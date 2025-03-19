@@ -1,0 +1,21 @@
+[project]
+name = "sage-db"
+version = "0.1.0"
+description = "Collects and parses information for the Sage database"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pip>=25.0.1",
+    "scrapy>=2.12.0",
+    "spacy>=3.8.4",
+    "en_core_web_trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.8.0/en_core_web_trf-3.8.0-py3-none-any.whl",
+    "sqlalchemy>=2.0.38",
+    "sqlalchemy-cockroachdb>=2.0.2",
+    "psycopg2>=2.9.10",
+    "python-dotenv>=1.0.0",
+    "black>=25.1.0",
+]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
