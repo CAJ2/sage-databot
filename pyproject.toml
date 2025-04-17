@@ -1,5 +1,5 @@
 [project]
-name = "sage-db"
+name = "sage-databot"
 version = "0.1.0"
 description = "Collects and parses information for the Sage database"
 readme = "README.md"
@@ -13,9 +13,21 @@ dependencies = [
     "sqlalchemy-cockroachdb>=2.0.2",
     "psycopg2>=2.9.10",
     "python-dotenv>=1.0.0",
-    "black>=25.1.0",
+    "prefect>=3.3.4",
+    "prefect-aws>=0.5.9",
+    "prefect-docker>=0.6.2",
+    "prefect-sqlalchemy>=0.5.2",
+    "ruff>=0.11.5",
+    "dlt>=1.9.0",
+    "gitpython>=3.1.44",
+    "duckdb>=1.2.2",
+    "polars>=1.27.1",
+    "marimo>=0.12.9",
+    "pyarrow>=19.0.1",
+    "adbc-driver-sqlite>=1.5.0",
+    "adbc-driver-postgresql>=1.5.0",
+    "connectorx>=0.4.3",
+    "python-iso639>=2025.2.18",
+    "pandas>=2.2.3",
+    "osmium>=4.0.2",
 ]
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3

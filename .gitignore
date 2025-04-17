@@ -11,3 +11,8 @@ wheels/
 
 # Env
 .env
+.dlt
+.local
+
+# Flow temporary files
+data
