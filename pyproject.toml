@@ -30,4 +30,6 @@ dependencies = [
     "python-iso639>=2025.2.18",
     "pandas>=2.2.3",
     "osmium>=4.0.2",
+    "nanoid>=2.0.0",
+    "jsonschema>=4.23.0",
 ]

@@ -24,18 +24,18 @@ def load_osm(country: str, download_url: str):
     return filepath
 
 
-def construct_osm_blob(o):
+def construct_osm_json(o):
     """
-    Construct the OSM blob.
+    Construct the OSM json.
     """
     tags = {}
     for t in o.tags:
         tags[t.k] = t.v
-    geojson = {
+    json_obj = {
         "timestamp": o.timestamp.isoformat(),
         "tags": tags,
     }
-    return json.dumps(geojson, ensure_ascii=False)
+    return json.dumps(json_obj, ensure_ascii=False)
 
 
 @task
@@ -51,7 +51,7 @@ def transform_osm(filepath: str):
             "name": pl.Utf8,
             "address": pl.Utf8,
             "location": pl.Utf8,
-            "osm": pl.Binary,
+            "osm": pl.Utf8,
         }
     )
 
@@ -69,7 +69,7 @@ def transform_osm(filepath: str):
                 json.dumps(generate_name(o.tags), ensure_ascii=False),
                 json.dumps(generate_address(o.tags), ensure_ascii=False),
                 f"SRID=4326;POINT({o.location.lon} {o.location.lat})",
-                construct_osm_blob(o),
+                construct_osm_json(o),
             )
             rows.append(node)
         if o.is_way():
@@ -90,7 +90,7 @@ def transform_osm(filepath: str):
                 json.dumps(generate_name(o.tags), ensure_ascii=False),
                 json.dumps(generate_address(o.tags), ensure_ascii=False),
                 loc,
-                construct_osm_blob(o),
+                construct_osm_json(o),
             )
             rows.append(way)
         if o.is_relation():
@@ -125,13 +125,13 @@ def transform_osm(filepath: str):
     )
     crdb.execute("""
         INSERT INTO public.places (id, created_at, updated_at, name, address, location, osm)
-        SELECT id, NOW(), NOW(), name::JSONB, address::JSONB, ST_GEOGFROMEWKT(location::TEXT), osm
+        SELECT id, NOW(), NOW(), name::JSONB, address::JSONB, ST_GEOGFROMEWKT(location::TEXT), osm::JSONB
         FROM databot.places_osm_load
         ON CONFLICT (id) DO UPDATE
         SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
             address = JSON_STRIP_NULLS(EXCLUDED.address::JSONB),
             location = ST_GEOGFROMEWKT(EXCLUDED.location::TEXT),
-            osm = EXCLUDED.osm,
+            osm = EXCLUDED.osm::JSONB,
             updated_at = NOW();
     """)
     crdb.execute("DROP TABLE IF EXISTS databot.places_osm_load;")
