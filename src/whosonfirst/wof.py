@@ -106,7 +106,7 @@ def transform_whosonfirst(filepath: str):
     )
     crdb.execute("""
         INSERT INTO public.regions (id, created_at, updated_at, name, geo, properties, placetype)
-        SELECT id, NOW(), NOW(), JSON_STRIP_NULLS(name::JSONB),
+        SELECT 'wof_' || id, NOW(), NOW(), JSON_STRIP_NULLS(name::JSONB),
             ST_MULTIPOLYFROMWKB(ST_ASEWKB(ST_MULTI(ST_GEOMFROMGEOJSON(geo::JSONB)))),
             properties::JSONB, placetype
         FROM databot.regions_wof_load
