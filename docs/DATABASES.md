@@ -1,5 +1,7 @@
 ## Database Setup
 
+### CockroachDB
+
 For some things, databot needs direct access to the CockroachDB main database. Generally it is preferred to use the API, but for some cases like region geo data, it is better to update the database directly.
 Follow this guide to setup a database connection locally for testing or for deployment.
 
