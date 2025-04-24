@@ -1,0 +1,64 @@
+id	name:en	name:sv;a	desc:en	desc:sv;a	source	technical
+hXiDjMuPndtUrYMoZ9gmK	Glass	Glas	Transparent material used in windows and containers.	Transparent material used in windows and containers.	{}	false
+feOj7e2u13WImnCwadDce	Metal	Metall	A strong and durable material used in construction and tools.	En stark och hållbar material som används i konstruktion och verktyg.	{}	false
+Mn8q6PtaKnUgr54KErqWs	Plastic	Plast	A synthetic material used in a variety of products.	Ett syntetiskt material som används i en mängd olika produkter.	{}	false
+LPS-Vzcp_UbFgRVQnsqMX	Paper	Papier	A thin material made from cellulose fibers, used for writing and packaging.	Ett tunt material gjort av cellulosa fibrer, används för skrivning och förpackning.	{}	false
+Wp0EY41k2mtuOVuP4wJmB	Biodegradable/Organic	Biologiskt nedbrytbart/Organiskt	A material that can decompose naturally.	Ett material som kan brytas ner naturligt.	{}	false
+mcE_p4uhvilwpfXi6kqXQ	Electronics	Elektronik	Devices and components that use electrical energy.	Enheter och komponenter som använder elektrisk energi.	{}	false
+6F97dYWROobg2OFJfuL8c	Textiles	Tekstiler	Flexible materials made from fibers, used for clothing and upholstery.	Flexibla material gjorda av fibrer, används för kläder och stoppning.	{}	false
+HI2Gklvo-T3IM5Dh7cu6C	Hazardous	Hazardous	Materials that pose a risk to health or the environment.	Material som utgör en risk för hälsa eller miljö.	{}	false
+GwA5OaQT_nZf_jmpH_GHr	Construction	Konstruktion	Materials used in building and construction.	Material som används i byggande och konstruktion.	{}	false
+6mF_GnbA6QNU9cHpVMX6y	Clear Glass	Klar Glas	A type of glass that is transparent and clear.	En typ av glas som är transparent och klart.	{}	false
+L5IW0PJDm4jC9qQkbTYXx	Colored Glass	Färgat Glas	A type of glass that is colored or tinted.	En typ av glas som är färgad eller tonad.	{}	false
+yDQ2NVFrviR7B948ul_PF	Composite Glass	Kompositglas	A type of glass made from a combination of materials.	En typ av glas gjort av en kombination av material.	{}	false
+-vzivUQy5TtElnyk7mv_S	Green Glass	Grönt Glas	A type of glass that is green in color.	En typ av glas som är grön i färgen.	{}	false
+Tc2IeFOFxly9Sal91cj07	Brown Glass	Brunt Glas	A type of glass that is brown in color.	En typ av glas som är brun i färgen.	{}	false
+4iedjCw1Gcivl6TMDZQmu	Blue Glass	Blått Glas	A type of glass that is blue in color.	En typ av glas som är blå i färgen.	{}	false
+8EPPbxIcFPC7S_AlF4LfN	Aluminium	Aluminium	A lightweight metal used in construction and packaging.	En lättviktsmetall som används i konstruktion och förpackning.	{}	false
+mvN8RQJDU4OGZBFNKjxRC	Steel	Stål	A strong alloy of iron and carbon used in construction.	Ett starkt legering av järn och kol som används i konstruktion.	{}	false
+iqgB50bl_IiJQgK4MqYVg	Iron	Järn	A strong metal used in construction and manufacturing.	En stark metall som används i konstruktion och tillverkning.	{}	false
+7KCWWky9jHTcxjJSuPlOg	Aluminium Foil	Aluminiumfolie	A thin sheet of aluminum used for wrapping and insulation.	En tunn aluminiumskiva som används för inslagning och isolering.	{}	false
+_7TSxNdkGGVwG3tlfSYEB	Aluminium Can	Aluminiumdosa	A container made of aluminum, often used for beverages.	En behållare gjord av aluminium, ofta används för drycker.	{}	false
+-DD3GzHWUP_ThLvBOz5fM	Aluminium Composite	Aluminiumkomposit	A material made from two layers of aluminum with a non-aluminum core.	Ett material gjort av två lager aluminium med en icke-aluminium kärna.	{}	false
+1FNAeVS8t5tSu04yAbpRE	Stainless Steel	 Rostfritt Stål	A corrosion-resistant alloy of iron, chromium, and nickel.	Ett korrosionsbeständigt legering av järn, krom och nickel.	{}	false
+Kvuft8qmnxtVmY-0GJvwE	Plastic Bag	Plastpåse	A flexible container made of plastic, often used for shopping.	En flexibel behållare gjord av plast, ofta används för shopping.	{}	false
+z2_GHMD95CsLyLsTPEEZD	Plastic Bottle	Plastflaska	A container made of plastic, often used for beverages.	En behållare gjord av plast, ofta används för drycker.	{}	false
+kD4Ijpa4hViFcHwJ5PWrB	Plastic Container	Plastbehållare	A container made of plastic, often used for storage.	En behållare gjord av plast, ofta används för lagring.	{}	false
+ii9gx0eeFEt4zpL6_5RcO	Plastic Wrapping	Plastfolie	A thin sheet of plastic used for wrapping and sealing.	En tunn plastskiva som används för inslagning och försegling.	{}	false
+B3Yn3UvoLKjy9XRmvqzIN	Bioplastic	Bioplast	A type of plastic made from renewable biomass sources.	En typ av plast gjord av förnybara biomassa källor.	{}	false
+fDIiuZeFV8Spj97nX37HK	Composite Plastic	Kompositplast	A material made from a combination of plastics and other materials.	Ett material gjort av en kombination av plaster och andra material.	{}	false
+bQmbG2PMJjVUr1zNP7K_U	Polyethylene Terephthalate (PET)	Polyetylentereftalat	A type of plastic commonly used in bottles and containers.	En typ av plast som vanligtvis används i flaskor och behållare.	{}	true
+fh7tseP_8_QAmswqab4HP	High-Density Polyethylene (HDPE)	Högdensitetspolyeten	A type of plastic used in containers and pipes.	En typ av plast som används i behållare och rör.	{}	true
+BOOPIIL5PrgZ2jaVtNTs3	Polyvinyl Chloride (PVC)	Polyvinylklorid	A type of plastic used in pipes and construction materials.	En typ av plast som används i rör och byggmaterial.	{}	true
+oIZ7UxTpTM6i6hnEotYdP	Low-Density Polyethylene (LDPE)	Lågdensitetspolyeten	A type of plastic used in bags and containers.	En typ av plast som används i påsar och behållare.	{}	true
+UrvoWX7OfLSwSZJ4splX6	Polypropylene (PP)	Polypropylen	A type of plastic used in containers and automotive parts.	En typ av plast som används i behållare och bilkomponenter.	{}	true
+Uy1P_kU7gslTPIlhsQVl-	Polystyrene (PS)	Polystyren	A type of plastic used in packaging and insulation.	En typ av plast som används i förpackningar och isolering.	{}	true
+Qcytv49YgiADNi8ixoPZz	Polycarbonate (PC)	Polykarbonat	A type of plastic known for its strength and transparency.	En typ av plast känd för sin styrka och transparens.	{}	true
+sudi9T64SoCqwZHSmfapL	Polyamide	Polyamid	A type of plastic known for its strength and flexibility.	En typ av plast känd för sin styrka och flexibilitet.	{}	true
+dFSJ69G5f4jcNur-LmAth	Styrene Acrylonitrile (SAN)	Styrenakrylonitril	A type of plastic known for its clarity and strength.	En typ av plast känd för sin klarhet och styrka.	{}	true
+t0pHYe3xFbO9kRdHMtJcD	Polyacrylonitrile (PAN)	Polyakrylonitril	A type of plastic used in textiles and fibers.	En typ av plast som används i textilier och fibrer.	{}	true
+uhNURC4RphniosdbCDxas	Polylactic Acid (PLA)	Polylaktidsyra	A biodegradable plastic made from renewable resources.	En biologiskt nedbrytbar plast gjord av förnybara resurser.	{}	true
+LjBTuNMuDMs-HnNKJSjNO	Acrylonitrile Butadiene Styrene (ABS)	Acrylonitrilbutadienstyren	A type of plastic known for its toughness and impact resistance.	En typ av plast känd för sin hållbarhet och slagmotstånd.	{}	true
+PnbPJAMn02lUbex4N3qly	Cardboard	Kartong	A material made from compressed paper fibers, used for packaging.	Ett material gjort av komprimerade pappersfibrer, används för förpackning.	{}	false
+kylSeUUr-vU_grYWsTPmJ	Paperboard	Papperboard	A thicker type of paper used for packaging and crafts.	En tjockare typ av papper som används för förpackning och hantverk.	{}	false
+nXKeu3nubx4mmNMaDmPF3	Newspaper	Tidning	A type of paper used for printing news and information.	En typ av papper som används för att trycka nyheter och information.	{}	false
+Ie7p_n1IuxOq6B79TvlVu	Office Paper	Kontorspapper	A type of paper used for printing and writing.	En typ av papper som används för utskrift och skrivning.	{}	false
+Wt-R_sICe3dlw65YrgojO	Paper Cup	Papperskopp	A disposable cup made from paper, often used for beverages.	En engångskopp gjord av papper, ofta används för drycker.	{}	false
+suPILCCLyisP5MvsBCBqM	Paper Book	Pappersbok	A book made from paper, used for reading.	En bok gjord av papper, används för läsning.	{}	false
+h5tGzYMUkR29kAvaUAg4A	Paper Magazine	Pappersmagasin	A magazine made from paper, used for reading.	En tidning gjord av papper, används för läsning.	{}	false
+Q1nT_Cq2LOl4tDVbHwXnq	Composite Paper	Kompositpapper	A type of paper made from a combination of materials.	En typ av papper gjort av en kombination av material.	{}	false
+x3Qux6EsNrkgXtc6qekQW	Food Waste	Matavfall	A biodegradable waste material from food.	Ett biologiskt nedbrytbart avfallsmaterial från mat.	{}	false
+2gkQ1M1MRMwIoN2P1Rmal	Yard Waste	Gårdsavfall	A biodegradable waste material from yard debris.	Ett biologiskt nedbrytbart avfallsmaterial från gårdsavfall.	{}	false
+qDp2eXZfJpyQ78ABXVXlH	Natural Fiber	Naturlig fiber	A fiber derived from plants or animals.	En fiber härledd från växter eller djur.	{}	false
+SNwJT75vaU3ZX1KusygDG	Synthetic Fiber	Syntetisk fiber	A fiber made from synthetic materials.	En fiber gjord av syntetiska material.	{}	false
+2cLiN68ZfJ9acL4FK-Dj7	Composite Fiber	Kompositfiber	A fiber made from a combination of natural and synthetic materials.	En fiber gjord av en kombination av naturliga och syntetiska material.	{}	false
+53E9DoN42OH6EheKpi-6d	Battery	Batteri	A device that stores electrical energy for later use.	En enhet som lagrar elektrisk energi för senare användning.	{}	false
+Ds90UwW_yZZsnjX8Y30d7	Adhesive	Klister	A substance used to bond materials together.	Ämne som används för att binda material tillsammans.	{}	false
+SQyeRJKilgb9hekbrensG	Aerosol	Aerosol	A pressurized container that releases a fine mist of liquid.	En trycksatt behållare som släpper ut en fin dimma av vätska.	{}	false
+_asS_YWilu-i3MJKuUDyW	Oil	Olja	A nonpolar hydrocarbon substance.	Ett opolärt kolväteämne.	{}	false
+L--Sh9yvy50ef9ALWgAFy	Gas	Gas	A state of matter with no fixed shape or volume.	Ett tillstånd av materia utan fast form eller volym.	{}	false
+C05fggUeB2VlXpDJ3e3fA	Paint	Måla	A substance used for painting.	Ett ämne som används för att måla.	{}	false
+uZVdE4LqWfUy_jMzXSfbR	Wood	Trä	A natural material used for furniture and construction.	Ett naturligt material som används för möbler och konstruktion.	{}	false
+BmqPntv_gjTGYJm32bfy5	Ceramic	Keramik	A hard, brittle material made from clay and other minerals.	Ett hårt, sprött material gjort av lera och andra mineraler.	{}	false
+ZskisiZvPwriQnhCHpleU	Concrete	Betong	A composite material made from cement, water, and aggregates.	Ett kompositmaterial gjort av cement, vatten och aggregat.	{}	false
+NAR9ubtL5N42FIEbGnIH4	Brick	Backsten	A small rectangular block used in construction.	Ett litet rektangulärt block som används i konstruktion.	{}	false
