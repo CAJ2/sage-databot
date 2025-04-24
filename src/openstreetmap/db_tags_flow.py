@@ -1,7 +1,6 @@
 from prefect import flow
 from prefect_sqlalchemy import SqlAlchemyConnector
 import json
-import nanoid
 
 from src.openstreetmap.db_tags import place_tags
 
@@ -28,7 +27,7 @@ def update_db_tags():
                 image = EXCLUDED.image
             """,
             {
-                "id": nanoid.generate(),
+                "id": tag["id"],
                 "name": json.dumps(tag["name"], ensure_ascii=False),
                 "type": tag["type"],
                 "desc": json.dumps(tag["desc"], ensure_ascii=False),

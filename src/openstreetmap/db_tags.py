@@ -1,5 +1,6 @@
 """
 Place Tags Template:
+id: Nano ID
 name: Translated name
 type: PLACE
 desc: Translated description
@@ -11,6 +12,7 @@ tag_id: Stable identifier for the tag
 
 place_tags = [
     {
+        "id": "6LsWZmITO4_YHFnZcRvph",
         "name": {"en": "Opening Hours", "sv": "Öppettider"},
         "type": "PLACE",
         "desc": None,
