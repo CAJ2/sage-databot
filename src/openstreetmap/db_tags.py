@@ -33,7 +33,7 @@ place_tags = [
             },
         },
         "bg_color": "#FF0000",
-        "image": "iconify://mdi--clock",
+        "image": "iconify://mdi:clock",
         "tag_id": "opening_hours",
     },
 ]
