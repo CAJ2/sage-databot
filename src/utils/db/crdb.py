@@ -30,16 +30,48 @@ def db_write_dataframe(
 ):
     """
     Write a Polars DataFrame to a CRDB database table using the crdb-sage SqlAlchemyConnector.
+
+    Converts struct columns to JSONB format.
     """
     crdb = SqlAlchemyConnector.load(conn)
     conn = create_polars_uri(crdb)
 
-    df.write_database(
-        connection=conn,
-        table_name=f"databot.{table}",
-        if_table_exists="replace",
-        engine="adbc",
-    )
+    # Convert struct columns to JSONB format
+    for col in df.columns:
+        col_info = df.get_column(col)
+        if col_info.dtype == pl.Struct:
+            df = df.with_columns(pl.col(col).struct.json_encode().alias(col))
+        elif col_info.dtype == pl.List:
+            # Better option when implemented: https://github.com/pola-rs/polars/issues/14029
+            # Converting to a struct is probably better than using map_elements, 'cause Python slow
+            # The actual list value will be under the JSON key with the same name as the column
+            df = df.with_columns(pl.struct(pl.col(col)).struct.json_encode().alias(col))
+
+    CHUNK_SIZE = 50_000
+    if df.height > CHUNK_SIZE:
+        # If the dataframe is too large, write it in chunks
+        df.slice(0, CHUNK_SIZE).write_database(
+            connection=conn,
+            table_name=f"databot.{table}",
+            if_table_exists="replace",
+            engine="adbc",
+        )
+        for i in range(CHUNK_SIZE, df.height, CHUNK_SIZE):
+            chunk = df.slice(i, CHUNK_SIZE)
+            chunk.write_database(
+                connection=conn,
+                table_name=f"databot.{table}",
+                if_table_exists="append",
+                engine="adbc",
+            )
+    else:
+        df.write_database(
+            connection=conn,
+            table_name=f"databot.{table}",
+            if_table_exists="replace",
+            engine="adbc",
+        )
+
     for col in id_cols:
         crdb.execute(f"ALTER TABLE databot.{table} ALTER COLUMN {col} SET NOT NULL;")
     crdb.execute(

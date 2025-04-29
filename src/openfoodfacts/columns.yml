@@ -1,0 +1,1561 @@
+############ file meta data ############
+created_by: parquet-cpp-arrow version 18.0.0-SNAPSHOT
+num_columns: 141
+num_rows: 3806520
+num_row_groups: 3718
+format_version: 2.6
+serialized_size: 78241450
+
+
+############ Columns ############
+additives_n
+element
+element
+element
+brands
+categories
+element
+element
+element
+element
+code
+compared_to_category
+complete
+completeness
+element
+element
+created_t
+creator
+element
+element
+element
+element
+ecoscore_data
+ecoscore_grade
+ecoscore_score
+element
+element
+element
+emb_codes
+element
+element
+lang
+text
+key
+imgid
+rev
+h
+w
+h
+w
+h
+w
+h
+w
+uploaded_t
+uploader
+element
+element
+ingredients_from_palm_oil_n
+ingredients_n
+element
+ingredients_percent_analysis
+element
+lang
+text
+ingredients_with_specified_percent_n
+ingredients_with_unspecified_percent_n
+ingredients_without_ciqual_codes_n
+element
+ingredients
+known_ingredients_n
+element
+labels
+lang
+element
+element
+last_editor
+last_image_t
+last_modified_by
+last_modified_t
+last_updated_t
+link
+element
+element
+manufacturing_places
+max_imgid
+element
+element
+new_additives_n
+no_nutrition_data
+nova_group
+element
+nova_groups
+element
+element
+name
+value
+100g
+serving
+unit
+prepared_value
+prepared_100g
+prepared_serving
+prepared_unit
+nutriscore_grade
+nutriscore_score
+nutrition_data_per
+obsolete
+element
+origins
+field_name
+timestamp
+owner
+packagings_complete
+element
+element
+element
+lang
+text
+packaging
+material
+number_of_units
+quantity_per_unit
+quantity_per_unit_unit
+quantity_per_unit_value
+recycling
+shape
+weight_measured
+element
+popularity_key
+element
+lang
+text
+product_quantity_unit
+product_quantity
+element
+quantity
+rev
+scans_n
+serving_quantity
+serving_size
+element
+element
+stores
+element
+unique_scans_n
+unknown_ingredients_n
+element
+element
+with_non_nutritive_sweeteners
+with_sweeteners
+
+############ Column(additives_n) ############
+name: additives_n
+path: additives_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(element) ############
+name: element
+path: additives_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 28%)
+
+############ Column(element) ############
+name: element
+path: allergens_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 12%)
+
+############ Column(element) ############
+name: element
+path: brands_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 25%)
+
+############ Column(brands) ############
+name: brands
+path: brands
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 29%)
+
+############ Column(categories) ############
+name: categories
+path: categories
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 61%)
+
+############ Column(element) ############
+name: element
+path: categories_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 40%)
+
+############ Column(element) ############
+name: element
+path: checkers_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -5%)
+
+############ Column(element) ############
+name: element
+path: ciqual_food_name_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 20%)
+
+############ Column(element) ############
+name: element
+path: cities_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(code) ############
+name: code
+path: code
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 55%)
+
+############ Column(compared_to_category) ############
+name: compared_to_category
+path: compared_to_category
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 33%)
+
+############ Column(complete) ############
+name: complete
+path: complete
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -5%)
+
+############ Column(completeness) ############
+name: completeness
+path: completeness
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 1%)
+
+############ Column(element) ############
+name: element
+path: correctors_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 26%)
+
+############ Column(element) ############
+name: element
+path: countries_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 11%)
+
+############ Column(created_t) ############
+name: created_t
+path: created_t
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 31%)
+
+############ Column(creator) ############
+name: creator
+path: creator
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 6%)
+
+############ Column(element) ############
+name: element
+path: data_quality_errors_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 20%)
+
+############ Column(element) ############
+name: element
+path: data_quality_info_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 50%)
+
+############ Column(element) ############
+name: element
+path: data_quality_warnings_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 47%)
+
+############ Column(element) ############
+name: element
+path: data_sources_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 34%)
+
+############ Column(ecoscore_data) ############
+name: ecoscore_data
+path: ecoscore_data
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 68%)
+
+############ Column(ecoscore_grade) ############
+name: ecoscore_grade
+path: ecoscore_grade
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(ecoscore_score) ############
+name: ecoscore_score
+path: ecoscore_score
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(element) ############
+name: element
+path: ecoscore_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(element) ############
+name: element
+path: editors.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 1%)
+
+############ Column(element) ############
+name: element
+path: emb_codes_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 5%)
+
+############ Column(emb_codes) ############
+name: emb_codes
+path: emb_codes
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 3%)
+
+############ Column(element) ############
+name: element
+path: entry_dates_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 63%)
+
+############ Column(element) ############
+name: element
+path: food_groups_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 20%)
+
+############ Column(lang) ############
+name: lang
+path: generic_name.list.element.lang
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 7%)
+
+############ Column(text) ############
+name: text
+path: generic_name.list.element.text
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 25%)
+
+############ Column(key) ############
+name: key
+path: images.list.element.key
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 8%)
+
+############ Column(imgid) ############
+name: imgid
+path: images.list.element.imgid
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(rev) ############
+name: rev
+path: images.list.element.rev
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(h) ############
+name: h
+path: images.list.element.sizes.100.h
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(w) ############
+name: w
+path: images.list.element.sizes.100.w
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 1%)
+
+############ Column(h) ############
+name: h
+path: images.list.element.sizes.200.h
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 0%)
+
+############ Column(w) ############
+name: w
+path: images.list.element.sizes.200.w
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(h) ############
+name: h
+path: images.list.element.sizes.400.h
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 5%)
+
+############ Column(w) ############
+name: w
+path: images.list.element.sizes.400.w
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 0%)
+
+############ Column(h) ############
+name: h
+path: images.list.element.sizes.full.h
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 0%)
+
+############ Column(w) ############
+name: w
+path: images.list.element.sizes.full.w
+max_definition_level: 6
+max_repetition_level: 1
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(uploaded_t) ############
+name: uploaded_t
+path: images.list.element.uploaded_t
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 26%)
+
+############ Column(uploader) ############
+name: uploader
+path: images.list.element.uploader
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 3%)
+
+############ Column(element) ############
+name: element
+path: informers_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 22%)
+
+############ Column(element) ############
+name: element
+path: ingredients_analysis_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 32%)
+
+############ Column(ingredients_from_palm_oil_n) ############
+name: ingredients_from_palm_oil_n
+path: ingredients_from_palm_oil_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(ingredients_n) ############
+name: ingredients_n
+path: ingredients_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(element) ############
+name: element
+path: ingredients_original_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 30%)
+
+############ Column(ingredients_percent_analysis) ############
+name: ingredients_percent_analysis
+path: ingredients_percent_analysis
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(element) ############
+name: element
+path: ingredients_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 25%)
+
+############ Column(lang) ############
+name: lang
+path: ingredients_text.list.element.lang
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 56%)
+
+############ Column(text) ############
+name: text
+path: ingredients_text.list.element.text
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 75%)
+
+############ Column(ingredients_with_specified_percent_n) ############
+name: ingredients_with_specified_percent_n
+path: ingredients_with_specified_percent_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(ingredients_with_unspecified_percent_n) ############
+name: ingredients_with_unspecified_percent_n
+path: ingredients_with_unspecified_percent_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(ingredients_without_ciqual_codes_n) ############
+name: ingredients_without_ciqual_codes_n
+path: ingredients_without_ciqual_codes_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(element) ############
+name: element
+path: ingredients_without_ciqual_codes.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 31%)
+
+############ Column(ingredients) ############
+name: ingredients
+path: ingredients
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 88%)
+
+############ Column(known_ingredients_n) ############
+name: known_ingredients_n
+path: known_ingredients_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(element) ############
+name: element
+path: labels_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 23%)
+
+############ Column(labels) ############
+name: labels
+path: labels
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 42%)
+
+############ Column(lang) ############
+name: lang
+path: lang
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 0%)
+
+############ Column(element) ############
+name: element
+path: languages_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 57%)
+
+############ Column(element) ############
+name: element
+path: last_edit_dates_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 52%)
+
+############ Column(last_editor) ############
+name: last_editor
+path: last_editor
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 5%)
+
+############ Column(last_image_t) ############
+name: last_image_t
+path: last_image_t
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 21%)
+
+############ Column(last_modified_by) ############
+name: last_modified_by
+path: last_modified_by
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 5%)
+
+############ Column(last_modified_t) ############
+name: last_modified_t
+path: last_modified_t
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 33%)
+
+############ Column(last_updated_t) ############
+name: last_updated_t
+path: last_updated_t
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 35%)
+
+############ Column(link) ############
+name: link
+path: link
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 35%)
+
+############ Column(element) ############
+name: element
+path: main_countries_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -6%)
+
+############ Column(element) ############
+name: element
+path: manufacturing_places_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 2%)
+
+############ Column(manufacturing_places) ############
+name: manufacturing_places
+path: manufacturing_places
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 2%)
+
+############ Column(max_imgid) ############
+name: max_imgid
+path: max_imgid
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(element) ############
+name: element
+path: minerals_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 29%)
+
+############ Column(element) ############
+name: element
+path: misc_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 55%)
+
+############ Column(new_additives_n) ############
+name: new_additives_n
+path: new_additives_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -5%)
+
+############ Column(no_nutrition_data) ############
+name: no_nutrition_data
+path: no_nutrition_data
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BOOLEAN
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 0%)
+
+############ Column(nova_group) ############
+name: nova_group
+path: nova_group
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(element) ############
+name: element
+path: nova_groups_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 7%)
+
+############ Column(nova_groups) ############
+name: nova_groups
+path: nova_groups
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(element) ############
+name: element
+path: nucleotides_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -6%)
+
+############ Column(element) ############
+name: element
+path: nutrient_levels_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 33%)
+
+############ Column(name) ############
+name: name
+path: nutriments.list.element.name
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 14%)
+
+############ Column(value) ############
+name: value
+path: nutriments.list.element.value
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 12%)
+
+############ Column(100g) ############
+name: 100g
+path: nutriments.list.element.100g
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 7%)
+
+############ Column(serving) ############
+name: serving
+path: nutriments.list.element.serving
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 14%)
+
+############ Column(unit) ############
+name: unit
+path: nutriments.list.element.unit
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 32%)
+
+############ Column(prepared_value) ############
+name: prepared_value
+path: nutriments.list.element.prepared_value
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 59%)
+
+############ Column(prepared_100g) ############
+name: prepared_100g
+path: nutriments.list.element.prepared_100g
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 59%)
+
+############ Column(prepared_serving) ############
+name: prepared_serving
+path: nutriments.list.element.prepared_serving
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 59%)
+
+############ Column(prepared_unit) ############
+name: prepared_unit
+path: nutriments.list.element.prepared_unit
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 59%)
+
+############ Column(nutriscore_grade) ############
+name: nutriscore_grade
+path: nutriscore_grade
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(nutriscore_score) ############
+name: nutriscore_score
+path: nutriscore_score
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(nutrition_data_per) ############
+name: nutrition_data_per
+path: nutrition_data_per
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -3%)
+
+############ Column(obsolete) ############
+name: obsolete
+path: obsolete
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BOOLEAN
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 69%)
+
+############ Column(element) ############
+name: element
+path: origins_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 6%)
+
+############ Column(origins) ############
+name: origins
+path: origins
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(field_name) ############
+name: field_name
+path: owner_fields.list.element.field_name
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -6%)
+
+############ Column(timestamp) ############
+name: timestamp
+path: owner_fields.list.element.timestamp
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -6%)
+
+############ Column(owner) ############
+name: owner
+path: owner
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -7%)
+
+############ Column(packagings_complete) ############
+name: packagings_complete
+path: packagings_complete
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BOOLEAN
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(element) ############
+name: element
+path: packaging_recycling_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -3%)
+
+############ Column(element) ############
+name: element
+path: packaging_shapes_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 14%)
+
+############ Column(element) ############
+name: element
+path: packaging_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 16%)
+
+############ Column(lang) ############
+name: lang
+path: packaging_text.list.element.lang
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -6%)
+
+############ Column(text) ############
+name: text
+path: packaging_text.list.element.text
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -6%)
+
+############ Column(packaging) ############
+name: packaging
+path: packaging
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 24%)
+
+############ Column(material) ############
+name: material
+path: packagings.list.element.material
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 13%)
+
+############ Column(number_of_units) ############
+name: number_of_units
+path: packagings.list.element.number_of_units
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 9%)
+
+############ Column(quantity_per_unit) ############
+name: quantity_per_unit
+path: packagings.list.element.quantity_per_unit
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 12%)
+
+############ Column(quantity_per_unit_unit) ############
+name: quantity_per_unit_unit
+path: packagings.list.element.quantity_per_unit_unit
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 14%)
+
+############ Column(quantity_per_unit_value) ############
+name: quantity_per_unit_value
+path: packagings.list.element.quantity_per_unit_value
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 14%)
+
+############ Column(recycling) ############
+name: recycling
+path: packagings.list.element.recycling
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 10%)
+
+############ Column(shape) ############
+name: shape
+path: packagings.list.element.shape
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 16%)
+
+############ Column(weight_measured) ############
+name: weight_measured
+path: packagings.list.element.weight_measured
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: FLOAT
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 14%)
+
+############ Column(element) ############
+name: element
+path: photographers.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -5%)
+
+############ Column(popularity_key) ############
+name: popularity_key
+path: popularity_key
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 24%)
+
+############ Column(element) ############
+name: element
+path: popularity_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 63%)
+
+############ Column(lang) ############
+name: lang
+path: product_name.list.element.lang
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 60%)
+
+############ Column(text) ############
+name: text
+path: product_name.list.element.text
+max_definition_level: 4
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 44%)
+
+############ Column(product_quantity_unit) ############
+name: product_quantity_unit
+path: product_quantity_unit
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(product_quantity) ############
+name: product_quantity
+path: product_quantity
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 21%)
+
+############ Column(element) ############
+name: element
+path: purchase_places_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(quantity) ############
+name: quantity
+path: quantity
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 22%)
+
+############ Column(rev) ############
+name: rev
+path: rev
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(scans_n) ############
+name: scans_n
+path: scans_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(serving_quantity) ############
+name: serving_quantity
+path: serving_quantity
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 21%)
+
+############ Column(serving_size) ############
+name: serving_size
+path: serving_size
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 37%)
+
+############ Column(element) ############
+name: element
+path: states_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 72%)
+
+############ Column(element) ############
+name: element
+path: stores_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -1%)
+
+############ Column(stores) ############
+name: stores
+path: stores
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(element) ############
+name: element
+path: traces_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 8%)
+
+############ Column(unique_scans_n) ############
+name: unique_scans_n
+path: unique_scans_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -2%)
+
+############ Column(unknown_ingredients_n) ############
+name: unknown_ingredients_n
+path: unknown_ingredients_n
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -0%)
+
+############ Column(element) ############
+name: element
+path: unknown_nutrients_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 8%)
+
+############ Column(element) ############
+name: element
+path: vitamins_tags.list.element
+max_definition_level: 3
+max_repetition_level: 1
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 15%)
+
+############ Column(with_non_nutritive_sweeteners) ############
+name: with_non_nutritive_sweeteners
+path: with_non_nutritive_sweeteners
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -3%)
+
+############ Column(with_sweeteners) ############
+name: with_sweeteners
+path: with_sweeteners
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: -4%)

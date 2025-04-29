@@ -12,7 +12,7 @@ def is_production() -> bool:
     return "PREFECT_ENV" in os.environ and os.environ["PREFECT_ENV"] == "production"
 
 
-def download_cache_file(basepath_var: str, url: str) -> str:
+def download_cache_file(basepath_var: str, url: str, subdir: str = "") -> str:
     """
     Download a file from a URL and cache it based on the local cache_dir.
 
@@ -37,7 +37,7 @@ def download_cache_file(basepath_var: str, url: str) -> str:
 
     basepath: str = Variable.get(basepath_var)
     if not basepath:
-        basepath = cache_dir
+        basepath = cache_dir if subdir == "" else os.path.join(cache_dir, subdir)
     baseparsed = urlparse(basepath)
     if baseparsed.scheme.startswith("s3"):
         # If the basepath is an S3 URL, cache from S3
