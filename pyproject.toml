@@ -33,4 +33,12 @@ dependencies = [
     "nanoid>=2.0.0",
     "jsonschema>=4.23.0",
     "networkx[default]>=2.8.8",
+    "ariadne-codegen>=0.14.0",
 ]
+
+[tool.ariadne-codegen]
+schema_path = "src/graphql/schema.gql"
+queries_path = "src/graphql/queries"
+target_package_name = "api_client"
+target_package_path = "src/graphql"
+async_client = false
