@@ -4,24 +4,32 @@ import polars as pl
 from src.utils import is_production
 
 
-def create_polars_uri(conn: SqlAlchemyConnector):
+def create_polars_uri(conn: SqlAlchemyConnector, client_certs: bool = True):
     """
     Create a connection string for the given SqlAlchemyConnector object.
+
+    Notes for Polars read_database and read_database_uri:
+    - They do not work with CRDB since the COPY TO binary format is not
+      implemented: https://go.crdb.dev/issue-v/97180/v24.3
     """
     c = conn.connection_info
 
     sslmode = "disable"
     sslparams = ""
     if is_production() or "CRDB_SSL_CERT" in os.environ:
-        sslmode = "verify-full"
-        sslparams = (
-            f"&sslrootcert={os.environ['CRDB_SSL_ROOTCERT']}"
-            + f"&sslcert={os.environ['CRDB_SSL_CERT']}&sslkey={os.environ['CRDB_SSL_KEY']}"
-        )
+        if client_certs:
+            sslmode = "verify-full"
+            sslparams = (
+                f"&sslrootcert={os.environ['CRDB_SSL_ROOTCERT']}"
+                + f"&sslcert={os.environ['CRDB_SSL_CERT']}&sslkey={os.environ['CRDB_SSL_KEY']}"
+            )
+        else:
+            sslmode = "require"
+            sslparams = f"&sslrootcert={os.environ['CRDB_SSL_ROOTCERT']}"
     elif not is_production() and "CRDB_SSL_MODE" in os.environ:
         sslmode = os.environ["CRDB_SSL_MODE"]
 
-    conn_str = f"postgresql://{c.username}:{c.password}@{c.host}:{c.port}/{c.database}?sslmode={sslmode}{sslparams}"
+    conn_str = f"postgresql://{c.username}:{c.password.get_secret_value()}@{c.host}:{c.port}/{c.database}?sslmode={sslmode}{sslparams}"
     return conn_str
 
 
