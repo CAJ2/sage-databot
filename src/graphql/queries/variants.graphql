@@ -1,0 +1,13 @@
+mutation AddVariant(
+  $input: CreateVariantInput!
+) {
+  createVariant(input: $input) {
+    variant {
+      id
+      name
+      desc
+      created_at
+      updated_at
+    }
+  }
+}
