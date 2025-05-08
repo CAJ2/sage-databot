@@ -27,6 +27,7 @@ def default_variables(env: str):
     if env == "production":
         # general
         set_variable("cache_dir", "/data/cache", tags=["general", "paths"])
+        set_variable("api_url", "https://api.sageleaf.app", tags=["general", "api"])
 
         # whosonfirst
         set_variable(
@@ -43,6 +44,7 @@ def default_variables(env: str):
     else:
         # general
         set_variable("cache_dir", "data", tags=["general", "paths"])
+        set_variable("api_url", "http://localhost:4444", tags=["general", "api"])
 
         # whosonfirst
         set_variable(
