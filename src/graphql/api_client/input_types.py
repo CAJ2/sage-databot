@@ -9,6 +9,20 @@ from .base_model import BaseModel
 from .enums import ChangeStatus, SourceType, TagType
 
 
+class ComponentMaterialInput(BaseModel):
+    id: str
+    material_fraction: Optional[float] = None
+
+
+class ComponentRegionInput(BaseModel):
+    id: str
+
+
+class ComponentTagsInput(BaseModel):
+    id: str
+    meta: Optional[Any] = None
+
+
 class CreateCategoryInput(BaseModel):
     add_sources: Optional[List[str]] = None
     apply: Optional[bool] = None
@@ -35,22 +49,29 @@ class CreateComponentInput(BaseModel):
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
+    desc: Optional[str] = None
+    image_url: Optional[str] = None
     lang: Optional[str] = None
+    materials: Optional[List["ComponentMaterialInput"]] = None
+    name: str
+    primary_material: Optional["ComponentMaterialInput"] = None
+    region: Optional["ComponentRegionInput"] = None
     remove_sources: Optional[List[str]] = None
+    tags: Optional[List["ComponentTagsInput"]] = None
 
 
-class CreateMaterialInput(BaseModel):
+class CreateItemInput(BaseModel):
     add_sources: Optional[List[str]] = None
-    ancestors: Optional[List[str]] = None
     apply: Optional[bool] = None
+    categories: Optional[List["ItemCategoriesInput"]] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
     desc: Optional[str] = None
-    descendants: Optional[List[str]] = None
+    image_url: Optional[str] = None
     lang: Optional[str] = None
-    name: str
+    name: Optional[str] = None
     remove_sources: Optional[List[str]] = None
-    technical: bool = False
+    tags: Optional[List["ItemTagsInput"]] = None
 
 
 class CreateProcessInput(BaseModel):
@@ -58,8 +79,16 @@ class CreateProcessInput(BaseModel):
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
+    desc: Optional[str] = None
+    intent: str = "COLLECTION"
     lang: Optional[str] = None
+    material: Optional[str] = None
+    name: str
+    org: Optional[str] = None
+    place: Optional[str] = None
+    region: Optional[str] = None
     remove_sources: Optional[List[str]] = None
+    variant: Optional[str] = None
 
 
 class CreateSourceInput(BaseModel):
@@ -69,7 +98,7 @@ class CreateSourceInput(BaseModel):
     type: SourceType
 
 
-class CreateTagInput(BaseModel):
+class CreateTagDefinitionInput(BaseModel):
     bg_color: Optional[str] = None
     desc: Optional[str] = None
     image: Optional[str] = None
@@ -83,12 +112,24 @@ class CreateVariantInput(BaseModel):
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
+    components: Optional[List["VariantComponentsInput"]] = None
     desc: Optional[str] = None
     item_id: Optional[str] = None
     lang: Optional[str] = None
     name: str
+    orgs: Optional[List["VariantOrgsInput"]] = None
     region_id: Optional[str] = None
     remove_sources: Optional[List[str]] = None
+    tags: Optional[List["VariantTagsInput"]] = None
+
+
+class ItemCategoriesInput(BaseModel):
+    id: str
+
+
+class ItemTagsInput(BaseModel):
+    id: str
+    meta: Optional[Any] = None
 
 
 class UpdateChangeInput(BaseModel):
@@ -102,26 +143,37 @@ class UpdateChangeInput(BaseModel):
 
 class UpdateComponentInput(BaseModel):
     add_sources: Optional[List[str]] = None
-    apply: Optional[bool] = None
-    change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
-    lang: Optional[str] = None
-    remove_sources: Optional[List[str]] = None
-
-
-class UpdateMaterialInput(BaseModel):
-    add_sources: Optional[List[str]] = None
-    ancestors: Optional[List[str]] = None
+    add_tags: Optional[List["ComponentTagsInput"]] = None
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
     desc: Optional[str] = None
-    descendants: Optional[List[str]] = None
     id: str
+    image_url: Optional[str] = None
+    lang: Optional[str] = None
+    materials: Optional[List["ComponentMaterialInput"]] = None
+    name: Optional[str] = None
+    primary_material: Optional["ComponentMaterialInput"] = None
+    region: Optional["ComponentRegionInput"] = None
+    remove_sources: Optional[List[str]] = None
+    remove_tags: Optional[List["ComponentTagsInput"]] = None
+
+
+class UpdateItemInput(BaseModel):
+    add_categories: Optional[List["ItemCategoriesInput"]] = None
+    add_sources: Optional[List[str]] = None
+    add_tags: Optional[List["ItemTagsInput"]] = None
+    apply: Optional[bool] = None
+    change: Optional["CreateChangeInput"] = None
+    change_id: Optional[str] = None
+    desc: Optional[str] = None
+    id: str
+    image_url: Optional[str] = None
     lang: Optional[str] = None
     name: Optional[str] = None
+    remove_categories: Optional[List["ItemCategoriesInput"]] = None
     remove_sources: Optional[List[str]] = None
-    technical: Optional[bool] = None
+    remove_tags: Optional[List["ItemTagsInput"]] = None
 
 
 class UpdateProcessInput(BaseModel):
@@ -129,8 +181,17 @@ class UpdateProcessInput(BaseModel):
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
+    desc: Optional[str] = None
+    id: str
+    intent: Optional[str] = None
     lang: Optional[str] = None
+    material: Optional[str] = None
+    name: Optional[str] = None
+    org: Optional[str] = None
+    place: Optional[str] = None
+    region: Optional[str] = None
     remove_sources: Optional[List[str]] = None
+    variant: Optional[str] = None
 
 
 class UpdateSourceInput(BaseModel):
@@ -141,7 +202,7 @@ class UpdateSourceInput(BaseModel):
     type: Optional[SourceType] = None
 
 
-class UpdateTagInput(BaseModel):
+class UpdateTagDefinitionInput(BaseModel):
     bg_color: Optional[str] = None
     desc: Optional[str] = None
     id: str
@@ -152,7 +213,10 @@ class UpdateTagInput(BaseModel):
 
 
 class UpdateVariantInput(BaseModel):
+    add_components: Optional[List["VariantComponentsInput"]] = None
+    add_orgs: Optional[List["VariantOrgsInput"]] = None
     add_sources: Optional[List[str]] = None
+    add_tags: Optional[List["VariantTagsInput"]] = None
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
@@ -162,15 +226,33 @@ class UpdateVariantInput(BaseModel):
     lang: Optional[str] = None
     name: Optional[str] = None
     region_id: Optional[str] = None
+    remove_components: Optional[List["VariantComponentsInput"]] = None
+    remove_orgs: Optional[List["VariantOrgsInput"]] = None
     remove_sources: Optional[List[str]] = None
+    remove_tags: Optional[List["VariantTagsInput"]] = None
+
+
+class VariantComponentsInput(BaseModel):
+    id: str
+    quantity: Optional[float] = None
+    unit: Optional[str] = None
+
+
+class VariantOrgsInput(BaseModel):
+    id: str
+
+
+class VariantTagsInput(BaseModel):
+    id: str
+    meta: Optional[Any] = None
 
 
 CreateCategoryInput.model_rebuild()
 CreateComponentInput.model_rebuild()
-CreateMaterialInput.model_rebuild()
+CreateItemInput.model_rebuild()
 CreateProcessInput.model_rebuild()
 CreateVariantInput.model_rebuild()
 UpdateComponentInput.model_rebuild()
-UpdateMaterialInput.model_rebuild()
+UpdateItemInput.model_rebuild()
 UpdateProcessInput.model_rebuild()
 UpdateVariantInput.model_rebuild()

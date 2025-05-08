@@ -30,5 +30,7 @@ class SourceType(str, Enum):
 
 class TagType(str, Enum):
     COMPONENT = "COMPONENT"
+    ITEM = "ITEM"
     PLACE = "PLACE"
+    PROCESS = "PROCESS"
     VARIANT = "VARIANT"
