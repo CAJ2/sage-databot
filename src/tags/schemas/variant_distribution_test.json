@@ -1,0 +1,29 @@
+{
+  "origins": [
+    {
+      "region_id": "AbCd123",
+      "name": {
+        "en": "Test Name",
+        "sv": "Test Namn"
+      }
+    }
+  ],
+  "manufacturing": [
+    {
+      "region_id": "AbCd123",
+      "name": {
+        "en": "Test Name",
+        "sv": "Test Namn"
+      }
+    }
+  ],
+  "stores": [
+    {
+      "place_id": "AbCd123",
+      "name": {
+        "en": "Test Name",
+        "sv": "Test Namn"
+      }
+    }
+  ]
+}
