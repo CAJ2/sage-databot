@@ -13,16 +13,16 @@ image: Remote path to the image file
 tags = [
     {
         "id": "9ytcoER6E3yFSQz6o2JZC",
-        "tag_id": "distribution",
+        "tag_id": "origins",
         "name": {
-            "en": "Distribution & Manufacturing",
-            "sv": "Distribution & Tillverkning",
+            "en": "Origins, Manufacturing, and Distribution",
+            "sv": "Ursprung, Tillverkning och Distribution",
         },
         "type": "VARIANT",
         "desc": None,
         "meta_template": {
-            "schema": "schemas/variant_distribution.json",
-            "ui_schema": "ui_schemas/variant_distribution.json",
+            "schema": "schemas/variant_origins.json",
+            "ui_schema": "ui_schemas/variant_origins.json",
         },
         "bg_color": "#FF0000",
         "image": "iconify://mdi:building",

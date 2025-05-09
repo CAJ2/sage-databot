@@ -1,6 +1,7 @@
 from prefect import flow
 from prefect_sqlalchemy import SqlAlchemyConnector
 import json
+from jsonschema import Draft202012Validator
 
 import src.tags.variant_tags as variant_tags
 
@@ -23,6 +24,9 @@ def update_db_tags():
             if type(meta_template["schema"]) is str:
                 with open("src/tags/" + meta_template["schema"], "r") as f:
                     meta_template["schema"] = json.load(f)
+                    Draft202012Validator(meta_template["schema"]).check_schema(
+                        meta_template["schema"]
+                    )
             meta_template["ui_schema"] = tag["meta_template"]["ui_schema"]
             if type(meta_template["ui_schema"]) is str:
                 with open("src/tags/" + meta_template["ui_schema"], "r") as f:

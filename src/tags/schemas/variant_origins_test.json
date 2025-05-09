@@ -8,6 +8,9 @@
       }
     }
   ],
+  "emb_codes": [
+    "AbCd123"
+  ],
   "manufacturing": [
     {
       "region_id": "AbCd123",

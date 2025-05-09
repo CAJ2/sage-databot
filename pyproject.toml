@@ -34,6 +34,8 @@ dependencies = [
     "jsonschema>=4.23.0",
     "networkx[default]>=2.8.8",
     "ariadne-codegen>=0.14.0",
+    "meilisearch>=0.34.1",
+    "stopwordsiso>=0.6.1",
 ]
 
 [tool.ariadne-codegen]
