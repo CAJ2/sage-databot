@@ -28,6 +28,8 @@ def default_variables(env: str):
         # general
         set_variable("cache_dir", "/data/cache", tags=["general", "paths"])
         set_variable("api_url", "https://api.sageleaf.app", tags=["general", "api"])
+        set_variable("meilisearch", "http://meilisearch:7700", tags=["general", "api"])
+        set_variable("spaces_db_bucket", "", tags=["general", "paths"])
 
         # whosonfirst
         set_variable(
@@ -45,6 +47,8 @@ def default_variables(env: str):
         # general
         set_variable("cache_dir", "data", tags=["general", "paths"])
         set_variable("api_url", "http://localhost:4444", tags=["general", "api"])
+        set_variable("meilisearch", "http://localhost:7700", tags=["general", "api"])
+        set_variable("spaces_db_bucket", "", tags=["general", "paths"])
 
         # whosonfirst
         set_variable(
