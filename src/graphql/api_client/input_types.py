@@ -112,13 +112,15 @@ class CreateVariantInput(BaseModel):
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
+    code: Optional[str] = None
     components: Optional[List["VariantComponentsInput"]] = None
     desc: Optional[str] = None
-    item_id: Optional[str] = None
+    items: Optional[List["VariantItemsInput"]] = None
     lang: Optional[str] = None
     name: str
     orgs: Optional[List["VariantOrgsInput"]] = None
     region_id: Optional[str] = None
+    regions: Optional[List["VariantRegionsInput"]] = None
     remove_sources: Optional[List[str]] = None
     tags: Optional[List["VariantTagsInput"]] = None
 
@@ -214,20 +216,24 @@ class UpdateTagDefinitionInput(BaseModel):
 
 class UpdateVariantInput(BaseModel):
     add_components: Optional[List["VariantComponentsInput"]] = None
+    add_items: Optional[List["VariantItemsInput"]] = None
     add_orgs: Optional[List["VariantOrgsInput"]] = None
+    add_regions: Optional[List["VariantRegionsInput"]] = None
     add_sources: Optional[List[str]] = None
     add_tags: Optional[List["VariantTagsInput"]] = None
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
+    code: Optional[str] = None
     desc: Optional[str] = None
     id: str
-    item_id: Optional[str] = None
     lang: Optional[str] = None
     name: Optional[str] = None
     region_id: Optional[str] = None
     remove_components: Optional[List["VariantComponentsInput"]] = None
+    remove_items: Optional[List["VariantItemsInput"]] = None
     remove_orgs: Optional[List["VariantOrgsInput"]] = None
+    remove_regions: Optional[List["VariantRegionsInput"]] = None
     remove_sources: Optional[List[str]] = None
     remove_tags: Optional[List["VariantTagsInput"]] = None
 
@@ -238,7 +244,15 @@ class VariantComponentsInput(BaseModel):
     unit: Optional[str] = None
 
 
+class VariantItemsInput(BaseModel):
+    id: str
+
+
 class VariantOrgsInput(BaseModel):
+    id: str
+
+
+class VariantRegionsInput(BaseModel):
     id: str
 
 

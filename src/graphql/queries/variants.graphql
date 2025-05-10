@@ -1,3 +1,24 @@
+query GetVariant(
+  $first: Int
+  $after: String
+) {
+  getVariants(first: $first, after: $after) {
+    edges {
+      node {
+        id
+        name
+        desc
+        created_at
+        updated_at
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
 mutation AddVariant(
   $input: CreateVariantInput!
 ) {

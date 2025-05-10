@@ -9,7 +9,7 @@ from .base_model import BaseModel
 
 
 class AddVariant(BaseModel):
-    create_variant: "AddVariantCreateVariant" = Field(alias="createVariant")
+    create_variant: Optional["AddVariantCreateVariant"] = Field(alias="createVariant")
 
 
 class AddVariantCreateVariant(BaseModel):

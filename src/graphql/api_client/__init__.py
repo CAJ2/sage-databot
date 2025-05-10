@@ -17,6 +17,13 @@ from .exceptions import (
     GraphQLClientInvalidResponseError,
 )
 from .get_root_category import GetRootCategory, GetRootCategoryRootCategory
+from .get_variant import (
+    GetVariant,
+    GetVariantGetVariants,
+    GetVariantGetVariantsEdges,
+    GetVariantGetVariantsEdgesNode,
+    GetVariantGetVariantsPageInfo,
+)
 from .input_types import (
     ComponentMaterialInput,
     ComponentRegionInput,
@@ -39,7 +46,9 @@ from .input_types import (
     UpdateTagDefinitionInput,
     UpdateVariantInput,
     VariantComponentsInput,
+    VariantItemsInput,
     VariantOrgsInput,
+    VariantRegionsInput,
     VariantTagsInput,
 )
 
@@ -65,6 +74,11 @@ __all__ = [
     "CreateVariantInput",
     "GetRootCategory",
     "GetRootCategoryRootCategory",
+    "GetVariant",
+    "GetVariantGetVariants",
+    "GetVariantGetVariantsEdges",
+    "GetVariantGetVariantsEdgesNode",
+    "GetVariantGetVariantsPageInfo",
     "GraphQLClientError",
     "GraphQLClientGraphQLError",
     "GraphQLClientGraphQLMultiError",
@@ -83,6 +97,8 @@ __all__ = [
     "UpdateVariantInput",
     "Upload",
     "VariantComponentsInput",
+    "VariantItemsInput",
     "VariantOrgsInput",
+    "VariantRegionsInput",
     "VariantTagsInput",
 ]
