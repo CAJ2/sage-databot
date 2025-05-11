@@ -32,3 +32,17 @@ mutation AddVariant(
     }
   }
 }
+
+mutation UpdateVariant(
+  $input: UpdateVariantInput!
+) {
+  updateVariant(input: $input) {
+    variant {
+      id
+      name
+      desc
+      created_at
+      updated_at
+    }
+  }
+}

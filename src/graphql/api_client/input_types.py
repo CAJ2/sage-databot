@@ -115,9 +115,11 @@ class CreateVariantInput(BaseModel):
     code: Optional[str] = None
     components: Optional[List["VariantComponentsInput"]] = None
     desc: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = None
     items: Optional[List["VariantItemsInput"]] = None
     lang: Optional[str] = None
-    name: str
+    name: Optional[str] = None
+    name_tr: Optional[List["TranslatedInput"]] = None
     orgs: Optional[List["VariantOrgsInput"]] = None
     region_id: Optional[str] = None
     regions: Optional[List["VariantRegionsInput"]] = None
@@ -132,6 +134,12 @@ class ItemCategoriesInput(BaseModel):
 class ItemTagsInput(BaseModel):
     id: str
     meta: Optional[Any] = None
+
+
+class TranslatedInput(BaseModel):
+    auto: bool = False
+    lang: str
+    text: Optional[str] = None
 
 
 class UpdateChangeInput(BaseModel):
@@ -226,9 +234,11 @@ class UpdateVariantInput(BaseModel):
     change_id: Optional[str] = None
     code: Optional[str] = None
     desc: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = None
     id: str
     lang: Optional[str] = None
     name: Optional[str] = None
+    name_tr: Optional[List["TranslatedInput"]] = None
     region_id: Optional[str] = None
     remove_components: Optional[List["VariantComponentsInput"]] = None
     remove_items: Optional[List["VariantItemsInput"]] = None

@@ -38,6 +38,7 @@ from .input_types import (
     CreateVariantInput,
     ItemCategoriesInput,
     ItemTagsInput,
+    TranslatedInput,
     UpdateChangeInput,
     UpdateComponentInput,
     UpdateItemInput,
@@ -50,6 +51,11 @@ from .input_types import (
     VariantOrgsInput,
     VariantRegionsInput,
     VariantTagsInput,
+)
+from .update_variant import (
+    UpdateVariant,
+    UpdateVariantUpdateVariant,
+    UpdateVariantUpdateVariantVariant,
 )
 
 __all__ = [
@@ -88,13 +94,17 @@ __all__ = [
     "ItemTagsInput",
     "SourceType",
     "TagType",
+    "TranslatedInput",
     "UpdateChangeInput",
     "UpdateComponentInput",
     "UpdateItemInput",
     "UpdateProcessInput",
     "UpdateSourceInput",
     "UpdateTagDefinitionInput",
+    "UpdateVariant",
     "UpdateVariantInput",
+    "UpdateVariantUpdateVariant",
+    "UpdateVariantUpdateVariantVariant",
     "Upload",
     "VariantComponentsInput",
     "VariantItemsInput",

@@ -8,7 +8,8 @@ from .base_client import BaseClient
 from .base_model import UNSET, UnsetType
 from .get_root_category import GetRootCategory
 from .get_variant import GetVariant
-from .input_types import CreateVariantInput
+from .input_types import CreateVariantInput, UpdateVariantInput
+from .update_variant import UpdateVariant
 
 
 def gql(q: str) -> str:
@@ -89,3 +90,26 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return AddVariant.model_validate(data)
+
+    def update_variant(self, input: UpdateVariantInput, **kwargs: Any) -> UpdateVariant:
+        query = gql(
+            """
+            mutation UpdateVariant($input: UpdateVariantInput!) {
+              updateVariant(input: $input) {
+                variant {
+                  id
+                  name
+                  desc
+                  created_at
+                  updated_at
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateVariant", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateVariant.model_validate(data)
