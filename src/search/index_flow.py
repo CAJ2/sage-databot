@@ -179,6 +179,51 @@ def index_categories(
     meili.index("categories").add_documents(docs)
 
 
+def index_variants(
+    crdb: SqlAlchemyConnector,
+    meili: meilisearch.Client,
+):
+    """
+    Index the variants in Meilisearch.
+    """
+    log = get_logger()
+    df = export_table(
+        crdb,
+        "public.variants",
+        cols='id, updated_at, name::string, "desc"::string, code',
+    )
+    log.info(f"Exported {df.height} rows from public.variants")
+    log.info(f"Columns: {df.describe()}")
+    df = df.cast({pl.Datetime: pl.String})
+    docs = df.to_dicts()
+    for doc in docs:
+        name_json = json.loads(doc["name"])
+        for lang, name in name_json.items():
+            try:
+                language = iso639.Language.match(lang.split(";")[0])
+                if language.part1:
+                    lang = language.part1
+                else:
+                    lang = language.part3
+            except Exception:
+                continue
+            doc[f"name_{lang}"] = name
+        del doc["name"]
+        desc_json = json.loads(doc["desc"] or "{}")
+        for lang, desc in desc_json.items():
+            try:
+                language = iso639.Language.match(lang.split(";")[0])
+                if language.part1:
+                    lang = language.part1
+                else:
+                    lang = language.part3
+            except Exception:
+                continue
+            doc[f"desc_{lang}"] = desc
+        del doc["desc"]
+    meili.index("variants").add_documents(docs)
+
+
 def index_materials(
     crdb: SqlAlchemyConnector,
     meili: meilisearch.Client,
@@ -279,7 +324,7 @@ def search_index_import(clear: bool = False):
     index_orgs(crdb, meili)
     index_categories(crdb, meili)
     # index_items(crdb, meili)
-    # index_variants(crdb, meili)
+    index_variants(crdb, meili)
     # index_components(crdb, meili)
     index_materials(crdb, meili)
 

@@ -26,8 +26,8 @@ def import_off():
     df = pl.scan_parquet(fpath)
 
     log.info(f"Columns: {df.collect_schema().names()}")
-    # Filter by products that have packaging
-    df = df.filter(pl.col("packagings").ne([]))
+    # Filter by products from Sweden
+    df = df.filter(pl.col("countries_tags").list.contains("en:sweden"))
     log.info(
         f"Filtered {df.select(pl.col('code')).count().collect()} products with packaging tags"
     )
