@@ -74,6 +74,20 @@ class CreateItemInput(BaseModel):
     tags: Optional[List["ItemTagsInput"]] = None
 
 
+class CreateOrgInput(BaseModel):
+    add_sources: Optional[List[str]] = None
+    apply: Optional[bool] = None
+    avatar_url: Optional[str] = None
+    change: Optional["CreateChangeInput"] = None
+    change_id: Optional[str] = None
+    desc: Optional[str] = None
+    lang: Optional[str] = None
+    name: str
+    remove_sources: Optional[List[str]] = None
+    slug: str
+    website_url: Optional[str] = None
+
+
 class CreateProcessInput(BaseModel):
     add_sources: Optional[List[str]] = None
     apply: Optional[bool] = None
@@ -186,6 +200,21 @@ class UpdateItemInput(BaseModel):
     remove_tags: Optional[List["ItemTagsInput"]] = None
 
 
+class UpdateOrgInput(BaseModel):
+    add_sources: Optional[List[str]] = None
+    apply: Optional[bool] = None
+    avatar_url: Optional[str] = None
+    change: Optional["CreateChangeInput"] = None
+    change_id: Optional[str] = None
+    desc: Optional[str] = None
+    id: str
+    lang: Optional[str] = None
+    name: Optional[str] = None
+    remove_sources: Optional[List[str]] = None
+    slug: Optional[str] = None
+    website_url: Optional[str] = None
+
+
 class UpdateProcessInput(BaseModel):
     add_sources: Optional[List[str]] = None
     apply: Optional[bool] = None
@@ -274,9 +303,11 @@ class VariantTagsInput(BaseModel):
 CreateCategoryInput.model_rebuild()
 CreateComponentInput.model_rebuild()
 CreateItemInput.model_rebuild()
+CreateOrgInput.model_rebuild()
 CreateProcessInput.model_rebuild()
 CreateVariantInput.model_rebuild()
 UpdateComponentInput.model_rebuild()
 UpdateItemInput.model_rebuild()
+UpdateOrgInput.model_rebuild()
 UpdateProcessInput.model_rebuild()
 UpdateVariantInput.model_rebuild()

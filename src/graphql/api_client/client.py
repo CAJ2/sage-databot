@@ -3,12 +3,20 @@
 
 from typing import Any, Dict, Optional, Union
 
+from .add_org import AddOrg
 from .add_variant import AddVariant
 from .base_client import BaseClient
 from .base_model import UNSET, UnsetType
+from .get_org import GetOrg
 from .get_root_category import GetRootCategory
 from .get_variant import GetVariant
-from .input_types import CreateVariantInput, UpdateVariantInput
+from .input_types import (
+    CreateOrgInput,
+    CreateVariantInput,
+    UpdateOrgInput,
+    UpdateVariantInput,
+)
+from .update_org import UpdateOrg
 from .update_variant import UpdateVariant
 
 
@@ -33,6 +41,70 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return GetRootCategory.model_validate(data)
+
+    def get_org(self, org_id: str, **kwargs: Any) -> GetOrg:
+        query = gql(
+            """
+            query GetOrg($orgId: ID!) {
+              getOrg(id: $orgId) {
+                id
+                name
+                desc
+                slug
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"orgId": org_id}
+        response = self.execute(
+            query=query, operation_name="GetOrg", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return GetOrg.model_validate(data)
+
+    def add_org(self, input: CreateOrgInput, **kwargs: Any) -> AddOrg:
+        query = gql(
+            """
+            mutation AddOrg($input: CreateOrgInput!) {
+              createOrg(input: $input) {
+                org {
+                  id
+                  name
+                  desc
+                  slug
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="AddOrg", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return AddOrg.model_validate(data)
+
+    def update_org(self, input: UpdateOrgInput, **kwargs: Any) -> UpdateOrg:
+        query = gql(
+            """
+            mutation UpdateOrg($input: UpdateOrgInput!) {
+              updateOrg(input: $input) {
+                org {
+                  id
+                  name
+                  desc
+                  slug
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateOrg", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateOrg.model_validate(data)
 
     def get_variant(
         self,

@@ -1,0 +1,34 @@
+query GetOrg($orgId: ID!) {
+  getOrg(id: $orgId) {
+    id
+    name
+    desc
+    slug
+  }
+}
+
+mutation AddOrg(
+  $input: CreateOrgInput!
+) {
+  createOrg(input: $input) {
+    org {
+      id
+      name
+      desc
+      slug
+    }
+  }
+}
+
+mutation UpdateOrg(
+  $input: UpdateOrgInput!
+) {
+  updateOrg(input: $input) {
+    org {
+      id
+      name
+      desc
+      slug
+    }
+  }
+}
