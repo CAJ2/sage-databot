@@ -36,6 +36,9 @@ dependencies = [
     "ariadne-codegen>=0.14.0",
     "meilisearch>=0.34.1",
     "stopwordsiso>=0.6.1",
+    "langchain>=0.3.25",
+    "langchain-ollama>=0.3.2",
+    "jinja2>=3.1.6",
 ]
 
 [tool.ariadne-codegen]
