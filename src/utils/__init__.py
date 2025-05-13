@@ -1,4 +1,5 @@
 import os
+import re
 from urllib.parse import urlparse
 from prefect.variables import Variable
 from prefect_aws import AwsCredentials, S3Bucket
@@ -72,3 +73,11 @@ def download_cache_file(basepath_var: str, url: str, subdir: str = "") -> str:
             log.info(f"File {filepath} already exists, skipping download.")
 
     return filepath
+
+
+def slugify(s):
+    s = s.lower().strip()
+    s = re.sub(r"[^\w\s-]", "", s)
+    s = re.sub(r"[\s_-]+", "-", s)
+    s = re.sub(r"^-+|-+$", "", s)
+    return s

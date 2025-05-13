@@ -6,9 +6,17 @@ from prefect_sqlalchemy import SqlAlchemyConnector
 import json
 import httpx
 import time
+import meilisearch
 
-from src.graphql.api_client.client import Client, CreateVariantInput, UpdateVariantInput
+from src.graphql.api_client.client import (
+    Client,
+    CreateVariantInput,
+    UpdateVariantInput,
+    CreateOrgInput,
+    UpdateOrgInput,
+)
 from src.utils.logging.loggers import get_logger
+from src.utils import slugify
 from src.utils.db.crdb import create_polars_uri, db_write_dataframe
 
 
@@ -22,6 +30,11 @@ def off_variants_flow():
 
     # Load the data from the database
     crdb = SqlAlchemyConnector.load("crdb-sage")
+
+    # Connect to Meilisearch
+    meili = meilisearch.Client(
+        Variable.get("meilisearch", default="http://localhost:7700"),
+    )
 
     # Load the databot user
     user = crdb.fetch_one(
@@ -72,6 +85,9 @@ def off_variants_flow():
             f"SELECT * FROM databot.off_products WHERE id > '{cursor}' LIMIT {ITER_SIZE}",
         )
         off_df = pl.from_records(off_cur)
+        if off_df.is_empty():
+            log.info("No more data to process.")
+            break
         off_cur = None
         start_cursor = cursor
         cursor = off_df.select(pl.col("id")).tail(1).to_series().item()
@@ -87,9 +103,6 @@ def off_variants_flow():
         )
         variants_df = pl.from_records(variants_cur)
         variants_cur = None
-        if off_df.is_empty():
-            log.info("No more data to process.")
-            break
 
         log.info(
             f"Processing {off_df.height} rows from databot.off_variants and {variants_df.height} rows from public.external_sources"
@@ -108,7 +121,7 @@ def off_variants_flow():
             # Format name translations
             name_json = json.loads(row["product_name"])
             name_list: dict = name_json["product_name"]
-            log.info(f"Name list: {name_list}")
+            log.debug(f"Product: {row['id']} {name_list}")
             if len(name_list) == 0:
                 log.warning(f"No name translations found for {row['id']}")
                 continue
@@ -162,12 +175,40 @@ def off_variants_flow():
             if len(origins_tag) > 0 and origins_def:
                 tags.append({"id": origins_def, "meta": origins_tag})
 
+            # Find and possibly create orgs
+            if row["brands"]:
+                brands = row["brands"].split(",")
+                orgs = []
+                for brand in brands:
+                    brand = brand.strip()
+                    matching_orgs = meili.index("orgs").search(
+                        brand, {"rankingScoreThreshold": 0.5, "limit": 1}
+                    )
+                    if len(matching_orgs["hits"]) > 0:
+                        org = matching_orgs["hits"][0]
+                        # Update the org
+                        log.info(f"Matching orgs: {matching_orgs['hits']}")
+                        orgs.append({"id": org["id"]})
+                    else:
+                        # Create a new org
+                        org = CreateOrgInput(name=brand, slug=slugify(brand))
+                        try:
+                            op = client.add_org(org)
+                        except Exception as e:
+                            log.debug(f"Brand search: {brand}")
+                            log.error(f"Failed to create org: {e}")
+                            time.sleep(0.1)
+                            continue
+                        time.sleep(0.1)
+                        orgs.append({"id": op.create_org.org.id})
+
             if variant_id:
                 # Update the variant
                 input = UpdateVariantInput(id=variant_id)
                 input.name_tr = input_names
                 input.code = code
                 input.add_tags = tags
+                input.add_orgs = orgs
                 op = client.update_variant(input)
                 time.sleep(0.1)
                 continue
@@ -177,6 +218,7 @@ def off_variants_flow():
             input.code = code
             input.tags = tags
             input.add_sources = [off_source_id]
+            input.orgs = orgs
             op = client.add_variant(input)
             crdb.execute(
                 f"INSERT INTO public.external_sources (source, source_id, variant_id) VALUES ('OFF', '{row['id'].removeprefix('off_')}', '{op.create_variant.variant.id}')"
