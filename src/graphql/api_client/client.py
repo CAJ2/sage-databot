@@ -3,6 +3,7 @@
 
 from typing import Any, Dict, Optional, Union
 
+from .add_item import AddItem
 from .add_org import AddOrg
 from .add_variant import AddVariant
 from .base_client import BaseClient
@@ -11,11 +12,14 @@ from .get_org import GetOrg
 from .get_root_category import GetRootCategory
 from .get_variant import GetVariant
 from .input_types import (
+    CreateItemInput,
     CreateOrgInput,
     CreateVariantInput,
+    UpdateItemInput,
     UpdateOrgInput,
     UpdateVariantInput,
 )
+from .update_item import UpdateItem
 from .update_org import UpdateOrg
 from .update_variant import UpdateVariant
 
@@ -41,6 +45,48 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return GetRootCategory.model_validate(data)
+
+    def add_item(self, input: CreateItemInput, **kwargs: Any) -> AddItem:
+        query = gql(
+            """
+            mutation AddItem($input: CreateItemInput!) {
+              createItem(input: $input) {
+                item {
+                  id
+                  name
+                  desc
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="AddItem", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return AddItem.model_validate(data)
+
+    def update_item(self, input: UpdateItemInput, **kwargs: Any) -> UpdateItem:
+        query = gql(
+            """
+            mutation UpdateItem($input: UpdateItemInput!) {
+              updateItem(input: $input) {
+                item {
+                  id
+                  name
+                  desc
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateItem", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateItem.model_validate(data)
 
     def get_org(self, org_id: str, **kwargs: Any) -> GetOrg:
         query = gql(

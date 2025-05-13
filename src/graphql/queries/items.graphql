@@ -1,0 +1,23 @@
+mutation AddItem(
+  $input: CreateItemInput!
+) {
+  createItem(input: $input) {
+    item {
+      id
+      name
+      desc
+    }
+  }
+}
+
+mutation UpdateItem(
+  $input: UpdateItemInput!
+) {
+  updateItem(input: $input) {
+    item {
+      id
+      name
+      desc
+    }
+  }
+}
