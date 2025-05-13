@@ -9,6 +9,7 @@ import iso639
 import argparse
 import copy
 
+from src.cli import setup_cli
 from src.utils.logging.loggers import get_logger
 
 index_settings = {
@@ -270,7 +271,7 @@ def index_materials(
 
 
 @flow
-def search_index_import(clear: bool = False):
+def search_index_import(args: argparse.Namespace):
     """
     Import all database data into Meilisearch indexes.
     """
@@ -285,60 +286,77 @@ def search_index_import(clear: bool = False):
     indexes = meili.get_indexes()
     index_uids = [index.uid for index in indexes["results"]]
     log.info(f"Meilisearch indexes: {index_uids}")
-    if clear:
-        log.info("Clearing all indexes")
-        for index in index_uids:
-            meili.index(index).delete()
-        index_uids = []
-    # Region index
-    if "regions" not in index_uids:
-        check_create_index(
-            meili,
-            "regions",
-            {
-                "filterableAttributes": ["placetype"],
-            },
-        )
-    # Org index
-    if "orgs" not in index_uids:
-        check_create_index(meili, "orgs", {"searchableAttributes": ["name", "desc_*"]})
-    # Category index
-    if "categories" not in index_uids:
-        check_create_index(meili, "categories")
+
+    if not args.index or "regions" in args.index:
+        # Region index
+        if "regions" not in index_uids:
+            check_create_index(
+                meili,
+                "regions",
+                {
+                    "filterableAttributes": ["placetype"],
+                },
+            )
+        index_regions(crdb, meili)
+    if not args.index or "orgs" in args.index:
+        # Org index
+        if args.clear:
+            log.info("Clearing orgs index")
+            meili.index("orgs").delete()
+        if "orgs" not in index_uids:
+            check_create_index(
+                meili, "orgs", {"searchableAttributes": ["name", "desc_*"]}
+            )
+        index_orgs(crdb, meili)
+    if not args.index or "categories" in args.index:
+        # Category index
+        if args.clear:
+            log.info("Clearing categories index")
+            meili.index("categories").delete()
+        if "categories" not in index_uids:
+            check_create_index(meili, "categories")
+        index_categories(crdb, meili)
+    # if not args.index or "items" in args.index:
     # Item index
-    if "items" not in index_uids:
-        check_create_index(meili, "items")
-    # Variant index
-    if "variants" not in index_uids:
-        check_create_index(meili, "variants")
+    # if "items" not in index_uids:
+    #     check_create_index(meili, "items")
+    #     index_items(crdb, meili)
+    if not args.index or "variants" in args.index:
+        # Variant index
+        if args.clear:
+            log.info("Clearing variants index")
+            meili.index("variants").delete()
+        if "variants" not in index_uids:
+            check_create_index(meili, "variants")
+        index_variants(crdb, meili)
+    # if not args.index or "components" in args.index:
     # Component index
-    if "components" not in index_uids:
-        check_create_index(meili, "components")
-    # Material index
-    if "materials" not in index_uids:
-        check_create_index(meili, "materials")
-
-    log.info("Created/verified indexes")
-
-    index_regions(crdb, meili)
-    index_orgs(crdb, meili)
-    index_categories(crdb, meili)
-    # index_items(crdb, meili)
-    index_variants(crdb, meili)
-    # index_components(crdb, meili)
-    index_materials(crdb, meili)
+    # if "components" not in index_uids:
+    #     check_create_index(meili, "components")
+    #     index_components(crdb, meili)
+    if not args.index or "materials" in args.index:
+        # Material index
+        if args.clear:
+            log.info("Clearing materials index")
+            meili.index("materials").delete()
+        if "materials" not in index_uids:
+            check_create_index(meili, "materials")
+        index_materials(crdb, meili)
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
 
-    load_dotenv()
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--clear",
-        action="store_true",
-        default=False,
-        help="Clear all indexes before importing",
-    )
-    args = parser.parse_args()
-    search_index_import(args.clear)
+    def args(parser):
+        parser.add_argument(
+            "--clear",
+            action="store_true",
+            default=False,
+            help="Clear all indexes before importing",
+        )
+        parser.add_argument(
+            "index",
+            nargs="+",
+            help="Select a specific index to import",
+        )
+
+    setup_cli(search_index_import, args)
