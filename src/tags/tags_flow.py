@@ -4,6 +4,7 @@ import json
 from jsonschema import Draft202012Validator
 
 import src.tags.variant_tags as variant_tags
+import src.tags.component_tags as component_tags
 
 
 @flow
@@ -13,7 +14,9 @@ def update_db_tags():
     """
     crdb = SqlAlchemyConnector.load("crdb-sage")
 
-    all_tags = variant_tags.tags
+    all_tags = []
+    for tags in [variant_tags.tags, component_tags.tags]:
+        all_tags.extend(tags)
 
     # Iterate over each tag and upsert it into the database
     for tag in all_tags:

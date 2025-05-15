@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {},
+  "unevaluatedProperties": false,
+  "$defs": {
+    "tr": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]{2}-?([A-Z]{2})?(;[a-z=]+)*$": {
+          "type": "string"
+        }
+      },
+      "minProperties": 1,
+      "unevaluatedProperties": false
+    }
+  }
+}
