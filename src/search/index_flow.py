@@ -139,6 +139,7 @@ def index_categories(
     log.info(f"Exported {df.height} rows from public.categories")
     log.info(f"Columns: {df.describe()}")
     df = df.cast({pl.Datetime: pl.String})
+    df = df.filter(pl.col("id").ne("CATEGORY_ROOT"))
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
@@ -238,9 +239,15 @@ def index_materials(
         "public.materials",
         cols='id, name::string, "desc"::string, technical',
     )
+    tree_df = export_table(
+        crdb,
+        "public.material_tree",
+        cols="ancestor_id, descendant_id, depth",
+    )
     log.info(f"Exported {df.height} rows from public.materials")
     log.info(f"Columns: {df.describe()}")
     df = df.cast({pl.Datetime: pl.String})
+    df = df.filter(pl.col("id").ne("MATERIAL_ROOT"))
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
@@ -267,6 +274,20 @@ def index_materials(
                 continue
             doc[f"desc_{lang}"] = desc
         del doc["desc"]
+    for doc in docs:
+        # Load all descendants to technical materials
+        if not doc["technical"]:
+            doc["technical_descendants"] = []
+            tree_df_filtered = tree_df.filter(
+                (pl.col("ancestor_id") == doc["id"]) & (pl.col("depth") > 0)
+            )
+            for row in tree_df_filtered.iter_rows():
+                descendant_id = row[1]
+                for doc2 in docs:
+                    if doc2["id"] == descendant_id and doc2["technical"]:
+                        doc["technical_descendants"].append(
+                            [v for i, v in doc2.items() if i.startswith("name_")]
+                        )
     meili.index("materials").add_documents(docs)
 
 
