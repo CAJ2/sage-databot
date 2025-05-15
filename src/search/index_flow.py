@@ -6,7 +6,6 @@ import meilisearch
 from stopwordsiso import stopwords
 import json
 import iso639
-import argparse
 import copy
 
 from src.cli import setup_cli
