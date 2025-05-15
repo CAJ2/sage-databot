@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional, Union
 
 from .add_item import AddItem
 from .add_org import AddOrg
+from .add_source import AddSource
 from .add_variant import AddVariant
 from .base_client import BaseClient
 from .base_model import UNSET, UnsetType
@@ -14,13 +15,16 @@ from .get_variant import GetVariant
 from .input_types import (
     CreateItemInput,
     CreateOrgInput,
+    CreateSourceInput,
     CreateVariantInput,
     UpdateItemInput,
     UpdateOrgInput,
+    UpdateSourceInput,
     UpdateVariantInput,
 )
 from .update_item import UpdateItem
 from .update_org import UpdateOrg
+from .update_source import UpdateSource
 from .update_variant import UpdateVariant
 
 
@@ -151,6 +155,50 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return UpdateOrg.model_validate(data)
+
+    def add_source(self, input: CreateSourceInput, **kwargs: Any) -> AddSource:
+        query = gql(
+            """
+            mutation AddSource($input: CreateSourceInput!) {
+              createSource(input: $input) {
+                source {
+                  id
+                  type
+                  processed_at
+                  location
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="AddSource", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return AddSource.model_validate(data)
+
+    def update_source(self, input: UpdateSourceInput, **kwargs: Any) -> UpdateSource:
+        query = gql(
+            """
+            mutation UpdateSource($input: UpdateSourceInput!) {
+              updateSource(input: $input) {
+                source {
+                  id
+                  type
+                  processed_at
+                  location
+                }
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateSource", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateSource.model_validate(data)
 
     def get_variant(
         self,

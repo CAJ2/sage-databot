@@ -1,0 +1,21 @@
+mutation AddSource($input: CreateSourceInput!) {
+  createSource(input: $input) {
+    source {
+      id
+      type
+      processed_at
+      location
+    }
+  }
+}
+
+mutation UpdateSource($input: UpdateSourceInput!) {
+  updateSource(input: $input) {
+    source {
+      id
+      type
+      processed_at
+      location
+    }
+  }
+}

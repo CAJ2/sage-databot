@@ -235,7 +235,7 @@ type CreateProcessOutput {
 
 input CreateSourceInput {
   content: JSONObject
-  location: String!
+  location: String
   metadata: JSONObject
   type: SourceType!
 }

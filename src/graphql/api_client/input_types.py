@@ -107,7 +107,7 @@ class CreateProcessInput(BaseModel):
 
 class CreateSourceInput(BaseModel):
     content: Optional[Any] = None
-    location: str
+    location: Optional[str] = None
     metadata: Optional[Any] = None
     type: SourceType
 

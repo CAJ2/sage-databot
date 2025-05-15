@@ -2,6 +2,7 @@
 
 from .add_item import AddItem, AddItemCreateItem, AddItemCreateItemItem
 from .add_org import AddOrg, AddOrgCreateOrg, AddOrgCreateOrgOrg
+from .add_source import AddSource, AddSourceCreateSource, AddSourceCreateSourceSource
 from .add_variant import (
     AddVariant,
     AddVariantCreateVariant,
@@ -59,6 +60,11 @@ from .input_types import (
 )
 from .update_item import UpdateItem, UpdateItemUpdateItem, UpdateItemUpdateItemItem
 from .update_org import UpdateOrg, UpdateOrgUpdateOrg, UpdateOrgUpdateOrgOrg
+from .update_source import (
+    UpdateSource,
+    UpdateSourceUpdateSource,
+    UpdateSourceUpdateSourceSource,
+)
 from .update_variant import (
     UpdateVariant,
     UpdateVariantUpdateVariant,
@@ -72,6 +78,9 @@ __all__ = [
     "AddOrg",
     "AddOrgCreateOrg",
     "AddOrgCreateOrgOrg",
+    "AddSource",
+    "AddSourceCreateSource",
+    "AddSourceCreateSourceSource",
     "AddVariant",
     "AddVariantCreateVariant",
     "AddVariantCreateVariantVariant",
@@ -122,7 +131,10 @@ __all__ = [
     "UpdateOrgUpdateOrg",
     "UpdateOrgUpdateOrgOrg",
     "UpdateProcessInput",
+    "UpdateSource",
     "UpdateSourceInput",
+    "UpdateSourceUpdateSource",
+    "UpdateSourceUpdateSourceSource",
     "UpdateTagDefinitionInput",
     "UpdateVariant",
     "UpdateVariantInput",
