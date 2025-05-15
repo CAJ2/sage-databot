@@ -1,4 +1,4 @@
-id	name:en	name:sv;a	desc:en	desc:sv;a	source	technical
+id	name:en	name:sv;a	desc:en	desc:sv;a	source	technical	shape
 hXiDjMuPndtUrYMoZ9gmK	Glass	Glas	Transparent material used in windows and containers.	Transparent material used in windows and containers.	{}	false
 feOj7e2u13WImnCwadDce	Metal	Metall	A strong and durable material used in construction and tools.	En stark och hållbar material som används i konstruktion och verktyg.	{}	false
 Mn8q6PtaKnUgr54KErqWs	Plastic	Plast	A synthetic material used in a variety of products.	Ett syntetiskt material som används i en mängd olika produkter.	{}	false
@@ -21,10 +21,10 @@ iqgB50bl_IiJQgK4MqYVg	Iron	Järn	A strong metal used in construction and manufac
 _7TSxNdkGGVwG3tlfSYEB	Aluminium Can	Aluminiumdosa	A container made of aluminum, often used for beverages.	En behållare gjord av aluminium, ofta används för drycker.	{}	false
 -DD3GzHWUP_ThLvBOz5fM	Aluminium Composite	Aluminiumkomposit	A material made from two layers of aluminum with a non-aluminum core.	Ett material gjort av två lager aluminium med en icke-aluminium kärna.	{}	false
 1FNAeVS8t5tSu04yAbpRE	Stainless Steel	 Rostfritt Stål	A corrosion-resistant alloy of iron, chromium, and nickel.	Ett korrosionsbeständigt legering av järn, krom och nickel.	{}	false
-Kvuft8qmnxtVmY-0GJvwE	Plastic Bag	Plastpåse	A flexible container made of plastic, often used for shopping.	En flexibel behållare gjord av plast, ofta används för shopping.	{}	false
-z2_GHMD95CsLyLsTPEEZD	Plastic Bottle	Plastflaska	A container made of plastic, often used for beverages.	En behållare gjord av plast, ofta används för drycker.	{}	false
-kD4Ijpa4hViFcHwJ5PWrB	Plastic Container	Plastbehållare	A container made of plastic, often used for storage.	En behållare gjord av plast, ofta används för lagring.	{}	false
-ii9gx0eeFEt4zpL6_5RcO	Plastic Wrapping	Plastfolie	A thin sheet of plastic used for wrapping and sealing.	En tunn plastskiva som används för inslagning och försegling.	{}	false
+Kvuft8qmnxtVmY-0GJvwE	Plastic Bag	Plastpåse	A flexible container made of plastic, often used for shopping.	En flexibel behållare gjord av plast, ofta används för shopping.	{}	false	BAG
+z2_GHMD95CsLyLsTPEEZD	Plastic Bottle	Plastflaska	A container made of plastic, often used for beverages.	En behållare gjord av plast, ofta används för drycker.	{}	false	BOTTLE
+kD4Ijpa4hViFcHwJ5PWrB	Plastic Container	Plastbehållare	A container made of plastic, often used for storage.	En behållare gjord av plast, ofta används för lagring.	{}	false	BOX
+ii9gx0eeFEt4zpL6_5RcO	Plastic Wrapping	Plastfolie	A thin sheet of plastic used for wrapping and sealing.	En tunn plastskiva som används för inslagning och försegling.	{}	false	WRAP
 B3Yn3UvoLKjy9XRmvqzIN	Bioplastic	Bioplast	A type of plastic made from renewable biomass sources.	En typ av plast gjord av förnybara biomassa källor.	{}	false
 fDIiuZeFV8Spj97nX37HK	Composite Plastic	Kompositplast	A material made from a combination of plastics and other materials.	Ett material gjort av en kombination av plaster och andra material.	{}	false
 bQmbG2PMJjVUr1zNP7K_U	Polyethylene Terephthalate (PET)	Polyetylentereftalat	A type of plastic commonly used in bottles and containers.	En typ av plast som vanligtvis används i flaskor och behållare.	{}	true
@@ -39,11 +39,12 @@ dFSJ69G5f4jcNur-LmAth	Styrene Acrylonitrile (SAN)	Styrenakrylonitril	A type of p
 t0pHYe3xFbO9kRdHMtJcD	Polyacrylonitrile (PAN)	Polyakrylonitril	A type of plastic used in textiles and fibers.	En typ av plast som används i textilier och fibrer.	{}	true
 uhNURC4RphniosdbCDxas	Polylactic Acid (PLA)	Polylaktidsyra	A biodegradable plastic made from renewable resources.	En biologiskt nedbrytbar plast gjord av förnybara resurser.	{}	true
 LjBTuNMuDMs-HnNKJSjNO	Acrylonitrile Butadiene Styrene (ABS)	Acrylonitrilbutadienstyren	A type of plastic known for its toughness and impact resistance.	En typ av plast känd för sin hållbarhet och slagmotstånd.	{}	true
+8Ff4hlRsIi4iEPSRUxIzs	Polyvinylidene Chloride (PVDC)	Polyvinylidenklorid	A type of plastic used in food packaging.	En typ av plast som används i livsmedelsförpackningar.	{}	true
 PnbPJAMn02lUbex4N3qly	Cardboard	Kartong	A material made from compressed paper fibers, used for packaging.	Ett material gjort av komprimerade pappersfibrer, används för förpackning.	{}	false
 kylSeUUr-vU_grYWsTPmJ	Paperboard	Papperboard	A thicker type of paper used for packaging and crafts.	En tjockare typ av papper som används för förpackning och hantverk.	{}	false
 nXKeu3nubx4mmNMaDmPF3	Newspaper	Tidning	A type of paper used for printing news and information.	En typ av papper som används för att trycka nyheter och information.	{}	false
 Ie7p_n1IuxOq6B79TvlVu	Office Paper	Kontorspapper	A type of paper used for printing and writing.	En typ av papper som används för utskrift och skrivning.	{}	false
-Wt-R_sICe3dlw65YrgojO	Paper Cup	Papperskopp	A disposable cup made from paper, often used for beverages.	En engångskopp gjord av papper, ofta används för drycker.	{}	false
+Wt-R_sICe3dlw65YrgojO	Paper Cup	Papperskopp	A disposable cup made from paper, often used for beverages.	En engångskopp gjord av papper, ofta används för drycker.	{}	false	BIN
 suPILCCLyisP5MvsBCBqM	Paper Book	Pappersbok	A book made from paper, used for reading.	En bok gjord av papper, används för läsning.	{}	false
 h5tGzYMUkR29kAvaUAg4A	Paper Magazine	Pappersmagasin	A magazine made from paper, used for reading.	En tidning gjord av papper, används för läsning.	{}	false
 Q1nT_Cq2LOl4tDVbHwXnq	Composite Paper	Kompositpapper	A type of paper made from a combination of materials.	En typ av papper gjort av en kombination av material.	{}	false

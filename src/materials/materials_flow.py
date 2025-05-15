@@ -121,14 +121,15 @@ def materials_flow():
         VALUES ('MATERIAL_ROOT', NOW(), '{"xx": "Material Root"}', '{}', FALSE);
     """)
     crdb.execute("""
-        INSERT INTO public.materials (id, created_at, updated_at, name, "desc", source, technical)
-        SELECT id, NOW(), NOW(), name::JSONB, "desc"::JSONB, source::JSONB, technical::BOOLEAN
+        INSERT INTO public.materials (id, created_at, updated_at, name, "desc", source, technical, shape)
+        SELECT id, NOW(), NOW(), name::JSONB, "desc"::JSONB, source::JSONB, technical::BOOLEAN, shape
         FROM databot.materials_load
         ON CONFLICT (id) DO UPDATE
         SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
             "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
             source = EXCLUDED.source::JSONB,
             technical = EXCLUDED.technical::BOOLEAN,
+            shape = EXCLUDED.shape,
             updated_at = NOW();
     """)
     crdb.execute("DROP TABLE IF EXISTS databot.materials_load;")
