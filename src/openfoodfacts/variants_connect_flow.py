@@ -17,7 +17,7 @@ from src.utils.extract import extract_any_json
 
 
 @flow
-def variants_connect_flow(args):
+def variants_connect_flow(**kwargs):
     """
     Scans the imported variants and
     creates/matches items and components.

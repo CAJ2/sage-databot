@@ -292,7 +292,7 @@ def index_materials(
 
 
 @flow
-def search_index_import(args: argparse.Namespace):
+def search_index_import(index: list[str], clear: bool, **kwargs):
     """
     Import all database data into Meilisearch indexes.
     """
@@ -308,7 +308,7 @@ def search_index_import(args: argparse.Namespace):
     index_uids = [index.uid for index in indexes["results"]]
     log.info(f"Meilisearch indexes: {index_uids}")
 
-    if not args.index or "regions" in args.index:
+    if not index or "regions" in index:
         # Region index
         if "regions" not in index_uids:
             check_create_index(
@@ -319,9 +319,9 @@ def search_index_import(args: argparse.Namespace):
                 },
             )
         index_regions(crdb, meili)
-    if not args.index or "orgs" in args.index:
+    if not index or "orgs" in index:
         # Org index
-        if args.clear:
+        if clear:
             log.info("Clearing orgs index")
             meili.index("orgs").delete()
         if "orgs" not in index_uids:
@@ -329,35 +329,35 @@ def search_index_import(args: argparse.Namespace):
                 meili, "orgs", {"searchableAttributes": ["name", "desc_*"]}
             )
         index_orgs(crdb, meili)
-    if not args.index or "categories" in args.index:
+    if not index or "categories" in index:
         # Category index
-        if args.clear:
+        if clear:
             log.info("Clearing categories index")
             meili.index("categories").delete()
         if "categories" not in index_uids:
             check_create_index(meili, "categories")
         index_categories(crdb, meili)
-    # if not args.index or "items" in args.index:
+    # if not index or "items" in index:
     # Item index
     # if "items" not in index_uids:
     #     check_create_index(meili, "items")
     #     index_items(crdb, meili)
-    if not args.index or "variants" in args.index:
+    if not index or "variants" in index:
         # Variant index
-        if args.clear:
+        if clear:
             log.info("Clearing variants index")
             meili.index("variants").delete()
         if "variants" not in index_uids:
             check_create_index(meili, "variants")
         index_variants(crdb, meili)
-    # if not args.index or "components" in args.index:
+    # if not index or "components" in index:
     # Component index
     # if "components" not in index_uids:
     #     check_create_index(meili, "components")
     #     index_components(crdb, meili)
-    if not args.index or "materials" in args.index:
+    if not index or "materials" in index:
         # Material index
-        if args.clear:
+        if clear:
             log.info("Clearing materials index")
             meili.index("materials").delete()
         if "materials" not in index_uids:

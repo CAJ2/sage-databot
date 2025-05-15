@@ -15,4 +15,4 @@ def setup_cli(flow: Flow, setup_parser=None):
     if setup_parser is not None:
         setup_parser(parser)
     args = parser.parse_args()
-    flow(args)
+    flow(**vars(args))

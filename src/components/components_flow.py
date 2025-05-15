@@ -10,7 +10,7 @@ from src.utils.logging.loggers import get_logger
 
 
 @flow
-def components_flow(args):
+def components_flow(**kwargs):
     """
     This flow orchestrates the components pipeline.
     """
