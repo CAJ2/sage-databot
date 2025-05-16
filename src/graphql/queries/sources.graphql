@@ -1,3 +1,15 @@
+query GetSource($id: ID!) {
+  getSource(id: $id) {
+    id
+    type
+    processed_at
+    location
+    content
+    content_url
+    metadata
+  }
+}
+
 mutation AddSource($input: CreateSourceInput!) {
   createSource(input: $input) {
     source {

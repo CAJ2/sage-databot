@@ -11,6 +11,7 @@ from .base_client import BaseClient
 from .base_model import UNSET, UnsetType
 from .get_org import GetOrg
 from .get_root_category import GetRootCategory
+from .get_source import GetSource
 from .get_variant import GetVariant
 from .input_types import (
     CreateItemInput,
@@ -155,6 +156,29 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return UpdateOrg.model_validate(data)
+
+    def get_source(self, id: str, **kwargs: Any) -> GetSource:
+        query = gql(
+            """
+            query GetSource($id: ID!) {
+              getSource(id: $id) {
+                id
+                type
+                processed_at
+                location
+                content
+                content_url
+                metadata
+              }
+            }
+            """
+        )
+        variables: Dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query, operation_name="GetSource", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return GetSource.model_validate(data)
 
     def add_source(self, input: CreateSourceInput, **kwargs: Any) -> AddSource:
         query = gql(
