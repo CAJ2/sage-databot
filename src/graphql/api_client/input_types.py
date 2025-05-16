@@ -107,6 +107,7 @@ class CreateProcessInput(BaseModel):
 
 class CreateSourceInput(BaseModel):
     content: Optional[Any] = None
+    content_url: Optional[str] = None
     location: Optional[str] = None
     metadata: Optional[Any] = None
     type: SourceType
@@ -235,6 +236,7 @@ class UpdateProcessInput(BaseModel):
 
 class UpdateSourceInput(BaseModel):
     content: Optional[Any] = None
+    content_url: Optional[str] = None
     id: str
     location: Optional[str] = None
     metadata: Optional[Any] = None
