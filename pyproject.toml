@@ -8,7 +8,6 @@ dependencies = [
     "pip>=25.0.1",
     "scrapy>=2.12.0",
     "spacy>=3.8.4",
-    "en_core_web_trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.8.0/en_core_web_trf-3.8.0-py3-none-any.whl",
     "sqlalchemy>=2.0.38",
     "sqlalchemy-cockroachdb>=2.0.2",
     "psycopg2>=2.9.10",
@@ -39,6 +38,8 @@ dependencies = [
     "langchain>=0.3.25",
     "langchain-ollama>=0.3.2",
     "jinja2>=3.1.6",
+    "unstructured[all-docs]>=0.17.2",
+    "fasttext>=0.9.3",
 ]
 
 [tool.ariadne-codegen]
