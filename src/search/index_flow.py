@@ -2,6 +2,7 @@ from prefect import flow
 from prefect.variables import Variable
 from prefect_sqlalchemy import SqlAlchemyConnector
 import polars as pl
+import polars.selectors as cs
 import meilisearch
 from stopwordsiso import stopwords
 import json
@@ -51,6 +52,23 @@ def export_table(
     return df
 
 
+def check_lang(lang: str):
+    """
+    Check if the language is valid.
+    """
+    try:
+        if lang == "xx":
+            return lang
+        language = iso639.Language.match(lang.split("-")[0])
+        if language.part1:
+            lang = language.part1
+        else:
+            lang = language.part3
+    except Exception:
+        return None
+    return lang
+
+
 def index_regions(
     crdb: SqlAlchemyConnector,
     meili: meilisearch.Client,
@@ -71,13 +89,8 @@ def index_regions(
     for doc in docs:
         name_json = json.loads(doc["name"])
         for lang, name in name_json.items():
-            try:
-                language = iso639.Language.from_part3(lang.split("-")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"name_{lang}"] = name
         del doc["name"]
@@ -109,13 +122,8 @@ def index_orgs(
     for doc in docs:
         desc_json = json.loads(doc["desc"])
         for lang, desc in desc_json.items():
-            try:
-                language = iso639.Language.match(lang.split("-")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"desc_{lang}"] = desc
         del doc["desc"]
@@ -143,37 +151,22 @@ def index_categories(
     for doc in docs:
         name_json = json.loads(doc["name"])
         for lang, name in name_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"name_{lang}"] = name
         del doc["name"]
         desc_json = json.loads(doc["desc"] or "{}")
         for lang, desc in desc_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"desc_{lang}"] = desc
         del doc["desc"]
         desc_short_json = json.loads(doc["desc_short"] or "{}")
         for lang, desc in desc_short_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"desc_short_{lang}"] = desc
         del doc["desc_short"]
@@ -200,25 +193,15 @@ def index_variants(
     for doc in docs:
         name_json = json.loads(doc["name"])
         for lang, name in name_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"name_{lang}"] = name
         del doc["name"]
         desc_json = json.loads(doc["desc"] or "{}")
         for lang, desc in desc_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"desc_{lang}"] = desc
         del doc["desc"]
@@ -251,25 +234,15 @@ def index_materials(
     for doc in docs:
         name_json = json.loads(doc["name"])
         for lang, name in name_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"name_{lang}"] = name
         del doc["name"]
         desc_json = json.loads(doc["desc"] or "{}")
         for lang, desc in desc_json.items():
-            try:
-                language = iso639.Language.match(lang.split(";")[0])
-                if language.part1:
-                    lang = language.part1
-                else:
-                    lang = language.part3
-            except Exception:
+            lang = check_lang(lang)
+            if not lang:
                 continue
             doc[f"desc_{lang}"] = desc
         del doc["desc"]
@@ -288,6 +261,50 @@ def index_materials(
                             [v for i, v in doc2.items() if i.startswith("name_")]
                         )
     meili.index("materials").add_documents(docs)
+
+
+def index_places(
+    crdb: SqlAlchemyConnector,
+    meili: meilisearch.Client,
+):
+    """
+    Index the places in Meilisearch.
+    """
+    log = get_logger()
+    df = export_table(
+        crdb,
+        "public.places",
+        cols='id, updated_at, name::string, address::string, "desc"::string',
+    )
+    log.info(f"Exported {df.height} rows from public.places")
+    log.info(f"Columns: {df.describe()}")
+    df = df.cast({pl.Datetime: pl.String}).with_columns(cs.string().str.strip_chars())
+    docs = df.to_dicts()
+    for doc in docs:
+        name_json = json.loads(doc["name"])
+        for lang, name in name_json.items():
+            lang = check_lang(lang)
+            if not lang:
+                continue
+            doc[f"name_{lang}"] = name
+        del doc["name"]
+        if doc["address"].startswith(("None", "null", "NULL")):
+            doc["address"] = "{}"
+        address_json = json.loads(doc["address"] or "{}")
+        for lang, address in address_json.items():
+            lang = check_lang(lang)
+            if not lang:
+                continue
+            doc[f"address_{lang}"] = address
+        del doc["address"]
+        desc_json = json.loads(doc["desc"] or "{}")
+        for lang, desc in desc_json.items():
+            lang = check_lang(lang)
+            if not lang:
+                continue
+            doc[f"desc_{lang}"] = desc
+        del doc["desc"]
+    meili.index("places").add_documents(docs)
 
 
 @flow
@@ -362,6 +379,14 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
         if "materials" not in index_uids:
             check_create_index(meili, "materials")
         index_materials(crdb, meili)
+    if not index or "places" in index:
+        # Place index
+        if clear:
+            log.info("Clearing places index")
+            meili.index("places").delete()
+        if "places" not in index_uids:
+            check_create_index(meili, "places")
+        index_places(crdb, meili)
 
 
 if __name__ == "__main__":
