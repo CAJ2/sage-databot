@@ -12,6 +12,8 @@ import copy
 from src.cli import setup_cli
 from src.utils.logging.loggers import get_logger
 
+locales = ["en", "sv"]
+
 index_settings = {
     "rankingRules": [
         "words",
@@ -22,11 +24,10 @@ index_settings = {
         "exactness",
     ],
     "sortableAttributes": ["updated_at"],
-    "stopWords": list(stopwords(["en", "sv"])),
-    "localizedAttributes": [
-        {"locales": ["en"], "attributePatterns": ["*_en"]},
-        {"locales": ["sv"], "attributePatterns": ["*_sv"]},
-    ],
+    "stopWords": list(stopwords(locales)),
+    "localizedAttributes": list(
+        {"locales": [o], "attributePatterns": ["*." + o]} for o in locales
+    ),
 }
 
 
@@ -88,17 +89,9 @@ def index_regions(
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
-        for lang, name in name_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"name_{lang}"] = name
-        del doc["name"]
+        doc["name"] = name_json
         prop_json = json.loads(doc["properties"])
-        for prop, value in prop_json.items():
-            if prop == "wof:country":
-                doc[f"properties_{prop}"] = value
-        del doc["properties"]
+        doc["properties"] = prop_json
     meili.index("regions").add_documents(docs)
 
 
@@ -121,12 +114,7 @@ def index_orgs(
     docs = df.to_dicts()
     for doc in docs:
         desc_json = json.loads(doc["desc"])
-        for lang, desc in desc_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"desc_{lang}"] = desc
-        del doc["desc"]
+        doc["desc"] = desc_json
     meili.index("orgs").add_documents(docs)
 
 
@@ -150,26 +138,11 @@ def index_categories(
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
-        for lang, name in name_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"name_{lang}"] = name
-        del doc["name"]
+        doc["name"] = name_json
         desc_json = json.loads(doc["desc"] or "{}")
-        for lang, desc in desc_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"desc_{lang}"] = desc
-        del doc["desc"]
+        doc["desc"] = desc_json
         desc_short_json = json.loads(doc["desc_short"] or "{}")
-        for lang, desc in desc_short_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"desc_short_{lang}"] = desc
-        del doc["desc_short"]
+        doc["desc_short"] = desc_short_json
     meili.index("categories").add_documents(docs)
 
 
@@ -192,19 +165,9 @@ def index_variants(
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
-        for lang, name in name_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"name_{lang}"] = name
-        del doc["name"]
+        doc["name"] = name_json
         desc_json = json.loads(doc["desc"] or "{}")
-        for lang, desc in desc_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"desc_{lang}"] = desc
-        del doc["desc"]
+        doc["desc"] = desc_json
     meili.index("variants").add_documents(docs)
 
 
@@ -233,33 +196,22 @@ def index_materials(
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
-        for lang, name in name_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"name_{lang}"] = name
-        del doc["name"]
+        doc["name"] = name_json
         desc_json = json.loads(doc["desc"] or "{}")
-        for lang, desc in desc_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"desc_{lang}"] = desc
-        del doc["desc"]
+        doc["desc"] = desc_json
     for doc in docs:
         # Load all descendants to technical materials
         if not doc["technical"]:
-            doc["technical_descendants"] = []
             tree_df_filtered = tree_df.filter(
                 (pl.col("ancestor_id") == doc["id"]) & (pl.col("depth") > 0)
             )
+            if tree_df_filtered.height > 0:
+                doc["technical_descendants"] = []
             for row in tree_df_filtered.iter_rows():
                 descendant_id = row[1]
                 for doc2 in docs:
                     if doc2["id"] == descendant_id and doc2["technical"]:
-                        doc["technical_descendants"].append(
-                            [v for i, v in doc2.items() if i.startswith("name_")]
-                        )
+                        doc["technical_descendants"].append(doc2["name"])
     meili.index("materials").add_documents(docs)
 
 
@@ -282,28 +234,13 @@ def index_places(
     docs = df.to_dicts()
     for doc in docs:
         name_json = json.loads(doc["name"])
-        for lang, name in name_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"name_{lang}"] = name
-        del doc["name"]
+        doc["name"] = name_json
         if doc["address"].startswith(("None", "null", "NULL")):
             doc["address"] = "{}"
         address_json = json.loads(doc["address"] or "{}")
-        for lang, address in address_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"address_{lang}"] = address
-        del doc["address"]
+        doc["address"] = address_json
         desc_json = json.loads(doc["desc"] or "{}")
-        for lang, desc in desc_json.items():
-            lang = check_lang(lang)
-            if not lang:
-                continue
-            doc[f"desc_{lang}"] = desc
-        del doc["desc"]
+        doc["desc"] = desc_json
     meili.index("places").add_documents(docs)
 
 
@@ -326,11 +263,16 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
 
     if not index or "regions" in index:
         # Region index
+        if clear:
+            log.info("Clearing regions index")
+            meili.index("regions").delete()
+            index_uids.remove("regions")
         if "regions" not in index_uids:
             check_create_index(
                 meili,
                 "regions",
                 {
+                    "searchableAttributes": ["name", "properties"],
                     "filterableAttributes": ["placetype"],
                 },
             )
@@ -340,9 +282,10 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
         if clear:
             log.info("Clearing orgs index")
             meili.index("orgs").delete()
+            index_uids.remove("orgs")
         if "orgs" not in index_uids:
             check_create_index(
-                meili, "orgs", {"searchableAttributes": ["name", "desc_*"]}
+                meili, "orgs", {"searchableAttributes": ["name", "desc"]}
             )
         index_orgs(crdb, meili)
     if not index or "categories" in index:
@@ -350,8 +293,13 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
         if clear:
             log.info("Clearing categories index")
             meili.index("categories").delete()
+            index_uids.remove("categories")
         if "categories" not in index_uids:
-            check_create_index(meili, "categories")
+            check_create_index(
+                meili,
+                "categories",
+                {"searchableAttributes": ["name", "desc_short", "desc"]},
+            )
         index_categories(crdb, meili)
     # if not index or "items" in index:
     # Item index
@@ -363,8 +311,11 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
         if clear:
             log.info("Clearing variants index")
             meili.index("variants").delete()
+            index_uids.remove("variants")
         if "variants" not in index_uids:
-            check_create_index(meili, "variants")
+            check_create_index(
+                meili, "variants", {"searchableAttributes": ["name", "desc", "code"]}
+            )
         index_variants(crdb, meili)
     # if not index or "components" in index:
     # Component index
@@ -376,16 +327,26 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
         if clear:
             log.info("Clearing materials index")
             meili.index("materials").delete()
+            index_uids.remove("materials")
         if "materials" not in index_uids:
-            check_create_index(meili, "materials")
+            check_create_index(
+                meili,
+                "materials",
+                {"searchableAttributes": ["name", "desc", "technical_descendants"]},
+            )
         index_materials(crdb, meili)
     if not index or "places" in index:
         # Place index
         if clear:
             log.info("Clearing places index")
             meili.index("places").delete()
+            index_uids.remove("places")
         if "places" not in index_uids:
-            check_create_index(meili, "places")
+            check_create_index(
+                meili,
+                "places",
+                {"searchableAttributes": ["name", "address", "desc"]},
+            )
         index_places(crdb, meili)
 
 
