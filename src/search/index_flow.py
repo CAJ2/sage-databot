@@ -255,6 +255,7 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
     # Connect to Meilisearch
     meili = meilisearch.Client(
         Variable.get("meilisearch", default="http://localhost:7700"),
+        Variable.get("meilisearch_api_key", default=None),
     )
 
     indexes = meili.get_indexes()
@@ -301,11 +302,13 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
                 {"searchableAttributes": ["name", "desc_short", "desc"]},
             )
         index_categories(crdb, meili)
-    # if not index or "items" in index:
-    # Item index
-    # if "items" not in index_uids:
-    #     check_create_index(meili, "items")
-    #     index_items(crdb, meili)
+    if not index or "items" in index:
+        # Item index
+        if "items" not in index_uids:
+            check_create_index(
+                meili, "items", {"searchableAttributes": ["name", "desc"]}
+            )
+        # index_items(crdb, meili)
     if not index or "variants" in index:
         # Variant index
         if clear:
@@ -317,11 +320,13 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
                 meili, "variants", {"searchableAttributes": ["name", "desc", "code"]}
             )
         index_variants(crdb, meili)
-    # if not index or "components" in index:
-    # Component index
-    # if "components" not in index_uids:
-    #     check_create_index(meili, "components")
-    #     index_components(crdb, meili)
+    if not index or "components" in index:
+        # Component index
+        if "components" not in index_uids:
+            check_create_index(
+                meili, "components", {"searchableAttributes": ["name", "desc"]}
+            )
+        # index_components(crdb, meili)
     if not index or "materials" in index:
         # Material index
         if clear:
