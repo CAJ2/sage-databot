@@ -81,7 +81,7 @@ def index_regions(
     df = export_table(
         crdb,
         "public.regions",
-        cols="id, name::string, properties::string, placetype",
+        cols="id, name::string, properties::string, placetype, admin_level",
     )
     log.info(f"Exported {df.height} rows from public.regions")
     log.info(f"Columns: {df.describe()}")
@@ -92,6 +92,10 @@ def index_regions(
         doc["name"] = name_json
         prop_json = json.loads(doc["properties"])
         doc["properties"] = prop_json
+        doc["_geo"] = {
+            "lat": prop_json["geom:latitude"],
+            "lng": prop_json["geom:longitude"],
+        }
     meili.index("regions").add_documents(docs)
 
 
@@ -275,6 +279,7 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
                 {
                     "searchableAttributes": ["name", "properties"],
                     "filterableAttributes": ["placetype"],
+                    "sortableAttributes": ["admin_level"],
                 },
             )
         index_regions(crdb, meili)
