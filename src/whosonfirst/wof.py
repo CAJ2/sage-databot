@@ -6,6 +6,27 @@ import polars as pl
 from src.utils.logging.loggers import get_logger
 from src.utils.db.crdb import create_polars_uri
 import bz2
+import json
+
+placetype_admin = [
+    ["continent", "1"],
+    ["empire", "1"],
+    ["dependency", "1"],
+    ["disputed", "1"],
+    ["macroregion", "1"],
+    ["marketarea", "1"],
+    ["country", "2"],
+    ["macrocounty", "4"],
+    ["macrohood", "4"],
+    ["microhood", "4"],
+    ["postalregion", "4"],
+    ["region", "4"],
+    ["county", "6"],
+    ["localadmin", "8"],
+    ["neighbourhood", "10"],
+    ["postalcode", "11"],
+    ["locality", "11"],
+]
 
 
 @task
@@ -52,7 +73,8 @@ def transform_whosonfirst(filepath: str):
     log = get_logger()
 
     names_df = pl.read_database_uri(
-        query="SELECT id, placetype, language, script, region, name FROM names WHERE privateuse = 'preferred'",
+        query="SELECT id, placetype, language, script, region, name FROM names WHERE privateuse = 'preferred' "
+        + f"AND placetype IN ({', '.join([f"'{i[0]}'" for i in placetype_admin])})",
         uri=f"sqlite:///{filepath}",
         engine="connectorx",
     )
@@ -76,6 +98,15 @@ def transform_whosonfirst(filepath: str):
     lang_df = lang_df.drop(pl.all().exclude(["id", "placetype", "name"]))
     lang_df = lang_df.with_columns(pl.col("name").struct.json_encode())
 
+    allowed_placetypes = [i[0] for i in placetype_admin]
+    replace_with = [i[1] for i in placetype_admin]
+    lang_df = lang_df.with_columns(
+        pl.col("placetype")
+        .str.replace_many(allowed_placetypes, replace_with)
+        .str.to_integer(strict=False)
+        .alias("admin_level")
+    )
+
     geojson_df = pl.read_database_uri(
         query="SELECT id, body FROM geojson WHERE is_alt = 0",
         uri=f"sqlite:///{filepath}",
@@ -86,6 +117,34 @@ def transform_whosonfirst(filepath: str):
         pl.col("body").str.json_path_match("$.properties").alias("properties"),
     )
     geojson_df = geojson_df.drop("body")
+
+    def filter_props(props: str) -> dict | None:
+        """
+        Filter out records that do not have proper hierarchies or placetypes.
+        """
+        props_json = json.loads(props)
+        if "wof:hierarchy" not in props_json or "wof:placetype" not in props_json:
+            return None
+        if props_json["wof:placetype"] not in allowed_placetypes:
+            return None
+        hierarchy = props_json["wof:hierarchy"]
+        if not isinstance(hierarchy, list) or len(hierarchy) < 1:
+            return None
+        if len(hierarchy[0].keys()) <= 1:
+            return None
+        for v in hierarchy[0].values():
+            if v < 1:
+                return None
+        new_props = {}
+        for k, v in props_json.items():
+            if not (k.startswith("name:") or k.startswith("ne:")):
+                new_props[k] = v
+        return json.dumps(new_props)
+
+    geojson_df = geojson_df.with_columns(
+        pl.col("properties").map_elements(filter_props).alias("properties")
+    )
+    geojson_df = geojson_df.filter(pl.col("properties").is_not_null())
     combined_df = lang_df.join(geojson_df, on="id", how="inner")
     combined_df = combined_df.drop_nulls(subset=["id"])
     log.info(f"Total records: {combined_df.height}")
@@ -105,16 +164,17 @@ def transform_whosonfirst(filepath: str):
         "ALTER TABLE databot.regions_wof_load ALTER PRIMARY KEY USING COLUMNS (id);"
     )
     crdb.execute("""
-        INSERT INTO public.regions (id, created_at, updated_at, name, geo, properties, placetype)
+        INSERT INTO public.regions (id, created_at, updated_at, name, geo, properties, placetype, admin_level)
         SELECT 'wof_' || id, NOW(), NOW(), JSON_STRIP_NULLS(name::JSONB),
             ST_MULTIPOLYFROMWKB(ST_ASEWKB(ST_MULTI(ST_GEOMFROMGEOJSON(geo::JSONB)))),
-            properties::JSONB, placetype
+            properties::JSONB, placetype, admin_level
         FROM databot.regions_wof_load
         ON CONFLICT (id) DO UPDATE
         SET placetype = EXCLUDED.placetype,
             name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
             geo = ST_MULTIPOLYFROMWKB(ST_ASEWKB(ST_MULTI(ST_GEOMFROMGEOJSON(EXCLUDED.geo::JSONB)))),
             properties = EXCLUDED.properties::JSONB,
+            admin_level = EXCLUDED.admin_level,
             updated_at = NOW();
     """)
     crdb.execute("DROP TABLE IF EXISTS databot.regions_wof_load;")
