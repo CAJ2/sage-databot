@@ -17,6 +17,7 @@ from src.graphql.api_client.client import (
 )
 from src.utils.logging.loggers import get_logger
 from src.utils import slugify
+from src.utils.api import api_connect
 from src.utils.db.crdb import create_polars_uri, db_write_dataframe
 
 
@@ -36,27 +37,9 @@ def off_variants_flow():
         Variable.get("meilisearch", default="http://localhost:7700"),
     )
 
-    # Load the databot user
-    user = crdb.fetch_one(
-        "SELECT * FROM public.users WHERE email = 'databot@sageleaf.app'",
-    )
-    if len(user) == 0:
-        raise ValueError("No databot user found in the database.")
     # Create an API client
-    api_url = Variable.get("api_url")
-    r = httpx.post(
-        api_url + "/auth/sign-in/email",
-        json={
-            "email": user[3],
-            "password": Secret.load("databot-password").get(),
-        },
-    )
-    if r.status_code != 200:
-        raise ValueError(f"Failed to sign in to the API: {r.status_code} {r.text}")
-    httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=r.cookies)
-    client = Client(http_client=httpx_client)
-    # Test the API connection
-    client.get_root_category()
+    client, user = api_connect(crdb=crdb)
+
     # Ensure the OFF source exists
     off_source_id = "g6OJVnSzQkE0mHtYS31O9"
     off_source = crdb.fetch_all(

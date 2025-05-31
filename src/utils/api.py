@@ -27,9 +27,12 @@ def api_connect(crdb: SqlAlchemyConnector = None):
             "password": Secret.load("databot-password").get(),
         },
     )
-    if r.status_code != 200:
+    if r.status_code != 200 or len(r.cookies) == 0:
         raise ValueError(f"Failed to sign in to the API: {r.status_code} {r.text}")
-    httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=r.cookies)
+    cookies = httpx.Cookies()
+    cookies.set("sage.session_token", r.cookies.get("sage.session_token"))
+    cookies.set("sage.session_data", r.cookies.get("sage.session_data"))
+    httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=cookies)
     client = Client(http_client=httpx_client)
     # Test the API connection
     try:
