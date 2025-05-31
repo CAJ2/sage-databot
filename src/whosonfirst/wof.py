@@ -121,6 +121,7 @@ def transform_whosonfirst(filepath: str):
     def filter_props(props: str) -> dict | None:
         """
         Filter out records that do not have proper hierarchies or placetypes.
+        Also create a hierarchy with an admin_level ordering.
         """
         props_json = json.loads(props)
         if "wof:hierarchy" not in props_json or "wof:placetype" not in props_json:
@@ -132,17 +133,40 @@ def transform_whosonfirst(filepath: str):
             return None
         if len(hierarchy[0].keys()) <= 1:
             return None
-        for v in hierarchy[0].values():
-            if v < 1:
-                return None
         new_props = {}
         for k, v in props_json.items():
             if not (k.startswith("name:") or k.startswith("ne:")):
                 new_props[k] = v
+        # Match hierarchy ids to the df and join admin_level
+        new_props["hierarchy"] = []
+        for h in hierarchy[0].values():
+            h_lookup = lang_df.filter(pl.col("id") == h).select(
+                "id", "placetype", "admin_level"
+            )
+            if h_lookup.is_empty():
+                continue
+            h_lookup = h_lookup.to_dicts()[0]
+            if h_lookup["admin_level"]:
+                new_props["hierarchy"].append(
+                    {
+                        "id": h_lookup["id"],
+                        "placetype": h_lookup["placetype"],
+                        "admin_level": h_lookup["admin_level"],
+                    }
+                )
+        # If the hierarchy doesn't look reasonable, skip it
+        if len(new_props["hierarchy"]) < 2:
+            return None
+        new_props["hierarchy"] = sorted(
+            new_props["hierarchy"], key=lambda x: x["admin_level"], reverse=True
+        )
+
         return json.dumps(new_props)
 
     geojson_df = geojson_df.with_columns(
-        pl.col("properties").map_elements(filter_props).alias("properties")
+        pl.col("properties")
+        .map_elements(filter_props, return_dtype=pl.String)
+        .alias("properties")
     )
     geojson_df = geojson_df.filter(pl.col("properties").is_not_null())
     combined_df = lang_df.join(geojson_df, on="id", how="inner")
@@ -178,6 +202,9 @@ def transform_whosonfirst(filepath: str):
             updated_at = NOW();
     """)
     crdb.execute("DROP TABLE IF EXISTS databot.regions_wof_load;")
+    crdb.execute(
+        "UPDATE regions SET \"name\" = jsonb_set(\"name\", '{xx}', properties->'wof:name');"
+    )
 
 
 @flow
