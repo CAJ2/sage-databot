@@ -230,7 +230,7 @@ def index_places(
     df = export_table(
         crdb,
         "public.places",
-        cols='id, updated_at, name::string, address::string, "desc"::string',
+        cols='id, updated_at, name::string, address::string, "desc"::string, st_asgeojson(location) as location',
     )
     log.info(f"Exported {df.height} rows from public.places")
     log.info(f"Columns: {df.describe()}")
@@ -245,6 +245,12 @@ def index_places(
         doc["address"] = address_json
         desc_json = json.loads(doc["desc"] or "{}")
         doc["desc"] = desc_json
+        geo_json = json.loads(doc["location"])
+        doc["_geo"] = {
+            "lat": geo_json["coordinates"][1],
+            "lng": geo_json["coordinates"][0],
+        }
+        del doc["location"]
     meili.index("places").add_documents(docs)
 
 
@@ -355,7 +361,10 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
             check_create_index(
                 meili,
                 "places",
-                {"searchableAttributes": ["name", "address", "desc"]},
+                {
+                    "searchableAttributes": ["name", "address", "desc"],
+                    "filterableAttributes": ["_geo"],
+                },
             )
         index_places(crdb, meili)
 
