@@ -155,7 +155,7 @@ def transform_whosonfirst(filepath: str):
                     }
                 )
         # If the hierarchy doesn't look reasonable, skip it
-        if len(new_props["hierarchy"]) < 2:
+        if len(new_props["hierarchy"]) < 2 and props_json["wof:placetype"] != "country":
             return None
         new_props["hierarchy"] = sorted(
             new_props["hierarchy"], key=lambda x: x["admin_level"], reverse=True
