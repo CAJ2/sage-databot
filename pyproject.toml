@@ -40,6 +40,7 @@ dependencies = [
     "jinja2>=3.1.6",
     "unstructured[all-docs]>=0.17.2",
     "fasttext>=0.9.3",
+    "fastexcel>=0.14.0",
 ]
 
 [tool.ariadne-codegen]
