@@ -1,47 +1,47 @@
 id	name:en	desc:en	primary_material:en	materials:en	material_fraction
-Pgq7igDBdKQ-LGtQcCN-s	Packaging	Packaging used for various purposes.	Plastic
-VArVzMp1qGfbWTfWr8bzU	Packaging	Packaging used for various purposes.	Plastic	Low Density Polyethylene (LDPE)
-u53UYMWr87ttqpxLUkHI4	Packaging	Packaging used for various purposes.	Plastic	High Density Polyethylene (HDPE)
-nrWskYR-5qNo1CHcdRL0Y	Packaging	Packaging used for various purposes.	Plastic	Polypropylene (PP)
-4hobODKSw2QuNEsLh628r	Packaging	Packaging used for various purposes.	Plastic	Polyvinyl Chloride (PVC)
-FGZXfpaO6p17KLn_6tz__	Packaging	Packaging used for various purposes.	Plastic	Polystyrene (PS)
-jGDJ3tcpCjytiM1RroI0B	Packaging	Packaging used for various purposes.	Plastic	Polyethylene Terephthalate (PET)
-9bGHG8PGykMuDIBveUD_M	Packaging	Packaging used for various purposes.	Plastic	Polylactic Acid (PLA)
-ihTq9_Mroh6xWMS-dfoSc	Bag	Packaging shaped like a bag.	Plastic
-72WyazXT4ofdWtH6aev8P	Bag	Packaging shaped like a bag.	Plastic Bag	Low Density Polyethylene (LDPE)
-WeaHXt0s2molJNrTpGV6G	Bag	Packaging shaped like a bag.	Plastic Bag	High Density Polyethylene (HDPE)
-AnMulpUisyCG6bjGfE5bb	Bag	Packaging shaped like a bag.	Plastic Bag	Polypropylene (PP)
-QR9I69nbg37aI_fbWJNtL	Bag	Packaging shaped like a bag.	Plastic Bag	Polyvinyl Chloride (PVC)
-IvTeDx9ZI7sZWKFQREB5X	Bag	Packaging shaped like a bag.	Plastic Bag	Polystyrene (PS)
-skD6AxSdl_DHwMYfDDpzs	Bag	Packaging shaped like a bag.	Plastic Bag	Polyethylene Terephthalate (PET)
-DOG5O5SGY5aMLFkiveeSF	Bag	Packaging shaped like a bag.	Plastic Bag	Polylactic Acid (PLA)
-op9Ycw3-SqtO9i_ulpakx	Wrap	Plastic wrap packaging.	Plastic Wrapping
-lJ196hy0dFvL__7wW1_e1	Wrap	Plastic wrap packaging.	Plastic Wrapping	Low Density Polyethylene (LDPE)
-MEpuiWK0BiB3frBrLIez_	Wrap	Plastic wrap packaging.	Plastic Wrapping	Polyvinylidene Chloride (PVDC)
-Im75-BfF0RLGr7CB8RXq6	Bottle	Bottle used for various purposes.	Plastic Bottle
-8u6mON1SZEcZmOzOc6uqk	Bottle	Bottle used for various purposes.	Plastic Bottle	Polyethylene Terephthalate (PET)
-2F_YJ4anbjQvu_P3C4HPZ	Bottle	Bottle used for various purposes.	Plastic Bottle	Polypropylene (PP)
-pvoT5XqcCCI2GaDkr_Xd3	Bottle	Bottle used for various purposes.	Plastic Bottle	Polyvinyl Chloride (PVC)
-Qv-UrTTJG8Q4k4k4szcF4	Bottle	Bottle used for various purposes.	Plastic Bottle	High Density Polyethylene (HDPE)
-_d1C5b3_3fkoX4Fh2TeW0	Bottle	Bottle used for various purposes.	Plastic Bottle	Low Density Polyethylene (LDPE)
-M7Jzn-CErEW-CyJBgqzPT	Bottle	Bottle used for various purposes.	Plastic Bottle	Polystyrene (PS)
-gkinanUwX2t_hPRZOSsYy	Bottle	Bottle used for various purposes.	Plastic Bottle	Polycarbonate (PC)
-fBRlXVDMQs69T_dXR3Nby	Bottle	Bottle used for various purposes.	Plastic Bottle	Composite Plastic
-0jrKkK5V22mmX6lYCMFz7	Cap	Bottle cap.	Plastic
-74GFmV89O3PW0yty86qc3	Cap	Bottle cap.	Plastic	Polypropylene (PP)
-MFqptBT01YzbwF04DshG-	Cap	Bottle cap.	Plastic	Polyethylene Terephthalate (PET)
-nUysQCFz0LnvbYp1wzFbc	Cap	Bottle cap.	Plastic	Polyvinyl Chloride (PVC)
-BlIQ3AsnKetWMJEhG7yZs	Cap	Bottle cap.	Plastic	High Density Polyethylene (HDPE)
-Vw9qrvLTJz0wwKkqHHQIq	Cap	Bottle cap.	Plastic	Low Density Polyethylene (LDPE)
-1ExwhjlJYn-GCwj5_SRaf	Box	Box used for packaging.	Cardboard
-qTQDk6AYqHHPkntWjKmCP	Box	Box used for packaging.	Paperboard
-ZWgKkWa37LptTEi3BhJy3	Egg Carton	Egg carton used for packaging.	Cardboard
-jPmlCQjGD1ignFJ_BHbLb	Egg Carton	Egg carton used for packaging.	Plastic
-D8LmGNrtL2njpt-5FYzkY	Egg Carton	Egg carton used for packaging.	Plastic	Polystyrene (PS)
-6cXmRIcycYfrntHm9w5HS	Egg Carton	Egg carton used for packaging.	Plastic	Polyethylene Terephthalate (PET)
-kAz8CfRySleS5_BkV8KxS	Pizza Box	Pizza box used for packaging.	Cardboard
-lEhqXrF3iye6eMI4LhA7E	Carton	Carton used for packaging.	Cardboard
-g4uYOXWAQQYv-VQ_j4cRT	Carton	Carton used for packaging.	Composite Paper	Paper,Plastic	0.7,0.3
-FN5OLHOP5cEGxewP2huna	Carton	Carton used for packaging.	Composite Paper	Paper,Plastic,Aluminium	0.7,0.26,0.04
-3ybV4kOsrEcziOwSanfrz	Can	Can used for packaging.	Aluminum Can
-lsO2WDvpvM5GmS7W-8FvR	Food	Food meant for consumption.	Food Waste
+Pgq7igDBdKQ-LGtQcCN-s	Packaging	Plastic packaging used for various purposes	Plastic
+VArVzMp1qGfbWTfWr8bzU	Packaging	Plastic packaging used for various purposes	Plastic	Low Density Polyethylene (LDPE)
+u53UYMWr87ttqpxLUkHI4	Packaging	Plastic packaging used for various purposes	Plastic	High Density Polyethylene (HDPE)
+nrWskYR-5qNo1CHcdRL0Y	Packaging	Plastic packaging used for various purposes	Plastic	Polypropylene (PP)
+4hobODKSw2QuNEsLh628r	Packaging	Plastic packaging used for various purposes	Plastic	Polyvinyl Chloride (PVC)
+FGZXfpaO6p17KLn_6tz__	Packaging	Plastic packaging used for various purposes	Plastic	Polystyrene (PS)
+jGDJ3tcpCjytiM1RroI0B	Packaging	Plastic packaging used for various purposes	Plastic	Polyethylene Terephthalate (PET)
+9bGHG8PGykMuDIBveUD_M	Packaging	Plastic packaging used for various purposes	Plastic	Polylactic Acid (PLA)
+ihTq9_Mroh6xWMS-dfoSc	Bag	Packaging shaped like a bag	Plastic
+72WyazXT4ofdWtH6aev8P	Bag	Packaging shaped like a bag	Plastic Bag	Low Density Polyethylene (LDPE)
+WeaHXt0s2molJNrTpGV6G	Bag	Packaging shaped like a bag	Plastic Bag	High Density Polyethylene (HDPE)
+AnMulpUisyCG6bjGfE5bb	Bag	Packaging shaped like a bag	Plastic Bag	Polypropylene (PP)
+QR9I69nbg37aI_fbWJNtL	Bag	Packaging shaped like a bag	Plastic Bag	Polyvinyl Chloride (PVC)
+IvTeDx9ZI7sZWKFQREB5X	Bag	Packaging shaped like a bag	Plastic Bag	Polystyrene (PS)
+skD6AxSdl_DHwMYfDDpzs	Bag	Packaging shaped like a bag	Plastic Bag	Polyethylene Terephthalate (PET)
+DOG5O5SGY5aMLFkiveeSF	Bag	Packaging shaped like a bag	Plastic Bag	Polylactic Acid (PLA)
+op9Ycw3-SqtO9i_ulpakx	Wrap	Plastic wrap packaging	Plastic Wrapping
+lJ196hy0dFvL__7wW1_e1	Wrap	Plastic wrap packaging	Plastic Wrapping	Low Density Polyethylene (LDPE)
+MEpuiWK0BiB3frBrLIez_	Wrap	Plastic wrap packaging	Plastic Wrapping	Polyvinylidene Chloride (PVDC)
+Im75-BfF0RLGr7CB8RXq6	Bottle	Plastic bottle packaging	Plastic Bottle
+8u6mON1SZEcZmOzOc6uqk	Bottle	Plastic bottle packaging	Plastic Bottle	Polyethylene Terephthalate (PET)
+2F_YJ4anbjQvu_P3C4HPZ	Bottle	Plastic bottle packaging	Plastic Bottle	Polypropylene (PP)
+pvoT5XqcCCI2GaDkr_Xd3	Bottle	Plastic bottle packaging	Plastic Bottle	Polyvinyl Chloride (PVC)
+Qv-UrTTJG8Q4k4k4szcF4	Bottle	Plastic bottle packaging	Plastic Bottle	High Density Polyethylene (HDPE)
+_d1C5b3_3fkoX4Fh2TeW0	Bottle	Plastic bottle packaging	Plastic Bottle	Low Density Polyethylene (LDPE)
+M7Jzn-CErEW-CyJBgqzPT	Bottle	Plastic bottle packaging	Plastic Bottle	Polystyrene (PS)
+gkinanUwX2t_hPRZOSsYy	Bottle	Plastic bottle packaging	Plastic Bottle	Polycarbonate (PC)
+fBRlXVDMQs69T_dXR3Nby	Bottle	Plastic bottle packaging	Plastic Bottle	Composite Plastic
+0jrKkK5V22mmX6lYCMFz7	Cap	Bottle cap	Plastic
+74GFmV89O3PW0yty86qc3	Cap	Bottle cap	Plastic	Polypropylene (PP)
+MFqptBT01YzbwF04DshG-	Cap	Bottle cap	Plastic	Polyethylene Terephthalate (PET)
+nUysQCFz0LnvbYp1wzFbc	Cap	Bottle cap	Plastic	Polyvinyl Chloride (PVC)
+BlIQ3AsnKetWMJEhG7yZs	Cap	Bottle cap	Plastic	High Density Polyethylene (HDPE)
+Vw9qrvLTJz0wwKkqHHQIq	Cap	Bottle cap	Plastic	Low Density Polyethylene (LDPE)
+1ExwhjlJYn-GCwj5_SRaf	Box	Box used for packaging	Cardboard
+qTQDk6AYqHHPkntWjKmCP	Box	Box used for packaging	Paperboard
+ZWgKkWa37LptTEi3BhJy3	Egg Carton	Egg carton used for packaging	Cardboard
+jPmlCQjGD1ignFJ_BHbLb	Egg Carton	Egg carton used for packaging	Plastic
+D8LmGNrtL2njpt-5FYzkY	Egg Carton	Egg carton used for packaging	Plastic	Polystyrene (PS)
+6cXmRIcycYfrntHm9w5HS	Egg Carton	Egg carton used for packaging	Plastic	Polyethylene Terephthalate (PET)
+kAz8CfRySleS5_BkV8KxS	Pizza Box	Pizza box used for packaging	Cardboard
+lEhqXrF3iye6eMI4LhA7E	Carton	Carton used for packaging	Cardboard
+g4uYOXWAQQYv-VQ_j4cRT	Carton	Carton used for packaging	Composite Paper	Paper,Plastic	0.7,0.3
+FN5OLHOP5cEGxewP2huna	Carton	Carton used for packaging	Composite Paper	Paper,Plastic,Aluminium	0.7,0.26,0.04
+3ybV4kOsrEcziOwSanfrz	Can	Can used for packaging	Aluminum Can
+lsO2WDvpvM5GmS7W-8FvR	Food	Food meant for consumption	Food Waste
