@@ -3,6 +3,13 @@ import re
 from urllib.parse import urlparse
 from prefect.variables import Variable
 from prefect_aws import AwsCredentials, S3Bucket
+from prefect.blocks.system import Secret
+from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.models.google import GoogleModel
+from pydantic_ai.providers.google import GoogleProvider
+from pydantic_ai.providers.openai import OpenAIProvider
+from google.oauth2 import service_account
+
 from src.utils.logging.loggers import get_logger
 
 
@@ -12,6 +19,22 @@ def is_production() -> bool:
     """
     return "PREFECT_ENV" in os.environ and os.environ["PREFECT_ENV"] == "production"
 
+def llm_agent(model_var: str = "llm_model"):
+    model_name = Variable.get(model_var)
+    if not model_name:
+        raise ValueError(f"Variable {model_var} is not set.")
+    ollama = Variable.get("ollama_api")
+    if len(ollama) > 0:
+        provider = OpenAIProvider(base_url=ollama)
+        llm = OpenAIModel(model_name=model_name, provider=provider)
+        return llm
+    creds = service_account.Credentials.from_service_account_info(
+        Secret.load("google_service_account").get(),
+        scopes=['https://www.googleapis.com/auth/cloud-platform'],
+    )
+    provider = GoogleProvider(credentials=creds)
+    llm = GoogleModel(model_name, provider=provider)
+    return llm
 
 def download_cache_file(basepath_var: str, url: str, subdir: str = "") -> str:
     """

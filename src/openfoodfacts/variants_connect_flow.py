@@ -1,16 +1,18 @@
 from prefect import flow
 from prefect.variables import Variable
+from prefect.blocks.system import Secret
 import polars as pl
 from prefect_sqlalchemy import SqlAlchemyConnector
 import json
 import time
 import meilisearch
 from jinja2 import Environment, PackageLoader, select_autoescape
-from langchain_ollama import ChatOllama
+from pydantic_ai import Agent
 
 from src.cli import setup_cli
 from src.graphql.api_client.client import CreateItemInput, UpdateVariantInput
 from src.graphql.api_client.input_types import VariantItemsInput
+from src.utils import llm_agent
 from src.utils.api import api_connect
 from src.utils.logging.loggers import get_logger
 from src.utils.extract import extract_any_json
@@ -36,7 +38,8 @@ def variants_connect_flow(**kwargs):
         autoescape=select_autoescape(),
     )
     item_template = jinja.get_template("item.jinja")
-    llm = ChatOllama(model="deepseek-r1", temperature=0.2, max_tokens=2000)
+    llm = llm_agent()
+    agent = Agent(llm)
 
     client, user = api_connect(crdb)
 
@@ -81,7 +84,7 @@ def variants_connect_flow(**kwargs):
                 }
             )
             log.info(f"Name: {row['name']}")
-            response = llm.invoke([("human", prompt)])
+            response = agent.run_sync(prompt)
             json_list = extract_any_json(response.content)
             if len(json_list) == 0:
                 log.warning(f"No JSON found in response for {row['variant_id']}")
