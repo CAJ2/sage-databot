@@ -17,6 +17,16 @@ class ChangeStatus(str, Enum):
     REJECTED = "REJECTED"
 
 
+class SearchType(str, Enum):
+    CATEGORY = "CATEGORY"
+    COMPONENT = "COMPONENT"
+    ITEM = "ITEM"
+    ORG = "ORG"
+    PLACE = "PLACE"
+    REGION = "REGION"
+    VARIANT = "VARIANT"
+
+
 class SourceType(str, Enum):
     API = "API"
     FILE = "FILE"
@@ -28,9 +38,19 @@ class SourceType(str, Enum):
     VIDEO = "VIDEO"
 
 
+class StreamScoreRating(str, Enum):
+    EXCELLENT = "EXCELLENT"
+    FAIR = "FAIR"
+    GOOD = "GOOD"
+    POOR = "POOR"
+    UNKNOWN = "UNKNOWN"
+    VERY_GOOD = "VERY_GOOD"
+
+
 class TagType(str, Enum):
     COMPONENT = "COMPONENT"
     ITEM = "ITEM"
+    ORG = "ORG"
     PLACE = "PLACE"
     PROCESS = "PROCESS"
     VARIANT = "VARIANT"

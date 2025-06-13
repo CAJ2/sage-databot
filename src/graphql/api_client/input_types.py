@@ -50,10 +50,12 @@ class CreateComponentInput(BaseModel):
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
     desc: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = None
     image_url: Optional[str] = None
     lang: Optional[str] = None
     materials: Optional[List["ComponentMaterialInput"]] = None
     name: str
+    name_tr: Optional[List["TranslatedInput"]] = None
     primary_material: Optional["ComponentMaterialInput"] = None
     region: Optional["ComponentRegionInput"] = None
     remove_sources: Optional[List[str]] = None
@@ -94,10 +96,12 @@ class CreateProcessInput(BaseModel):
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
     desc: Optional[str] = None
-    intent: str = "COLLECTION"
+    desc_tr: Optional[List["TranslatedInput"]] = None
+    intent: str
     lang: Optional[str] = None
     material: Optional[str] = None
     name: str
+    name_tr: Optional[List["TranslatedInput"]] = None
     org: Optional[str] = None
     place: Optional[str] = None
     region: Optional[str] = None
@@ -173,11 +177,13 @@ class UpdateComponentInput(BaseModel):
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
     desc: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = None
     id: str
     image_url: Optional[str] = None
     lang: Optional[str] = None
     materials: Optional[List["ComponentMaterialInput"]] = None
     name: Optional[str] = None
+    name_tr: Optional[List["TranslatedInput"]] = None
     primary_material: Optional["ComponentMaterialInput"] = None
     region: Optional["ComponentRegionInput"] = None
     remove_sources: Optional[List[str]] = None
@@ -222,11 +228,13 @@ class UpdateProcessInput(BaseModel):
     change: Optional["CreateChangeInput"] = None
     change_id: Optional[str] = None
     desc: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = None
     id: str
     intent: Optional[str] = None
     lang: Optional[str] = None
     material: Optional[str] = None
     name: Optional[str] = None
+    name_tr: Optional[List["TranslatedInput"]] = None
     org: Optional[str] = None
     place: Optional[str] = None
     region: Optional[str] = None

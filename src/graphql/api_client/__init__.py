@@ -11,7 +11,14 @@ from .add_variant import (
 from .base_client import BaseClient
 from .base_model import BaseModel, Upload
 from .client import Client
-from .enums import CacheControlScope, ChangeStatus, SourceType, TagType
+from .enums import (
+    CacheControlScope,
+    ChangeStatus,
+    SearchType,
+    SourceType,
+    StreamScoreRating,
+    TagType,
+)
 from .exceptions import (
     GraphQLClientError,
     GraphQLClientGraphQLError,
@@ -120,7 +127,9 @@ __all__ = [
     "GraphQLClientInvalidResponseError",
     "ItemCategoriesInput",
     "ItemTagsInput",
+    "SearchType",
     "SourceType",
+    "StreamScoreRating",
     "TagType",
     "TranslatedInput",
     "UpdateChangeInput",
