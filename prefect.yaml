@@ -1,19 +1,19 @@
-# Welcome to your prefect.yaml file! You can use this file for storing and managing
-# configuration for deploying your flows. We recommend committing this file to source
-# control along with your flow code.
-
-# Generic metadata about this project
 name: sage-databot
 prefect-version: 3.2.14
 
 # build section allows you to manage and build docker images
 build:
+- prefect.deployments.steps.run_shell_script:
+    id: get-commit-hash
+    script: git rev-parse --short HEAD
+    stream_output: false
 - prefect_docker.deployments.steps.build_docker_image:
     id: build_image
-    requires: prefect-docker>=0.6.2
-    image_name: sage-leaf-databot
+    requires: prefect-docker>=0.6.6
+    image_name: sageleaf-databot
     tag: latest
-    dockerfile: auto
+    dockerfile: Dockerfile
+    platform: "linux/amd64"
 
 # push section allows you to manage if and how this project is uploaded to remote locations
 push:
@@ -29,17 +29,21 @@ pull:
     branch: main
     access_token: null
 
+definitions:
+  tags: &common_tags
+    - "{{ get-commit-hash.stdout }}"
+  work_pool: &common_work_pool
+    name: "kubernetes"
+    job_variables:
+      image: "{{ build-image.image }}"
+
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-- name: sage-leaf-dev-changes
-  tags: []
+- name: sageleaf-dev
+  tags: *common_tags
   description: null
   schedule: {}
   flow_name: null
   entrypoint: null
   parameters: {}
-  work_pool:
-    name: changes
-    work_queue_name: default
-    job_variables:
-      image: '{{ build_image.image }}'
+  work_pool: *common_work_pool
