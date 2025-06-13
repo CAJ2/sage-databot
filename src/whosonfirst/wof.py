@@ -3,10 +3,12 @@ from prefect import flow, task
 from prefect.variables import Variable
 from prefect_sqlalchemy import SqlAlchemyConnector
 import polars as pl
-from src.utils.logging.loggers import get_logger
-from src.utils.db.crdb import create_polars_uri
 import bz2
 import json
+
+from src.utils.logging.loggers import get_logger
+from src.utils.db.crdb import create_polars_uri
+from src.cli import setup_cli
 
 placetype_admin = [
     ["continent", "1"],
@@ -208,7 +210,7 @@ def transform_whosonfirst(filepath: str):
 
 
 @flow
-def import_whosonfirst_admin():
+def import_whosonfirst_admin(country: list[str], **kwargs):
     """
     This flow imports the Whos On First administrative data from Geocode Earth.
     The data is then transformed and loaded into the main database.
@@ -219,20 +221,23 @@ def import_whosonfirst_admin():
     """
     log = get_logger()
 
-    countries: list[str] = Variable.get("whosonfirst_countries")
-    if not countries:
-        log.error("No countries found in the whosonfirst_countries variable.")
-        return
-
-    for country in countries:
-        log.info(f"Importing region data for {country.upper()}...")
-        download_url = f"https://data.geocode.earth/wof/dist/sqlite/whosonfirst-data-admin-{country.lower()}-latest.db.bz2"
-        filepath = load_whosonfirst(country, download_url)
-        transform_whosonfirst(filepath)
+    if len(country) == 0:
+        raise ValueError("No country provided. Please specify a country to import.")
+    country = country[0]
+    log.info(f"Importing region data for {country.upper()}...")
+    download_url = f"https://data.geocode.earth/wof/dist/sqlite/whosonfirst-data-admin-{country.lower()}-latest.db.bz2"
+    filepath = load_whosonfirst(country, download_url)
+    transform_whosonfirst(filepath)
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
 
-    load_dotenv()
-    import_whosonfirst_admin()
+    def args(parser):
+        parser.add_argument(
+            "country",
+            type=str,
+            nargs="+",
+            help="The country to process.",
+        )
+
+    setup_cli(import_whosonfirst_admin, args)
