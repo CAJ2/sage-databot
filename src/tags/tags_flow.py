@@ -21,7 +21,7 @@ def update_db_tags():
     # Iterate over each tag and upsert it into the database
     for tag in all_tags:
         meta_template = None
-        if "meta_template" in tag:
+        if "meta_template" in tag and tag["meta_template"] is not None:
             meta_template = {}
             meta_template["schema"] = tag["meta_template"]["schema"]
             if type(meta_template["schema"]) is str:
@@ -30,10 +30,10 @@ def update_db_tags():
                     Draft202012Validator(meta_template["schema"]).check_schema(
                         meta_template["schema"]
                     )
-            meta_template["ui_schema"] = tag["meta_template"]["ui_schema"]
-            if type(meta_template["ui_schema"]) is str:
-                with open("src/tags/" + meta_template["ui_schema"], "r") as f:
-                    meta_template["ui_schema"] = json.load(f)
+            meta_template["uischema"] = tag["meta_template"]["uischema"]
+            if type(meta_template["uischema"]) is str:
+                with open("src/tags/" + meta_template["uischema"], "r") as f:
+                    meta_template["uischema"] = json.load(f)
 
         crdb.execute(
             """

@@ -23,10 +23,7 @@ tags = [
             "en": "Material used solely for packaging the product.",
             "sv": "Material som används enbart för att förpacka produkten.",
         },
-        "meta_template": {
-            "schema": "schemas/component_packaging.json",
-            "ui_schema": "ui_schemas/component_packaging.json",
-        },
+        "meta_template": None,
         "bg_color": "#D4B2D8",
         "image": "iconify://mdi:package",
     },

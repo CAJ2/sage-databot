@@ -10,23 +10,5 @@
   ],
   "emb_codes": [
     "AbCd123"
-  ],
-  "manufacturing": [
-    {
-      "region_id": "AbCd123",
-      "name": {
-        "en": "Test Name",
-        "sv": "Test Namn"
-      }
-    }
-  ],
-  "stores": [
-    {
-      "place_id": "AbCd123",
-      "name": {
-        "en": "Test Name",
-        "sv": "Test Namn"
-      }
-    }
   ]
 }
