@@ -10,7 +10,7 @@ def set_variable(name: str, value: str, tags: list = []):
         value (str): The value of the variable.
         tags (list): The tags for the variable.
     """
-    if Variable.get(name) is None:
+    if Variable.get(name, default="__doesnotexist__") == "__doesnotexist__":
         Variable.set(name, value, tags=tags)
 
 
