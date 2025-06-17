@@ -1,0 +1,5 @@
+{
+  "type": "Control",
+  "scope": "#/properties/opening_hours",
+  "label": "Opening Hours"
+}

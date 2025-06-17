@@ -3,7 +3,6 @@ from prefect_sqlalchemy import SqlAlchemyConnector
 import json
 from jsonschema import validate
 
-from src.openstreetmap.db_tags_flow import update_db_tags
 from src.utils.logging.loggers import get_logger
 
 
@@ -31,8 +30,6 @@ def osm_tags_flow():
     Flow to assign Sage database place tags based on OSM tags.
     """
     log = get_logger()
-    # Ensure the tags table is up to date
-    update_db_tags()
 
     crdb = SqlAlchemyConnector.load("crdb-sage")
 
