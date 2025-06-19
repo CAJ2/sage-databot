@@ -17,7 +17,9 @@ def is_production() -> bool:
     """
     Check if the environment is production.
     """
-    return "PREFECT_ENV" in os.environ and os.environ["PREFECT_ENV"] == "production"
+    env = Variable.get("prefect_env", default="development")
+    return env == "production"
+
 
 def llm_agent(model_var: str = "llm_model"):
     model_name = Variable.get(model_var)
@@ -30,11 +32,12 @@ def llm_agent(model_var: str = "llm_model"):
         return llm
     creds = service_account.Credentials.from_service_account_info(
         Secret.load("google_service_account").get(),
-        scopes=['https://www.googleapis.com/auth/cloud-platform'],
+        scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
     provider = GoogleProvider(credentials=creds)
     llm = GoogleModel(model_name, provider=provider)
     return llm
+
 
 def download_cache_file(basepath_var: str, url: str, subdir: str = "") -> str:
     """

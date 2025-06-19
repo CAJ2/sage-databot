@@ -1,5 +1,6 @@
 from prefect import flow
 from prefect.variables import Variable
+from prefect.blocks.system import Secret
 from prefect_sqlalchemy import SqlAlchemyConnector
 import polars as pl
 import polars.selectors as cs
@@ -263,9 +264,13 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
     crdb = SqlAlchemyConnector.load("crdb-sage")
 
     # Connect to Meilisearch
+    try:
+        meili_key = Secret.load("meilisearch-api-key")
+    except Exception as e:
+        meili_key = None
     meili = meilisearch.Client(
         Variable.get("meilisearch", default="http://localhost:7700"),
-        Variable.get("meilisearch_api_key", default=None),
+        api_key=meili_key.get() if meili_key else None,
     )
 
     indexes = meili.get_indexes()

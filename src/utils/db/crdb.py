@@ -1,10 +1,12 @@
 import os
+from prefect.variables import Variable
+from prefect.blocks.system import Secret
 from prefect_sqlalchemy import SqlAlchemyConnector
 import polars as pl
 from src.utils import is_production
 
 
-def create_polars_uri(conn: SqlAlchemyConnector, client_certs: bool = True):
+def create_polars_uri(conn: SqlAlchemyConnector):
     """
     Create a connection string for the given SqlAlchemyConnector object.
 
@@ -14,10 +16,10 @@ def create_polars_uri(conn: SqlAlchemyConnector, client_certs: bool = True):
     """
     c = conn.connection_info
 
-    sslmode = "disable"
+    sslmode = Variable.get("crdb_ssl_mode", default="disable")
     sslparams = ""
-    if is_production() or "CRDB_SSL_CERT" in os.environ:
-        if client_certs:
+    if is_production():
+        if "CRDB_SSL_CERT" in os.environ:
             sslmode = "verify-full"
             sslparams = (
                 f"&sslrootcert={os.environ['CRDB_SSL_ROOTCERT']}"
@@ -26,8 +28,9 @@ def create_polars_uri(conn: SqlAlchemyConnector, client_certs: bool = True):
         else:
             sslmode = "require"
             sslparams = f"&sslrootcert={os.environ['CRDB_SSL_ROOTCERT']}"
-    elif not is_production() and "CRDB_SSL_MODE" in os.environ:
-        sslmode = os.environ["CRDB_SSL_MODE"]
+    elif "CRDB_SSL_ROOTCERT" in os.environ:
+        sslmode = "require"
+        sslparams = f"&sslrootcert={os.environ['CRDB_SSL_ROOTCERT']}"
 
     conn_str = f"postgresql://{c.username}:{c.password.get_secret_value()}@{c.host}:{c.port}/{c.database}?sslmode={sslmode}{sslparams}"
     return conn_str

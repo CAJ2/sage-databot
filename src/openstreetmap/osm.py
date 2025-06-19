@@ -10,6 +10,7 @@ from src.openstreetmap.osm_tags import waste_tags
 from src.utils import download_cache_file
 from src.utils.logging.loggers import get_logger
 from src.utils.db.crdb import create_polars_uri
+from src.cli import setup_cli
 
 
 @task
@@ -138,28 +139,33 @@ def transform_osm(filepath: str):
 
 
 @flow
-def import_osm_places():
+def import_osm_places(country: list[str], **kwargs):
     """
     This flow imports the OSM places data.
     """
     log = get_logger()
 
-    countries: list[str] = Variable.get("osm_countries")
-    if not countries:
-        log.error("No countries found in the osm_countries variable.")
+    country = country[0]
+    if not country:
+        log.error("No country specified.")
         return
 
-    for country in countries:
-        log.info(f"Importing place data for {country.upper()}...")
-        download_url = (
-            f"https://download.geofabrik.de/europe/{country.lower()}-latest.osm.pbf"
-        )
-        filepath = load_osm(country, download_url)
-        transform_osm(filepath)
+    log.info(f"Importing place data for {country.upper()}...")
+    download_url = (
+        f"https://download.geofabrik.de/europe/{country.lower()}-latest.osm.pbf"
+    )
+    filepath = load_osm(country, download_url)
+    transform_osm(filepath)
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv
 
-    load_dotenv()
-    import_osm_places()
+    def args(parser):
+        parser.add_argument(
+            "country",
+            type=str,
+            nargs="+",
+            help="The country to process.",
+        )
+
+    setup_cli(import_osm_places, args)
