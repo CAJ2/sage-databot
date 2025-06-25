@@ -2,7 +2,7 @@ query GetVariant(
   $first: Int
   $after: String
 ) {
-  getVariants(first: $first, after: $after) {
+  variants(first: $first, after: $after) {
     edges {
       node {
         id

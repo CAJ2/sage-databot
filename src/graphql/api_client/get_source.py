@@ -3,17 +3,15 @@
 
 from typing import Any, Optional
 
-from pydantic import Field
-
 from .base_model import BaseModel
 from .enums import SourceType
 
 
 class GetSource(BaseModel):
-    get_source: Optional["GetSourceGetSource"] = Field(alias="getSource")
+    source: Optional["GetSourceSource"]
 
 
-class GetSourceGetSource(BaseModel):
+class GetSourceSource(BaseModel):
     id: str
     type: SourceType
     processed_at: Optional[Any]

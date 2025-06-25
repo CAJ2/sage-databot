@@ -3,16 +3,14 @@
 
 from typing import Optional
 
-from pydantic import Field
-
 from .base_model import BaseModel
 
 
 class GetOrg(BaseModel):
-    get_org: Optional["GetOrgGetOrg"] = Field(alias="getOrg")
+    org: Optional["GetOrgOrg"]
 
 
-class GetOrgGetOrg(BaseModel):
+class GetOrgOrg(BaseModel):
     id: str
     name: str
     desc: Optional[str]

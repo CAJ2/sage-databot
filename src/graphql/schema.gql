@@ -22,11 +22,14 @@ type Category implements Named {
   created_at: DateTime!
   desc: String
   desc_short: String
+  desc_short_tr: [TranslatedOutput!]
+  desc_tr: [TranslatedOutput!]
   descendants(after: String, before: String, first: Int, last: Int): CategoriesPage!
   id: ID!
   image_url: String
   items(after: String, before: String, first: Int, last: Int): ItemsPage!
   name: String!
+  name_tr: [TranslatedOutput!]
   parents(after: String, before: String, first: Int, last: Int): CategoriesPage!
   updated_at: DateTime!
 }
@@ -39,9 +42,8 @@ type CategoryEdge {
 type Change {
   created_at: DateTime!
   description: String
-  edits: [Edit!]!
+  edits(after: String, before: String, first: Int, id: ID, last: Int, type: EditModelType): ChangeEditsPage!
   id: ID!
-  metadata: JSONObject
   sources(after: String, before: String, first: Int, last: Int): SourcesPage!
   status: ChangeStatus!
   title: String
@@ -52,6 +54,13 @@ type Change {
 type ChangeEdge {
   cursor: String!
   node: Change!
+}
+
+type ChangeEditsPage {
+  edges: [EditEdge!]
+  nodes: [Edit!]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 """Status of a change"""
@@ -153,15 +162,18 @@ type ContainerShape {
 }
 
 input CreateCategoryInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   change: CreateChangeInput
   change_id: ID
   desc: String
   desc_short: String
+  desc_short_tr: [TranslatedInput!]
+  desc_tr: [TranslatedInput!]
   image_url: String
   lang: String
-  name: String!
+  name: String
+  name_tr: [TranslatedInput!]
   remove_sources: [ID!]
 }
 
@@ -172,8 +184,7 @@ type CreateCategoryOutput {
 
 input CreateChangeInput {
   description: String
-  metadata: JSONObject
-  sources: [ID!]! = []
+  sources: [ID!]
   status: ChangeStatus
   title: String
 }
@@ -183,7 +194,7 @@ type CreateChangeOutput {
 }
 
 input CreateComponentInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   change: CreateChangeInput
   change_id: ID
@@ -192,7 +203,7 @@ input CreateComponentInput {
   image_url: String
   lang: String
   materials: [ComponentMaterialInput!]
-  name: String!
+  name: String
   name_tr: [TranslatedInput!]
   primary_material: ComponentMaterialInput
   region: ComponentRegionInput
@@ -206,15 +217,17 @@ type CreateComponentOutput {
 }
 
 input CreateItemInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   categories: [ItemCategoriesInput!]
   change: CreateChangeInput
   change_id: ID
   desc: String
+  desc_tr: [TranslatedInput!]
   image_url: String
   lang: String
   name: String
+  name_tr: [TranslatedInput!]
   remove_sources: [ID!]
   tags: [ItemTagsInput!]
 }
@@ -225,7 +238,7 @@ type CreateItemOutput {
 }
 
 input CreateOrgInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   avatar_url: String
   change: CreateChangeInput
@@ -244,22 +257,25 @@ type CreateOrgOutput {
 }
 
 input CreateProcessInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   change: CreateChangeInput
   change_id: ID
   desc: String
   desc_tr: [TranslatedInput!]
+  efficiency: JSONObject
+  instructions: JSONObject
   intent: String!
   lang: String
-  material: ID
-  name: String!
+  material: ProcessMaterialInput
+  name: String
   name_tr: [TranslatedInput!]
-  org: ID
-  place: ID
-  region: ID
+  org: ProcessOrgInput
+  place: ProcessPlaceInput
+  region: ProcessRegionInput
   remove_sources: [ID!]
-  variant: ID
+  rules: JSONObject
+  variant: ProcessVariantInput
 }
 
 type CreateProcessOutput {
@@ -293,7 +309,7 @@ type CreateTagDefinitionOutput {
 }
 
 input CreateVariantInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   change: CreateChangeInput
   change_id: ID
@@ -301,12 +317,13 @@ input CreateVariantInput {
   components: [VariantComponentsInput!]
   desc: String
   desc_tr: [TranslatedInput!]
+  image_url: String
   items: [VariantItemsInput!]
   lang: String
   name: String
   name_tr: [TranslatedInput!]
   orgs: [VariantOrgsInput!]
-  region_id: ID
+  region: VariantRegionsInput
   regions: [VariantRegionsInput!]
   remove_sources: [ID!]
   tags: [VariantTagsInput!]
@@ -326,18 +343,63 @@ type DeleteChangeOutput {
   success: Boolean
 }
 
+input DeleteInput {
+  add_sources: [SourceInput!]
+  apply: Boolean
+  change: CreateChangeInput
+  change_id: ID
+  id: ID!
+  remove_sources: [ID!]
+}
+
+type DeleteOutput {
+  id: String
+  success: Boolean!
+}
+
 type DeleteSourceOutput {
+  success: Boolean
+}
+
+type DirectEdit {
+  entity_name: String!
+  id: ID
+  model_create: JSONObject
+  model_update: JSONObject
+}
+
+type DiscardEditOutput {
+  id: ID
   success: Boolean
 }
 
 type Edit {
   changes: EditModel
+  changes_create: JSONObject
+  changes_update: JSONObject
   entity_name: String!
   id: ID
   original: EditModel
 }
 
+type EditEdge {
+  cursor: String!
+  node: Edit!
+}
+
 union EditModel = Category | Component | Item | Material | Place | Process | Region | Variant
+
+"""Type of the model being edited"""
+enum EditModelType {
+  Category
+  Component
+  Item
+  Material
+  Place
+  Process
+  Region
+  Variant
+}
 
 type Item implements Named {
   categories(after: String, before: String, first: Int, last: Int): CategoriesPage!
@@ -395,6 +457,7 @@ type Material implements Named {
   parents(after: String, before: String, first: Int, last: Int): MaterialsPage!
   primary_components(after: String, before: String, first: Int, last: Int): ComponentsPage!
   processes(after: String, before: String, first: Int, last: Int): ProcessPage!
+  shape: String
   technical: Boolean!
   updated_at: DateTime!
 }
@@ -409,6 +472,10 @@ type MaterialsPage {
   nodes: [Material!]
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+type MergeChangeOutput {
+  change: Change
 }
 
 type ModelEditSchema {
@@ -432,9 +499,17 @@ type Mutation {
   createSource(input: CreateSourceInput!): CreateSourceOutput
   createTagDefinition(input: CreateTagDefinitionInput!): CreateTagDefinitionOutput
   createVariant(input: CreateVariantInput!): CreateVariantOutput
+  deleteCategory(input: DeleteInput!): DeleteOutput
   deleteChange(id: ID!): DeleteChangeOutput
+  deleteComponent(input: DeleteInput!): DeleteOutput
+  deleteItem(input: DeleteInput!): DeleteOutput
+  deleteProcess(input: DeleteInput!): DeleteOutput
   deleteSource(id: ID!): DeleteSourceOutput
+  deleteVariant(input: DeleteInput!): DeleteOutput
+  discardEdit(change_id: ID!, edit_id: ID!): DiscardEditOutput
   markSourceProcessed(id: ID!): MarkSourceProcessedOutput
+  mergeChange(id: ID!): MergeChangeOutput
+  updateCategory(input: UpdateCategoryInput!): UpdateCategoryOutput
   updateChange(input: UpdateChangeInput!): UpdateChangeOutput
   updateComponent(input: UpdateComponentInput!): UpdateComponentOutput
   updateItem(input: UpdateItemInput!): UpdateItemOutput
@@ -475,13 +550,6 @@ type OrgEdge {
   node: Org!
 }
 
-type OrgsPage {
-  edges: [OrgEdge!]
-  nodes: [Org!]
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -497,7 +565,7 @@ type Place implements Named {
   location: PlaceLocation
   name: String
   org: Org
-  tags: [Tag!]!
+  tags: TagPage!
   updated_at: DateTime!
 }
 
@@ -530,6 +598,7 @@ type PlacesPage {
 type Process implements Named {
   created_at: DateTime!
   desc: String
+  efficiency: ProcessEfficiency
   history: [ProcessHistory!]!
 
   """The ID of the model"""
@@ -549,12 +618,26 @@ type ProcessEdge {
   node: Process!
 }
 
+type ProcessEfficiency {
+  efficiency: Float
+  equivalency: Float
+  value_ratio: Float
+}
+
 type ProcessHistory {
   changes: String
   datetime: DateTime!
   original: String
   process: Process!
   user: User!
+}
+
+input ProcessMaterialInput {
+  id: ID!
+}
+
+input ProcessOrgInput {
+  id: ID!
 }
 
 type ProcessPage {
@@ -564,36 +647,53 @@ type ProcessPage {
   totalCount: Int!
 }
 
+input ProcessPlaceInput {
+  id: ID!
+}
+
+input ProcessRegionInput {
+  id: ID!
+}
+
+input ProcessVariantInput {
+  id: ID!
+}
+
 type Query {
-  getCategories(after: String, before: String, first: Int, last: Int): CategoriesPage!
-  getCategory(id: ID!): Category
-  getChange(id: ID!): Change
-  getChanges(after: String, before: String, first: Int, last: Int, status: ChangeStatus, user_id: ID): ChangesPage!
-  getComponent(id: ID!): Component
-  getComponentSchema: ModelEditSchema
-  getComponents(after: String, before: String, first: Int, last: Int): ComponentsPage!
-  getItem(id: ID!): Item
-  getItems(after: String, before: String, first: Int, last: Int): ItemsPage!
-  getMaterial(id: ID!): Material
-  getMaterials(after: String, before: String, first: Int, last: Int): MaterialsPage!
-  getOrg(id: ID!): Org
-  getPlace(id: ID!): Place
-  getPlaces(after: String, before: String, first: Int, last: Int): PlacesPage!
-  getProcess(id: ID!): Process
-  getProcesses(after: String, before: String, first: Int, last: Int): ProcessPage!
-  getRegion(id: ID!): Region
-  getRegions(after: String, before: String, first: Int, last: Int): RegionsPage!
-  getSource(id: ID!): Source
-  getSources(after: String, before: String, first: Int, last: Int, type: SourceType): SourcesPage!
-  getTag(id: ID!): Tag
-  getTags(after: String, before: String, first: Int, last: Int): TagPage!
-  getUser(id: ID!): User
-  getVariant(id: ID!): Variant
-  getVariants(after: String, before: String, first: Int, last: Int): VariantsPage!
-  rootCategory: Category!
-  rootMaterial: Material!
+  categories(after: String, before: String, first: Int, last: Int): CategoriesPage!
+  category(id: ID!): Category
+  categoryRoot: Category!
+  categorySchema: ModelEditSchema
+  change(id: ID!): Change
+  changes(after: String, before: String, first: Int, last: Int, status: ChangeStatus, user_id: ID): ChangesPage!
+  component(id: ID!, with_change: ID): Component
+  componentSchema: ModelEditSchema
+  components(after: String, before: String, first: Int, last: Int): ComponentsPage!
+  directEdit(entity_name: String, id: ID): DirectEdit
+  item(id: ID!): Item
+  itemSchema: ModelEditSchema
+  items(after: String, before: String, first: Int, last: Int): ItemsPage!
+  material(id: ID!): Material
+  materialRoot: Material!
+  materials(after: String, before: String, first: Int, last: Int): MaterialsPage!
+  org(id: ID!): Org
+  place(id: ID!): Place
+  places(after: String, before: String, first: Int, last: Int): PlacesPage!
+  process(id: ID!): Process
+  processSchema: ModelEditSchema
+  processes(after: String, before: String, first: Int, last: Int, material: String, region: String): ProcessPage!
+  region(id: ID!): Region
+  regions(after: String, before: String, first: Int, last: Int): RegionsPage!
   search(lat_long: [Float!], limit: Int, offset: Int, query: String!, types: [SearchType!]): SearchResultPage!
   searchRegionsByPoint(after: String, before: String, first: Int, last: Int, lat_long: [Float!]!): RegionsPage!
+  source(id: ID!): Source
+  sources(after: String, before: String, first: Int, last: Int, type: SourceType): SourcesPage!
+  tag(id: ID!): Tag
+  tags(after: String, before: String, first: Int, last: Int): TagPage!
+  user(id: ID!): User
+  variant(id: ID!): Variant
+  variantSchema: ModelEditSchema
+  variants(after: String, before: String, first: Int, last: Int): VariantsPage!
 }
 
 type RecyclingStream {
@@ -626,7 +726,7 @@ type RegionsPage {
   totalCount: Int!
 }
 
-union SearchResultItem = Category | Component | Item | Org | Place | Region | Variant
+union SearchResultItem = Category | Component | Item | Material | Org | Place | Region | Variant
 
 type SearchResultItemEdge {
   cursor: String!
@@ -645,6 +745,7 @@ enum SearchType {
   CATEGORY
   COMPONENT
   ITEM
+  MATERIAL
   ORG
   PLACE
   REGION
@@ -668,6 +769,11 @@ type Source {
 type SourceEdge {
   cursor: String!
   node: Source!
+}
+
+input SourceInput {
+  id: ID!
+  meta: JSONObject
 }
 
 """Type of source data"""
@@ -780,10 +886,37 @@ input TranslatedInput {
   text: String
 }
 
+type TranslatedOutput {
+  auto: Boolean!
+  lang: String!
+  text: String
+}
+
+input UpdateCategoryInput {
+  add_sources: [SourceInput!]
+  apply: Boolean
+  change: CreateChangeInput
+  change_id: ID
+  desc: String
+  desc_short: String
+  desc_short_tr: [TranslatedInput!]
+  desc_tr: [TranslatedInput!]
+  id: ID!
+  image_url: String
+  lang: String
+  name: String
+  name_tr: [TranslatedInput!]
+  remove_sources: [ID!]
+}
+
+type UpdateCategoryOutput {
+  category: Category
+  change: Change
+}
+
 input UpdateChangeInput {
   description: String
   id: ID!
-  metadata: JSONObject
   sources: [ID!]
   status: ChangeStatus
   title: String
@@ -794,7 +927,7 @@ type UpdateChangeOutput {
 }
 
 input UpdateComponentInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   add_tags: [ComponentTagsInput!]
   apply: Boolean
   change: CreateChangeInput
@@ -810,7 +943,8 @@ input UpdateComponentInput {
   primary_material: ComponentMaterialInput
   region: ComponentRegionInput
   remove_sources: [ID!]
-  remove_tags: [ComponentTagsInput!]
+  remove_tags: [ID!]
+  tags: [ComponentTagsInput!]
 }
 
 type UpdateComponentOutput {
@@ -820,19 +954,23 @@ type UpdateComponentOutput {
 
 input UpdateItemInput {
   add_categories: [ItemCategoriesInput!]
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   add_tags: [ItemTagsInput!]
   apply: Boolean
+  categories: [ItemCategoriesInput!]
   change: CreateChangeInput
   change_id: ID
   desc: String
+  desc_tr: [TranslatedInput!]
   id: ID!
   image_url: String
   lang: String
   name: String
-  remove_categories: [ItemCategoriesInput!]
+  name_tr: [TranslatedInput!]
+  remove_categories: [ID!]
   remove_sources: [ID!]
-  remove_tags: [ItemTagsInput!]
+  remove_tags: [ID!]
+  tags: [ItemTagsInput!]
 }
 
 type UpdateItemOutput {
@@ -841,7 +979,7 @@ type UpdateItemOutput {
 }
 
 input UpdateOrgInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   avatar_url: String
   change: CreateChangeInput
@@ -861,23 +999,26 @@ type UpdateOrgOutput {
 }
 
 input UpdateProcessInput {
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   apply: Boolean
   change: CreateChangeInput
   change_id: ID
   desc: String
   desc_tr: [TranslatedInput!]
+  efficiency: JSONObject
   id: ID!
+  instructions: JSONObject
   intent: String
   lang: String
-  material: ID
+  material: ProcessMaterialInput
   name: String
   name_tr: [TranslatedInput!]
-  org: ID
-  place: ID
-  region: ID
+  org: ProcessOrgInput
+  place: ProcessPlaceInput
+  region: ProcessRegionInput
   remove_sources: [ID!]
-  variant: ID
+  rules: JSONObject
+  variant: ProcessVariantInput
 }
 
 type UpdateProcessOutput {
@@ -917,25 +1058,29 @@ input UpdateVariantInput {
   add_items: [VariantItemsInput!]
   add_orgs: [VariantOrgsInput!]
   add_regions: [VariantRegionsInput!]
-  add_sources: [ID!]
+  add_sources: [SourceInput!]
   add_tags: [VariantTagsInput!]
   apply: Boolean
   change: CreateChangeInput
   change_id: ID
   code: String
+  components: [VariantComponentsInput!]
   desc: String
   desc_tr: [TranslatedInput!]
   id: ID!
+  image_url: String
   lang: String
   name: String
   name_tr: [TranslatedInput!]
-  region_id: ID
-  remove_components: [VariantComponentsInput!]
-  remove_items: [VariantItemsInput!]
-  remove_orgs: [VariantOrgsInput!]
-  remove_regions: [VariantRegionsInput!]
+  orgs: [VariantOrgsInput!]
+  region: VariantRegionsInput
+  remove_components: [ID!]
+  remove_items: [ID!]
+  remove_orgs: [ID!]
+  remove_regions: [ID!]
   remove_sources: [ID!]
-  remove_tags: [VariantTagsInput!]
+  remove_tags: [ID!]
+  tags: [VariantTagsInput!]
 }
 
 type UpdateVariantOutput {
@@ -951,7 +1096,7 @@ type User {
   id: ID!
   lang: String
   name: String
-  orgs(after: String, before: String, first: Int, last: Int): OrgsPage!
+  orgs(after: String, before: String, first: Int, last: Int): UserOrgsPage!
   profile: UserProfile
   updated_at: DateTime!
   username: String!
@@ -960,6 +1105,23 @@ type User {
 type UserEdge {
   cursor: String!
   node: User!
+}
+
+type UserOrg {
+  org: Org!
+  role: String
+}
+
+type UserOrgEdge {
+  cursor: String!
+  node: UserOrg!
+}
+
+type UserOrgsPage {
+  edges: [UserOrgEdge!]
+  nodes: [UserOrg!]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type UserPage {
@@ -974,7 +1136,7 @@ type UserProfile {
 }
 
 type Variant implements Named {
-  components(after: String, before: String, first: Int, last: Int): ComponentsPage!
+  components(after: String, before: String, first: Int, last: Int): VariantComponentsPage!
   created_at: DateTime!
   desc: String
 
@@ -983,16 +1145,34 @@ type Variant implements Named {
   image_url: String
   items(after: String, before: String, first: Int, last: Int): ItemsPage!
   name: String
-  orgs(after: String, before: String, first: Int, last: Int): OrgsPage!
+  orgs(after: String, before: String, first: Int, last: Int): VariantOrgsPage!
   recycle_score(region_id: ID): StreamScore
   tags(after: String, before: String, first: Int, last: Int): TagPage!
   updated_at: DateTime!
+}
+
+type VariantComponent {
+  component: Component!
+  quantity: Float
+  unit: String
+}
+
+type VariantComponentEdge {
+  cursor: String!
+  node: VariantComponent!
 }
 
 input VariantComponentsInput {
   id: ID!
   quantity: Float
   unit: String
+}
+
+type VariantComponentsPage {
+  edges: [VariantComponentEdge!]
+  nodes: [VariantComponent!]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type VariantEdge {
@@ -1004,8 +1184,25 @@ input VariantItemsInput {
   id: ID!
 }
 
+type VariantOrg {
+  org: Org!
+  role: String
+}
+
+type VariantOrgEdge {
+  cursor: String!
+  node: VariantOrg!
+}
+
 input VariantOrgsInput {
   id: ID!
+}
+
+type VariantOrgsPage {
+  edges: [VariantOrgEdge!]
+  nodes: [VariantOrg!]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 input VariantRegionsInput {

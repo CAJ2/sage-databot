@@ -1,5 +1,5 @@
 query GetSource($id: ID!) {
-  getSource(id: $id) {
+  source(id: $id) {
     id
     type
     processed_at

@@ -38,7 +38,7 @@ class Client(BaseClient):
         query = gql(
             """
             query GetRootCategory {
-              rootCategory {
+              categoryRoot {
                 id
               }
             }
@@ -97,7 +97,7 @@ class Client(BaseClient):
         query = gql(
             """
             query GetOrg($orgId: ID!) {
-              getOrg(id: $orgId) {
+              org(id: $orgId) {
                 id
                 name
                 desc
@@ -161,7 +161,7 @@ class Client(BaseClient):
         query = gql(
             """
             query GetSource($id: ID!) {
-              getSource(id: $id) {
+              source(id: $id) {
                 id
                 type
                 processed_at
@@ -233,7 +233,7 @@ class Client(BaseClient):
         query = gql(
             """
             query GetVariant($first: Int, $after: String) {
-              getVariants(first: $first, after: $after) {
+              variants(first: $first, after: $after) {
                 edges {
                   node {
                     id

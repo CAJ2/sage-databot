@@ -17,10 +17,22 @@ class ChangeStatus(str, Enum):
     REJECTED = "REJECTED"
 
 
+class EditModelType(str, Enum):
+    Category = "Category"
+    Component = "Component"
+    Item = "Item"
+    Material = "Material"
+    Place = "Place"
+    Process = "Process"
+    Region = "Region"
+    Variant = "Variant"
+
+
 class SearchType(str, Enum):
     CATEGORY = "CATEGORY"
     COMPONENT = "COMPONENT"
     ITEM = "ITEM"
+    MATERIAL = "MATERIAL"
     ORG = "ORG"
     PLACE = "PLACE"
     REGION = "REGION"

@@ -1,5 +1,5 @@
 query GetOrg($orgId: ID!) {
-  getOrg(id: $orgId) {
+  org(id: $orgId) {
     id
     name
     desc

@@ -7,10 +7,10 @@ from .base_model import BaseModel
 
 
 class GetRootCategory(BaseModel):
-    root_category: "GetRootCategoryRootCategory" = Field(alias="rootCategory")
+    category_root: "GetRootCategoryCategoryRoot" = Field(alias="categoryRoot")
 
 
-class GetRootCategoryRootCategory(BaseModel):
+class GetRootCategoryCategoryRoot(BaseModel):
     id: str
 
 

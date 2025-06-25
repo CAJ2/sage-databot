@@ -7,7 +7,7 @@ from .base_model import BaseModel
 
 
 class RootCategory(BaseModel):
-    root_category: "RootCategoryRootCategory" = Field(alias="rootCategory")
+    root_category: "RootCategoryRootCategory" = Field(alias="categoryRoot")
 
 
 class RootCategoryRootCategory(BaseModel):

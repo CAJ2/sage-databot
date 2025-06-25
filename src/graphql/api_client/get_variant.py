@@ -9,19 +9,19 @@ from .base_model import BaseModel
 
 
 class GetVariant(BaseModel):
-    get_variants: "GetVariantGetVariants" = Field(alias="getVariants")
+    variants: "GetVariantVariants"
 
 
-class GetVariantGetVariants(BaseModel):
-    edges: Optional[List["GetVariantGetVariantsEdges"]]
-    page_info: "GetVariantGetVariantsPageInfo" = Field(alias="pageInfo")
+class GetVariantVariants(BaseModel):
+    edges: Optional[List["GetVariantVariantsEdges"]]
+    page_info: "GetVariantVariantsPageInfo" = Field(alias="pageInfo")
 
 
-class GetVariantGetVariantsEdges(BaseModel):
-    node: "GetVariantGetVariantsEdgesNode"
+class GetVariantVariantsEdges(BaseModel):
+    node: "GetVariantVariantsEdgesNode"
 
 
-class GetVariantGetVariantsEdgesNode(BaseModel):
+class GetVariantVariantsEdgesNode(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
@@ -29,11 +29,11 @@ class GetVariantGetVariantsEdgesNode(BaseModel):
     updated_at: Any
 
 
-class GetVariantGetVariantsPageInfo(BaseModel):
+class GetVariantVariantsPageInfo(BaseModel):
     has_next_page: bool = Field(alias="hasNextPage")
     end_cursor: Optional[str] = Field(alias="endCursor")
 
 
 GetVariant.model_rebuild()
-GetVariantGetVariants.model_rebuild()
-GetVariantGetVariantsEdges.model_rebuild()
+GetVariantVariants.model_rebuild()
+GetVariantVariantsEdges.model_rebuild()
