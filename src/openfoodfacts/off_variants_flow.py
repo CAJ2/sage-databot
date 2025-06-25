@@ -19,6 +19,7 @@ from src.utils.logging.loggers import get_logger
 from src.utils import slugify
 from src.utils.api import api_connect
 from src.utils.db.crdb import create_polars_uri, db_write_dataframe
+from src.utils.db.meili import meili_connect
 
 
 @flow
@@ -33,9 +34,7 @@ def off_variants_flow():
     crdb = SqlAlchemyConnector.load("crdb-sage")
 
     # Connect to Meilisearch
-    meili = meilisearch.Client(
-        Variable.get("meilisearch", default="http://localhost:7700"),
-    )
+    meili = meili_connect()
 
     # Create an API client
     client, user = api_connect(crdb=crdb)
@@ -100,6 +99,7 @@ def off_variants_flow():
                 v_series = variant.select(pl.col("variant_id")).to_series()
                 if not v_series.is_empty():
                     variant_id = v_series.item()
+                    continue
 
             # Format name translations
             name_json = json.loads(row["product_name"])
@@ -164,9 +164,15 @@ def off_variants_flow():
                 orgs = []
                 for brand in brands:
                     brand = brand.strip()
-                    matching_orgs = meili.index("orgs").search(
-                        brand, {"rankingScoreThreshold": 0.5, "limit": 1}
-                    )
+                    try:
+                        matching_orgs = meili.index("orgs").search(
+                            brand, {"rankingScoreThreshold": 0.5, "limit": 1}
+                        )
+                    except Exception as e:
+                        time.sleep(5)
+                        matching_orgs = meili.index("orgs").search(
+                            brand, {"rankingScoreThreshold": 0.5, "limit": 1}
+                        )
                     if len(matching_orgs["hits"]) > 0:
                         org = matching_orgs["hits"][0]
                         # Update the org
