@@ -21,7 +21,7 @@ tags = [
             "uischema": "ui_schemas/place_opening_hours.json",
         },
         "bg_color": "#7236FD",
-        "image": "iconify://mdi:clock",
+        "image": "icon://mdi:clock",
         "tag_id": "opening_hours",
     },
 ]

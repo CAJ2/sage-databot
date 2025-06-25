@@ -25,6 +25,6 @@ tags = [
         },
         "meta_template": None,
         "bg_color": "#D4B2D8",
-        "image": "iconify://mdi:package",
+        "image": "icon://mdi:package",
     },
 ]

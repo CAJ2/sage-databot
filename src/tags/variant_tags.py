@@ -25,7 +25,7 @@ tags = [
             "uischema": "ui_schemas/variant_origins.json",
         },
         "bg_color": "#92B4A7",
-        "image": "iconify://ic:baseline-place",
+        "image": "icon://ic:baseline-place",
     },
     {
         "id": "bnsXi41vh9qb5SudBKGWR",
@@ -41,7 +41,7 @@ tags = [
             "uischema": "ui_schemas/variant_manufacturing.json",
         },
         "bg_color": "#2F2F2F",
-        "image": "iconify://mdi:building",
+        "image": "icon://mdi:building",
     },
     {
         "id": "pf77bSePb7M0IgzLJfkTh",
@@ -54,6 +54,6 @@ tags = [
         "desc": None,
         "meta_template": None,
         "bg_color": "#69B578",
-        "image": "iconify://mdi:organic",
+        "image": "icon://mdi:organic",
     },
 ]
