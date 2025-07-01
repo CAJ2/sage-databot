@@ -43,7 +43,15 @@ def get_product_df_from_language_code(code: str):
                 ["cat_1", "cat_2", "cat_3", "cat_4", "cat_5", "cat_6", "cat_7"]
             )
         ).unnest("cat")
-        df = df.drop("column_2", "column_3", "column_4", "column_5", "column_6", "column_7", strict=False)
+        df = df.drop(
+            "column_2",
+            "column_3",
+            "column_4",
+            "column_5",
+            "column_6",
+            "column_7",
+            strict=False,
+        )
     df = df.rename(dict(zip(df.columns, df_columns)))
     df = df.with_columns(pl.col("id").cast(pl.Utf8))
     log.info(f"Loaded {df.shape[0]} rows for {code}")
@@ -73,7 +81,7 @@ def get_product_df_from_language_code(code: str):
             "id_to": pl.Utf8,
         }
     )
-    to_remove = ['Mature', 'Tobacco']
+    to_remove = ["Mature", "Tobacco"]
     df = df.filter(
         ~(pl.concat_str(coalesce_cols, ignore_nulls=True).str.contains_any(to_remove))
     )
@@ -188,9 +196,17 @@ def categories_flow():
     categories_df = categories_df.vstack(
         pl.DataFrame(root_row, schema=categories_df.schema)
     )
-    cat_edge_df = cat_edge_df.join(categories_df.select("google_id", "id").rename({"google_id": "id_from"}), on="id_from", how="inner")
+    cat_edge_df = cat_edge_df.join(
+        categories_df.select("google_id", "id").rename({"google_id": "id_from"}),
+        on="id_from",
+        how="inner",
+    )
     cat_edge_df = cat_edge_df.drop("id_from").rename({"id": "id_from"})
-    cat_edge_df = cat_edge_df.join(categories_df.select("google_id", "id").rename({"google_id": "id_to"}), on="id_to", how="inner")
+    cat_edge_df = cat_edge_df.join(
+        categories_df.select("google_id", "id").rename({"google_id": "id_to"}),
+        on="id_to",
+        how="inner",
+    )
     cat_edge_df = cat_edge_df.drop("id_to").rename({"id": "id_to"})
     categories_df = categories_df.drop("google_id")
     log.info(f"Categories: {categories_df.head(20)}")
