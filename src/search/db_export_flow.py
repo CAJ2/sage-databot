@@ -14,7 +14,7 @@ def setup_db_export():
     crdb = SqlAlchemyConnector.load("crdb-sage")
 
     # Load the AWS credentials
-    aws = AwsCredentials.load("do-spaces")
+    aws = AwsCredentials.load("digitalocean-spaces")
     bucket = Variable.get("spaces_db_bucket")
     if not bucket:
         raise ValueError(

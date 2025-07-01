@@ -176,6 +176,31 @@ def index_variants(
     meili.index("variants").add_documents(docs)
 
 
+def index_components(
+    crdb: SqlAlchemyConnector,
+    meili: meilisearch.Client,
+):
+    """
+    Index the components in Meilisearch.
+    """
+    log = get_logger()
+    df = export_table(
+        crdb,
+        "public.components",
+        cols='id, updated_at, name::string, "desc"::string',
+    )
+    log.info(f"Exported {df.height} rows from public.components")
+    log.info(f"Columns: {df.describe()}")
+    df = df.cast({pl.Datetime: pl.String})
+    docs = df.to_dicts()
+    for doc in docs:
+        name_json = json.loads(doc["name"])
+        doc["name"] = name_json
+        desc_json = json.loads(doc["desc"] or "{}")
+        doc["desc"] = desc_json
+    meili.index("components").add_documents(docs)
+
+
 def index_materials(
     crdb: SqlAlchemyConnector,
     meili: meilisearch.Client,
@@ -342,7 +367,7 @@ def search_index_import(index: list[str], clear: bool, **kwargs):
             check_create_index(
                 meili, "components", {"searchableAttributes": ["name", "desc"]}
             )
-        # index_components(crdb, meili)
+        index_components(crdb, meili)
     if not index or "materials" in index:
         # Material index
         if clear:
