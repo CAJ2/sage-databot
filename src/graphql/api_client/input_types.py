@@ -3,13 +3,15 @@
 
 from typing import Any, List, Optional
 
+from pydantic import Field
+
 from .base_model import BaseModel
 from .enums import ChangeStatus, SourceType, TagType
 
 
 class ComponentMaterialInput(BaseModel):
     id: str
-    material_fraction: Optional[float] = None
+    material_fraction: Optional[float] = Field(alias="materialFraction", default=None)
 
 
 class ComponentRegionInput(BaseModel):
@@ -22,19 +24,21 @@ class ComponentTagsInput(BaseModel):
 
 
 class CreateCategoryInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_short: Optional[str] = None
-    desc_short_tr: Optional[List["TranslatedInput"]] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
-    image_url: Optional[str] = None
+    desc_short: Optional[str] = Field(alias="descShort", default=None)
+    desc_short_tr: Optional[List["TranslatedInput"]] = Field(
+        alias="descShortTr", default=None
+    )
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
-    remove_sources: Optional[List[str]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
 
 
 class CreateChangeInput(BaseModel):
@@ -45,120 +49,124 @@ class CreateChangeInput(BaseModel):
 
 
 class CreateComponentInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
-    image_url: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
     materials: Optional[List["ComponentMaterialInput"]] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
-    primary_material: Optional["ComponentMaterialInput"] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    physical: Optional[Any] = None
+    primary_material: Optional["ComponentMaterialInput"] = Field(
+        alias="primaryMaterial", default=None
+    )
     region: Optional["ComponentRegionInput"] = None
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     tags: Optional[List["ComponentTagsInput"]] = None
+    visual: Optional[Any] = None
 
 
 class CreateItemInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     categories: Optional[List["ItemCategoriesInput"]] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
-    image_url: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
-    remove_sources: Optional[List[str]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     tags: Optional[List["ItemTagsInput"]] = None
 
 
 class CreateOrgInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
-    avatar_url: Optional[str] = None
+    avatar_url: Optional[str] = Field(alias="avatarURL", default=None)
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
     lang: Optional[str] = None
     name: str
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     slug: str
-    website_url: Optional[str] = None
+    website_url: Optional[str] = Field(alias="websiteURL", default=None)
 
 
 class CreateProcessInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
     efficiency: Optional[Any] = None
     instructions: Optional[Any] = None
     intent: str
     lang: Optional[str] = None
     material: Optional["ProcessMaterialInput"] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
     org: Optional["ProcessOrgInput"] = None
     place: Optional["ProcessPlaceInput"] = None
     region: Optional["ProcessRegionInput"] = None
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     rules: Optional[Any] = None
     variant: Optional["ProcessVariantInput"] = None
 
 
 class CreateSourceInput(BaseModel):
     content: Optional[Any] = None
-    content_url: Optional[str] = None
+    content_url: Optional[str] = Field(alias="contentURL", default=None)
     location: Optional[str] = None
     metadata: Optional[Any] = None
     type: SourceType
 
 
 class CreateTagDefinitionInput(BaseModel):
-    bg_color: Optional[str] = None
+    bg_color: Optional[str] = Field(alias="bgColor", default=None)
     desc: Optional[str] = None
     image: Optional[str] = None
-    meta_template: Optional[Any] = None
+    meta_template: Optional[Any] = Field(alias="metaTemplate", default=None)
     name: str
     type: TagType
 
 
 class CreateVariantInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     code: Optional[str] = None
     components: Optional[List["VariantComponentsInput"]] = None
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
-    image_url: Optional[str] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     items: Optional[List["VariantItemsInput"]] = None
     lang: Optional[str] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
     orgs: Optional[List["VariantOrgsInput"]] = None
     region: Optional["VariantRegionsInput"] = None
     regions: Optional[List["VariantRegionsInput"]] = None
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     tags: Optional[List["VariantTagsInput"]] = None
 
 
 class DeleteInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     id: str
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
 
 
 class ItemCategoriesInput(BaseModel):
@@ -202,20 +210,22 @@ class TranslatedInput(BaseModel):
 
 
 class UpdateCategoryInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_short: Optional[str] = None
-    desc_short_tr: Optional[List["TranslatedInput"]] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
+    desc_short: Optional[str] = Field(alias="descShort", default=None)
+    desc_short_tr: Optional[List["TranslatedInput"]] = Field(
+        alias="descShortTr", default=None
+    )
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
     id: str
-    image_url: Optional[str] = None
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
-    remove_sources: Optional[List[str]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
 
 
 class UpdateChangeInput(BaseModel):
@@ -227,69 +237,79 @@ class UpdateChangeInput(BaseModel):
 
 
 class UpdateComponentInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
-    add_tags: Optional[List["ComponentTagsInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
+    add_tags: Optional[List["ComponentTagsInput"]] = Field(
+        alias="addTags", default=None
+    )
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
     id: str
-    image_url: Optional[str] = None
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
     materials: Optional[List["ComponentMaterialInput"]] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
-    primary_material: Optional["ComponentMaterialInput"] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    physical: Optional[Any] = None
+    primary_material: Optional["ComponentMaterialInput"] = Field(
+        alias="primaryMaterial", default=None
+    )
     region: Optional["ComponentRegionInput"] = None
-    remove_sources: Optional[List[str]] = None
-    remove_tags: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
+    remove_tags: Optional[List[str]] = Field(alias="removeTags", default=None)
     tags: Optional[List["ComponentTagsInput"]] = None
+    visual: Optional[Any] = None
 
 
 class UpdateItemInput(BaseModel):
-    add_categories: Optional[List["ItemCategoriesInput"]] = None
-    add_sources: Optional[List["SourceInput"]] = None
-    add_tags: Optional[List["ItemTagsInput"]] = None
+    add_categories: Optional[List["ItemCategoriesInput"]] = Field(
+        alias="addCategories", default=None
+    )
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
+    add_tags: Optional[List["ItemTagsInput"]] = Field(alias="addTags", default=None)
     apply: Optional[bool] = None
     categories: Optional[List["ItemCategoriesInput"]] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
     id: str
-    image_url: Optional[str] = None
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
-    remove_categories: Optional[List[str]] = None
-    remove_sources: Optional[List[str]] = None
-    remove_tags: Optional[List[str]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    remove_categories: Optional[List[str]] = Field(
+        alias="removeCategories", default=None
+    )
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
+    remove_tags: Optional[List[str]] = Field(alias="removeTags", default=None)
     tags: Optional[List["ItemTagsInput"]] = None
 
 
 class UpdateOrgInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
-    avatar_url: Optional[str] = None
+    avatar_url: Optional[str] = Field(alias="avatarURL", default=None)
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
     id: str
     lang: Optional[str] = None
     name: Optional[str] = None
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     slug: Optional[str] = None
-    website_url: Optional[str] = None
+    website_url: Optional[str] = Field(alias="websiteURL", default=None)
 
 
 class UpdateProcessInput(BaseModel):
-    add_sources: Optional[List["SourceInput"]] = None
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
     efficiency: Optional[Any] = None
     id: str
     instructions: Optional[Any] = None
@@ -297,18 +317,18 @@ class UpdateProcessInput(BaseModel):
     lang: Optional[str] = None
     material: Optional["ProcessMaterialInput"] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
     org: Optional["ProcessOrgInput"] = None
     place: Optional["ProcessPlaceInput"] = None
     region: Optional["ProcessRegionInput"] = None
-    remove_sources: Optional[List[str]] = None
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
     rules: Optional[Any] = None
     variant: Optional["ProcessVariantInput"] = None
 
 
 class UpdateSourceInput(BaseModel):
     content: Optional[Any] = None
-    content_url: Optional[str] = None
+    content_url: Optional[str] = Field(alias="contentURL", default=None)
     id: str
     location: Optional[str] = None
     metadata: Optional[Any] = None
@@ -316,42 +336,51 @@ class UpdateSourceInput(BaseModel):
 
 
 class UpdateTagDefinitionInput(BaseModel):
-    bg_color: Optional[str] = None
+    bg_color: Optional[str] = Field(alias="bgColor", default=None)
     desc: Optional[str] = None
     id: str
     image: Optional[str] = None
-    meta_template: Optional[Any] = None
+    meta_template: Optional[Any] = Field(alias="metaTemplate", default=None)
     name: Optional[str] = None
     type: Optional[TagType] = None
 
 
 class UpdateVariantInput(BaseModel):
-    add_components: Optional[List["VariantComponentsInput"]] = None
-    add_items: Optional[List["VariantItemsInput"]] = None
-    add_orgs: Optional[List["VariantOrgsInput"]] = None
-    add_regions: Optional[List["VariantRegionsInput"]] = None
-    add_sources: Optional[List["SourceInput"]] = None
-    add_tags: Optional[List["VariantTagsInput"]] = None
+    add_components: Optional[List["VariantComponentsInput"]] = Field(
+        alias="addComponents", default=None
+    )
+    add_items: Optional[List["VariantItemsInput"]] = Field(
+        alias="addItems", default=None
+    )
+    add_orgs: Optional[List["VariantOrgsInput"]] = Field(alias="addOrgs", default=None)
+    add_regions: Optional[List["VariantRegionsInput"]] = Field(
+        alias="addRegions", default=None
+    )
+    add_sources: Optional[List["SourceInput"]] = Field(alias="addSources", default=None)
+    add_tags: Optional[List["VariantTagsInput"]] = Field(alias="addTags", default=None)
     apply: Optional[bool] = None
     change: Optional["CreateChangeInput"] = None
-    change_id: Optional[str] = None
+    change_id: Optional[str] = Field(alias="changeID", default=None)
     code: Optional[str] = None
     components: Optional[List["VariantComponentsInput"]] = None
     desc: Optional[str] = None
-    desc_tr: Optional[List["TranslatedInput"]] = None
+    desc_tr: Optional[List["TranslatedInput"]] = Field(alias="descTr", default=None)
     id: str
-    image_url: Optional[str] = None
+    image_url: Optional[str] = Field(alias="imageURL", default=None)
+    items: Optional[List["VariantItemsInput"]] = None
     lang: Optional[str] = None
     name: Optional[str] = None
-    name_tr: Optional[List["TranslatedInput"]] = None
+    name_tr: Optional[List["TranslatedInput"]] = Field(alias="nameTr", default=None)
     orgs: Optional[List["VariantOrgsInput"]] = None
     region: Optional["VariantRegionsInput"] = None
-    remove_components: Optional[List[str]] = None
-    remove_items: Optional[List[str]] = None
-    remove_orgs: Optional[List[str]] = None
-    remove_regions: Optional[List[str]] = None
-    remove_sources: Optional[List[str]] = None
-    remove_tags: Optional[List[str]] = None
+    remove_components: Optional[List[str]] = Field(
+        alias="removeComponents", default=None
+    )
+    remove_items: Optional[List[str]] = Field(alias="removeItems", default=None)
+    remove_orgs: Optional[List[str]] = Field(alias="removeOrgs", default=None)
+    remove_regions: Optional[List[str]] = Field(alias="removeRegions", default=None)
+    remove_sources: Optional[List[str]] = Field(alias="removeSources", default=None)
+    remove_tags: Optional[List[str]] = Field(alias="removeTags", default=None)
     tags: Optional[List["VariantTagsInput"]] = None
 
 

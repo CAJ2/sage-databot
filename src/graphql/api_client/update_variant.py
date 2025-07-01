@@ -22,8 +22,8 @@ class UpdateVariantUpdateVariantVariant(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
-    created_at: Any
-    updated_at: Any
+    created_at: Any = Field(alias="createdAt")
+    updated_at: Any = Field(alias="updatedAt")
 
 
 UpdateVariant.model_rebuild()

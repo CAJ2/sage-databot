@@ -2,10 +2,10 @@ query GetSource($id: ID!) {
   source(id: $id) {
     id
     type
-    processed_at
+    processedAt
     location
     content
-    content_url
+    contentURL
     metadata
   }
 }
@@ -15,7 +15,7 @@ mutation AddSource($input: CreateSourceInput!) {
     source {
       id
       type
-      processed_at
+      processedAt
       location
     }
   }
@@ -26,7 +26,7 @@ mutation UpdateSource($input: UpdateSourceInput!) {
     source {
       id
       type
-      processed_at
+      processedAt
       location
     }
   }

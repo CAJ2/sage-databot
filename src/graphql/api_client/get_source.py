@@ -3,6 +3,8 @@
 
 from typing import Any, Optional
 
+from pydantic import Field
+
 from .base_model import BaseModel
 from .enums import SourceType
 
@@ -14,10 +16,10 @@ class GetSource(BaseModel):
 class GetSourceSource(BaseModel):
     id: str
     type: SourceType
-    processed_at: Optional[Any]
+    processed_at: Optional[Any] = Field(alias="processedAt")
     location: Optional[str]
     content: Optional[Any]
-    content_url: Optional[str]
+    content_url: Optional[str] = Field(alias="contentURL")
     metadata: Optional[Any]
 
 

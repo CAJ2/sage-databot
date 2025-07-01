@@ -20,7 +20,7 @@ class UpdateSourceUpdateSource(BaseModel):
 class UpdateSourceUpdateSourceSource(BaseModel):
     id: str
     type: SourceType
-    processed_at: Optional[Any]
+    processed_at: Optional[Any] = Field(alias="processedAt")
     location: Optional[str]
 
 

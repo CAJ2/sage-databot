@@ -8,8 +8,8 @@ query GetVariant(
         id
         name
         desc
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
     }
     pageInfo {
@@ -27,8 +27,8 @@ mutation AddVariant(
       id
       name
       desc
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
   }
 }
@@ -41,8 +41,8 @@ mutation UpdateVariant(
       id
       name
       desc
-      created_at
-      updated_at
+      createdAt
+      updatedAt
     }
   }
 }

@@ -164,10 +164,10 @@ class Client(BaseClient):
               source(id: $id) {
                 id
                 type
-                processed_at
+                processedAt
                 location
                 content
-                content_url
+                contentURL
                 metadata
               }
             }
@@ -188,7 +188,7 @@ class Client(BaseClient):
                 source {
                   id
                   type
-                  processed_at
+                  processedAt
                   location
                 }
               }
@@ -210,7 +210,7 @@ class Client(BaseClient):
                 source {
                   id
                   type
-                  processed_at
+                  processedAt
                   location
                 }
               }
@@ -239,8 +239,8 @@ class Client(BaseClient):
                     id
                     name
                     desc
-                    created_at
-                    updated_at
+                    createdAt
+                    updatedAt
                   }
                 }
                 pageInfo {
@@ -267,8 +267,8 @@ class Client(BaseClient):
                   id
                   name
                   desc
-                  created_at
-                  updated_at
+                  createdAt
+                  updatedAt
                 }
               }
             }
@@ -290,8 +290,8 @@ class Client(BaseClient):
                   id
                   name
                   desc
-                  created_at
-                  updated_at
+                  createdAt
+                  updatedAt
                 }
               }
             }
