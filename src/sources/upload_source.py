@@ -19,11 +19,11 @@ def upload_source(file: list[str], **kwargs):
     client, user = api_connect()
 
     # Load the AWS credentials
-    aws = AwsCredentials.load("do-spaces")
-    bucket = Variable.get("spaces_public_bucket")
+    aws = AwsCredentials.load("digitalocean-spaces")
+    bucket = Variable.get("spaces_sources_bucket")
     if not bucket or bucket == "":
         raise ValueError(
-            "No bucket name provided. Please set the 'spaces_public_bucket' variable."
+            "No bucket name provided. Please set the 'spaces_sources_bucket' variable."
         )
 
     # Create the S3 bucket client
@@ -31,6 +31,8 @@ def upload_source(file: list[str], **kwargs):
         bucket_name=bucket,
         credentials=aws,
     )
+    # Test if the bucket is accessible
+    s3.list_objects(max_items=1)
 
     file_path = file[0] if len(file) > 0 else None
     source_type = None

@@ -38,7 +38,7 @@ def source_unstructured(source_id: list[str], **kwargs):
     client, user = api_connect()
 
     # Load the AWS credentials
-    aws = AwsCredentials.load("do-spaces")
+    aws = AwsCredentials.load("digitalocean-spaces")
     bucket = Variable.get("spaces_public_bucket")
     if not bucket or bucket == "":
         raise ValueError(
