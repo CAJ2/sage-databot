@@ -1,0 +1,6 @@
+summary: Configuration variables and scripts
+display_name: config
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

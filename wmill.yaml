@@ -1,0 +1,30 @@
+defaultTs: bun
+
+includes:
+  - f/**
+excludes: []
+codebases: []
+
+skipVariables: false
+skipResources: false
+skipResourceTypes: false
+skipSecrets: true
+skipScripts: false
+skipFlows: false
+skipApps: false
+skipFolders: false
+includeSchedules: false
+includeTriggers: false
+includeUsers: false
+includeGroups: true
+includeSettings: false
+includeKey: false
+skipWorkspaceDependencies: false
+
+gitBranches:
+  main:
+    baseUrl: 'https://databot.dev.sageleaf.app'
+    workspaceId: sage-prod
+  dev:
+    baseUrl: 'https://databot.dev.sageleaf.app'
+    workspaceId: sage-dev

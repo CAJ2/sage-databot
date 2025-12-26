@@ -16,3 +16,6 @@ wheels/
 
 # Flow temporary files
 data
+
+# Misc
+.DS_Store

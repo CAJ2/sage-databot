@@ -1,0 +1,6 @@
+summary: Environment-specific resources
+display_name: envs
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

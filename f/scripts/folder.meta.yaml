@@ -1,0 +1,6 @@
+summary: Misc utility scripts and flows
+display_name: scripts
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot
