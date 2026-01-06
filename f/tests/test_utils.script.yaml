@@ -1,0 +1,16 @@
+summary: Tests the utils scripts
+description: ''
+lock: '!inline f/tests/test_utils.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - no_default
+    - name
+    - age
+    - obj
+    - l
+    - file_
+  properties: {}
+  required: []

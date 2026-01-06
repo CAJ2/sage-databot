@@ -1,0 +1,39 @@
+summary: Runs the integration tests
+description: ''
+value:
+  modules:
+    - id: b
+      summary: Gather integration test files
+      value:
+        type: rawscript
+        content: '!inline gather_integration_test_files.inline_script.py'
+        input_transforms: {}
+        lock: '!inline gather_integration_test_files.inline_script.lock'
+        language: python3
+    - id: c
+      value:
+        type: forloopflow
+        modules:
+          - id: d
+            summary: Run the test script
+            value:
+              type: rawscript
+              content: '!inline run_the_test_script.inline_script.py'
+              input_transforms:
+                test_script:
+                  type: javascript
+                  expr: flow_input.iter.value
+              lock: '!inline run_the_test_script.inline_script.lock'
+              language: python3
+        iterator:
+          type: javascript
+          expr: results.b
+        parallel: false
+        skip_failures: true
+        squash: false
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order: []
+  properties: {}
+  required: []

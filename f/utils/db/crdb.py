@@ -3,7 +3,7 @@ import os
 import stat
 import polars as pl
 from urllib.parse import urlparse, urlencode, parse_qs
-from sqlalchemy import create_engine, Engine
+from sqlalchemy import create_engine, Engine, text
 
 
 def _check_or_create_cert_file(content: str, file_name: str):
@@ -63,7 +63,7 @@ _sql_engine = None
 def create_sql_engine(resource = 'f/db_config/db_sage') -> Engine:
     global _sql_engine
     if _sql_engine is None:
-        _sql_engine = create_engine(create_crdb_uri(resource=resource).replace("cockroachdb", "cockroachdb+psycopg", 1))
+        _sql_engine = create_engine(create_crdb_uri(resource=resource).replace("cockroachdb", "postgresql+psycopg", 1))
     return _sql_engine
 
 
@@ -116,8 +116,8 @@ def db_write_dataframe(
 
     for col in id_cols:
         with crdb.begin() as conn:
-            conn.execute(f"ALTER TABLE databot.{table} ALTER COLUMN {col} SET NOT NULL;")
+            conn.execute(text(f"ALTER TABLE databot.{table} ALTER COLUMN {col} SET NOT NULL"))
     with crdb.begin() as conn:
         conn.execute(
-            f"ALTER TABLE databot.{table} ALTER PRIMARY KEY USING COLUMNS ({','.join(id_cols)});"
+            text(f"ALTER TABLE databot.{table} ALTER PRIMARY KEY USING COLUMNS ({','.join(id_cols)})")
         )

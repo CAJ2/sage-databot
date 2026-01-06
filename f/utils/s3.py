@@ -7,8 +7,11 @@ from urllib.parse import urlparse
 from urllib.request import urlretrieve
 
 class S3Client:
-    def __init__(self):
-        self.bucket = wmill.get_resource("f/s3_config/s3_databot")["bucket"]
+    def __init__(self, resource_id = "f/s3_config/s3_databot"):
+        resource = wmill.get_resource(resource_id)
+        if resource is None:
+            raise ValueError(f"Resource '{resource_id}' does not exist")
+        self.bucket = resource["bucket"]
         args = wmill.boto3_connection_settings("f/s3_config/s3_databot")
         args['endpoint_url'] = args['endpoint_url'].replace('https://', '', 1)
         self.client = boto3.client("s3", **args)
@@ -28,13 +31,18 @@ class S3Client:
     def s3_exists(self, url: str) -> bool:
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
-            return False
-        try:
-            reader = open(parsed_url, transport_params={"client": self.client})
-            reader.read(1)
-            return True
-        except Exception:
-            return False
+            raise ValueError(f"Invalid url '{url}'")
+        parsed = urlparse(parsed_url)
+        path = parsed.path.replace(self.bucket + "/", "", 1)
+        response = self.client.list_objects_v2(
+            Bucket=self.bucket,
+            Prefix=path,
+        )
+        for obj in response.get('Contents', []):
+            print(obj)
+            if obj['Key'] == path:
+                return True
+        return False
     
     def s3_upload(self, url: str, f, mode = "wb") -> bool:
         parsed_url = self._ensure_url(url)

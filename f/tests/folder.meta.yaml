@@ -1,0 +1,6 @@
+summary: Integration tests
+display_name: tests
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot
