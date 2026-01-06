@@ -1,5 +1,6 @@
 import wmill
 import os
+import stat
 import polars as pl
 from urllib.parse import urlparse, urlencode, parse_qs
 from sqlalchemy import create_engine, Engine
@@ -10,6 +11,7 @@ def _check_or_create_cert_file(content: str, file_name: str):
         return
     with open(file_name, "w") as fp:
         fp.write(content)
+    os.chmod(file_name, stat.S_IREAD)
 
 def create_crdb_uri(resource = "f/db_config/db_sage") -> str:
     """
@@ -42,7 +44,7 @@ def create_crdb_uri(resource = "f/db_config/db_sage") -> str:
         _check_or_create_cert_file(c["ssl_key"], file_name)
         query_params["sslkey"] = [file_name]
     query_params["sslmode"] = [sslmode]
-    uri = uri._replace(query=urlencode(query_params))
+    uri = uri._replace(query=urlencode(query_params, doseq=True))
     return uri.geturl()
 
 
@@ -61,7 +63,7 @@ _sql_engine = None
 def create_sql_engine(resource = 'f/db_config/db_sage') -> Engine:
     global _sql_engine
     if _sql_engine is None:
-        _sql_engine = create_engine(create_crdb_uri(resource=resource))
+        _sql_engine = create_engine(create_crdb_uri(resource=resource).replace("cockroachdb", "cockroachdb+psycopg", 1))
     return _sql_engine
 
 

@@ -54,15 +54,17 @@ class S3Client:
             return False
         start = time.time()
         print(f"Starting download from {parsed_url}...")
-        with open(parsed_url, transport_params={"client": self.client}) as f_in:
+        with open(parsed_url, "rb", transport_params={"client": self.client}) as f_in:
             for line in f_in:
                 f.write(line)
         print(f"Successfully downloaded from {parsed_url} ({timedelta(seconds=(time.time() - start))})")
         return True
 
     def _ensure_url(self, url: str) -> str | None:
+        if "://" not in url:
+            url = self.bucket + "/" + url
         try:
-            parsed = urlparse(url, "s3://")
+            parsed = urlparse(url, "s3")
             return parsed.geturl()
         except Exception:
             print(f"Invalid url: {url}")
