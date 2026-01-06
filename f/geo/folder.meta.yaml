@@ -1,0 +1,6 @@
+summary: Geographical and mapping
+display_name: geo
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

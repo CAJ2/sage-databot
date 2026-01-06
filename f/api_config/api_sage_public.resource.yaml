@@ -1,0 +1,6 @@
+description: The Sage API
+value:
+  base_url: '$var:f/api_config/api_sage_graphql'
+  bearer_token: ''
+  custom_headers: null
+resource_type: graphql

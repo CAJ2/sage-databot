@@ -1,0 +1,3 @@
+description: URL of the Sage GraphQL API
+value: 'https://api.dev.sageleaf.app/graphql'
+is_secret: false

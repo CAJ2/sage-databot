@@ -1,0 +1,34 @@
+description: A direct cockroachdb connection
+format_extension: null
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - uri
+    - ssl_cert
+    - ssl_rootcert
+    - ssl_key
+  properties:
+    ssl_cert:
+      type: string
+      description: ''
+      default: ''
+      password: true
+    ssl_key:
+      type: string
+      description: ''
+      default: ''
+      password: true
+    ssl_rootcert:
+      type: string
+      description: ''
+      default: ''
+      password: true
+    uri:
+      type: string
+      description: ''
+      default: ''
+      nullable: false
+      password: true
+  required:
+    - uri

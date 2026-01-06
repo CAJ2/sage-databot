@@ -1,0 +1,7 @@
+description: Direct connection to the Sage DB
+value:
+  ssl_cert: '$var:f/db_config/db_sage_cert'
+  ssl_key: '$var:f/db_config/db_sage_key'
+  ssl_rootcert: '$var:f/db_config/db_sage_rootcert'
+  uri: '$var:f/db_config/db_sage_uri'
+resource_type: c_cockroachdb
