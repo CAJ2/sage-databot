@@ -1,7 +1,0 @@
-.venv
-data
-.local
-.dlt
-.ruff_cache
-__pycache__
-*.pyc
