@@ -1,17 +1,15 @@
-from prefect import flow, task
+# requirements: project
+
 import polars as pl
 import networkx as nx
-from prefect_sqlalchemy import SqlAlchemyConnector
 import nanoid
+from sqlalchemy import text
 
-from src.utils.db.crdb import db_write_dataframe
-from src.utils.logging.loggers import get_logger
+from f.utils.db.crdb import create_sql_engine, db_write_dataframe
 
 
-@task(log_prints=True)
 def get_product_df_from_language_code(code: str):
-    log = get_logger()
-    log.info(f"Loading Google product taxonomy for {code}...")
+    print(f"Loading Google product taxonomy for {code}...")
     df_columns = "id cat_1 cat_2 cat_3 cat_4 cat_5 cat_6 cat_7".split()
     coalesce_cols = df_columns[1:]
     coalesce_cols.reverse()
@@ -54,8 +52,8 @@ def get_product_df_from_language_code(code: str):
         )
     df = df.rename(dict(zip(df.columns, df_columns)))
     df = df.with_columns(pl.col("id").cast(pl.Utf8))
-    log.info(f"Loaded {df.shape[0]} rows for {code}")
-    log.info(f"Columns: {df.columns}")
+    print(f"Loaded {df.shape[0]} rows for {code}")
+    print(f"Columns: {df.columns}")
     df = df.vstack(
         pl.DataFrame(
             {
@@ -70,7 +68,7 @@ def get_product_df_from_language_code(code: str):
             }
         )
     )
-    log.info(f"Loaded {df.shape[0]} rows for {code}")
+    print(f"Loaded {df.shape[0]} rows for {code}")
 
     name_col = f"name:{code}"
     df = df.with_columns(pl.coalesce(*coalesce_cols).alias(name_col))
@@ -85,7 +83,7 @@ def get_product_df_from_language_code(code: str):
     df = df.filter(
         ~(pl.concat_str(coalesce_cols, ignore_nulls=True).str.contains_any(to_remove))
     )
-    log.info(f"After filter: {df.shape[0]} categories for {code}")
+    print(f"After filter: {df.shape[0]} categories for {code}")
     if code != "en-US":
         df = df.drop(coalesce_cols)
         df = df.drop("column_2", "column_3", "column_4", "column_5", strict=False)
@@ -132,13 +130,11 @@ def get_product_df_from_language_code(code: str):
     return (df, df_edges)
 
 
-@flow
 def categories_flow():
     """
     This flow imports the Google product taxonomy.
     The main steps are: validation of the categories graph and SQL data loading.
     """
-    log = get_logger()
 
     code_list = [
         "en-US",
@@ -192,7 +188,7 @@ def categories_flow():
         .alias("id")
     )
     categories_df = categories_df.with_columns(new_ids)
-    log.info(root_row)
+    print(root_row)
     categories_df = categories_df.vstack(
         pl.DataFrame(root_row, schema=categories_df.schema)
     )
@@ -209,8 +205,8 @@ def categories_flow():
     )
     cat_edge_df = cat_edge_df.drop("id_to").rename({"id": "id_to"})
     categories_df = categories_df.drop("google_id")
-    log.info(f"Categories: {categories_df.head(20)}")
-    log.info(f"Category edges: {cat_edge_df.head(20)}")
+    print(f"Categories: {categories_df.head(20)}")
+    print(f"Category edges: {cat_edge_df.head(20)}")
     categories_df.write_csv("data/taxonomy/categories.csv")
     cat_edge_df.write_csv("data/taxonomy/category_edges.csv")
     name_cols = {}
@@ -234,9 +230,9 @@ def categories_flow():
     for row in cat_edge_df.iter_rows(named=True):
         graph.add_edge(row["id_from"], row["id_to"])
 
-    log.info(f"Number of nodes: {graph.number_of_nodes()}")
-    log.info(f"Number of edges: {graph.number_of_edges()}")
-    log.info("Running graph validation...")
+    print(f"Number of nodes: {graph.number_of_nodes()}")
+    print(f"Number of edges: {graph.number_of_edges()}")
+    print("Running graph validation...")
     if not nx.is_directed_acyclic_graph(graph):
         raise ValueError("Graph is not a directed acyclic graph (DAG)")
     if not nx.is_weakly_connected(graph):
@@ -247,11 +243,11 @@ def categories_flow():
             .to_series()
             .to_list()
         )
-        log.error(
+        print(
             f"Graph is not weakly connected. Smallest component: {named_smallest}"
         )
         raise ValueError("Graph is not weakly connected")
-    log.info("Graph is a valid categories DAG")
+    print("Graph is a valid categories DAG")
 
     tree_df = pl.DataFrame(
         schema={
@@ -289,7 +285,7 @@ def categories_flow():
                 }
             )
         )
-    log.info(tree_df.glimpse())
+    print(tree_df.glimpse())
 
     db_write_dataframe(categories_df, "categories_load")
     db_write_dataframe(
@@ -299,37 +295,33 @@ def categories_flow():
         edges_df, "categories_edges_load", id_cols=["parent_id", "child_id"]
     )
 
-    crdb = SqlAlchemyConnector.load("crdb-sage")
-    crdb.execute("""
-        UPSERT INTO public.categories (id, updated_at, name)
-        VALUES ('CATEGORY_ROOT', NOW(), '{"xx": "Category Root"}');
-    """)
-    crdb.execute("""
-        INSERT INTO public.categories (id, created_at, updated_at, name)
-        SELECT id, NOW(), NOW(), name::JSONB
-        FROM databot.categories_load
-        ON CONFLICT (id) DO UPDATE
-        SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
-            updated_at = NOW();
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.categories_load;")
-    crdb.execute("""
-        UPSERT INTO public.category_tree (ancestor_id, descendant_id, depth)
-        SELECT ancestor_id, descendant_id, depth
-        FROM databot.categories_tree_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.categories_tree_load;")
-    crdb.execute("""
-        UPSERT INTO public.category_edges (parent_id, child_id)
-        SELECT parent_id, child_id
-        FROM databot.categories_edges_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.categories_edges_load;")
+    engine = create_sql_engine()
+    with engine.begin() as crdb:
+        crdb.execute(text("""
+            UPSERT INTO public.categories (id, updated_at, name)
+            VALUES ('CATEGORY_ROOT', NOW(), '{"xx": "Category Root"}');
+        """))
+        crdb.execute(text("""
+            INSERT INTO public.categories (id, created_at, updated_at, name)
+            SELECT id, NOW(), NOW(), name::JSONB
+            FROM databot.categories_load
+            ON CONFLICT (id) DO UPDATE
+            SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
+                updated_at = NOW();
+        """))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.categories_load;"))
+        crdb.execute(text("""
+            UPSERT INTO public.category_tree (ancestor_id, descendant_id, depth)
+            SELECT ancestor_id, descendant_id, depth
+            FROM databot.categories_tree_load;
+        """))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.categories_tree_load;"))
+        crdb.execute(text("""
+            UPSERT INTO public.category_edges (parent_id, child_id)
+            SELECT parent_id, child_id
+            FROM databot.categories_edges_load;
+        """))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.categories_edges_load;"))
 
-
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
+def main():
     categories_flow()

@@ -1,5 +1,7 @@
 version: v2
 locks:
+  f/categories/categories_flow: d2a141ae184075fadacc2aca7097eb8eedc0bd13483dda5408193a22aeba25b4
+  f/categories/google_taxonomy_flow: 6e8c5ce225eec292e361bda5d0e32c032974f87bc302ab09d53495ff4a920c31
   f/geo/import_whos_on_first.flow+__flow_hash: 0ae4998d40dc5150f078d024605649ac04debfc447f692951a5cccfe9cbd18a8
   f/geo/import_whos_on_first.flow+load_whos_on_first_data.inline_script.py: 985c8deef6d82a044cb6d26bda2958434a0a524ddc326b4b8171be0fd65f03e3
   f/geo/import_whos_on_first.flow+transform_and_insert.inline_script.py: 24128930b74f84b7658dadd5e61412e9f3b2b1f696d0bd0050172fbc6d06df62

@@ -1,22 +1,19 @@
-from prefect import flow
+# requirements: project
+
 import polars as pl
 import networkx as nx
-from prefect_sqlalchemy import SqlAlchemyConnector
+from sqlalchemy import text
 
-from src.utils.db.crdb import db_write_dataframe
-from src.utils.logging.loggers import get_logger
+from f.utils.db.crdb import create_sql_engine, db_write_dataframe
 
-
-@flow
 def categories_flow():
     """
     This flow orchestrates the categories pipeline.
     The main steps are: validation of the categories graph and SQL data loading.
     """
-    log = get_logger()
 
     categories_df = pl.read_csv(
-        "src/categories/categories.tsv", separator="\t", has_header=True
+        "f/categories/categories.tsv", separator="\t", has_header=True
     )
     name_cols = {}
     desc_short_cols = {}
@@ -47,7 +44,7 @@ def categories_flow():
     )
     categories_df = categories_df.drop(desc_cols.values())
     cat_edge_df = pl.read_csv(
-        "src/categories/categories_edges.tsv", separator="\t", has_header=True
+        "f/categories/categories_edges.tsv", separator="\t", has_header=True
     )
 
     # Add all nodes and edges to the graph and validate
@@ -60,9 +57,9 @@ def categories_flow():
     for row in cat_edge_df.iter_rows(named=True):
         graph.add_edge(row["id_from"], row["id_to"])
 
-    log.info(f"Number of nodes: {graph.number_of_nodes()}")
-    log.info(f"Number of edges: {graph.number_of_edges()}")
-    log.info("Running graph validation...")
+    print(f"Number of nodes: {graph.number_of_nodes()}")
+    print(f"Number of edges: {graph.number_of_edges()}")
+    print("Running graph validation...")
     if not nx.is_directed_acyclic_graph(graph):
         raise ValueError("Graph is not a directed acyclic graph (DAG)")
     if not nx.is_weakly_connected(graph):
@@ -73,11 +70,11 @@ def categories_flow():
             .to_series()
             .to_list()
         )
-        log.error(
+        print(
             f"Graph is not weakly connected. Smallest component: {named_smallest}"
         )
         raise ValueError("Graph is not weakly connected")
-    log.info("Graph is a valid categories DAG")
+    print("Graph is a valid categories DAG")
 
     tree_df = pl.DataFrame(
         schema={
@@ -115,7 +112,7 @@ def categories_flow():
                 }
             )
         )
-    log.info(tree_df.glimpse())
+    print(tree_df.glimpse())
 
     db_write_dataframe(categories_df, "categories_load")
     db_write_dataframe(
@@ -125,40 +122,36 @@ def categories_flow():
         edges_df, "categories_edges_load", id_cols=["parent_id", "child_id"]
     )
 
-    crdb = SqlAlchemyConnector.load("crdb-sage")
-    crdb.execute("""
-        UPSERT INTO public.categories (id, updated_at, name)
-        VALUES ('CATEGORY_ROOT', NOW(), '{"xx": "Category Root"}');
-    """)
-    crdb.execute("""
-        INSERT INTO public.categories (id, created_at, updated_at, name, "desc_short", "desc", image_url)
-        SELECT id, NOW(), NOW(), name::JSONB, "desc_short"::JSONB, "desc"::JSONB, image_url::STRING
-        FROM databot.categories_load
-        ON CONFLICT (id) DO UPDATE
-        SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
-            "desc_short" = JSON_STRIP_NULLS(EXCLUDED."desc_short"::JSONB),
-            "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
-            image_url = EXCLUDED.image_url::STRING,
-            updated_at = NOW();
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.categories_load;")
-    crdb.execute("""
-        UPSERT INTO public.category_tree (ancestor_id, descendant_id, depth)
-        SELECT ancestor_id, descendant_id, depth
-        FROM databot.categories_tree_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.categories_tree_load;")
-    crdb.execute("""
-        UPSERT INTO public.category_edges (parent_id, child_id)
-        SELECT parent_id, child_id
-        FROM databot.categories_edges_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.categories_edges_load;")
+    engine = create_sql_engine()
+    with engine.begin() as crdb:
+        crdb.execute(text("""
+            UPSERT INTO public.categories (id, updated_at, name)
+            VALUES ('CATEGORY_ROOT', NOW(), '{"xx": "Category Root"}');
+        """))
+        crdb.execute(text("""
+            INSERT INTO public.categories (id, created_at, updated_at, name, "desc_short", "desc", image_url)
+            SELECT id, NOW(), NOW(), name::JSONB, "desc_short"::JSONB, "desc"::JSONB, image_url::STRING
+            FROM databot.categories_load
+            ON CONFLICT (id) DO UPDATE
+            SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
+                "desc_short" = JSON_STRIP_NULLS(EXCLUDED."desc_short"::JSONB),
+                "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
+                image_url = EXCLUDED.image_url::STRING,
+                updated_at = NOW();
+        """))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.categories_load;"))
+        crdb.execute(text("""
+            UPSERT INTO public.category_tree (ancestor_id, descendant_id, depth)
+            SELECT ancestor_id, descendant_id, depth
+            FROM databot.categories_tree_load;
+        """))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.categories_tree_load;"))
+        crdb.execute(text("""
+            UPSERT INTO public.category_edges (parent_id, child_id)
+            SELECT parent_id, child_id
+            FROM databot.categories_edges_load;
+        """))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.categories_edges_load;"))
 
-
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
+def main():
     categories_flow()
