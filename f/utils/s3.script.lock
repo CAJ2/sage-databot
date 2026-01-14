@@ -1,7 +1,7 @@
 # py: 3.12
 anyio==4.12.1
-boto3==1.42.23
-botocore==1.42.23
+boto3==1.42.27
+botocore==1.42.27
 certifi==2026.1.4
 h11==0.16.0
 httpcore==1.0.9
@@ -13,6 +13,6 @@ s3transfer==0.16.0
 six==1.17.0
 smart-open==7.5.0
 typing-extensions==4.15.0
-urllib3==2.6.2
-wmill==1.601.1
+urllib3==2.6.3
+wmill==1.606.1
 wrapt==2.0.1

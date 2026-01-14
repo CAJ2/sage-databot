@@ -47,8 +47,8 @@ extract = [
 deps = "src.pyproject_deps:main"
 
 [tool.ariadne-codegen]
-schema_path = "src/graphql/schema.gql"
-queries_path = "src/graphql/queries"
+schema_path = "f/graphql/schema.gql"
+queries_path = "f/graphql/queries"
 target_package_name = "api_client"
-target_package_path = "src/graphql"
+target_package_path = "f/graphql"
 async_client = false
