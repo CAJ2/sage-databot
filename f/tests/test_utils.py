@@ -1,4 +1,5 @@
 # requirements: project
+from sqlalchemy import text
 
 import f.utils.db.crdb as crdb
 from f.utils.s3 import S3Client
@@ -6,7 +7,7 @@ from f.utils.s3 import S3Client
 def test_db_sage():
     engine = crdb.create_sql_engine()
     with engine.begin() as conn:
-        conn.execute("SELECT 1")
+        conn.execute(text("SELECT 1"))
     print("Connection successful")
 
 def test_s3_client():

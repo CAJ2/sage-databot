@@ -33,7 +33,7 @@ def create_crdb_uri(resource = "f/db_config/db_sage") -> str:
         file_name = file_name_prefix + "_ssl_rootcert.crt"
         _check_or_create_cert_file(c["ssl_rootcert"], file_name)
         query_params["sslrootcert"] = [file_name]
-        sslmode = "require"
+        sslmode = "verify-ca"
     if len(c["ssl_cert"]) > 0:
         file_name = file_name_prefix + "_ssl_cert.crt"
         _check_or_create_cert_file(c["ssl_cert"], file_name)
@@ -63,7 +63,7 @@ _sql_engine = None
 def create_sql_engine(resource = 'f/db_config/db_sage') -> Engine:
     global _sql_engine
     if _sql_engine is None:
-        _sql_engine = create_engine(create_crdb_uri(resource=resource).replace("cockroachdb", "postgresql+psycopg", 1))
+        _sql_engine = create_engine(create_crdb_uri(resource=resource).replace("cockroachdb", "cockroachdb+psycopg", 1))
     return _sql_engine
 
 
