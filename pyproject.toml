@@ -8,7 +8,6 @@ dependencies = [
     "sqlalchemy>=2.0.45",
     "sqlalchemy-cockroachdb>=2.0.3",
     "psycopg[binary]>=3.3.2",
-    "psycopg2>=2.9.11",
     "python-dotenv>=1.2.1",
     "ruff>=0.14.10",
     "gitpython>=3.1.44",
