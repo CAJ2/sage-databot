@@ -5,6 +5,6 @@ value:
   endPoint: 'https://fra1.digitaloceanspaces.com'
   pathStyle: true
   region: ''
-  secretKey: '$var:f/s3_config/s3_db'
+  secretKey: '$var:f/s3_config/s3_databot_secret'
   useSSL: true
 resource_type: s3
