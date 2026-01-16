@@ -15,19 +15,19 @@ class S3Client:
         args = wmill.boto3_connection_settings("f/s3_config/s3_databot")
         args['endpoint_url'] = args['endpoint_url'].replace('https://', '', 1)
         self.client = boto3.client("s3", **args)
-    
+
     def create_url(self, path: str, bucket = "") -> str | None:
         if bucket == "":
             bucket = self.bucket
         return self._ensure_url(f"s3://{bucket}/{path}")
-    
+
     def to_wmill(self, url: str) -> wmill.S3Object | None:
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
             return None
         url_path = parsed_url.replace("s3://", "").replace(self.bucket, "", 1)
         return wmill.S3Object(s3=url_path)
-    
+
     def s3_exists(self, url: str) -> bool:
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
@@ -39,11 +39,10 @@ class S3Client:
             Prefix=path,
         )
         for obj in response.get('Contents', []):
-            print(obj)
             if obj['Key'] == path:
                 return True
         return False
-    
+
     def s3_upload(self, url: str, f, mode = "wb") -> bool:
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
@@ -55,7 +54,7 @@ class S3Client:
                 f_out.write(line)
         print(f"Successfully uploaded to {parsed_url} ({timedelta(seconds=(time.time() - start))})")
         return True
-    
+
     def s3_download(self, url: str, f) -> bool:
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
@@ -77,4 +76,3 @@ class S3Client:
         except Exception:
             print(f"Invalid url: {url}")
             return None
-
