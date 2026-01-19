@@ -67,6 +67,12 @@ class S3Client:
         print(f"Successfully downloaded from {parsed_url} ({timedelta(seconds=(time.time() - start))})")
         return True
 
+    def s3_scan(self, prefix: str) -> iter:
+        paginator = self.client.get_paginator('list_objects_v2')
+        page_iterator = paginator.paginate(Bucket=self.bucket, Prefix=prefix)
+        for page in page_iterator:
+            yield page
+
     def _ensure_url(self, url: str) -> str | None:
         if "://" not in url:
             url = self.bucket + "/" + url

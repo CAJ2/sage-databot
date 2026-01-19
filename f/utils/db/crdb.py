@@ -1,3 +1,4 @@
+from typing import Iterator
 import wmill
 import os
 import stat
@@ -66,6 +67,20 @@ def create_sql_engine(resource = 'f/db_config/db_sage') -> Engine:
         _sql_engine = create_engine(create_crdb_uri(resource=resource).replace("cockroachdb", "cockroachdb+psycopg", 1))
     return _sql_engine
 
+def export_table_by_ids(
+    crdb: Engine, table: str, ids: list[str], cols: str = "*", schema: dict | None = None, batch_size: int = 5000
+) -> Iterator[pl.DataFrame]:
+    """
+    Export a selection of rows keyed by primary id from the database to a Polars DataFrame.
+    """
+    df_iter = pl.read_database(
+        f"SELECT {cols} FROM {table} WHERE id IN ('{"','".join(ids)}')",
+        connection=crdb,
+        schema_overrides=schema,
+        iter_batches=True,
+        batch_size=batch_size
+    )
+    return df_iter
 
 def db_write_dataframe(
     df: pl.DataFrame, table: str, id_cols: list[str] = ["id"], resource: str = "f/db_config/db_sage"

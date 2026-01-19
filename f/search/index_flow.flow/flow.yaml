@@ -1,0 +1,65 @@
+summary: Index changes from CRDB into Meilisearch
+description: ''
+value:
+  modules:
+    - id: a
+      summary: Parses incoming triggers
+      value:
+        type: rawscript
+        content: '!inline parses_incoming_triggers.inline_script.py'
+        input_transforms:
+          length:
+            type: javascript
+            expr: flow_input.length
+          payload:
+            type: javascript
+            expr: flow_input.payload
+        lock: '!inline parses_incoming_triggers.inline_script.lock'
+        language: python3
+    - id: b
+      value:
+        type: forloopflow
+        modules:
+          - id: c
+            summary: ''
+            value:
+              type: branchone
+              branches:
+                - summary: Categories
+                  modules:
+                    - id: d
+                      value:
+                        type: script
+                        input_transforms:
+                          keys:
+                            type: javascript
+                            expr: flow_input.iter.value.keys
+                        is_trigger: false
+                        path: f/search/categories/index_categories
+                  expr: flow_input.iter.value.table == "categories"
+                  parallel: true
+                  skip_failure: true
+              default: []
+        iterator:
+          type: javascript
+          expr: results.a
+        parallel: false
+        skip_failures: true
+        squash: false
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - payload
+    - length
+  properties:
+    length:
+      type: integer
+      description: ''
+    payload:
+      type: array
+      description: ''
+      default: []
+      items:
+        type: string
+  required: []
