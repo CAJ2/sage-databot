@@ -19,3 +19,4 @@ schema:
   required:
     - continent
     - country
+timeout: 7200
