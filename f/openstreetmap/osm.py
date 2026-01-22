@@ -145,7 +145,7 @@ def transform_osm(filepath: str):
             ON CONFLICT (id) DO UPDATE
             SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
                 address = JSON_STRIP_NULLS(EXCLUDED.address::JSONB),
-                location = ST_GEOGFROMEWKT(EXCLUDED.location::TEXT),
+                location = EXCLUDED.location,
                 osm = EXCLUDED.osm::JSONB,
                 updated_at = NOW();
         """)
