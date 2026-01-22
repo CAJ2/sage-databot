@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: project:6d8e623bcf99aa3f47f4c2656e91ec2a71a6671782ec14d1d920a6d5d34ea327
+# workspace-dependencies: project:2
 # py: 3.12
 adbc-driver-manager==1.5.0
 adbc-driver-postgresql==1.9.0

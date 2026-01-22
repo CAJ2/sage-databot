@@ -33,7 +33,7 @@ def generate_name(tags) -> dict:
     return name
 
 
-def generate_address(tags) -> dict:
+def generate_address(tags) -> dict | None:
     """
     Generate an address from the tags.
 

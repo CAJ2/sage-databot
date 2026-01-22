@@ -15,7 +15,9 @@ value:
             type: javascript
             expr: flow_input.payload
         lock: '!inline parses_incoming_triggers.inline_script.lock'
+        concurrency_time_window_s: 0
         language: python3
+      continue_on_error: false
     - id: b
       value:
         type: forloopflow
@@ -36,6 +38,16 @@ value:
                             expr: flow_input.iter.value.keys
                         is_trigger: false
                         path: f/search/categories/index_categories
+                      continue_on_error: false
+                      retry:
+                        constant:
+                          attempts: 0
+                          seconds: 0
+                        exponential:
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                          seconds: 5
                   expr: flow_input.iter.value.table == "categories"
                   parallel: true
                   skip_failure: true
