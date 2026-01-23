@@ -4,7 +4,7 @@ import json
 from http import cookies
 from urllib.parse import unquote
 
-from src.graphql.api_client.client import Client
+from f.graphql.api_client.client import Client
 
 
 def api_connect():
@@ -32,7 +32,7 @@ def api_connect():
     cx = httpx.Cookies()
     for k in c.keys():
         cx.set(k, c[k].value)
-        
+
     body = r.json()
     if "user" not in body:
         raise ValueError("Failed to sign in to the API: user key not found")
