@@ -17,10 +17,10 @@ There are several main features that Databot intends to implement. These are def
 
 ### Architecture
 
-The Databot is built using Python and Prefect for workflow orchestration. Prefect provides the concept of flows, which are entrypoints into the code meant to perform an action, such as one listed in the features above.
+Databot is built using Python and [Windmill](https://www.windmill.dev/) for workflow orchestration.
 
 Dependencies:
 - Sage API
-- Prefect + PostgreSQL
+- Windmill + PostgreSQL
 - Meilisearch
 - Redis
