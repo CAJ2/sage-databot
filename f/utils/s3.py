@@ -10,23 +10,59 @@ from urllib.request import urlretrieve
 
 class S3Client:
     def __init__(self, resource_id="f/s3_config/s3_databot"):
-        resource = wmill.get_resource(resource_id)
-        if resource is None:
+        self.resource = wmill.get_resource(resource_id)
+        if self.resource is None:
             raise ValueError(f"Resource '{resource_id}' does not exist")
-        self.bucket = resource["bucket"]
+        self.bucket = self.resource["bucket"]
         args = wmill.boto3_connection_settings("f/s3_config/s3_databot")
-        args["endpoint_url"] = args["endpoint_url"].replace("https://", "", 1)
+        https_count = args["endpoint_url"].count("https://")
+        if https_count > 1:
+            args["endpoint_url"] = args["endpoint_url"].replace(
+                "https://", "", https_count - 1
+            )
         self.client = boto3.client("s3", **args)
 
-    def create_url(self, path: str, bucket="") -> str | None:
+    def create_url(self, path: str, bucket="") -> str:
         if bucket == "":
             bucket = self.bucket
-        return self._ensure_url(f"s3://{bucket}/{path}")
+        url = self._ensure_url(f"s3://{bucket}/{path}")
+        if url is None:
+            raise ValueError(f"Invalid path '{path}'")
+        return url
 
-    def to_wmill(self, url: str) -> wmill.S3Object | None:
+    def polars_options(self) -> dict:
+        if self.resource is None:
+            raise ValueError("S3 resource is not defined")
+        endpoint = self.resource.get("endPoint", "")
+        if not endpoint.startswith("https://"):
+            endpoint = "https://" + endpoint
+        options = {
+            "access_key_id": self.resource.get("accessKey", ""),
+            "secret_access_key": self.resource.get("secretKey", ""),
+            "region": self.resource.get("region", ""),
+            "endpoint_url": endpoint,
+        }
+        return options
+
+    def duckdb_setup(self) -> str:
+        if self.resource is None:
+            raise ValueError("S3 resource is not defined")
+        setup = f"""
+            CREATE OR REPLACE SECRET secret (
+                TYPE s3,
+                PROVIDER config,
+                KEY_ID '{self.resource.get("accessKey", "")}',
+                SECRET '{self.resource.get("secretKey", "")}',
+                REGION '{self.resource.get("region", "")}',
+                ENDPOINT '{self.resource.get("endPoint", "")}'
+            );
+        """
+        return setup
+
+    def to_wmill(self, url: str) -> wmill.S3Object:
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
-            return None
+            raise ValueError(f"Invalid url '{url}'")
         url_path = parsed_url.replace("s3://", "").replace(self.bucket, "", 1)
         return wmill.S3Object(s3=url_path)
 

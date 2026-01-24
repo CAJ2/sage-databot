@@ -1,0 +1,16 @@
+summary: Filters out duplicate IDs from an OpenFoodFacts export
+description: ''
+lock: '!inline f/openfoodfacts/off_filter_duplicates.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  properties:
+    parquet_file:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - parquet_file
+timeout: 3600

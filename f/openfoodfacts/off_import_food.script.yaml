@@ -1,0 +1,23 @@
+summary: Import OpenFoodFacts food data into CRDB
+description: ''
+lock: '!inline f/openfoodfacts/off_import_food.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - no_default
+    - name
+    - age
+    - obj
+    - l
+    - file_
+  properties:
+    parquet_file:
+      type: object
+      description: ''
+      default: null
+      format: resource-s3_object
+  required:
+    - parquet_file
+timeout: 3600

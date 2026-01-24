@@ -1,0 +1,6 @@
+summary: Scripts for interacting with the OpenFoodFacts database
+display_name: openfoodfacts
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

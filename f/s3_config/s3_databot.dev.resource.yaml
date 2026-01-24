@@ -2,7 +2,7 @@ description: S3 access to the databot bucket
 value:
   accessKey: '$var:f/s3_config/s3_databot_access'
   bucket: sage-leaf-databot-dev
-  endPoint: 'https://fra1.digitaloceanspaces.com'
+  endPoint: fra1.digitaloceanspaces.com
   pathStyle: true
   region: ''
   secretKey: '$var:f/s3_config/s3_databot_secret'

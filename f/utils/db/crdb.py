@@ -104,63 +104,78 @@ def export_table_by_ids(
 
 
 def db_write_dataframe(
-    df: pl.DataFrame,
+    df: pl.DataFrame | pl.LazyFrame,
     table: str,
     id_cols: list[str] = ["id"],
+    append: bool = False,
     resource: str = "f/db_config/db_sage",
+    chunk_size: int = 5_000,
 ):
     """
-    Write a Polars DataFrame to a CRDB database table using the crdb-sage SqlAlchemyConnector.
+    Write a Polars DataFrame or LazyFrame to a CRDB database table.
+    Handles large DataFrames by writing/materializing in batches.
 
     Converts struct columns to JSONB format.
     """
-    conn = create_polars_uri(resource=resource)
     crdb = create_sql_engine(resource=resource)
 
+    print(f"Writing to table databot.{table} with chunk size {chunk_size}...")
+    df = df.lazy()
     # Convert struct columns to JSONB format
-    for col in df.columns:
-        col_info = df.get_column(col)
-        if col_info.dtype == pl.Struct:
+    schema = df.collect_schema()
+    print(f"Schema has {len(schema)} columns")
+    for col in schema.names():
+        if schema[col] == pl.Struct:
             df = df.with_columns(pl.col(col).struct.json_encode().alias(col))
-        elif col_info.dtype == pl.List:
+        elif schema[col] == pl.List:
             # Better option when implemented: https://github.com/pola-rs/polars/issues/14029
             # Converting to a struct is probably better than using map_elements, 'cause Python slow
             # The actual list value will be under the JSON key with the same name as the column
             df = df.with_columns(pl.struct(pl.col(col)).struct.json_encode().alias(col))
 
-    CHUNK_SIZE = 50_000
-    if df.height > CHUNK_SIZE:
-        # If the dataframe is too large, write it in chunks
-        df.slice(0, CHUNK_SIZE).write_database(
-            connection=conn,
+    first = not append
+    total_count = 0
+    opt = pl.QueryOptFlags(
+        predicate_pushdown=True,
+        projection_pushdown=True,
+        simplify_expression=True,
+        slice_pushdown=True,
+        comm_subplan_elim=True,
+        comm_subexpr_elim=True,
+        cluster_with_columns=True,
+        collapse_joins=True,
+        check_order_observe=True,
+        fast_projection=True,
+    )
+    print("Starting to write batches...")
+    print(f"Query plan: \n{df.explain(optimizations=opt)}")
+    for next_df in df.collect_batches(
+        chunk_size=chunk_size,
+        maintain_order=False,
+        optimizations=opt,
+    ):
+        next_df.write_database(
+            connection=crdb,
             table_name=f"databot.{table}",
-            if_table_exists="replace",
-            engine="adbc",
+            if_table_exists="replace" if first else "append",
         )
-        for i in range(CHUNK_SIZE, df.height, CHUNK_SIZE):
-            chunk = df.slice(i, CHUNK_SIZE)
-            chunk.write_database(
-                connection=conn,
-                table_name=f"databot.{table}",
-                if_table_exists="append",
-                engine="adbc",
-            )
-    else:
-        df.write_database(
-            connection=conn,
-            table_name=f"databot.{table}",
-            if_table_exists="replace",
-            engine="adbc",
-        )
-
-    for col in id_cols:
-        with crdb.begin() as conn:
-            conn.execute(
-                text(f"ALTER TABLE databot.{table} ALTER COLUMN {col} SET NOT NULL")
-            )
-    with crdb.begin() as conn:
-        conn.execute(
-            text(
-                f"ALTER TABLE databot.{table} ALTER PRIMARY KEY USING COLUMNS ({','.join(id_cols)})"
-            )
-        )
+        if first:
+            for col in id_cols:
+                with crdb.begin() as conn:
+                    conn.execute(
+                        text(
+                            f"ALTER TABLE databot.{table} ALTER COLUMN {col} SET NOT NULL"
+                        )
+                    )
+            with crdb.begin() as conn:
+                conn.execute(
+                    text(
+                        f"ALTER TABLE databot.{table} ALTER PRIMARY KEY USING COLUMNS ({','.join(id_cols)})"
+                    )
+                )
+            print(f"Wrote initial {next_df.height} rows to databot.{table}")
+        else:
+            print(f"Appended {next_df.height} rows to databot.{table}")
+        first = False
+        total_count += next_df.height
+    print(f"Finished writing {total_count} rows to databot.{table}")
