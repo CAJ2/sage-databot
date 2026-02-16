@@ -1,6 +1,6 @@
-summary: CockroachDB utils
+summary: ''
 description: ''
-lock: '!inline f/utils/db/crdb.script.lock'
+lock: '!inline f/openfoodfacts/off_variant.script.lock'
 kind: script
 schema:
   $schema: 'https://json-schema.org/draft/2020-12/schema'

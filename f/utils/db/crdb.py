@@ -5,8 +5,11 @@ import os
 import stat
 import polars as pl
 from urllib.parse import urlparse, urlencode, parse_qs
-from sqlalchemy import create_engine, Engine, text
+from sqlalchemy import create_engine, Engine, text, JSON
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.types import TypeDecorator
+import json
+from dataclasses import asdict
 
 
 def _check_or_create_cert_file(content: str, file_name: str):
@@ -80,6 +83,25 @@ def create_sql_engine(resource="f/db_config/db_sage") -> Engine:
 
 class Base(DeclarativeBase):
     pass
+
+
+class JSONData(TypeDecorator):
+    impl = JSON
+
+    def __init__(self, dataclass, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.dataclass = dataclass
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            return json.dumps(asdict(value))
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+            value = self.dataclass(**value)
+        return value
 
 
 def export_table_by_ids(
