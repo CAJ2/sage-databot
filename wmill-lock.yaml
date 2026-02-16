@@ -2,6 +2,8 @@ version: v2
 locks:
   f/categories/categories_flow: d2a141ae184075fadacc2aca7097eb8eedc0bd13483dda5408193a22aeba25b4
   f/categories/google_taxonomy_flow: 6e8c5ce225eec292e361bda5d0e32c032974f87bc302ab09d53495ff4a920c31
+  f/db/base: f3e9cb185006ea14b6dd0a579c989be668d8ba9c7e09a41a40f66d43aa9c32c4
+  f/db/external_sources/model: c1192129d9d203e7915dc33bf300ce40fb47925a01a4e92d78ac5aecca1e5a16
   f/geo/import_whos_on_first.flow+__flow_hash: 0ae4998d40dc5150f078d024605649ac04debfc447f692951a5cccfe9cbd18a8
   f/geo/import_whos_on_first.flow+load_whos_on_first_data.inline_script.py: 985c8deef6d82a044cb6d26bda2958434a0a524ddc326b4b8171be0fd65f03e3
   f/geo/import_whos_on_first.flow+transform_and_insert.inline_script.py: 24128930b74f84b7658dadd5e61412e9f3b2b1f696d0bd0050172fbc6d06df62
@@ -51,7 +53,7 @@ locks:
   f/utils/__init__: 9cf12c4d7e9613edbce79a5a2f6e8b96fbb0aadb8405bad2c3259ba05990c26c
   f/utils/api: 96fc86ec591b9072a1f92120057340765d22c6fffad3108c9bf1989d43480ba2
   f/utils/db/__init__: 86ca230a09983540b728ede77d93c3b00e78a58c8f228704ee429eb36d37e618
-  f/utils/db/crdb: 602911fcf312a6a081dd3648c991ea1c6115bc008601e87feae50822a7ae1e84
+  f/utils/db/crdb: 0c5fa11908bd7843178288b622848899515685a34021e48c9a7f1930bebdfb65
   f/utils/db/meili: 7b7bcd7f4c14769c4ea4862800bfb747f44bf5538441c5237ae164f37cbb97e3
   f/utils/extract: a3243960d5cf94582ec2978693f70bef8f1842b3e985f9e7d5ec37c01ca4db66
   f/utils/git: 67fecfd4e5a02a1dd5a7f179acf30de60fc21828398482770081196a9b38f872

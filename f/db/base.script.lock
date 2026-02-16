@@ -1,0 +1,4 @@
+# py: 3.12
+greenlet==3.3.1
+sqlalchemy==2.0.46
+typing-extensions==4.15.0
