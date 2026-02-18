@@ -12,8 +12,8 @@ def api_connect():
     Connects to the API and returns the client and user.
     """
     # Create an API client
-    api_url = wmill.get_variable("api_sage_url")
-    api_key = json.loads(wmill.get_variable("api_sage_key"))
+    api_url = wmill.get_variable("f/api_config/api_sage_url")
+    api_key = json.loads(wmill.get_variable("f/api_config/api_sage_key"))
     r = httpx.post(
         api_url + "/auth/sign-in/email",
         json={
@@ -44,7 +44,7 @@ def api_connect():
         client.get_root_category()
     except Exception as e:
         raise ValueError(f"Failed to connect to the GraphQL API: {e}")
-    return (client, body.user)
+    return (client, body["user"])
 
 
 def extract_cookies(r: httpx.Response) -> cookies.SimpleCookie:

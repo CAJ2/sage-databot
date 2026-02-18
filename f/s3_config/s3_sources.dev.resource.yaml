@@ -1,0 +1,10 @@
+description: S3 access to the sources bucket
+value:
+  accessKey: '$var:f/s3_config/s3_databot_access'
+  bucket: sage-leaf-sources
+  endPoint: fra1.digitaloceanspaces.com
+  pathStyle: true
+  region: ''
+  secretKey: '$var:f/s3_config/s3_databot_secret'
+  useSSL: true
+resource_type: s3

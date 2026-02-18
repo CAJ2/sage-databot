@@ -1,9 +1,18 @@
-summary: ''
-description: ''
-lock: '!inline f/openfoodfacts/off_variant.script.lock'
+summary: "Parse an OFF product into a variant"
+description: |
+  Parses an OFF product from the off_products table and tries to create
+  update a variant. A few fields may be updated automatically but most will
+  need to go through the change process.
+lock: "!inline f/openfoodfacts/off_variant.script.lock"
 kind: script
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: "https://json-schema.org/draft/2020-12/schema"
   type: object
-  properties: {}
-  required: []
+  properties:
+    product_id:
+      type: string
+      description: Import a product ID
+      default: null
+      originalType: string
+  required:
+    - product_id
