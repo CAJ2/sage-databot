@@ -1,3 +1,4 @@
+import inspect
 from sqlalchemy import JSON
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.types import TypeDecorator
@@ -23,6 +24,31 @@ class JSONData(TypeDecorator):
 
     def process_result_value(self, value, dialect):
         if value is not None:
-            value = json.loads(value)
-            value = self.dataclass(**value)
+            if not isinstance(value, dict):
+                value = json.loads(value)
+            value = self.dataclass(
+                **{
+                    k: v
+                    for k, v in value.items()
+                    if k in inspect.signature(self.dataclass).parameters
+                }
+            )
+        return value
+
+
+class Translated(TypeDecorator):
+    impl = JSON
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            return json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            if not isinstance(value, dict):
+                value = json.loads(value)
         return value

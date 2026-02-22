@@ -2,10 +2,10 @@
 
 import time
 from sqlalchemy import insert, select, text
-from sqlalchemy.orm import Session, Mapped, mapped_column
-from dataclasses import dataclass
+from sqlalchemy.orm import Session
 
-from f.db.external_sources.model import ExternalSource
+from f.db.databot.model import OFFProduct
+from f.db.sage.model import ExternalSource
 from f.graphql.api_client.client import (
     CreateVariantInput,
     UpdateVariantInput,
@@ -15,83 +15,8 @@ from f.graphql.api_client.client import (
 from f.graphql.api_client.input_types import SourceInput, VariantOrgsInput
 from f.utils.general import slugify
 from f.utils.api import api_connect
-from f.utils.db.crdb import (
-    create_sql_engine,
-    Base,
-    JSONData,
-)
+from f.utils.db.crdb import create_sql_engine
 from f.utils.db.meili import meili_connect
-
-
-@dataclass
-class CitiesTags:
-    cities_tags: list[str]
-
-
-@dataclass
-class CountriesTags:
-    countries_tags: list[str]
-
-
-@dataclass
-class DataSourcesTags:
-    data_sources_tags: list[str]
-
-
-@dataclass
-class EcoscoreData:
-    score: int
-    grade: str
-    adjustments: dict
-
-
-@dataclass
-class GenericName:
-    generic_name: list[dict]
-
-
-@dataclass
-class Images:
-    images: list[dict]
-
-
-@dataclass
-class Packagings:
-    packagings: list[dict]
-
-
-@dataclass
-class ProductName:
-    product_name: list[dict]
-
-
-class OFFProduct(Base):
-    __tablename__ = "off_products"
-
-    id: Mapped[str] = mapped_column(primary_key=True)
-    brands: Mapped[str | None]
-    categories: Mapped[str | None]
-    cities_tags: Mapped[CitiesTags | None] = mapped_column(JSONData(CitiesTags))
-    countries_tags: Mapped[CountriesTags | None] = mapped_column(
-        JSONData(CountriesTags)
-    )
-    data_sources_tags: Mapped[DataSourcesTags | None] = mapped_column(
-        JSONData(DataSourcesTags)
-    )
-    ecoscore_data: Mapped[EcoscoreData | None] = mapped_column(JSONData(EcoscoreData))
-    emb_codes: Mapped[str | None]
-    generic_name: Mapped[GenericName | None] = mapped_column(JSONData(GenericName))
-    images: Mapped[Images | None] = mapped_column(JSONData(Images))
-    labels: Mapped[str | None]
-    lang: Mapped[str | None]
-    link: Mapped[str | None]
-    manufacturing_places: Mapped[str | None]
-    origins: Mapped[str | None]
-    packagings: Mapped[Packagings | None] = mapped_column(JSONData(Packagings))
-    product_name: Mapped[ProductName | None] = mapped_column(JSONData(ProductName))
-    product_quantity: Mapped[str | None]
-    product_quantity_unit: Mapped[str | None]
-    stores: Mapped[str | None]
 
 
 def off_variant(product_id: str):
@@ -126,21 +51,21 @@ def off_variant(product_id: str):
 
     # Get the variant from the external sources table
     variant_id = None
-    with crdb.begin() as conn:
-        result = conn.execute(
-            text(
-                "SELECT variant_id FROM public.external_sources WHERE source = 'OFF' AND source_id = :source_id"
-            ),
-            {"source_id": product_id.removeprefix("off_")},
+    with Session(crdb) as session:
+        external_sources = (
+            session.query(ExternalSource)
+            .where(
+                ExternalSource.source == "OFF",
+                ExternalSource.source_id == product_id.removeprefix("off_"),
+            )
+            .first()
         )
-        row = result.first()
-        if row:
-            variant_id = row[0]
+        if external_sources:
+            variant_id = external_sources.variant_id
 
     # Fetch the OFF product
-    with crdb.begin() as conn:
-        stmt = select(OFFProduct).where(OFFProduct.id == product_id)
-        product = conn.execute(stmt).scalars().first()
+    with Session(crdb) as session:
+        product = session.query(OFFProduct).where(OFFProduct.id == product_id).first()
     if not product:
         print(f"No OFF product found with id {product_id}")
         return
@@ -223,7 +148,9 @@ def off_variant(product_id: str):
                 org = matching_orgs["hits"][0]
                 # Update the org
                 print(f"Matching orgs: {matching_orgs['hits']}")
-                orgs.append(VariantOrgsInput(id=org["id"]))
+                # Check if orgs already has this org ID
+                if not any(o.id == org["id"] for o in orgs):
+                    orgs.append(VariantOrgsInput(id=org["id"]))
             else:
                 # Create a new org
                 org = CreateOrgInput(name=brand, slug=slugify(brand))
