@@ -11,6 +11,7 @@ from f.db.databot.model import OFFProduct
 from f.db.sage.model import VariantSources, Source, ExternalSource
 from f.graphql.api_client.client import CreateSourceInput
 from f.graphql.api_client.enums import SourceType
+from f.graphql.api_client.input_types import SourceInput, UpdateVariantInput
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
 from f.utils.s3 import S3Client
@@ -222,6 +223,17 @@ def main(
 
                 source_id = op.create_source.source.id
                 print(f"Created source: {source_id}")
+
+                print("Linking source to variant...")
+                variant_input = UpdateVariantInput(id=variant_id)
+                variant_input.add_sources = [SourceInput(id=source_id)]
+                op = client.update_variant(variant_input)
+
+                if not op.update_variant or not op.update_variant.variant:
+                    print(
+                        f"Failed to link source to variant for image {image_id} size {size}"
+                    )
+                    continue
 
                 created_sources.append(
                     {
