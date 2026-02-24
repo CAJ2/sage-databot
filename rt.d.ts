@@ -8,8 +8,8 @@ declare namespace RT {
   }
 
   type Accelo = {
-    clientId: string,
-    deployment: string,
+    clientId: string
+    deployment: string
     clientSecret: string
   }
 
@@ -42,7 +42,7 @@ declare namespace RT {
   }
 
   type AirtableTable = {
-    baseId: string,
+    baseId: string
     tableName: string
   }
 
@@ -63,12 +63,12 @@ declare namespace RT {
   }
 
   type ApifyWebhookConfig = {
-    url: string,
+    url: string
     token: string
   }
 
   type ApiKeyAuth = {
-    api_key_header: string,
+    api_key_header: string
     api_key_secret: string
   }
 
@@ -77,14 +77,14 @@ declare namespace RT {
   }
 
   type Appwrite = {
-    key: string,
-    project: string,
-    endpoint: string,
+    key: string
+    project: string
+    endpoint: string
     self_signed: boolean
   }
 
   type ArcgisAccount = {
-    password: string,
+    password: string
     username: string
   }
 
@@ -101,34 +101,34 @@ declare namespace RT {
   }
 
   type Aws = {
-    region: string,
-    awsAccessKeyId: string,
+    region: string
+    awsAccessKeyId: string
     awsSecretAccessKey: string
   }
 
   type AwsBedrock = {
-    apiKey: string,
-    region: string,
-    awsAccessKeyId: string,
+    apiKey: string
+    region: string
+    awsAccessKeyId: string
     awsSecretAccessKey: string
   }
 
   type AwsOidc = {
-    region: string,
+    region: string
     roleArn: string
   }
 
   type Azure = {
-    azureClientId: string,
-    azureTenantId: string,
+    azureClientId: string
+    azureTenantId: string
     azureClientSecret: string
   }
 
   type AzureBlob = {
-    useSSL: boolean,
-    endpoint: string,
-    accessKey: string,
-    accountName: string,
+    useSSL: boolean
+    endpoint: string
+    accessKey: string
+    accountName: string
     containerName: string
   }
 
@@ -137,18 +137,18 @@ declare namespace RT {
   }
 
   type AzureOpenai = {
-    apiKey: string,
+    apiKey: string
     baseUrl: string
   }
 
   type AzureWorkloadIdentity = {
-    useSSL: boolean,
-    accountName: string,
+    useSSL: boolean
+    accountName: string
     containerName: string
   }
 
   type BambooHr = {
-    apiKey: string,
+    apiKey: string
     companyDomain: string
   }
 
@@ -157,17 +157,17 @@ declare namespace RT {
   }
 
   type Baserow = {
-    token: string,
+    token: string
     base_url: string
   }
 
   type BaserowTable = {
-    table_id: number,
+    table_id: number
     database_id: number
   }
 
   type BasicHttpAuth = {
-    password: string,
+    password: string
     username: string
   }
 
@@ -180,20 +180,20 @@ declare namespace RT {
   }
 
   type Bigquery = {
-    type: string,
-    auth_uri: string,
-    client_id: string,
-    token_uri: string,
-    project_id: string,
-    private_key: string,
-    client_email: string,
-    private_key_id: string,
-    client_x509_cert_url: string,
+    type: string
+    auth_uri: string
+    client_id: string
+    token_uri: string
+    project_id: string
+    private_key: string
+    client_email: string
+    private_key_id: string
+    client_x509_cert_url: string
     auth_provider_x509_cert_url: string
   }
 
   type Bitbucket = {
-    password: string,
+    password: string
     username: string
   }
 
@@ -202,7 +202,7 @@ declare namespace RT {
   }
 
   type Bluesky = {
-    password: string,
+    password: string
     username: string
   }
 
@@ -243,10 +243,10 @@ declare namespace RT {
   }
 
   type Chromadb = {
-    ssl: boolean,
-    host: string,
-    port: number,
-    tenant: string,
+    ssl: boolean
+    host: string
+    port: number
+    tenant: string
     database: string
   }
 
@@ -259,8 +259,8 @@ declare namespace RT {
   }
 
   type Clickhouse = {
-    host: string,
-    password: string,
+    host: string
+    password: string
     username: string
   }
 
@@ -269,8 +269,8 @@ declare namespace RT {
   }
 
   type Cloudflare = {
-    key: string,
-    email: string,
+    key: string
+    email: string
     token: string
   }
 
@@ -287,19 +287,19 @@ declare namespace RT {
   }
 
   type ComapeoServer = {
-    server_url: string,
+    server_url: string
     access_token: string
   }
 
   type Confluence = {
-    email: string,
-    baseUrl: string,
+    email: string
+    baseUrl: string
     apiToken: string
   }
 
   type Contentful = {
-    spaceId: string,
-    accessToken: string,
+    spaceId: string
+    accessToken: string
     environment: string
   }
 
@@ -316,13 +316,13 @@ declare namespace RT {
   }
 
   type Customai = {
-    api_key: string,
+    api_key: string
     base_url: string
   }
 
   type Datadog = {
-    apiKey: string,
-    appKey: string,
+    apiKey: string
+    appKey: string
     apiBase: string
   }
 
@@ -339,7 +339,7 @@ declare namespace RT {
   }
 
   type Deepl = {
-    apiKey: string,
+    apiKey: string
     baseUrl: string
   }
 
@@ -352,7 +352,7 @@ declare namespace RT {
   }
 
   type DiscordBotConfiguration = {
-    public_key: string,
+    public_key: string
     application_id: string
   }
 
@@ -361,35 +361,35 @@ declare namespace RT {
   }
 
   type Discourse = {
-    apiKey: string,
-    apiUsername: string,
+    apiKey: string
+    apiUsername: string
     defaultHost: string
   }
 
   type Docspring = {
-    tokenId: string,
+    tokenId: string
     tokenSecret: string
   }
 
   type Dust = {
-    apiKey: string,
+    apiKey: string
     workspaceId: string
   }
 
   type Dynatrace = {
-    accessToken: string,
-    environmentId: string,
+    accessToken: string
+    environmentId: string
     environmentUrl: string
   }
 
   type Edgedb = {
-    dsn: string,
-    host: string,
-    port: number,
-    user: string,
-    database: string,
-    password: string,
-    secretKey: string,
+    dsn: string
+    host: string
+    port: number
+    user: string
+    database: string
+    password: string
+    secretKey: string
     instanceName: string
   }
 
@@ -402,7 +402,7 @@ declare namespace RT {
   }
 
   type Faunadb = {
-    region: string,
+    region: string
     secret: string
   }
 
@@ -411,12 +411,12 @@ declare namespace RT {
   }
 
   type Firebase = {
-    appId: string,
-    apiKey: string,
-    projectId: string,
-    authDomain: string,
-    measurementId: string,
-    storageBucket: string,
+    appId: string
+    apiKey: string
+    projectId: string
+    authDomain: string
+    measurementId: string
+    storageBucket: string
     messagingSenderId: string
   }
 
@@ -433,12 +433,12 @@ declare namespace RT {
   }
 
   type Freshdesk = {
-    apiKey: string,
+    apiKey: string
     baseUrl: string
   }
 
   type Funkwhale = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
@@ -447,33 +447,33 @@ declare namespace RT {
   }
 
   type Gcloud = {
-    type: string,
-    auth_uri: string,
-    client_id: string,
-    token_uri: string,
-    project_id: string,
-    private_key: string,
-    client_email: string,
-    private_key_id: string,
-    client_x509_cert_url: string,
+    type: string
+    auth_uri: string
+    client_id: string
+    token_uri: string
+    project_id: string
+    private_key: string
+    client_email: string
+    private_key_id: string
+    client_x509_cert_url: string
     auth_provider_x509_cert_url: string
   }
 
   type GcloudStorage = {
-    bucket: string,
+    bucket: string
     serviceAccountKey: any
   }
 
   type GcpServiceAccount = {
-    type: string,
-    auth_uri: string,
-    client_id: string,
-    token_uri: string,
-    project_id: string,
-    private_key: string,
-    client_email: string,
-    private_key_id: string,
-    client_x509_cert_url: string,
+    type: string
+    auth_uri: string
+    client_id: string
+    token_uri: string
+    project_id: string
+    private_key: string
+    client_email: string
+    private_key_id: string
+    client_x509_cert_url: string
     auth_provider_x509_cert_url: string
   }
 
@@ -494,7 +494,7 @@ declare namespace RT {
   }
 
   type Ghostcms = {
-    apiKey: string,
+    apiKey: string
     apiUrl: string
   }
 
@@ -507,15 +507,15 @@ declare namespace RT {
   }
 
   type Gitlab = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
   type GitRepository = {
-    url: string,
-    branch: string,
-    folder: string,
-    gpg_key: any,
+    url: string
+    branch: string
+    folder: string
+    gpg_key: any
     is_github_app: boolean
   }
 
@@ -528,20 +528,20 @@ declare namespace RT {
   }
 
   type Gorgias = {
-    apiKey: string,
-    domain: string,
+    apiKey: string
+    domain: string
     username: string
   }
 
   type GpgKey = {
-    email: string,
-    passphrase: string,
+    email: string
+    passphrase: string
     private_key: string
   }
 
   type Graphql = {
-    base_url: string,
-    bearer_token: string,
+    base_url: string
+    bearer_token: string
     custom_headers: any
   }
 
@@ -550,7 +550,7 @@ declare namespace RT {
   }
 
   type Grist = {
-    host: string,
+    host: string
     apiKey: string
   }
 
@@ -579,14 +579,14 @@ declare namespace RT {
   }
 
   type IfsCloudOidc = {
-    server: string,
-    clientId: string,
-    oidcPath: string,
+    server: string
+    clientId: string
+    oidcPath: string
     clientSecret: string
   }
 
   type Intercom = {
-    token: string,
+    token: string
     apiVersion: string
   }
 
@@ -595,13 +595,13 @@ declare namespace RT {
   }
 
   type Jira = {
-    domain: string,
-    password: string,
+    domain: string
+    password: string
     username: string
   }
 
   type Jotform = {
-    apiKey: string,
+    apiKey: string
     baseUrl: string
   }
 
@@ -610,7 +610,7 @@ declare namespace RT {
   }
 
   type Kafka = {
-    brokers: string[],
+    brokers: string[]
     security: any
   }
 
@@ -619,7 +619,7 @@ declare namespace RT {
   }
 
   type Kobotoolbox = {
-    api_key: string,
+    api_key: string
     server_url: string
   }
 
@@ -628,16 +628,16 @@ declare namespace RT {
   }
 
   type Langfuse = {
-    base_url: string,
-    public_key: string,
+    base_url: string
+    public_key: string
     secret_key: string
   }
 
   type Ldap = {
-    server: string,
-    use_ssl: boolean,
-    bind_user: string,
-    ssl_validate: boolean,
+    server: string
+    use_ssl: boolean
+    bind_user: string
+    ssl_validate: boolean
     bind_password: string
   }
 
@@ -650,7 +650,7 @@ declare namespace RT {
   }
 
   type Linkding = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
@@ -667,14 +667,14 @@ declare namespace RT {
   }
 
   type Magento = {
-    accessToken: string,
-    consumerKey: string,
-    consumerSecret: string,
+    accessToken: string
+    consumerKey: string
+    consumerSecret: string
     accessTokenSecret: string
   }
 
   type Mailchimp = {
-    server: string,
+    server: string
     api_key: string
   }
 
@@ -687,24 +687,24 @@ declare namespace RT {
   }
 
   type Mastodon = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
   type Matrix = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
   type Mcp = {
-    url: string,
-    name: string,
-    token: string,
+    url: string
+    name: string
+    token: string
     headers: any
   }
 
   type Meteosource = {
-    tier: string,
+    tier: string
     apiKey: string
   }
 
@@ -725,14 +725,14 @@ declare namespace RT {
   }
 
   type Mongodb = {
-    db: string,
-    tls: boolean,
-    servers: any,
+    db: string
+    tls: boolean
+    servers: any
     credential: any
   }
 
   type MongodbRest = {
-    api_key: string,
+    api_key: string
     endpoint: string
   }
 
@@ -742,29 +742,29 @@ declare namespace RT {
 
   type Mqtt = {
     tls: {
-    enabled: boolean,
-    ca_certificate: string,
-    pkcs12_client_certificate: string,
-    pkcs12_certificate_password: string
-  },
-    port: number,
-    broker: string,
+      enabled: boolean
+      ca_certificate: string
+      pkcs12_client_certificate: string
+      pkcs12_certificate_password: string
+    }
+    port: number
+    broker: string
     credentials: {
-    password: string,
-    username: string
-  }
+      password: string
+      username: string
+    }
   }
 
   type MsSqlServer = {
-    host: string,
-    port: number,
-    user: string,
-    dbname: string,
-    ca_cert: string,
-    encrypt: boolean,
-    password: string,
-    aad_token: any,
-    trust_cert: boolean,
+    host: string
+    port: number
+    user: string
+    dbname: string
+    ca_cert: string
+    encrypt: boolean
+    password: string
+    aad_token: any
+    trust_cert: boolean
     instance_name: string
   }
 
@@ -773,18 +773,18 @@ declare namespace RT {
   }
 
   type Mysql = {
-    ssl: boolean,
-    host: string,
-    port: number,
-    user: string,
-    database: string,
-    password: string,
+    ssl: boolean
+    host: string
+    port: number
+    user: string
+    database: string
+    password: string
     root_certificate_pem: string
   }
 
   type Nats = {
-    auth: any,
-    servers: string[],
+    auth: any
+    servers: string[]
     require_tls: boolean
   }
 
@@ -793,7 +793,7 @@ declare namespace RT {
   }
 
   type Netbox = {
-    url: string,
+    url: string
     token: string
   }
 
@@ -806,15 +806,15 @@ declare namespace RT {
   }
 
   type Nextcloud = {
-    baseUrl: string,
-    password: string,
+    baseUrl: string
+    password: string
     username: string
   }
 
   type Nocodb = {
-    table: string,
-    apiUrl: string,
-    xc_token: string,
+    table: string
+    apiUrl: string
+    xc_token: string
     workspace: string
   }
 
@@ -823,14 +823,14 @@ declare namespace RT {
   }
 
   type Odk = {
-    base_url: string,
-    password: string,
-    username: string,
+    base_url: string
+    password: string
+    username: string
     default_project_id: number
   }
 
   type Openai = {
-    api_key: string,
+    api_key: string
     organization_id: string
   }
 
@@ -839,8 +839,8 @@ declare namespace RT {
   }
 
   type Oracledb = {
-    user: string,
-    database: string,
+    user: string
+    database: string
     password: string
   }
 
@@ -849,7 +849,7 @@ declare namespace RT {
   }
 
   type Paychex = {
-    client_id: string,
+    client_id: string
     client_secret: string
   }
 
@@ -858,7 +858,7 @@ declare namespace RT {
   }
 
   type Paypal = {
-    clientId: string,
+    clientId: string
     clientSecret: string
   }
 
@@ -867,17 +867,17 @@ declare namespace RT {
   }
 
   type Personio = {
-    clientId: string,
+    clientId: string
     clientSecret: string
   }
 
   type Phrase = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
   type Pinecone = {
-    apiKey: string,
+    apiKey: string
     environment: string
   }
 
@@ -890,22 +890,22 @@ declare namespace RT {
   }
 
   type Planetscale = {
-    serviceToken: string,
+    serviceToken: string
     serviceTokenId: string
   }
 
   type Postgresql = {
-    host: string,
-    port: number,
-    user: string,
-    dbname: string,
-    sslmode: string,
-    password: string,
+    host: string
+    port: number
+    user: string
+    dbname: string
+    sslmode: string
+    password: string
     root_certificate_pem: string
   }
 
   type Pushover = {
-    user: string,
+    user: string
     token: string
   }
 
@@ -914,8 +914,8 @@ declare namespace RT {
   }
 
   type Quickbooks = {
-    token: string,
-    realmId: string,
+    token: string
+    realmId: string
     isSandBox: boolean
   }
 
@@ -928,10 +928,10 @@ declare namespace RT {
   }
 
   type Reddit = {
-    clientId: string,
-    password: string,
-    username: string,
-    userAgent: string,
+    clientId: string
+    password: string
+    username: string
+    userAgent: string
     clientSecret: string
   }
 
@@ -952,19 +952,19 @@ declare namespace RT {
   }
 
   type S3 = {
-    port: number,
-    bucket: string,
-    region: string,
-    useSSL: boolean,
-    endPoint: string,
-    accessKey: string,
-    pathStyle: boolean,
+    port: number
+    bucket: string
+    region: string
+    useSSL: boolean
+    endPoint: string
+    accessKey: string
+    pathStyle: boolean
     secretKey: string
   }
 
   type S3AwsOidc = {
-    bucket: string,
-    region: string,
+    bucket: string
+    region: string
     roleArn: string
   }
 
@@ -977,7 +977,7 @@ declare namespace RT {
   }
 
   type Segment = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
@@ -986,18 +986,18 @@ declare namespace RT {
   }
 
   type Sensortower = {
-    base_url: string,
+    base_url: string
     auth_token: string
   }
 
   type Sentry = {
-    token: string,
-    region: string,
+    token: string
+    region: string
     organizationSlug: string
   }
 
   type Shopify = {
-    token: string,
+    token: string
     store_name: string
   }
 
@@ -1006,18 +1006,18 @@ declare namespace RT {
   }
 
   type SignatureAuth = {
-    secret_key: string,
-    signature_provider: string,
+    secret_key: string
+    signature_provider: string
     authentication_config: {
-    encoding: string,
-    algorithm: string,
-    signature_prefix: string,
-    signature_header_name: string
-  }
+      encoding: string
+      algorithm: string
+      signature_prefix: string
+      signature_header_name: string
+    }
   }
 
   type Signoz = {
-    apiKey: string,
+    apiKey: string
     baseUrl: string
   }
 
@@ -1026,25 +1026,25 @@ declare namespace RT {
   }
 
   type Smartsheet = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
   type Smtp = {
-    host: string,
-    port: number,
-    user: string,
+    host: string
+    port: number
+    user: string
     password: string
   }
 
   type Snowflake = {
-    role: string,
-    schema: string,
-    database: string,
-    username: string,
-    warehouse: string,
-    public_key: string,
-    private_key: string,
+    role: string
+    schema: string
+    database: string
+    username: string
+    warehouse: string
+    public_key: string
+    private_key: string
     account_identifier: string
   }
 
@@ -1065,12 +1065,12 @@ declare namespace RT {
   }
 
   type Supabase = {
-    key: string,
+    key: string
     url: string
   }
 
   type Surrealdb = {
-    url: string,
+    url: string
     token: string
   }
 
@@ -1087,7 +1087,7 @@ declare namespace RT {
   }
 
   type Terra = {
-    devId: string,
+    devId: string
     apiKey: string
   }
 
@@ -1112,7 +1112,7 @@ declare namespace RT {
   }
 
   type Trello = {
-    key: string,
+    key: string
     token: string
   }
 
@@ -1125,21 +1125,21 @@ declare namespace RT {
   }
 
   type Twilio = {
-    token: string,
+    token: string
     accountSid: string
   }
 
   type TwilioMessageTemplate = {
-    auth_token: string,
-    recipients: string[],
-    account_sid: string,
-    content_sid: string,
-    origin_number: string,
+    auth_token: string
+    recipients: string[]
+    account_sid: string
+    content_sid: string
+    origin_number: string
     message_service_sid: string
   }
 
   type Typeform = {
-    token: string,
+    token: string
     baseUrl: string
   }
 
@@ -1172,10 +1172,10 @@ declare namespace RT {
   }
 
   type Woocommerce = {
-    url: string,
-    version: string,
-    consumerKey: string,
-    consumerSecret: string,
+    url: string
+    version: string
+    consumerKey: string
+    consumerSecret: string
     queryStringAuth: boolean
   }
 
@@ -1196,8 +1196,8 @@ declare namespace RT {
   }
 
   type Zendesk = {
-    password: string,
-    username: string,
+    password: string
+    username: string
     subdomain: string
   }
 
@@ -1210,9 +1210,9 @@ declare namespace RT {
   }
 
   type Zoom = {
-    accountId: string,
-    oauthClientId: string,
-    oauthClientSecret: string,
+    accountId: string
+    oauthClientId: string
+    oauthClientSecret: string
     webhookSecretToken: string
   }
 

@@ -1,0 +1,6 @@
+summary: Change and Edit analysis scripts/flows
+display_name: changes
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

@@ -3,3 +3,29 @@ query GetRootCategory {
     id
   }
 }
+
+query GetCategoryForReview($id: ID!) {
+  category(id: $id) {
+    id
+    name
+    desc
+    parents(first: 5) {
+      nodes {
+        id
+        name
+      }
+    }
+    children(first: 10) {
+      nodes {
+        id
+        name
+      }
+    }
+    items(first: 10) {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+}

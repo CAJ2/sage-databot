@@ -9,20 +9,31 @@ from .add_source import AddSource
 from .add_variant import AddVariant
 from .base_client import BaseClient
 from .base_model import UNSET, UnsetType
+from .get_category_for_review import GetCategoryForReview
+from .get_change_for_review import GetChangeForReview
+from .get_component_for_review import GetComponentForReview
+from .get_item_for_link import GetItemForLink
+from .get_item_for_review import GetItemForReview
+from .get_material_for_review import GetMaterialForReview
 from .get_org import GetOrg
+from .get_place_for_review import GetPlaceForReview
+from .get_process_for_review import GetProcessForReview
 from .get_root_category import GetRootCategory
 from .get_source import GetSource
 from .get_variant import GetVariant
+from .get_variant_for_review import GetVariantForReview
 from .input_types import (
     CreateItemInput,
     CreateOrgInput,
     CreateSourceInput,
     CreateVariantInput,
+    UpdateChangeInput,
     UpdateItemInput,
     UpdateOrgInput,
     UpdateSourceInput,
     UpdateVariantInput,
 )
+from .update_change_status import UpdateChangeStatus
 from .update_item import UpdateItem
 from .update_org import UpdateOrg
 from .update_source import UpdateSource
@@ -50,6 +61,266 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return GetRootCategory.model_validate(data)
+
+    def get_category_for_review(self, id: str, **kwargs: Any) -> GetCategoryForReview:
+        query = gql(
+            """
+            query GetCategoryForReview($id: ID!) {
+              category(id: $id) {
+                id
+                name
+                desc
+                parents(first: 5) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
+                children(first: 10) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
+                items(first: 10) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetCategoryForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetCategoryForReview.model_validate(data)
+
+    def get_change_for_review(self, id: str, **kwargs: Any) -> GetChangeForReview:
+        query = gql(
+            """
+            query GetChangeForReview($id: ID!) {
+              change(id: $id) {
+                id
+                title
+                description
+                status
+                user {
+                  id
+                  username
+                }
+                edits(first: 100) {
+                  nodes {
+                    id
+                    entityName
+                    createChanges
+                    updateChanges
+                    changes {
+                      ... on Item {
+                        __typename
+                        id
+                      }
+                      ... on Variant {
+                        __typename
+                        id
+                      }
+                      ... on Component {
+                        __typename
+                        id
+                      }
+                      ... on Process {
+                        __typename
+                        id
+                      }
+                      ... on Place {
+                        __typename
+                        id
+                      }
+                      ... on Category {
+                        __typename
+                        id
+                      }
+                      ... on Material {
+                        __typename
+                        id
+                      }
+                      ... on Region {
+                        __typename
+                        id
+                      }
+                    }
+                    original {
+                      ... on Item {
+                        __typename
+                        id
+                      }
+                      ... on Variant {
+                        __typename
+                        id
+                      }
+                      ... on Component {
+                        __typename
+                        id
+                      }
+                      ... on Process {
+                        __typename
+                        id
+                      }
+                      ... on Place {
+                        __typename
+                        id
+                      }
+                      ... on Category {
+                        __typename
+                        id
+                      }
+                      ... on Material {
+                        __typename
+                        id
+                      }
+                      ... on Region {
+                        __typename
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetChangeForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetChangeForReview.model_validate(data)
+
+    def update_change_status(
+        self, input: UpdateChangeInput, **kwargs: Any
+    ) -> UpdateChangeStatus:
+        query = gql(
+            """
+            mutation UpdateChangeStatus($input: UpdateChangeInput!) {
+              updateChange(input: $input) {
+                change {
+                  id
+                  status
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query,
+            operation_name="UpdateChangeStatus",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateChangeStatus.model_validate(data)
+
+    def get_component_for_review(self, id: str, **kwargs: Any) -> GetComponentForReview:
+        query = gql(
+            """
+            query GetComponentForReview($id: ID!) {
+              component(id: $id) {
+                id
+                name
+                desc
+                primaryMaterial {
+                  id
+                  name
+                }
+                materials {
+                  material {
+                    id
+                    name
+                  }
+                  materialFraction
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetComponentForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetComponentForReview.model_validate(data)
+
+    def get_item_for_review(self, id: str, **kwargs: Any) -> GetItemForReview:
+        query = gql(
+            """
+            query GetItemForReview($id: ID!) {
+              item(id: $id) {
+                id
+                name
+                desc
+                categories(first: 10) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
+                variants(first: 10) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetItemForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetItemForReview.model_validate(data)
+
+    def get_item_for_link(self, id: str, **kwargs: Any) -> GetItemForLink:
+        query = gql(
+            """
+            query GetItemForLink($id: ID!) {
+              item(id: $id) {
+                id
+                name
+                desc
+                categories(first: 5) {
+                  nodes {
+                    id
+                    name
+                  }
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query, operation_name="GetItemForLink", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return GetItemForLink.model_validate(data)
 
     def add_item(self, input: CreateItemInput, **kwargs: Any) -> AddItem:
         query = gql(
@@ -92,6 +363,28 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return UpdateItem.model_validate(data)
+
+    def get_material_for_review(self, id: str, **kwargs: Any) -> GetMaterialForReview:
+        query = gql(
+            """
+            query GetMaterialForReview($id: ID!) {
+              material(id: $id) {
+                id
+                name
+                desc
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetMaterialForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetMaterialForReview.model_validate(data)
 
     def get_org(self, org_id: str, **kwargs: Any) -> GetOrg:
         query = gql(
@@ -156,6 +449,91 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return UpdateOrg.model_validate(data)
+
+    def get_place_for_review(self, id: str, **kwargs: Any) -> GetPlaceForReview:
+        query = gql(
+            """
+            query GetPlaceForReview($id: ID!) {
+              place(id: $id) {
+                id
+                name
+                desc
+                address {
+                  street
+                  housenumber
+                  city
+                  postalCode
+                  region
+                  country
+                }
+                location {
+                  latitude
+                  longitude
+                }
+                org {
+                  id
+                  name
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetPlaceForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetPlaceForReview.model_validate(data)
+
+    def get_process_for_review(self, id: str, **kwargs: Any) -> GetProcessForReview:
+        query = gql(
+            """
+            query GetProcessForReview($id: ID!) {
+              process(id: $id) {
+                id
+                name
+                desc
+                intent
+                material {
+                  id
+                  name
+                }
+                org {
+                  id
+                  name
+                }
+                place {
+                  id
+                  name
+                }
+                region {
+                  id
+                }
+                variant {
+                  id
+                  name
+                }
+                efficiency {
+                  efficiency
+                  equivalency
+                  valueRatio
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetProcessForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetProcessForReview.model_validate(data)
 
     def get_source(self, id: str, **kwargs: Any) -> GetSource:
         query = gql(
@@ -223,6 +601,54 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return UpdateSource.model_validate(data)
+
+    def get_variant_for_review(self, id: str, **kwargs: Any) -> GetVariantForReview:
+        query = gql(
+            """
+            query GetVariantForReview($id: ID!) {
+              variant(id: $id) {
+                id
+                name
+                desc
+                items(first: 10) {
+                  nodes {
+                    id
+                    name
+                    desc
+                  }
+                }
+                components(first: 10) {
+                  nodes {
+                    component {
+                      id
+                      name
+                    }
+                    quantity
+                    unit
+                  }
+                }
+                orgs(first: 5) {
+                  nodes {
+                    org {
+                      id
+                      name
+                    }
+                    role
+                  }
+                }
+              }
+            }
+            """
+        )
+        variables: dict[str, object] = {"id": id}
+        response = self.execute(
+            query=query,
+            operation_name="GetVariantForReview",
+            variables=variables,
+            **kwargs
+        )
+        data = self.get_data(response)
+        return GetVariantForReview.model_validate(data)
 
     def get_variant(
         self,

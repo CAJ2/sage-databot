@@ -1,0 +1,49 @@
+query GetChangeForReview($id: ID!) {
+  change(id: $id) {
+    id
+    title
+    description
+    status
+    user {
+      id
+      username
+    }
+    edits(first: 100) {
+      nodes {
+        id
+        entityName
+        createChanges
+        updateChanges
+        changes {
+          ... on Item { __typename id }
+          ... on Variant { __typename id }
+          ... on Component { __typename id }
+          ... on Process { __typename id }
+          ... on Place { __typename id }
+          ... on Category { __typename id }
+          ... on Material { __typename id }
+          ... on Region { __typename id }
+        }
+        original {
+          ... on Item { __typename id }
+          ... on Variant { __typename id }
+          ... on Component { __typename id }
+          ... on Process { __typename id }
+          ... on Place { __typename id }
+          ... on Category { __typename id }
+          ... on Material { __typename id }
+          ... on Region { __typename id }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdateChangeStatus($input: UpdateChangeInput!) {
+  updateChange(input: $input) {
+    change {
+      id
+      status
+    }
+  }
+}

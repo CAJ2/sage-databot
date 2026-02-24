@@ -3,10 +3,10 @@ description: |
   Downloads product images from OpenFoodFacts S3 bucket for a given variant,
   uploads them to the sage-leaf-sources S3 bucket, and creates source records
   via the GraphQL API.
-lock: "!inline f/openfoodfacts/off_download_images.script.lock"
+lock: '!inline f/openfoodfacts/off_download_images.script.lock'
 kind: script
 schema:
-  $schema: "https://json-schema.org/draft/2020-12/schema"
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
   type: object
   properties:
     image_sizes:
@@ -16,7 +16,7 @@ schema:
         - full
       items:
         type: string
-      originalType: "string[]"
+      originalType: 'string[]'
     variant_id:
       type: string
       description: The variant ID to process images for

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/refs/heads/main/npm/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 100,
+  "ignorePatterns": ["AGENTS.md", "f/graphql/api_client/**/*", "f/graphql/schema.gql"]
+}

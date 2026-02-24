@@ -1,0 +1,7 @@
+query GetMaterialForReview($id: ID!) {
+  material(id: $id) {
+    id
+    name
+    desc
+  }
+}

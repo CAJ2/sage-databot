@@ -1,0 +1,18 @@
+query GetComponentForReview($id: ID!) {
+  component(id: $id) {
+    id
+    name
+    desc
+    primaryMaterial {
+      id
+      name
+    }
+    materials {
+      material {
+        id
+        name
+      }
+      materialFraction
+    }
+  }
+}

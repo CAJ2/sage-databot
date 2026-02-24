@@ -1,0 +1,299 @@
+summary: Automated AI review of a proposed Change
+description: >
+  Triggered with a change_id. Fetches the Change and all its Edits from the
+  GraphQL API, dispatches each edit to a model-type-specific AI analysis script
+  in parallel, then collects the results and writes them to the Change metadata
+  in CRDB. The Change status is set to APPROVED if all edits pass, or REJECTED
+  if any fail.
+value:
+  modules:
+    - id: a
+      value:
+        lock: '!inline fetch_change_edits.inline_script.lock'
+        type: rawscript
+        content: '!inline fetch_change_edits.inline_script.py'
+        language: python3
+        input_transforms:
+          change_id:
+            expr: flow_input.change_id
+            type: javascript
+        concurrency_time_window_s: 0
+      summary: Fetch change edits
+      continue_on_error: false
+    - id: b
+      value:
+        type: forloopflow
+        squash: false
+        modules:
+          - id: c
+            value:
+              type: branchone
+              default:
+                - id: j
+                  value:
+                    path: f/changes/analyze_generic_edit
+                    type: script
+                    is_trigger: false
+                    input_transforms:
+                      edit_id:
+                        expr: flow_input.iter.value.edit_id
+                        type: javascript
+                      original_id:
+                        expr: flow_input.iter.value.original_id
+                        type: javascript
+                      proposed_id:
+                        expr: flow_input.iter.value.proposed_id
+                        type: javascript
+                      change_id:
+                        expr: flow_input.iter.value.change_id
+                        type: javascript
+                      entity_name:
+                        expr: flow_input.iter.value.entity_name
+                        type: javascript
+                      create_changes:
+                        expr: flow_input.iter.value.create_changes
+                        type: javascript
+                      update_changes:
+                        expr: flow_input.iter.value.update_changes
+                        type: javascript
+                  summary: 'Analyze generic edit (Material, Region, etc.)'
+                  continue_on_error: true
+              branches:
+                - expr: flow_input.iter.value.entity_name == "Item"
+                  modules:
+                    - id: d
+                      value:
+                        path: f/changes/analyze_item_edit
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          edit_id:
+                            expr: flow_input.iter.value.edit_id
+                            type: javascript
+                          original_id:
+                            expr: flow_input.iter.value.original_id
+                            type: javascript
+                          proposed_id:
+                            expr: flow_input.iter.value.proposed_id
+                            type: javascript
+                          change_id:
+                            expr: flow_input.iter.value.change_id
+                            type: javascript
+                          entity_name:
+                            expr: flow_input.iter.value.entity_name
+                            type: javascript
+                          create_changes:
+                            expr: flow_input.iter.value.create_changes
+                            type: javascript
+                          update_changes:
+                            expr: flow_input.iter.value.update_changes
+                            type: javascript
+                      summary: Analyze Item edit
+                      continue_on_error: true
+                  summary: Item
+                  parallel: true
+                  skip_failure: false
+                - expr: flow_input.iter.value.entity_name == "Variant"
+                  modules:
+                    - id: e
+                      value:
+                        path: f/changes/analyze_variant_edit
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          edit_id:
+                            expr: flow_input.iter.value.edit_id
+                            type: javascript
+                          original_id:
+                            expr: flow_input.iter.value.original_id
+                            type: javascript
+                          proposed_id:
+                            expr: flow_input.iter.value.proposed_id
+                            type: javascript
+                          change_id:
+                            expr: flow_input.iter.value.change_id
+                            type: javascript
+                          entity_name:
+                            expr: flow_input.iter.value.entity_name
+                            type: javascript
+                          create_changes:
+                            expr: flow_input.iter.value.create_changes
+                            type: javascript
+                          update_changes:
+                            expr: flow_input.iter.value.update_changes
+                            type: javascript
+                      summary: Analyze Variant edit
+                      continue_on_error: true
+                  summary: Variant
+                  parallel: true
+                  skip_failure: false
+                - expr: flow_input.iter.value.entity_name == "Component"
+                  modules:
+                    - id: f
+                      value:
+                        path: f/changes/analyze_component_edit
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          edit_id:
+                            expr: flow_input.iter.value.edit_id
+                            type: javascript
+                          original_id:
+                            expr: flow_input.iter.value.original_id
+                            type: javascript
+                          proposed_id:
+                            expr: flow_input.iter.value.proposed_id
+                            type: javascript
+                          change_id:
+                            expr: flow_input.iter.value.change_id
+                            type: javascript
+                          entity_name:
+                            expr: flow_input.iter.value.entity_name
+                            type: javascript
+                          create_changes:
+                            expr: flow_input.iter.value.create_changes
+                            type: javascript
+                          update_changes:
+                            expr: flow_input.iter.value.update_changes
+                            type: javascript
+                      summary: Analyze Component edit
+                      continue_on_error: true
+                  summary: Component
+                  parallel: true
+                  skip_failure: false
+                - expr: flow_input.iter.value.entity_name == "Process"
+                  modules:
+                    - id: g
+                      value:
+                        path: f/changes/analyze_process_edit
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          edit_id:
+                            expr: flow_input.iter.value.edit_id
+                            type: javascript
+                          original_id:
+                            expr: flow_input.iter.value.original_id
+                            type: javascript
+                          proposed_id:
+                            expr: flow_input.iter.value.proposed_id
+                            type: javascript
+                          change_id:
+                            expr: flow_input.iter.value.change_id
+                            type: javascript
+                          entity_name:
+                            expr: flow_input.iter.value.entity_name
+                            type: javascript
+                          create_changes:
+                            expr: flow_input.iter.value.create_changes
+                            type: javascript
+                          update_changes:
+                            expr: flow_input.iter.value.update_changes
+                            type: javascript
+                      summary: Analyze Process edit
+                      continue_on_error: true
+                  summary: Process
+                  parallel: true
+                  skip_failure: false
+                - expr: flow_input.iter.value.entity_name == "Place"
+                  modules:
+                    - id: h
+                      value:
+                        path: f/changes/analyze_place_edit
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          edit_id:
+                            expr: flow_input.iter.value.edit_id
+                            type: javascript
+                          original_id:
+                            expr: flow_input.iter.value.original_id
+                            type: javascript
+                          proposed_id:
+                            expr: flow_input.iter.value.proposed_id
+                            type: javascript
+                          change_id:
+                            expr: flow_input.iter.value.change_id
+                            type: javascript
+                          entity_name:
+                            expr: flow_input.iter.value.entity_name
+                            type: javascript
+                          create_changes:
+                            expr: flow_input.iter.value.create_changes
+                            type: javascript
+                          update_changes:
+                            expr: flow_input.iter.value.update_changes
+                            type: javascript
+                      summary: Analyze Place edit
+                      continue_on_error: true
+                  summary: Place
+                  parallel: true
+                  skip_failure: false
+                - expr: flow_input.iter.value.entity_name == "Category"
+                  modules:
+                    - id: i
+                      value:
+                        path: f/changes/analyze_category_edit
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          edit_id:
+                            expr: flow_input.iter.value.edit_id
+                            type: javascript
+                          original_id:
+                            expr: flow_input.iter.value.original_id
+                            type: javascript
+                          proposed_id:
+                            expr: flow_input.iter.value.proposed_id
+                            type: javascript
+                          change_id:
+                            expr: flow_input.iter.value.change_id
+                            type: javascript
+                          entity_name:
+                            expr: flow_input.iter.value.entity_name
+                            type: javascript
+                          create_changes:
+                            expr: flow_input.iter.value.create_changes
+                            type: javascript
+                          update_changes:
+                            expr: flow_input.iter.value.update_changes
+                            type: javascript
+                      summary: Analyze Category edit
+                      continue_on_error: true
+                  summary: Category
+                  parallel: true
+                  skip_failure: false
+            summary: Dispatch to model-type analyzer
+        iterator:
+          expr: results.a
+          type: javascript
+        parallel: true
+        skip_failures: false
+      summary: Analyze each edit
+    - id: k
+      value:
+        lock: '!inline write_review_results_to_crdb.inline_script.lock'
+        type: rawscript
+        content: '!inline write_review_results_to_crdb.inline_script.py'
+        language: python3
+        input_transforms:
+          change_id:
+            expr: flow_input.change_id
+            type: javascript
+          edit_analyses:
+            expr: results.b
+            type: javascript
+        concurrency_time_window_s: 0
+      summary: Write review results to CRDB
+      continue_on_error: false
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - change_id
+  properties:
+    change_id:
+      type: string
+      description: The ID of the Change to review
+  required:
+    - change_id

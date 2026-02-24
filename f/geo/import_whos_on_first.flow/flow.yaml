@@ -3,34 +3,34 @@ description: Import Whos On First administrative data from Geocode Earth
 value:
   modules:
     - id: a
-      summary: Load Whos On First data
       value:
+        lock: '!inline load_whos_on_first_data.inline_script.lock'
         type: rawscript
         content: '!inline load_whos_on_first_data.inline_script.py'
+        language: python3
         input_transforms:
           country:
-            type: javascript
             expr: flow_input.country
-        lock: '!inline load_whos_on_first_data.inline_script.lock'
+            type: javascript
         concurrency_time_window_s: 0
-        language: python3
+      summary: Load Whos On First data
       continue_on_error: false
     - id: b
-      summary: Transform and insert
       value:
+        lock: '!inline transform_and_insert.inline_script.lock'
         type: rawscript
         content: '!inline transform_and_insert.inline_script.py'
+        language: python3
         input_transforms:
           s3_file:
-            type: javascript
             expr: results.a
-        lock: '!inline transform_and_insert.inline_script.lock'
+            type: javascript
         concurrency_time_window_s: 0
-        language: python3
-      continue_on_error: false
+      summary: Transform and insert
       timeout:
         type: static
         value: 3600
+      continue_on_error: false
   flow_env: {}
 schema:
   $schema: 'https://json-schema.org/draft/2020-12/schema'
