@@ -24,11 +24,11 @@ skipWorkspaceDependencies: false
 gitBranches:
   commonSpecificItems:
     variables:
-      - "f/*_config/**"
+      - 'f/*_config/**'
     resources:
-      - "f/*_config/**"
+      - 'f/*_config/**'
     triggers:
-      - "f/triggers/**"
+      - 'f/triggers/**'
   main:
     baseUrl: 'https://databot.dev.sageleaf.app'
     workspaceId: sage-prod

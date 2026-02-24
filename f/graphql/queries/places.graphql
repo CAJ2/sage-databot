@@ -1,0 +1,23 @@
+query GetPlaceForReview($id: ID!) {
+  place(id: $id) {
+    id
+    name
+    desc
+    address {
+      street
+      housenumber
+      city
+      postalCode
+      region
+      country
+    }
+    location {
+      latitude
+      longitude
+    }
+    org {
+      id
+      name
+    }
+  }
+}

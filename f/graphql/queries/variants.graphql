@@ -1,7 +1,38 @@
-query GetVariant(
-  $first: Int
-  $after: String
-) {
+query GetVariantForReview($id: ID!) {
+  variant(id: $id) {
+    id
+    name
+    desc
+    items(first: 10) {
+      nodes {
+        id
+        name
+        desc
+      }
+    }
+    components(first: 10) {
+      nodes {
+        component {
+          id
+          name
+        }
+        quantity
+        unit
+      }
+    }
+    orgs(first: 5) {
+      nodes {
+        org {
+          id
+          name
+        }
+        role
+      }
+    }
+  }
+}
+
+query GetVariant($first: Int, $after: String) {
   variants(first: $first, after: $after) {
     edges {
       node {
@@ -19,9 +50,7 @@ query GetVariant(
   }
 }
 
-mutation AddVariant(
-  $input: CreateVariantInput!
-) {
+mutation AddVariant($input: CreateVariantInput!) {
   createVariant(input: $input) {
     variant {
       id
@@ -33,9 +62,7 @@ mutation AddVariant(
   }
 }
 
-mutation UpdateVariant(
-  $input: UpdateVariantInput!
-) {
+mutation UpdateVariant($input: UpdateVariantInput!) {
   updateVariant(input: $input) {
     variant {
       id

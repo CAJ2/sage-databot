@@ -1,0 +1,32 @@
+query GetProcessForReview($id: ID!) {
+  process(id: $id) {
+    id
+    name
+    desc
+    intent
+    material {
+      id
+      name
+    }
+    org {
+      id
+      name
+    }
+    place {
+      id
+      name
+    }
+    region {
+      id
+    }
+    variant {
+      id
+      name
+    }
+    efficiency {
+      efficiency
+      equivalency
+      valueRatio
+    }
+  }
+}

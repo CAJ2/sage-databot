@@ -1,34 +1,34 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "type": "object",
-    "properties": {
-        "manufacturing": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "region_id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "$ref": "#/$defs/tr"
-                    }
-                },
-                "minProperties": 1
-            }
-        }
-    },
-    "unevaluatedProperties": false,
-    "$defs": {
-        "tr": {
-            "type": "object",
-            "patternProperties": {
-                "^[a-z]{2}-?([A-Z]{2})?(;[a-z=]+)*$": {
-                    "type": "string"
-                }
-            },
-            "minProperties": 1,
-            "unevaluatedProperties": false
-        }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "manufacturing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "region_id": {
+            "type": "string"
+          },
+          "name": {
+            "$ref": "#/$defs/tr"
+          }
+        },
+        "minProperties": 1
+      }
     }
+  },
+  "unevaluatedProperties": false,
+  "$defs": {
+    "tr": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]{2}-?([A-Z]{2})?(;[a-z=]+)*$": {
+          "type": "string"
+        }
+      },
+      "minProperties": 1,
+      "unevaluatedProperties": false
+    }
+  }
 }

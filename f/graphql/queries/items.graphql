@@ -1,6 +1,38 @@
-mutation AddItem(
-  $input: CreateItemInput!
-) {
+query GetItemForReview($id: ID!) {
+  item(id: $id) {
+    id
+    name
+    desc
+    categories(first: 10) {
+      nodes {
+        id
+        name
+      }
+    }
+    variants(first: 10) {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+}
+
+query GetItemForLink($id: ID!) {
+  item(id: $id) {
+    id
+    name
+    desc
+    categories(first: 5) {
+      nodes {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation AddItem($input: CreateItemInput!) {
   createItem(input: $input) {
     item {
       id
@@ -10,9 +42,7 @@ mutation AddItem(
   }
 }
 
-mutation UpdateItem(
-  $input: UpdateItemInput!
-) {
+mutation UpdateItem($input: UpdateItemInput!) {
   updateItem(input: $input) {
     item {
       id

@@ -1,4 +1,3 @@
-
 You are a helpful assistant that can help with Windmill scripts and flows creation.
 
 ## Script Guidance
@@ -36,71 +35,6 @@ e.g., `{ b: 1, a: 2 }` calls the flow with `a = 2` and `b = 1`, assuming the flo
 
 The preprocessor receives a single parameter called `event`.
 
-
-# Bash
-
-## Structure
-
-Do not include `#!/bin/bash`. Arguments are obtained as positional parameters:
-
-```bash
-# Get arguments
-var1="$1"
-var2="$2"
-
-echo "Processing $var1 and $var2"
-
-# Return JSON by echoing to stdout
-echo "{\"result\": \"$var1\", \"count\": $var2}"
-```
-
-**Important:**
-- Do not include shebang (`#!/bin/bash`)
-- Arguments are always strings
-- Access with `$1`, `$2`, etc.
-
-## Output
-
-The script output is captured as the result. For structured data, output valid JSON:
-
-```bash
-name="$1"
-count="$2"
-
-# Output JSON result
-cat << EOF
-{
-  "name": "$name",
-  "count": $count,
-  "timestamp": "$(date -Iseconds)"
-}
-EOF
-```
-
-## Environment Variables
-
-Environment variables set in Windmill are available:
-
-```bash
-# Access environment variable
-echo "Workspace: $WM_WORKSPACE"
-echo "Job ID: $WM_JOB_ID"
-```
-
-
-# BigQuery
-
-Arguments use `@name` syntax.
-
-Name the parameters by adding comments before the statement:
-
-```sql
--- @name1 (string)
--- @name2 (int64) = 0
-SELECT * FROM users WHERE name = @name1 AND age > @name2;
-```
-
-
 # TypeScript (Bun)
 
 Bun runtime with full npm ecosystem and fastest execution.
@@ -112,7 +46,7 @@ Export a single **async** function called `main`:
 ```typescript
 export async function main(param1: string, param2: number) {
   // Your code here
-  return { result: param1, count: param2 };
+  return { result: param1, count: param2 }
 }
 ```
 
@@ -135,8 +69,8 @@ Only use resource types if you need them to satisfy the instructions. Always use
 ## Imports
 
 ```typescript
-import Stripe from "stripe";
-import { someFunction } from "some-package";
+import Stripe from 'stripe'
+import { someFunction } from 'some-package'
 ```
 
 ## Windmill Client
@@ -144,7 +78,7 @@ import { someFunction } from "some-package";
 Import the windmill client for platform interactions:
 
 ```typescript
-import * as wmill from "windmill-client";
+import * as wmill from 'windmill-client'
 ```
 
 See the SDK documentation for available methods.
@@ -156,26 +90,26 @@ For preprocessor scripts, the function should be named `preprocessor` and receiv
 ```typescript
 type Event = {
   kind:
-    | "webhook"
-    | "http"
-    | "websocket"
-    | "kafka"
-    | "email"
-    | "nats"
-    | "postgres"
-    | "sqs"
-    | "mqtt"
-    | "gcp";
-  body: any;
-  headers: Record<string, string>;
-  query: Record<string, string>;
-};
+    | 'webhook'
+    | 'http'
+    | 'websocket'
+    | 'kafka'
+    | 'email'
+    | 'nats'
+    | 'postgres'
+    | 'sqs'
+    | 'mqtt'
+    | 'gcp'
+  body: any
+  headers: Record<string, string>
+  query: Record<string, string>
+}
 
 export async function preprocessor(event: Event) {
   return {
     param1: event.body.field1,
     param2: event.query.id,
-  };
+  }
 }
 ```
 
@@ -189,29 +123,28 @@ The S3Object type represents a file in S3 storage:
 
 ```typescript
 type S3Object = {
-  s3: string; // Path within the bucket
-};
+  s3: string // Path within the bucket
+}
 ```
 
 ## TypeScript Operations
 
 ```typescript
-import * as wmill from "windmill-client";
+import * as wmill from 'windmill-client'
 
 // Load file content from S3
-const content: Uint8Array = await wmill.loadS3File(s3object);
+const content: Uint8Array = await wmill.loadS3File(s3object)
 
 // Load file as stream
-const blob: Blob = await wmill.loadS3FileStream(s3object);
+const blob: Blob = await wmill.loadS3FileStream(s3object)
 
 // Write file to S3
 const result: S3Object = await wmill.writeS3File(
   s3object, // Target path (or undefined to auto-generate)
   fileContent, // string or Blob
-  s3ResourcePath // Optional: specific S3 resource to use
-);
+  s3ResourcePath, // Optional: specific S3 resource to use
+)
 ```
-
 
 # TypeScript (Bun Native)
 
@@ -224,7 +157,7 @@ Export a single **async** function called `main`:
 ```typescript
 export async function main(param1: string, param2: number) {
   // Your code here
-  return { result: param1, count: param2 };
+  return { result: param1, count: param2 }
 }
 ```
 
@@ -250,8 +183,8 @@ Only use resource types if you need them to satisfy the instructions. Always use
 
 ```typescript
 export async function main(url: string) {
-  const response = await fetch(url);
-  return await response.json();
+  const response = await fetch(url)
+  return await response.json()
 }
 ```
 
@@ -266,26 +199,26 @@ For preprocessor scripts, the function should be named `preprocessor` and receiv
 ```typescript
 type Event = {
   kind:
-    | "webhook"
-    | "http"
-    | "websocket"
-    | "kafka"
-    | "email"
-    | "nats"
-    | "postgres"
-    | "sqs"
-    | "mqtt"
-    | "gcp";
-  body: any;
-  headers: Record<string, string>;
-  query: Record<string, string>;
-};
+    | 'webhook'
+    | 'http'
+    | 'websocket'
+    | 'kafka'
+    | 'email'
+    | 'nats'
+    | 'postgres'
+    | 'sqs'
+    | 'mqtt'
+    | 'gcp'
+  body: any
+  headers: Record<string, string>
+  query: Record<string, string>
+}
 
 export async function preprocessor(event: Event) {
   return {
     param1: event.body.field1,
     param2: event.query.id,
-  };
+  }
 }
 ```
 
@@ -299,72 +232,28 @@ The S3Object type represents a file in S3 storage:
 
 ```typescript
 type S3Object = {
-  s3: string; // Path within the bucket
-};
+  s3: string // Path within the bucket
+}
 ```
 
 ## TypeScript Operations
 
 ```typescript
-import * as wmill from "windmill-client";
+import * as wmill from 'windmill-client'
 
 // Load file content from S3
-const content: Uint8Array = await wmill.loadS3File(s3object);
+const content: Uint8Array = await wmill.loadS3File(s3object)
 
 // Load file as stream
-const blob: Blob = await wmill.loadS3FileStream(s3object);
+const blob: Blob = await wmill.loadS3FileStream(s3object)
 
 // Write file to S3
 const result: S3Object = await wmill.writeS3File(
   s3object, // Target path (or undefined to auto-generate)
   fileContent, // string or Blob
-  s3ResourcePath // Optional: specific S3 resource to use
-);
+  s3ResourcePath, // Optional: specific S3 resource to use
+)
 ```
-
-
-# C#
-
-The script must contain a public static `Main` method inside a class:
-
-```csharp
-public class Script
-{
-    public static object Main(string name, int count)
-    {
-        return new { Name = name, Count = count };
-    }
-}
-```
-
-**Important:**
-- Class name is irrelevant
-- Method must be `public static`
-- Return type can be `object` or specific type
-
-## NuGet Packages
-
-Add packages using the `#r` directive at the top:
-
-```csharp
-#r "nuget: Newtonsoft.Json, 13.0.3"
-#r "nuget: RestSharp, 110.2.0"
-
-using Newtonsoft.Json;
-using RestSharp;
-
-public class Script
-{
-    public static object Main(string url)
-    {
-        var client = new RestClient(url);
-        var request = new RestRequest();
-        var response = client.Get(request);
-        return JsonConvert.DeserializeObject(response.Content);
-    }
-}
-```
-
 
 # TypeScript (Deno)
 
@@ -377,7 +266,7 @@ Export a single **async** function called `main`:
 ```typescript
 export async function main(param1: string, param2: number) {
   // Your code here
-  return { result: param1, count: param2 };
+  return { result: param1, count: param2 }
 }
 ```
 
@@ -401,11 +290,11 @@ Only use resource types if you need them to satisfy the instructions. Always use
 
 ```typescript
 // npm packages use npm: prefix
-import Stripe from "npm:stripe";
-import { someFunction } from "npm:some-package";
+import Stripe from 'npm:stripe'
+import { someFunction } from 'npm:some-package'
 
 // Deno standard library
-import { serve } from "https://deno.land/std/http/server.ts";
+import { serve } from 'https://deno.land/std/http/server.ts'
 ```
 
 ## Windmill Client
@@ -413,7 +302,7 @@ import { serve } from "https://deno.land/std/http/server.ts";
 Import the windmill client for platform interactions:
 
 ```typescript
-import * as wmill from "windmill-client";
+import * as wmill from 'windmill-client'
 ```
 
 See the SDK documentation for available methods.
@@ -425,26 +314,26 @@ For preprocessor scripts, the function should be named `preprocessor` and receiv
 ```typescript
 type Event = {
   kind:
-    | "webhook"
-    | "http"
-    | "websocket"
-    | "kafka"
-    | "email"
-    | "nats"
-    | "postgres"
-    | "sqs"
-    | "mqtt"
-    | "gcp";
-  body: any;
-  headers: Record<string, string>;
-  query: Record<string, string>;
-};
+    | 'webhook'
+    | 'http'
+    | 'websocket'
+    | 'kafka'
+    | 'email'
+    | 'nats'
+    | 'postgres'
+    | 'sqs'
+    | 'mqtt'
+    | 'gcp'
+  body: any
+  headers: Record<string, string>
+  query: Record<string, string>
+}
 
 export async function preprocessor(event: Event) {
   return {
     param1: event.body.field1,
     param2: event.query.id,
-  };
+  }
 }
 ```
 
@@ -458,29 +347,28 @@ The S3Object type represents a file in S3 storage:
 
 ```typescript
 type S3Object = {
-  s3: string; // Path within the bucket
-};
+  s3: string // Path within the bucket
+}
 ```
 
 ## TypeScript Operations
 
 ```typescript
-import * as wmill from "windmill-client";
+import * as wmill from 'windmill-client'
 
 // Load file content from S3
-const content: Uint8Array = await wmill.loadS3File(s3object);
+const content: Uint8Array = await wmill.loadS3File(s3object)
 
 // Load file as stream
-const blob: Blob = await wmill.loadS3FileStream(s3object);
+const blob: Blob = await wmill.loadS3FileStream(s3object)
 
 // Write file to S3
 const result: S3Object = await wmill.writeS3File(
   s3object, // Target path (or undefined to auto-generate)
   fileContent, // string or Blob
-  s3ResourcePath // Optional: specific S3 resource to use
-);
+  s3ResourcePath, // Optional: specific S3 resource to use
+)
 ```
-
 
 # DuckDB
 
@@ -534,7 +422,6 @@ SELECT * FROM read_parquet('s3:///path/to/file.parquet');
 SELECT * FROM read_json('s3:///path/to/file.json');
 ```
 
-
 # Go
 
 ## Structure
@@ -553,6 +440,7 @@ func main(param1 string, param2 int) (map[string]interface{}, error) {
 ```
 
 **Important:**
+
 - Package must be `inner`
 - Return type must be `({return_type}, error)`
 - Function name is `main` (lowercase)
@@ -594,8 +482,13 @@ func main(value int) (string, error) {
 }
 ```
 
-
 # GraphQL
+
+## Sage API
+
+The Sage API has a defined GraphQL schema located in `f/graphql/schema.gql`.
+The `ariadne_codegen` tool is used for generating a Python client from the schema.
+For Sage API GraphQL queries/mutations, place them in `f/graphql/queries/*.graphql` files instead of embedding them in scripts. Use the generated client to execute them. Make sure the queries have unique names to be easily tied back to the script(s) using them.
 
 ## Structure
 
@@ -641,73 +534,6 @@ mutation CreateUser($input: CreateUserInput!) {
 }
 ```
 
-
-# Java
-
-The script must contain a Main public class with a `public static main()` method:
-
-```java
-public class Main {
-    public static Object main(String name, int count) {
-        java.util.Map<String, Object> result = new java.util.HashMap<>();
-        result.put("name", name);
-        result.put("count", count);
-        return result;
-    }
-}
-```
-
-**Important:**
-- Class must be named `Main`
-- Method must be `public static Object main(...)`
-- Return type is `Object` or `void`
-
-## Maven Dependencies
-
-Add dependencies using comments at the top:
-
-```java
-//requirements:
-//com.google.code.gson:gson:2.10.1
-//org.apache.httpcomponents:httpclient:4.5.14
-
-import com.google.gson.Gson;
-
-public class Main {
-    public static Object main(String input) {
-        Gson gson = new Gson();
-        return gson.fromJson(input, Object.class);
-    }
-}
-```
-
-
-# Microsoft SQL Server (MSSQL)
-
-Arguments use `@P1`, `@P2`, etc.
-
-Name the parameters by adding comments before the statement:
-
-```sql
--- @P1 name1 (varchar)
--- @P2 name2 (int) = 0
-SELECT * FROM users WHERE name = @P1 AND age > @P2;
-```
-
-
-# MySQL
-
-Arguments use `?` placeholders.
-
-Name the parameters by adding comments before the statement:
-
-```sql
--- ? name1 (text)
--- ? name2 (int) = 0
-SELECT * FROM users WHERE name = ? AND age > ?;
-```
-
-
 # TypeScript (Native)
 
 Native TypeScript execution with fetch only - no external imports allowed.
@@ -719,7 +545,7 @@ Export a single **async** function called `main`:
 ```typescript
 export async function main(param1: string, param2: number) {
   // Your code here
-  return { result: param1, count: param2 };
+  return { result: param1, count: param2 }
 }
 ```
 
@@ -745,8 +571,8 @@ Only use resource types if you need them to satisfy the instructions. Always use
 
 ```typescript
 export async function main(url: string) {
-  const response = await fetch(url);
-  return await response.json();
+  const response = await fetch(url)
+  return await response.json()
 }
 ```
 
@@ -761,88 +587,28 @@ For preprocessor scripts, the function should be named `preprocessor` and receiv
 ```typescript
 type Event = {
   kind:
-    | "webhook"
-    | "http"
-    | "websocket"
-    | "kafka"
-    | "email"
-    | "nats"
-    | "postgres"
-    | "sqs"
-    | "mqtt"
-    | "gcp";
-  body: any;
-  headers: Record<string, string>;
-  query: Record<string, string>;
-};
+    | 'webhook'
+    | 'http'
+    | 'websocket'
+    | 'kafka'
+    | 'email'
+    | 'nats'
+    | 'postgres'
+    | 'sqs'
+    | 'mqtt'
+    | 'gcp'
+  body: any
+  headers: Record<string, string>
+  query: Record<string, string>
+}
 
 export async function preprocessor(event: Event) {
   return {
     param1: event.body.field1,
-    param2: event.query.id
-  };
+    param2: event.query.id,
+  }
 }
 ```
-
-
-# PHP
-
-## Structure
-
-The script must start with `<?php` and contain at least one function called `main`:
-
-```php
-<?php
-
-function main(string $param1, int $param2) {
-    return ["result" => $param1, "count" => $param2];
-}
-```
-
-## Resource Types
-
-On Windmill, credentials and configuration are stored in resources and passed as parameters to main.
-
-You need to **redefine** the type of the resources that are needed before the main function. Always check if the class already exists using `class_exists`:
-
-```php
-<?php
-
-if (!class_exists('Postgresql')) {
-    class Postgresql {
-        public string $host;
-        public int $port;
-        public string $user;
-        public string $password;
-        public string $dbname;
-    }
-}
-
-function main(Postgresql $db) {
-    // $db contains the database connection details
-}
-```
-
-The resource type name has to be exactly as specified.
-
-## Library Dependencies
-
-Specify library dependencies as comments before the main function:
-
-```php
-<?php
-
-// require:
-// guzzlehttp/guzzle
-// stripe/stripe-php@^10.0
-
-function main() {
-    // Libraries are available
-}
-```
-
-One dependency per line. No need to require autoload, it is already done.
-
 
 # PostgreSQL
 
@@ -855,64 +621,6 @@ Name the parameters by adding comments at the beginning of the script (without s
 -- $2 name2 = default_value
 SELECT * FROM users WHERE name = $1::TEXT AND age > $2::INT;
 ```
-
-
-# PowerShell
-
-## Structure
-
-Arguments are obtained by calling the `param` function on the first line:
-
-```powershell
-param($Name, $Count = 0, [int]$Age)
-
-# Your code here
-Write-Output "Processing $Name, count: $Count, age: $Age"
-
-# Return object
-@{
-    name = $Name
-    count = $Count
-    age = $Age
-}
-```
-
-## Parameter Types
-
-You can specify types for parameters:
-
-```powershell
-param(
-    [string]$Name,
-    [int]$Count = 0,
-    [bool]$Enabled = $true,
-    [array]$Items
-)
-
-@{
-    name = $Name
-    count = $Count
-    enabled = $Enabled
-    items = $Items
-}
-```
-
-## Return Values
-
-Return values by outputting them at the end of the script:
-
-```powershell
-param($Input)
-
-$result = @{
-    processed = $true
-    data = $Input
-    timestamp = Get-Date -Format "o"
-}
-
-$result
-```
-
 
 # Python
 
@@ -966,6 +674,16 @@ import pandas as pd
 from datetime import datetime
 ```
 
+Most scripts and flows should be tied to a specific set of dependencies, defined in `dependencies/<name>.requirements.in`.
+The `dependencies/project.requirements.in` is the default set of requirements, used for most scripts and flows with medium to large complexity.
+To specify these dependencies, add a comment at the top of the file as so:
+
+```python
+# requirements: project
+OR
+# requirements: <name>
+```
+
 If an import name conflicts with a resource type:
 
 ```python
@@ -1012,27 +730,7 @@ def preprocessor(event: Event):
 
 ## S3 Object Operations
 
-Windmill provides built-in support for S3-compatible storage operations.
-
-```python
-import wmill
-
-# Load file content from S3
-content: bytes = wmill.load_s3_file(s3object)
-
-# Load file as stream reader
-reader: BufferedReader = wmill.load_s3_file_reader(s3object)
-
-# Write file to S3
-result: S3Object = wmill.write_s3_file(
-    s3object,           # Target path (or None to auto-generate)
-    file_content,       # bytes or BufferedReader
-    s3_resource_path,   # Optional: specific S3 resource
-    content_type,       # Optional: MIME type
-    content_disposition # Optional: Content-Disposition header
-)
-```
-
+Use the S3Client class and operations in `f/utils/s3.py` for interacting with S3 storage.
 
 # Rust
 
@@ -1122,7 +820,6 @@ Name the parameters by adding comments before the statement:
 -- ? name2 (number) = 0
 SELECT * FROM users WHERE name = ? AND age > ?;
 ```
-
 
 # TypeScript SDK (windmill-client)
 
@@ -1367,7 +1064,7 @@ async denoS3LightClientSettings(s3_resource_path: string | undefined): Promise<D
 
 /**
  * Load the content of a file stored in S3. If the s3ResourcePath is undefined, it will default to the workspace S3 resource.
- * 
+ *
  * ```typescript
  * let fileContent = await wmill.loadS3FileContent(inputFile)
  * // if the file is a raw text file, it can be decoded and printed directly:
@@ -1379,7 +1076,7 @@ async loadS3File(s3object: S3Object, s3ResourcePath: string | undefined = undefi
 
 /**
  * Load the content of a file stored in S3 as a stream. If the s3ResourcePath is undefined, it will default to the workspace S3 resource.
- * 
+ *
  * ```typescript
  * let fileContentBlob = await wmill.loadS3FileStream(inputFile)
  * // if the content is plain text, the blob can be read directly:
@@ -1390,7 +1087,7 @@ async loadS3FileStream(s3object: S3Object, s3ResourcePath: string | undefined = 
 
 /**
  * Persist a file to the S3 bucket. If the s3ResourcePath is undefined, it will default to the workspace S3 resource.
- * 
+ *
  * ```typescript
  * const s3object = await writeS3File(s3Object, "Hello Windmill!")
  * const fileContentAsUtf8Str = (await s3object.toArray()).toString('utf-8')
@@ -1481,10 +1178,10 @@ async usernameToEmail(username: string): Promise<string>
 
 /**
  * Sends an interactive approval request via Slack, allowing optional customization of the message, approver, and form fields.
- * 
+ *
  * **[Enterprise Edition Only]** To include form fields in the Slack approval request, go to **Advanced -> Suspend -> Form**
  * and define a form. Learn more at [Windmill Documentation](https://www.windmill.dev/docs/flows/flow_approval#form).
- * 
+ *
  * @param {Object} options - The configuration options for the Slack approval request.
  * @param {string} options.slackResourcePath - The path to the Slack resource in Windmill.
  * @param {string} options.channelId - The Slack channel ID where the approval request will be sent.
@@ -1492,12 +1189,12 @@ async usernameToEmail(username: string): Promise<string>
  * @param {string} [options.approver] - Optional user ID or name of the approver for the request.
  * @param {DefaultArgs} [options.defaultArgsJson] - Optional object defining or overriding the default arguments to a form field.
  * @param {Enums} [options.dynamicEnumsJson] - Optional object overriding the enum default values of an enum form field.
- * 
+ *
  * @returns {Promise<void>} Resolves when the Slack approval request is successfully sent.
- * 
+ *
  * @throws {Error} If the function is not called within a flow or flow preview.
  * @throws {Error} If the `JobService.getSlackApprovalPayload` call fails.
- * 
+ *
  * **Usage Example:**
  * ```typescript
  * await requestInteractiveSlackApproval({
@@ -1509,17 +1206,17 @@ async usernameToEmail(username: string): Promise<string>
  *   dynamicEnumsJson: { foo: ["choice1", "choice2"], bar: ["optionA", "optionB"] },
  * });
  * ```
- * 
+ *
  * **Note:** This function requires execution within a Windmill flow or flow preview.
  */
 async requestInteractiveSlackApproval({ slackResourcePath, channelId, message, approver, defaultArgsJson, dynamicEnumsJson, }: SlackApprovalOptions): Promise<void>
 
 /**
  * Sends an interactive approval request via Teams, allowing optional customization of the message, approver, and form fields.
- * 
+ *
  * **[Enterprise Edition Only]** To include form fields in the Teams approval request, go to **Advanced -> Suspend -> Form**
  * and define a form. Learn more at [Windmill Documentation](https://www.windmill.dev/docs/flows/flow_approval#form).
- * 
+ *
  * @param {Object} options - The configuration options for the Teams approval request.
  * @param {string} options.teamName - The Teams team name where the approval request will be sent.
  * @param {string} options.channelName - The Teams channel name where the approval request will be sent.
@@ -1527,12 +1224,12 @@ async requestInteractiveSlackApproval({ slackResourcePath, channelId, message, a
  * @param {string} [options.approver] - Optional user ID or name of the approver for the request.
  * @param {DefaultArgs} [options.defaultArgsJson] - Optional object defining or overriding the default arguments to a form field.
  * @param {Enums} [options.dynamicEnumsJson] - Optional object overriding the enum default values of an enum form field.
- * 
+ *
  * @returns {Promise<void>} Resolves when the Teams approval request is successfully sent.
- * 
+ *
  * @throws {Error} If the function is not called within a flow or flow preview.
  * @throws {Error} If the `JobService.getTeamsApprovalPayload` call fails.
- * 
+ *
  * **Usage Example:**
  * ```typescript
  * await requestInteractiveTeamsApproval({
@@ -1544,7 +1241,7 @@ async requestInteractiveSlackApproval({ slackResourcePath, channelId, message, a
  *   dynamicEnumsJson: { foo: ["choice1", "choice2"], bar: ["optionA", "optionB"] },
  * });
  * ```
- * 
+ *
  * **Note:** This function requires execution within a Windmill flow or flow preview.
  */
 async requestInteractiveTeamsApproval({ teamName, channelName, message, approver, defaultArgsJson, dynamicEnumsJson, }: TeamsApprovalOptions): Promise<void>
@@ -1590,7 +1287,6 @@ async polarsConnectionSettings(s3_resource_path: string | undefined): Promise<an
 
 async duckdbConnectionSettings(s3_resource_path: string | undefined): Promise<any>
 
-
 # Python SDK (wmill)
 
 Import: import wmill
@@ -1598,44 +1294,44 @@ Import: import wmill
 def get_mocked_api() -> Optional[dict]
 
 # Get the HTTP client instance.
-# 
+#
 # Returns:
 #     Configured httpx.Client for API requests
 def get_client() -> httpx.Client
 
 # Make an HTTP GET request to the Windmill API.
-# 
+#
 # Args:
 #     endpoint: API endpoint path
 #     raise_for_status: Whether to raise an exception on HTTP errors
 #     **kwargs: Additional arguments passed to httpx.get
-# 
+#
 # Returns:
 #     HTTP response object
 def get(endpoint, raise_for_status = True, **kwargs) -> httpx.Response
 
 # Make an HTTP POST request to the Windmill API.
-# 
+#
 # Args:
 #     endpoint: API endpoint path
 #     raise_for_status: Whether to raise an exception on HTTP errors
 #     **kwargs: Additional arguments passed to httpx.post
-# 
+#
 # Returns:
 #     HTTP response object
 def post(endpoint, raise_for_status = True, **kwargs) -> httpx.Response
 
 # Create a new authentication token.
-# 
+#
 # Args:
 #     duration: Token validity duration (default: 1 day)
-# 
+#
 # Returns:
 #     New authentication token string
 def create_token(duration = dt.timedelta(days=1)) -> str
 
 # Create a script job and return its job id.
-# 
+#
 # .. deprecated:: Use run_script_by_path_async or run_script_by_hash_async instead.
 def run_script_async(path: str = None, hash_: str = None, args: dict = None, scheduled_in_secs: int = None) -> str
 
@@ -1649,7 +1345,7 @@ def run_script_by_hash_async(hash_: str, args: dict = None, scheduled_in_secs: i
 def run_flow_async(path: str, args: dict = None, scheduled_in_secs: int = None, do_not_track_in_parent: bool = True) -> str
 
 # Run script synchronously and return its result.
-# 
+#
 # .. deprecated:: Use run_script_by_path or run_script_by_hash instead.
 def run_script(path: str = None, hash_: str = None, args: dict = None, timeout: dt.timedelta | int | float | None = None, verbose: bool = False, cleanup: bool = True, assert_result_is_not_none: bool = False) -> Any
 
@@ -1663,28 +1359,28 @@ def run_script_by_hash(hash_: str, args: dict = None, timeout: dt.timedelta | in
 def run_inline_script_preview(content: str, language: str, args: dict = None) -> Any
 
 # Wait for a job to complete and return its result.
-# 
+#
 # Args:
 #     job_id: ID of the job to wait for
 #     timeout: Maximum time to wait (seconds or timedelta)
 #     verbose: Enable verbose logging
 #     cleanup: Register cleanup handler to cancel job on exit
 #     assert_result_is_not_none: Raise exception if result is None
-# 
+#
 # Returns:
 #     Job result when completed
-# 
+#
 # Raises:
 #     TimeoutError: If timeout is reached
 #     Exception: If job fails
 def wait_job(job_id, timeout: dt.timedelta | int | float | None = None, verbose: bool = False, cleanup: bool = True, assert_result_is_not_none: bool = False)
 
 # Cancel a specific job by ID.
-# 
+#
 # Args:
 #     job_id: UUID of the job to cancel
 #     reason: Optional reason for cancellation
-# 
+#
 # Returns:
 #     Response message from the cancel endpoint
 def cancel_job(job_id: str, reason: str = None) -> str
@@ -1693,63 +1389,63 @@ def cancel_job(job_id: str, reason: str = None) -> str
 def cancel_running() -> dict
 
 # Get job details by ID.
-# 
+#
 # Args:
 #     job_id: UUID of the job
-# 
+#
 # Returns:
 #     Job details dictionary
 def get_job(job_id: str) -> dict
 
 # Get the root job ID for a flow hierarchy.
-# 
+#
 # Args:
 #     job_id: Job ID (defaults to current WM_JOB_ID)
-# 
+#
 # Returns:
 #     Root job ID
 def get_root_job_id(job_id: str | None = None) -> dict
 
 # Get an OIDC JWT token for authentication to external services.
-# 
+#
 # Args:
 #     audience: Token audience (e.g., "vault", "aws")
 #     expires_in: Optional expiration time in seconds
-# 
+#
 # Returns:
 #     JWT token string
 def get_id_token(audience: str, expires_in: int | None = None) -> str
 
 # Get the status of a job.
-# 
+#
 # Args:
 #     job_id: UUID of the job
-# 
+#
 # Returns:
 #     Job status: "RUNNING", "WAITING", or "COMPLETED"
 def get_job_status(job_id: str) -> JobStatus
 
 # Get the result of a completed job.
-# 
+#
 # Args:
 #     job_id: UUID of the completed job
 #     assert_result_is_not_none: Raise exception if result is None
-# 
+#
 # Returns:
 #     Job result
 def get_result(job_id: str, assert_result_is_not_none: bool = True) -> Any
 
 # Get a variable value by path.
-# 
+#
 # Args:
 #     path: Variable path in Windmill
-# 
+#
 # Returns:
 #     Variable value as string
 def get_variable(path: str) -> str
 
 # Set a variable value by path, creating it if it doesn't exist.
-# 
+#
 # Args:
 #     path: Variable path in Windmill
 #     value: Variable value to set
@@ -1757,17 +1453,17 @@ def get_variable(path: str) -> str
 def set_variable(path: str, value: str, is_secret: bool = False) -> None
 
 # Get a resource value by path.
-# 
+#
 # Args:
 #     path: Resource path in Windmill
 #     none_if_undefined: Return None instead of raising if not found
-# 
+#
 # Returns:
 #     Resource value dictionary or None
 def get_resource(path: str, none_if_undefined: bool = False) -> dict | None
 
 # Set a resource value by path, creating it if it doesn't exist.
-# 
+#
 # Args:
 #     value: Resource value to set
 #     path: Resource path in Windmill
@@ -1775,34 +1471,34 @@ def get_resource(path: str, none_if_undefined: bool = False) -> dict | None
 def set_resource(value: Any, path: str, resource_type: str)
 
 # List resources from Windmill workspace.
-# 
+#
 # Args:
 #     resource_type: Optional resource type to filter by (e.g., "postgresql", "mysql", "s3")
 #     page: Optional page number for pagination
 #     per_page: Optional number of results per page
-#     
+#
 # Returns:
 #     List of resource dictionaries
 def list_resources(resource_type: str = None, page: int = None, per_page: int = None) -> list[dict]
 
 # Set the workflow state.
-# 
+#
 # Args:
 #     value: State value to set
 def set_state(value: Any)
 
 # Set job progress percentage (0-99).
-# 
+#
 # Args:
 #     value: Progress percentage
 #     job_id: Job ID (defaults to current WM_JOB_ID)
 def set_progress(value: int, job_id: Optional[str] = None)
 
 # Get job progress percentage.
-# 
+#
 # Args:
 #     job_id: Job ID (defaults to current WM_JOB_ID)
-# 
+#
 # Returns:
 #     Progress value (0-100) or None if not set
 def get_progress(job_id: Optional[str] = None) -> Any
@@ -1814,7 +1510,7 @@ def set_flow_user_state(key: str, value: Any) -> None
 def get_flow_user_state(key: str) -> Any
 
 # Get the Windmill server version.
-# 
+#
 # Returns:
 #     Version string
 def version()
@@ -1832,10 +1528,10 @@ def get_polars_connection_settings(s3_resource_path: str = '') -> PolarsConnecti
 def get_boto3_connection_settings(s3_resource_path: str = '') -> Boto3ConnectionSettings
 
 # Load a file from the workspace s3 bucket and returns its content as bytes.
-# 
+#
 # '''python
 # from wmill import S3Object
-# 
+#
 # s3_obj = S3Object(s3="/path/to/my_file.txt")
 # my_obj_content = client.load_s3_file(s3_obj)
 # file_content = my_obj_content.decode("utf-8")
@@ -1843,10 +1539,10 @@ def get_boto3_connection_settings(s3_resource_path: str = '') -> Boto3Connection
 def load_s3_file(s3object: S3Object | str, s3_resource_path: str | None) -> bytes
 
 # Load a file from the workspace s3 bucket and returns the bytes stream.
-# 
+#
 # '''python
 # from wmill import S3Object
-# 
+#
 # s3_obj = S3Object(s3="/path/to/my_file.txt")
 # with wmill.load_s3_file_reader(s3object, s3_resource_path) as file_reader:
 #     print(file_reader.read())
@@ -1854,16 +1550,16 @@ def load_s3_file(s3object: S3Object | str, s3_resource_path: str | None) -> byte
 def load_s3_file_reader(s3object: S3Object | str, s3_resource_path: str | None) -> BufferedReader
 
 # Write a file to the workspace S3 bucket
-# 
+#
 # '''python
 # from wmill import S3Object
-# 
+#
 # s3_obj = S3Object(s3="/path/to/my_file.txt")
-# 
+#
 # # for an in memory bytes array:
 # file_content = b'Hello Windmill!'
 # client.write_s3_file(s3_obj, file_content)
-# 
+#
 # # for a file:
 # with open("my_file.txt", "rb") as my_file:
 #     client.write_s3_file(s3_obj, my_file)
@@ -1871,33 +1567,33 @@ def load_s3_file_reader(s3object: S3Object | str, s3_resource_path: str | None) 
 def write_s3_file(s3object: S3Object | str | None, file_content: BufferedReader | bytes, s3_resource_path: str | None, content_type: str | None = None, content_disposition: str | None = None) -> S3Object
 
 # Sign S3 objects for use by anonymous users in public apps.
-# 
+#
 # Args:
 #     s3_objects: List of S3 objects to sign
-# 
+#
 # Returns:
 #     List of signed S3 objects
 def sign_s3_objects(s3_objects: list[S3Object | str]) -> list[S3Object]
 
 # Sign a single S3 object for use by anonymous users in public apps.
-# 
+#
 # Args:
 #     s3_object: S3 object to sign
-# 
+#
 # Returns:
 #     Signed S3 object
 def sign_s3_object(s3_object: S3Object | str) -> S3Object
 
 # Generate presigned public URLs for an array of S3 objects.
 # If an S3 object is not signed yet, it will be signed first.
-# 
+#
 # Args:
 #     s3_objects: List of S3 objects to sign
 #     base_url: Optional base URL for the presigned URLs (defaults to WM_BASE_URL)
-# 
+#
 # Returns:
 #     List of signed public URLs
-# 
+#
 # Example:
 #     >>> s3_objs = [S3Object(s3="/path/to/file1.txt"), S3Object(s3="/path/to/file2.txt")]
 #     >>> urls = client.get_presigned_s3_public_urls(s3_objs)
@@ -1905,39 +1601,39 @@ def get_presigned_s3_public_urls(s3_objects: list[S3Object | str], base_url: str
 
 # Generate a presigned public URL for an S3 object.
 # If the S3 object is not signed yet, it will be signed first.
-# 
+#
 # Args:
 #     s3_object: S3 object to sign
 #     base_url: Optional base URL for the presigned URL (defaults to WM_BASE_URL)
-# 
+#
 # Returns:
 #     Signed public URL
-# 
+#
 # Example:
 #     >>> s3_obj = S3Object(s3="/path/to/file.txt")
 #     >>> url = client.get_presigned_s3_public_url(s3_obj)
 def get_presigned_s3_public_url(s3_object: S3Object | str, base_url: str | None = None) -> str
 
 # Get the current user information.
-# 
+#
 # Returns:
 #     User details dictionary
 def whoami() -> dict
 
 # Get the current user information (alias for whoami).
-# 
+#
 # Returns:
 #     User details dictionary
 def user() -> dict
 
 # Get the state resource path from environment.
-# 
+#
 # Returns:
 #     State path string
 def state_path() -> str
 
 # Get the workflow state.
-# 
+#
 # Returns:
 #     State value or None if not set
 def state() -> Any
@@ -1955,19 +1651,19 @@ def set_shared_state(value: Any, path: str = 'state.json') -> None
 def get_shared_state(path: str = 'state.json') -> None
 
 # Get URLs needed for resuming a flow after suspension.
-# 
+#
 # Args:
 #     approver: Optional approver name
-# 
+#
 # Returns:
 #     Dictionary with approvalPage, resume, and cancel URLs
 def get_resume_urls(approver: str = None) -> dict
 
 # Sends an interactive approval request via Slack, allowing optional customization of the message, approver, and form fields.
-# 
+#
 # **[Enterprise Edition Only]** To include form fields in the Slack approval request, use the "Advanced -> Suspend -> Form" functionality.
 # Learn more at: https://www.windmill.dev/docs/flows/flow_approval#form
-# 
+#
 # :param slack_resource_path: The path to the Slack resource in Windmill.
 # :type slack_resource_path: str
 # :param channel_id: The Slack channel ID where the approval request will be sent.
@@ -1980,12 +1676,12 @@ def get_resume_urls(approver: str = None) -> dict
 # :type default_args_json: dict, optional
 # :param dynamic_enums_json: Optional dictionary overriding the enum default values of enum form fields.
 # :type dynamic_enums_json: dict, optional
-# 
+#
 # :raises Exception: If the function is not called within a flow or flow preview.
 # :raises Exception: If the required flow job or flow step environment variables are not set.
-# 
+#
 # :return: None
-# 
+#
 # **Usage Example:**
 #     >>> client.request_interactive_slack_approval(
 #     ...     slack_resource_path="/u/alex/my_slack_resource",
@@ -1995,7 +1691,7 @@ def get_resume_urls(approver: str = None) -> dict
 #     ...     default_args_json={"key1": "value1", "key2": 42},
 #     ...     dynamic_enums_json={"foo": ["choice1", "choice2"], "bar": ["optionA", "optionB"]},
 #     ... )
-# 
+#
 # **Notes:**
 # - This function must be executed within a Windmill flow or flow preview.
 # - The function checks for required environment variables (`WM_FLOW_JOB_ID`, `WM_FLOW_STEP_ID`) to ensure it is run in the appropriate context.
@@ -2010,19 +1706,19 @@ def username_to_email(username: str) -> str
 def send_teams_message(conversation_id: str, text: str, success: bool = True, card_block: dict = None)
 
 # Get a DataTable client for SQL queries.
-# 
+#
 # Args:
 #     name: Database name (default: "main")
-# 
+#
 # Returns:
 #     DataTableClient instance
 def datatable(name: str = 'main')
 
 # Get a DuckLake client for DuckDB queries.
-# 
+#
 # Args:
 #     name: Database name (default: "main")
-# 
+#
 # Returns:
 #     DucklakeClient instance
 def ducklake(name: str = 'main')
@@ -2032,7 +1728,7 @@ def init_global_client(f)
 def deprecate(in_favor_of: str)
 
 # Get the current workspace ID.
-# 
+#
 # Returns:
 #     Workspace ID string
 def get_workspace() -> str
@@ -2040,7 +1736,7 @@ def get_workspace() -> str
 def get_version() -> str
 
 # Run a script synchronously by hash and return its result.
-# 
+#
 # Args:
 #     hash: Script hash
 #     args: Script arguments
@@ -2048,13 +1744,13 @@ def get_version() -> str
 #     assert_result_is_not_none: Raise exception if result is None
 #     cleanup: Register cleanup handler to cancel job on exit
 #     timeout: Maximum time to wait
-# 
+#
 # Returns:
 #     Script result
 def run_script_sync(hash: str, args: Dict[str, Any] = None, verbose: bool = False, assert_result_is_not_none: bool = True, cleanup: bool = True, timeout: dt.timedelta = None) -> Any
 
 # Run a script synchronously by path and return its result.
-# 
+#
 # Args:
 #     path: Script path
 #     args: Script arguments
@@ -2062,7 +1758,7 @@ def run_script_sync(hash: str, args: Dict[str, Any] = None, verbose: bool = Fals
 #     assert_result_is_not_none: Raise exception if result is None
 #     cleanup: Register cleanup handler to cancel job on exit
 #     timeout: Maximum time to wait
-# 
+#
 # Returns:
 #     Script result
 def run_script_by_path_sync(path: str, args: Dict[str, Any] = None, verbose: bool = False, assert_result_is_not_none: bool = True, cleanup: bool = True, timeout: dt.timedelta = None) -> Any
@@ -2083,19 +1779,19 @@ def boto3_connection_settings(s3_resource_path: str = '') -> Boto3ConnectionSett
 def get_state() -> Any
 
 # Get the state resource path from environment.
-# 
+#
 # Returns:
 #     State path string
 def get_state_path() -> str
 
 # Decorator to mark a function as a workflow task.
-# 
+#
 # When executed inside a Windmill job, the decorated function runs as a
 # separate workflow step. Outside Windmill, it executes normally.
-# 
+#
 # Args:
 #     tag: Optional worker tag for execution
-# 
+#
 # Returns:
 #     Decorated function
 def task(*args, **kwargs)
@@ -2110,38 +1806,38 @@ def parse_s3_object(s3_object: S3Object | str) -> S3Object
 def parse_variable_syntax(s: str) -> Optional[str]
 
 # Append a text to the result stream.
-# 
+#
 # Args:
 #     text: text to append to the result stream
 def append_to_result_stream(text: str) -> None
 
 # Stream to the result stream.
-# 
+#
 # Args:
 #     stream: stream to stream to the result stream
 def stream_result(stream) -> None
 
 # Execute a SQL query against the DataTable.
-# 
+#
 # Args:
 #     sql: SQL query string with $1, $2, etc. placeholders
 #     *args: Positional arguments to bind to query placeholders
-# 
+#
 # Returns:
 #     SqlQuery instance for fetching results
 def query(sql: str, *args)
 
 # Execute query and fetch results.
-# 
+#
 # Args:
 #     result_collection: Optional result collection mode
-# 
+#
 # Returns:
 #     Query results
 def fetch(result_collection: str | None = None)
 
 # Execute query and fetch first row of results.
-# 
+#
 # Returns:
 #     First row of query results
 def fetch_one()
@@ -2300,7 +1996,7 @@ app related commands
 
 **Subcommands:**
 
-- `app push <file_path:string> <remote_path:string>` - push a local app 
+- `app push <file_path:string> <remote_path:string>` - push a local app
 - `app generate-locks [app_folder:string]` - re-generate the lockfiles for app runnables inline scripts that have changed
   - `--yes` - Skip confirmation prompt
   - `--dry-run` - Perform a dry run without making changes
@@ -2639,5 +2335,3 @@ workspace related commands
   - `--create-workspace-name <workspace_name:string>` - Specify the workspace name. Ignored if --create is not specified or the workspace already exists. Will default to the workspace id.
 - `workspace delete-fork <fork_name:string>` - Delete a forked workspace and git branch
   - `-y --yes` - Skip confirmation prompt
-
-

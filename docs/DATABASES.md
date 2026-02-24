@@ -33,6 +33,7 @@ Password: <password>
 Host: Can leave blank if local or address of Docker/K8s container
 Port: 26257
 ```
+
 Click "Create"
 
 5. Now you should be able to access the credentials with:

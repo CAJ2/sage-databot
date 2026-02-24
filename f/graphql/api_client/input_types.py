@@ -12,6 +12,7 @@ from .enums import ChangeStatus, SourceType, TagType
 class ComponentMaterialInput(BaseModel):
     id: str
     material_fraction: Optional[float] = Field(alias="materialFraction", default=None)
+    "Fraction of this material in the component (0–1)"
 
 
 class ComponentRegionInput(BaseModel):
@@ -25,9 +26,13 @@ class ComponentTagsInput(BaseModel):
 
 class CreateCategoryInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_short: Optional[str] = Field(alias="descShort", default=None)
     desc_short_tr: Optional[list["TranslatedInput"]] = Field(
@@ -36,9 +41,11 @@ class CreateCategoryInput(BaseModel):
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
 
 
 class CreateChangeInput(BaseModel):
@@ -50,13 +57,18 @@ class CreateChangeInput(BaseModel):
 
 class CreateComponentInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     materials: Optional[list["ComponentMaterialInput"]] = None
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
@@ -66,51 +78,69 @@ class CreateComponentInput(BaseModel):
     )
     region: Optional["ComponentRegionInput"] = None
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     tags: Optional[list["ComponentTagsInput"]] = None
     visual: Optional[Any] = None
 
 
 class CreateItemInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     categories: Optional[list["ItemCategoriesInput"]] = None
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     tags: Optional[list["ItemTagsInput"]] = None
 
 
 class CreateOrgInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     avatar_url: Optional[str] = Field(alias="avatarURL", default=None)
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: str
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     slug: str
     website_url: Optional[str] = Field(alias="websiteURL", default=None)
 
 
 class CreateProcessInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     efficiency: Optional[Any] = None
     instructions: Optional[Any] = None
     intent: str
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     material: Optional["ProcessMaterialInput"] = None
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
@@ -118,6 +148,7 @@ class CreateProcessInput(BaseModel):
     place: Optional["ProcessPlaceInput"] = None
     region: Optional["ProcessRegionInput"] = None
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     rules: Optional[Any] = None
     variant: Optional["ProcessVariantInput"] = None
 
@@ -141,22 +172,29 @@ class CreateTagDefinitionInput(BaseModel):
 
 class CreateVariantInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     code: Optional[str] = None
+    "Manufacturer or product code for this variant"
     components: Optional[list["VariantComponentsInput"]] = None
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     items: Optional[list["VariantItemsInput"]] = None
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
     orgs: Optional[list["VariantOrgsInput"]] = None
     region: Optional["VariantRegionsInput"] = None
     regions: Optional[list["VariantRegionsInput"]] = None
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     tags: Optional[list["VariantTagsInput"]] = None
 
 
@@ -204,16 +242,24 @@ class SourceInput(BaseModel):
 
 
 class TranslatedInput(BaseModel):
+    """A translated text value for a specific language"""
+
     auto: bool = False
+    "Whether this translation was generated automatically"
     lang: str
+    'BCP 47 language code (e.g. "en", "fr-CA")'
     text: Optional[str] = None
 
 
 class UpdateCategoryInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_short: Optional[str] = Field(alias="descShort", default=None)
     desc_short_tr: Optional[list["TranslatedInput"]] = Field(
@@ -223,9 +269,11 @@ class UpdateCategoryInput(BaseModel):
     id: str
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
 
 
 class UpdateChangeInput(BaseModel):
@@ -238,17 +286,22 @@ class UpdateChangeInput(BaseModel):
 
 class UpdateComponentInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     add_tags: Optional[list["ComponentTagsInput"]] = Field(
         alias="addTags", default=None
     )
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     id: str
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     materials: Optional[list["ComponentMaterialInput"]] = None
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
@@ -258,6 +311,7 @@ class UpdateComponentInput(BaseModel):
     )
     region: Optional["ComponentRegionInput"] = None
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     remove_tags: Optional[list[str]] = Field(alias="removeTags", default=None)
     tags: Optional[list["ComponentTagsInput"]] = None
     visual: Optional[Any] = None
@@ -268,46 +322,62 @@ class UpdateItemInput(BaseModel):
         alias="addCategories", default=None
     )
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     add_tags: Optional[list["ItemTagsInput"]] = Field(alias="addTags", default=None)
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     categories: Optional[list["ItemCategoriesInput"]] = None
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     id: str
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
     remove_categories: Optional[list[str]] = Field(
         alias="removeCategories", default=None
     )
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     remove_tags: Optional[list[str]] = Field(alias="removeTags", default=None)
     tags: Optional[list["ItemTagsInput"]] = None
 
 
 class UpdateOrgInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     avatar_url: Optional[str] = Field(alias="avatarURL", default=None)
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     id: str
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     slug: Optional[str] = None
     website_url: Optional[str] = Field(alias="websiteURL", default=None)
 
 
 class UpdateProcessInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     desc: Optional[str] = None
     desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
     efficiency: Optional[Any] = None
@@ -315,6 +385,7 @@ class UpdateProcessInput(BaseModel):
     instructions: Optional[Any] = None
     intent: Optional[str] = None
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     material: Optional["ProcessMaterialInput"] = None
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
@@ -322,6 +393,7 @@ class UpdateProcessInput(BaseModel):
     place: Optional["ProcessPlaceInput"] = None
     region: Optional["ProcessRegionInput"] = None
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     rules: Optional[Any] = None
     variant: Optional["ProcessVariantInput"] = None
 
@@ -357,10 +429,14 @@ class UpdateVariantInput(BaseModel):
         alias="addRegions", default=None
     )
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
     add_tags: Optional[list["VariantTagsInput"]] = Field(alias="addTags", default=None)
     apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
     change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
     change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
     code: Optional[str] = None
     components: Optional[list["VariantComponentsInput"]] = None
     desc: Optional[str] = None
@@ -369,6 +445,7 @@ class UpdateVariantInput(BaseModel):
     image_url: Optional[str] = Field(alias="imageURL", default=None)
     items: Optional[list["VariantItemsInput"]] = None
     lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
     name: Optional[str] = None
     name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
     orgs: Optional[list["VariantOrgsInput"]] = None
@@ -380,6 +457,7 @@ class UpdateVariantInput(BaseModel):
     remove_orgs: Optional[list[str]] = Field(alias="removeOrgs", default=None)
     remove_regions: Optional[list[str]] = Field(alias="removeRegions", default=None)
     remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
     remove_tags: Optional[list[str]] = Field(alias="removeTags", default=None)
     tags: Optional[list["VariantTagsInput"]] = None
 
@@ -387,7 +465,9 @@ class UpdateVariantInput(BaseModel):
 class VariantComponentsInput(BaseModel):
     id: str
     quantity: Optional[float] = None
+    "Quantity of this component in the variant"
     unit: Optional[str] = None
+    "Unit of measurement for the component quantity"
 
 
 class VariantItemsInput(BaseModel):

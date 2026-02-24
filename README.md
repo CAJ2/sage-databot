@@ -20,6 +20,7 @@ There are several main features that Databot intends to implement. These are def
 Databot is built using Python and [Windmill](https://www.windmill.dev/) for workflow orchestration.
 
 Dependencies:
+
 - Sage API
 - Windmill + PostgreSQL
 - Meilisearch
