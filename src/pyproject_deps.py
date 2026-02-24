@@ -1,7 +1,8 @@
-import tomllib
-import subprocess
-from pathlib import Path
 import re
+import subprocess
+import tomllib
+from pathlib import Path
+
 
 def extract_python_version(requires_python: str) -> str:
     # Extract the first version number from a string like ">=3.12"
@@ -22,7 +23,7 @@ def main():
     with out_path.open("w") as f:
         f.write(f"# py: {py_version}\n")
     subprocess.run(
-        f"uv export --no-hashes --format requirements-txt -q >> {out_path}",
+        f"uv export --no-hashes --format requirements-txt -q >> {out_path} && sed -i '' '/-e \\./d' {out_path}",
         shell=True, check=True, cwd=root
     )
     # Optional dependencies
@@ -32,7 +33,7 @@ def main():
         with out_path.open("w") as f:
             f.write(f"# py: {py_version}\n")
         subprocess.run(
-            f"uv export --no-hashes --format requirements-txt -q --extra {name} >> {out_path}",
+            f"uv export --no-hashes --format requirements-txt -q --extra {name} >> {out_path} && sed -i '' '/-e \\./d' {out_path}",
             shell=True, check=True, cwd=root
         )
 

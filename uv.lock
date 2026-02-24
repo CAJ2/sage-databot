@@ -4357,7 +4357,7 @@ wheels = [
 [[package]]
 name = "sage-databot"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "adbc-driver-postgresql" },
     { name = "adbc-driver-sqlite" },
