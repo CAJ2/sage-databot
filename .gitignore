@@ -9,6 +9,10 @@ wheels/
 # Virtual environments
 .venv
 
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
 # Env
 .env
 .dlt
