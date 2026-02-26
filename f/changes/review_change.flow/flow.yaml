@@ -1,11 +1,12 @@
 summary: Automated AI review of a proposed Change
 description: >
   Triggered with a change_id. Fetches the Change and all its Edits from the
-  GraphQL API. For each edit, calls the model-specific context script (mode="review")
-  to get rich structured context, then runs the generic review_edit script to produce
-  an EditAnalysis. Collects all analyses and writes results to the Change record in
-  CRDB using SQLAlchemy ORM. Status is set to APPROVED if all edits pass, REJECTED
-  if any fail. Raises an error if the Change has no edits.
+  GraphQL API. For each edit, calls the model-specific context script
+  (mode="review") to get rich structured context, then runs the generic
+  review_edit script to produce an EditAnalysis. Collects all analyses and
+  writes results to the Change record in CRDB using SQLAlchemy ORM. Status is
+  set to APPROVED if all edits pass, REJECTED if any fail. Raises an error if
+  the Change has no edits.
 value:
   modules:
     - id: a
@@ -36,11 +37,11 @@ value:
                     type: script
                     is_trigger: false
                     input_transforms:
-                      entity_id:
-                        expr: flow_input.iter.value.entity_id
-                        type: javascript
                       mode:
                         expr: '"review"'
+                        type: javascript
+                      entity_id:
+                        expr: flow_input.iter.value.entity_id
                         type: javascript
                   summary: Fetch generic context
                   continue_on_error: true
@@ -53,11 +54,11 @@ value:
                         type: script
                         is_trigger: false
                         input_transforms:
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                           mode:
                             expr: '"review"'
+                            type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Fetch Variant context
                       continue_on_error: true
@@ -72,11 +73,11 @@ value:
                         type: script
                         is_trigger: false
                         input_transforms:
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                           mode:
                             expr: '"review"'
+                            type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Fetch Item context
                       continue_on_error: true
@@ -91,11 +92,11 @@ value:
                         type: script
                         is_trigger: false
                         input_transforms:
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                           mode:
                             expr: '"review"'
+                            type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Fetch Process context
                       continue_on_error: true
@@ -110,11 +111,11 @@ value:
                         type: script
                         is_trigger: false
                         input_transforms:
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                           mode:
                             expr: '"review"'
+                            type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Fetch Component context
                       continue_on_error: true
@@ -129,11 +130,11 @@ value:
                         type: script
                         is_trigger: false
                         input_transforms:
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                           mode:
                             expr: '"review"'
+                            type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Fetch Place context
                       continue_on_error: true
@@ -148,11 +149,11 @@ value:
                         type: script
                         is_trigger: false
                         input_transforms:
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                           mode:
                             expr: '"review"'
+                            type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Fetch Category context
                       continue_on_error: true
@@ -166,14 +167,14 @@ value:
               type: script
               is_trigger: false
               input_transforms:
-                entity_context:
-                  expr: results.c
-                  type: javascript
                 edit_id:
                   expr: flow_input.iter.value.edit_id
                   type: javascript
                 create_changes:
                   expr: flow_input.iter.value.create_changes
+                  type: javascript
+                entity_context:
+                  expr: results.c
                   type: javascript
                 update_changes:
                   expr: flow_input.iter.value.update_changes

@@ -1,9 +1,10 @@
 summary: AI auto-suggest field values for a model entity
 description: >
   Given an entity_name, entity_id, and a list of target fields, fetches rich
-  structured context for the entity using the model-specific context script, then
-  runs an AI suggestion agent to propose values for each requested field.
-  Returns a SuggestResult with per-field suggestions, confidence scores, and reasoning.
+  structured context for the entity using the model-specific context script,
+  then runs an AI suggestion agent to propose values for each requested field.
+  Returns a SuggestResult with per-field suggestions, confidence scores, and
+  reasoning.
 value:
   modules:
     - id: a
@@ -16,11 +17,11 @@ value:
               type: script
               is_trigger: false
               input_transforms:
-                entity_id:
-                  expr: flow_input.entity_id
-                  type: javascript
                 mode:
                   expr: '"suggest"'
+                  type: javascript
+                entity_id:
+                  expr: flow_input.entity_id
                   type: javascript
                 target_fields:
                   expr: flow_input.target_fields
@@ -36,11 +37,11 @@ value:
                   type: script
                   is_trigger: false
                   input_transforms:
-                    entity_id:
-                      expr: flow_input.entity_id
-                      type: javascript
                     mode:
                       expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
                       type: javascript
                     target_fields:
                       expr: flow_input.target_fields
@@ -58,11 +59,11 @@ value:
                   type: script
                   is_trigger: false
                   input_transforms:
-                    entity_id:
-                      expr: flow_input.entity_id
-                      type: javascript
                     mode:
                       expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
                       type: javascript
                     target_fields:
                       expr: flow_input.target_fields
@@ -80,11 +81,11 @@ value:
                   type: script
                   is_trigger: false
                   input_transforms:
-                    entity_id:
-                      expr: flow_input.entity_id
-                      type: javascript
                     mode:
                       expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
                       type: javascript
                     target_fields:
                       expr: flow_input.target_fields
@@ -102,11 +103,11 @@ value:
                   type: script
                   is_trigger: false
                   input_transforms:
-                    entity_id:
-                      expr: flow_input.entity_id
-                      type: javascript
                     mode:
                       expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
                       type: javascript
                     target_fields:
                       expr: flow_input.target_fields
@@ -124,11 +125,11 @@ value:
                   type: script
                   is_trigger: false
                   input_transforms:
-                    entity_id:
-                      expr: flow_input.entity_id
-                      type: javascript
                     mode:
                       expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
                       type: javascript
                     target_fields:
                       expr: flow_input.target_fields
@@ -146,11 +147,11 @@ value:
                   type: script
                   is_trigger: false
                   input_transforms:
-                    entity_id:
-                      expr: flow_input.entity_id
-                      type: javascript
                     mode:
                       expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
                       type: javascript
                     target_fields:
                       expr: flow_input.target_fields
@@ -167,11 +168,11 @@ value:
         type: script
         is_trigger: false
         input_transforms:
-          entity_context:
-            expr: results.a
-            type: javascript
           target_fields:
             expr: flow_input.target_fields
+            type: javascript
+          entity_context:
+            expr: results.a
             type: javascript
       summary: AI field suggestion
       continue_on_error: false
