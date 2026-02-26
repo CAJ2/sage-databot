@@ -64,15 +64,19 @@ def analyze_edit(
     change_description: str,
     context: dict,
     model: Model,
+    prompt_hints: str = "",
 ) -> EditAnalysis:
     """
     Runs AI analysis on a single edit and returns a typed EditAnalysis result.
+    prompt_hints is optional model-specific guidance injected into the prompt.
     """
     context_str = json.dumps(context, indent=2, default=str)
+    hints_section = f"\nMODEL-SPECIFIC GUIDANCE:\n{prompt_hints}\n" if prompt_hints else ""
     prompt = (
         f"Review the following proposed change to a {entity_name} record.\n\n"
         f"CHANGE DESCRIPTION:\n{change_description}\n\n"
-        f"CONTEXT:\n{context_str}\n\n"
+        f"CONTEXT:\n{context_str}\n"
+        f"{hints_section}\n"
         "Is this change reasonable? Evaluate each modified field and any relational links. "
         "Return your verdict (approved: true/false), concise reasoning, and per-field analysis."
     )

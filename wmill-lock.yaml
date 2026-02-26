@@ -3,6 +3,7 @@ locks:
   f/categories/categories_flow: d2a141ae184075fadacc2aca7097eb8eedc0bd13483dda5408193a22aeba25b4
   f/categories/google_taxonomy_flow: 6e8c5ce225eec292e361bda5d0e32c032974f87bc302ab09d53495ff4a920c31
   f/changes/ai_review: 0d5a65525b521ebcc4ea70032e72ec1331edc68bd9470cff8aaf8f1a86bed905
+  f/changes/ai_suggest: 305caf41320b0f7c8aeed3912a8ab4d22ce6d35e675faf5dcd6750b93adab4aa
   f/changes/analyze_category_edit: 2e8c9536417d10a32757ab873574e0da6e9230a396199147bec591a64daf08d4
   f/changes/analyze_component_edit: 493319e3dc87bf9c0787cc3a7a8b1afdba708005296171f7b31434d26ad9e65b
   f/changes/analyze_generic_edit: f1687e418d5801d3bd59a6c2b14c6d5e89d0bfa8e6040d514ee07a90a048dce9
@@ -14,6 +15,7 @@ locks:
   f/changes/review_change.flow+fetch_change_edits.inline_script.py: e0cba51f2d6343c208deba9aa914203b51a7264e054357c3adda5f61012b556a
   f/changes/review_change.flow+write_review_results_to_crdb.inline_script.py: a9674c75c8213dff737b082d7e61ab1ecdb649ec0fc5fa51829f6065ec4b2b61
   f/changes/review_change.flow+write_review_results.inline_script.py: a9674c75c8213dff737b082d7e61ab1ecdb649ec0fc5fa51829f6065ec4b2b61
+  f/context/context_types: 19e1157b4352b5ef9656918ac15877580ccea19b40eb6d6a554a361aef1cd09c
   f/db/base: ff118e2c7d820e31324470c286f24297b5a74606e5f74bb59bd63ac6fb84e264
   f/db/databot/model: 39e693a7e1553db380d4c0b3f022ef0e992e5757a99aaee4390abdf14e0aa71c
   f/db/external_sources/model: c1192129d9d203e7915dc33bf300ce40fb47925a01a4e92d78ac5aecca1e5a16

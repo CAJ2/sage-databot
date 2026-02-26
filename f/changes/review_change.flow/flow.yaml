@@ -1,10 +1,11 @@
 summary: Automated AI review of a proposed Change
 description: >
   Triggered with a change_id. Fetches the Change and all its Edits from the
-  GraphQL API, dispatches each edit to a model-type-specific AI analysis script
-  in parallel, then collects the results and writes them to the Change metadata
-  in CRDB. The Change status is set to APPROVED if all edits pass, or REJECTED
-  if any fail.
+  GraphQL API. For each edit, calls the model-specific context script (mode="review")
+  to get rich structured context, then runs the generic review_edit script to produce
+  an EditAnalysis. Collects all analyses and writes results to the Change record in
+  CRDB using SQLAlchemy ORM. Status is set to APPROVED if all edits pass, REJECTED
+  if any fail. Raises an error if the Change has no edits.
 value:
   modules:
     - id: a
@@ -29,241 +30,156 @@ value:
             value:
               type: branchone
               default:
-                - id: j
+                - id: c_generic
                   value:
-                    path: f/changes/analyze_generic_edit
+                    path: f/context/generic_context
                     type: script
                     is_trigger: false
                     input_transforms:
-                      edit_id:
-                        expr: flow_input.iter.value.edit_id
+                      entity_id:
+                        expr: flow_input.iter.value.entity_id
                         type: javascript
-                      original_id:
-                        expr: flow_input.iter.value.original_id
+                      mode:
+                        expr: '"review"'
                         type: javascript
-                      proposed_id:
-                        expr: flow_input.iter.value.proposed_id
-                        type: javascript
-                      change_id:
-                        expr: flow_input.iter.value.change_id
-                        type: javascript
-                      entity_name:
-                        expr: flow_input.iter.value.entity_name
-                        type: javascript
-                      create_changes:
-                        expr: flow_input.iter.value.create_changes
-                        type: javascript
-                      update_changes:
-                        expr: flow_input.iter.value.update_changes
-                        type: javascript
-                  summary: 'Analyze generic edit (Material, Region, etc.)'
+                  summary: Fetch generic context
                   continue_on_error: true
               branches:
-                - expr: flow_input.iter.value.entity_name == "Item"
-                  modules:
-                    - id: d
-                      value:
-                        path: f/changes/analyze_item_edit
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
-                            type: javascript
-                          original_id:
-                            expr: flow_input.iter.value.original_id
-                            type: javascript
-                          proposed_id:
-                            expr: flow_input.iter.value.proposed_id
-                            type: javascript
-                          change_id:
-                            expr: flow_input.iter.value.change_id
-                            type: javascript
-                          entity_name:
-                            expr: flow_input.iter.value.entity_name
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
-                      summary: Analyze Item edit
-                      continue_on_error: true
-                  summary: Item
-                  parallel: true
-                  skip_failure: false
                 - expr: flow_input.iter.value.entity_name == "Variant"
                   modules:
-                    - id: e
+                    - id: c_variant
                       value:
-                        path: f/changes/analyze_variant_edit
+                        path: f/context/variant_context
                         type: script
                         is_trigger: false
                         input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
-                          original_id:
-                            expr: flow_input.iter.value.original_id
+                          mode:
+                            expr: '"review"'
                             type: javascript
-                          proposed_id:
-                            expr: flow_input.iter.value.proposed_id
-                            type: javascript
-                          change_id:
-                            expr: flow_input.iter.value.change_id
-                            type: javascript
-                          entity_name:
-                            expr: flow_input.iter.value.entity_name
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
-                      summary: Analyze Variant edit
+                      summary: Fetch Variant context
                       continue_on_error: true
                   summary: Variant
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Component"
+                - expr: flow_input.iter.value.entity_name == "Item"
                   modules:
-                    - id: f
+                    - id: c_item
                       value:
-                        path: f/changes/analyze_component_edit
+                        path: f/context/item_context
                         type: script
                         is_trigger: false
                         input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
-                          original_id:
-                            expr: flow_input.iter.value.original_id
+                          mode:
+                            expr: '"review"'
                             type: javascript
-                          proposed_id:
-                            expr: flow_input.iter.value.proposed_id
-                            type: javascript
-                          change_id:
-                            expr: flow_input.iter.value.change_id
-                            type: javascript
-                          entity_name:
-                            expr: flow_input.iter.value.entity_name
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
-                      summary: Analyze Component edit
+                      summary: Fetch Item context
                       continue_on_error: true
-                  summary: Component
+                  summary: Item
                   parallel: true
                   skip_failure: false
                 - expr: flow_input.iter.value.entity_name == "Process"
                   modules:
-                    - id: g
+                    - id: c_process
                       value:
-                        path: f/changes/analyze_process_edit
+                        path: f/context/process_context
                         type: script
                         is_trigger: false
                         input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
-                          original_id:
-                            expr: flow_input.iter.value.original_id
+                          mode:
+                            expr: '"review"'
                             type: javascript
-                          proposed_id:
-                            expr: flow_input.iter.value.proposed_id
-                            type: javascript
-                          change_id:
-                            expr: flow_input.iter.value.change_id
-                            type: javascript
-                          entity_name:
-                            expr: flow_input.iter.value.entity_name
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
-                      summary: Analyze Process edit
+                      summary: Fetch Process context
                       continue_on_error: true
                   summary: Process
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Place"
+                - expr: flow_input.iter.value.entity_name == "Component"
                   modules:
-                    - id: h
+                    - id: c_component
                       value:
-                        path: f/changes/analyze_place_edit
+                        path: f/context/component_context
                         type: script
                         is_trigger: false
                         input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
-                          original_id:
-                            expr: flow_input.iter.value.original_id
+                          mode:
+                            expr: '"review"'
                             type: javascript
-                          proposed_id:
-                            expr: flow_input.iter.value.proposed_id
+                      summary: Fetch Component context
+                      continue_on_error: true
+                  summary: Component
+                  parallel: true
+                  skip_failure: false
+                - expr: flow_input.iter.value.entity_name == "Place"
+                  modules:
+                    - id: c_place
+                      value:
+                        path: f/context/place_context
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
-                          change_id:
-                            expr: flow_input.iter.value.change_id
+                          mode:
+                            expr: '"review"'
                             type: javascript
-                          entity_name:
-                            expr: flow_input.iter.value.entity_name
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
-                      summary: Analyze Place edit
+                      summary: Fetch Place context
                       continue_on_error: true
                   summary: Place
                   parallel: true
                   skip_failure: false
                 - expr: flow_input.iter.value.entity_name == "Category"
                   modules:
-                    - id: i
+                    - id: c_category
                       value:
-                        path: f/changes/analyze_category_edit
+                        path: f/context/category_context
                         type: script
                         is_trigger: false
                         input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
                             type: javascript
-                          original_id:
-                            expr: flow_input.iter.value.original_id
+                          mode:
+                            expr: '"review"'
                             type: javascript
-                          proposed_id:
-                            expr: flow_input.iter.value.proposed_id
-                            type: javascript
-                          change_id:
-                            expr: flow_input.iter.value.change_id
-                            type: javascript
-                          entity_name:
-                            expr: flow_input.iter.value.entity_name
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
-                      summary: Analyze Category edit
+                      summary: Fetch Category context
                       continue_on_error: true
                   summary: Category
                   parallel: true
                   skip_failure: false
-            summary: Dispatch to model-type analyzer
+            summary: Fetch entity context
+          - id: d
+            value:
+              path: f/changes/review_edit
+              type: script
+              is_trigger: false
+              input_transforms:
+                entity_context:
+                  expr: results.c
+                  type: javascript
+                edit_id:
+                  expr: flow_input.iter.value.edit_id
+                  type: javascript
+                create_changes:
+                  expr: flow_input.iter.value.create_changes
+                  type: javascript
+                update_changes:
+                  expr: flow_input.iter.value.update_changes
+                  type: javascript
+            summary: AI review of edit
+            continue_on_error: true
         iterator:
           expr: results.a
           type: javascript
