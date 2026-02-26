@@ -1,5 +1,6 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from f.db.base import Base, JSONData, Translated
@@ -57,3 +58,13 @@ class ExternalSource(Base):
     variant_id: Mapped[str | None]
     component_id: Mapped[str | None]
     process_id: Mapped[str | None]
+
+
+class Change(Base):
+    __tablename__ = "changes"
+    __table_args__ = {"schema": "public"}
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    status: Mapped[str]
+    metadata_: Mapped[dict | None] = mapped_column("metadata", JSONB)
+    updated_at: Mapped[datetime]

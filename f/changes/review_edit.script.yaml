@@ -1,0 +1,31 @@
+summary: ''
+description: ''
+lock: '!inline f/changes/review_edit.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  properties:
+    create_changes:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+    edit_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    entity_context:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+    update_changes:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+  required:
+    - entity_context
+    - edit_id
