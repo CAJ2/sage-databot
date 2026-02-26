@@ -11,7 +11,7 @@ class EntityContext(BaseModel):
     Consumed by both the review and auto-suggest flows.
     """
     entity_name: str
-    entity_id: str
+    entity_id: str | None = None
     entity_data: dict
     related_data: dict
     # Model-specific guidance for the AI, tailored to the requested mode.

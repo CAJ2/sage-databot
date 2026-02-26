@@ -21,7 +21,7 @@ def main(
     ctx = EntityContext.model_validate(entity_context)
     model = llm_agent()
 
-    entity_id = ctx.entity_id or None
+    entity_id = ctx.entity_id
     entity_name = ctx.entity_name
 
     if create_changes:

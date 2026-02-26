@@ -2,7 +2,7 @@
 
 import json
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic_ai import Agent
 from pydantic_ai.models import Model
 
@@ -13,14 +13,14 @@ class FieldSuggestion(BaseModel):
     """A single AI-generated field value suggestion."""
     field: str
     suggested_value: str
-    confidence: float  # 0.0 – 1.0
+    confidence: float = Field(ge=0.0, le=1.0)  # 0.0 – 1.0
     reasoning: str
 
 
 class SuggestResult(BaseModel):
     """All field suggestions for a single entity, returned by the auto-suggest flow."""
     entity_name: str
-    entity_id: str
+    entity_id: str | None
     suggestions: list[FieldSuggestion]
 
 
