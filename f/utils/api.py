@@ -47,7 +47,7 @@ def api_connect(extra_headers: dict[str, str] | None = None):
         headers.update(extra_headers)
     # Auto-detect test workspace and add test header
     workspace = os.environ.get("WM_WORKSPACE", "")
-    if workspace.startswith("sage-test") and "x-env" not in headers:
+    if workspace.startswith("wm-fork-test") and "x-env" not in headers:
         headers["x-env"] = "test"
     httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=cx, headers=headers)
     client = Client(http_client=httpx_client)

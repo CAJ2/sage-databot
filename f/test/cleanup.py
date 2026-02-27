@@ -277,9 +277,9 @@ class DBTracker:
 def ensure_test_workspace():
     """Validate we're running in a test workspace. Raises if not."""
     workspace = os.environ.get("WM_WORKSPACE", "")
-    if not workspace.startswith("sage-test"):
+    if not workspace.startswith("wm-fork-test"):
         raise RuntimeError(
-            f"Safety check failed: workspace is '{workspace}', expected 'sage-test*'. "
+            f"Safety check failed: workspace is '{workspace}', expected 'wm-fork-test*'. "
             "Tests must run in a forked test workspace."
         )
     return workspace

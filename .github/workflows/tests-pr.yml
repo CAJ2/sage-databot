@@ -13,7 +13,8 @@ env:
   WMILL_WORKSPACE: sage-dev
 
 jobs:
-  integration-tests:
+  test:
+    name: 'Run tests'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -28,40 +29,41 @@ jobs:
 
       - name: Set workspace ID
         id: ws
-        run: echo "id=sage-test-pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+        run: echo "id=wm-fork-test-pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
 
-      - name: Fork workspace
+      - name: Fork workspace (create if not exists)
         run: |
-          wmill workspace fork ${{ steps.ws.outputs.id }} ${{ steps.ws.outputs.id }} \
-            --workspace ${{ env.WMILL_WORKSPACE }} \
-            --base-url ${{ env.WMILL_BASE_URL }} \
-            --token ${{ secrets.WMILL_TOKEN }}
-        continue-on-error: true  # Fork may already exist from previous push
-
-      - name: Add forked workspace
-        run: |
-          wmill workspace add ${{ steps.ws.outputs.id }} ${{ steps.ws.outputs.id }} ${{ env.WMILL_BASE_URL }} \
-            --token ${{ secrets.WMILL_TOKEN }}
-        continue-on-error: true
-
-      - name: Switch to forked workspace
-        run: |
-          wmill workspace switch ${{ steps.ws.outputs.id }} \
-            --token ${{ secrets.WMILL_TOKEN }}
+          WS_ID="${{ steps.ws.outputs.id }}"
+          EXISTS=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"id\": \"$WS_ID\"}" \
+            "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
+          if [ "$EXISTS" = "true" ]; then
+            echo "Workspace $WS_ID already exists, reusing it"
+          else
+            curl -s -f -X POST \
+              -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"id\": \"$WS_ID\", \"name\": \"$WS_ID\"}" \
+              "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
+            echo "Created forked workspace: $WS_ID"
+          fi
 
       - name: Sync push to forked workspace
         run: |
           wmill sync push \
             --workspace ${{ steps.ws.outputs.id }} \
             --base-url ${{ env.WMILL_BASE_URL }} \
-            --token ${{ secrets.WMILL_TOKEN }}
+            --token ${{ secrets.WMILL_TOKEN }} \
+            --branch dev
 
       - name: Run integration tests
         id: tests
         run: |
-          # Run the test flow and capture the job ID
+          WS_ID="${{ steps.ws.outputs.id }}"
           JOB_ID=$(wmill flow run f/test/run_tests \
-            --workspace ${{ steps.ws.outputs.id }} \
+            --workspace "$WS_ID" \
             --base-url ${{ env.WMILL_BASE_URL }} \
             --token ${{ secrets.WMILL_TOKEN }} 2>&1 | grep -Eo '[a-f0-9-]{36}')
 
@@ -76,7 +78,7 @@ jobs:
           for i in $(seq 1 60); do
             sleep 10
             STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-              "${{ env.WMILL_BASE_URL }}/api/w/${{ steps.ws.outputs.id }}/jobs_u/get/$JOB_ID" \
+              "${{ env.WMILL_BASE_URL }}/api/w/$WS_ID/jobs_u/get/$JOB_ID" \
               | jq -r '.type // "unknown"')
 
             if [ "$STATUS" = "CompletedJob" ]; then
@@ -101,13 +103,10 @@ jobs:
             "${{ env.WMILL_BASE_URL }}/api/w/${{ steps.ws.outputs.id }}/jobs_u/get/${{ steps.tests.outputs.job_id }}" \
             | jq -r '.result')
 
-          # Extract markdown for PR comment
           MARKDOWN=$(echo "$RESULT" | jq -r '.markdown // "No results available"')
           SUCCESS=$(echo "$RESULT" | jq -r '.success // false')
 
-          # Write markdown to a file for the PR comment step
           echo "$MARKDOWN" > test-results.md
-
           echo "success=$SUCCESS" >> "$GITHUB_OUTPUT"
 
       - name: Post PR comment

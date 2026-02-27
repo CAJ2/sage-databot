@@ -10,7 +10,7 @@ from urllib.request import urlretrieve
 
 
 def _is_test_workspace() -> bool:
-    return os.environ.get("WM_WORKSPACE", "").startswith("sage-test")
+    return os.environ.get("WM_WORKSPACE", "").startswith("wm-fork-test")
 
 
 class S3Client:
