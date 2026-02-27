@@ -22,10 +22,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '>=20'
+
       - name: Install wmill CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/windmill-labs/windmill/main/cli/install.sh | bash
-          wmill version
+          npm install -g windmill-cli
+          wmill --version
 
       - name: Set workspace ID
         id: ws
