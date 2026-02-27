@@ -1,3 +1,4 @@
+import os
 import wmill
 import httpx
 import json
@@ -7,9 +8,13 @@ from urllib.parse import unquote
 from f.graphql.api_client.client import Client
 
 
-def api_connect():
+def api_connect(extra_headers: dict[str, str] | None = None):
     """
     Connects to the API and returns the client and user.
+
+    Args:
+        extra_headers: Additional headers to include on every request.
+                       For tests, pass {"x-env": "test"} to enable test mode.
     """
     # Create an API client
     api_url = wmill.get_variable("f/api_config/api_sage_url")
@@ -37,7 +42,14 @@ def api_connect():
     if "user" not in body:
         raise ValueError("Failed to sign in to the API: user key not found")
 
-    httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=cx)
+    headers = {}
+    if extra_headers:
+        headers.update(extra_headers)
+    # Auto-detect test workspace and add test header
+    workspace = os.environ.get("WM_WORKSPACE", "")
+    if workspace.startswith("sage-test") and "x-env" not in headers:
+        headers["x-env"] = "test"
+    httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=cx, headers=headers)
     client = Client(http_client=httpx_client)
     # Test the API connection
     try:

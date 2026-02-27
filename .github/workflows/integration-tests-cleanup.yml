@@ -1,0 +1,25 @@
+name: Integration Tests Cleanup (PR)
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  WMILL_BASE_URL: https://databot.dev.sageleaf.app
+  WMILL_WORKSPACE: sage-dev
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install wmill CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/windmill-labs/windmill/main/cli/install.sh | bash
+
+      - name: Delete forked workspace
+        run: |
+          wmill workspace delete-fork sage-test-pr-${{ github.event.pull_request.number }} -y \
+            --workspace ${{ env.WMILL_WORKSPACE }} \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }}
+        continue-on-error: true  # Don't fail if workspace doesn't exist

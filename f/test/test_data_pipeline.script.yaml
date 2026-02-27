@@ -1,0 +1,9 @@
+summary: 'Tests: data pipeline (categories, tags, gen_ids)'
+description: ''
+lock: '!inline f/test/test_data_pipeline.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  properties: {}
+  required: []

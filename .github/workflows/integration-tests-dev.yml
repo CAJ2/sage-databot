@@ -1,0 +1,109 @@
+name: Integration Tests (Dev)
+
+on:
+  push:
+    branches: [dev]
+
+concurrency:
+  group: integration-tests-dev
+  cancel-in-progress: true
+
+env:
+  WMILL_BASE_URL: https://databot.dev.sageleaf.app
+  WMILL_WORKSPACE: sage-dev
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install wmill CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/windmill-labs/windmill/main/cli/install.sh | bash
+          wmill version
+
+      - name: Fork workspace
+        run: |
+          wmill workspace fork sage-test-dev sage-test-dev \
+            --workspace ${{ env.WMILL_WORKSPACE }} \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }}
+        continue-on-error: true  # Fork may already exist
+
+      - name: Add workspace
+        run: |
+          wmill workspace add sage-test-dev sage-test-dev ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }}
+        continue-on-error: true
+
+      - name: Switch to forked workspace
+        run: |
+          wmill workspace switch sage-test-dev \
+            --token ${{ secrets.WMILL_TOKEN }}
+
+      - name: Sync push to forked workspace
+        run: |
+          wmill sync push \
+            --workspace sage-test-dev \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }}
+
+      - name: Run integration tests
+        id: tests
+        run: |
+          JOB_ID=$(wmill flow run f/test/run_tests \
+            --workspace sage-test-dev \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }} 2>&1 | grep -Eo '[a-f0-9-]{36}')
+
+          if [ -z "$JOB_ID" ]; then
+            echo "Error: Failed to extract job ID from wmill output"
+            exit 1
+          fi
+
+          echo "job_id=$JOB_ID" >> "$GITHUB_OUTPUT"
+
+          for i in $(seq 1 60); do
+            sleep 10
+            STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+              "${{ env.WMILL_BASE_URL }}/api/w/sage-test-dev/jobs_u/get/$JOB_ID" \
+              | jq -r '.type // "unknown"')
+
+            if [ "$STATUS" = "CompletedJob" ]; then
+              echo "Tests completed"
+              break
+            fi
+
+            if [ $i -eq 60 ]; then
+              echo "Timeout waiting for test results"
+              exit 1
+            fi
+          done
+
+      - name: Check results
+        run: |
+          RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            "${{ env.WMILL_BASE_URL }}/api/w/sage-test-dev/jobs_u/get/${{ steps.tests.outputs.job_id }}" \
+            | jq -r '.result')
+
+          SUCCESS=$(echo "$RESULT" | jq -r '.success // false')
+          SUMMARY=$(echo "$RESULT" | jq -r '.summary // "No summary"')
+
+          echo "## Integration Tests: $SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+          echo "$RESULT" | jq -r '.markdown // "No results"' >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "Integration tests failed"
+            exit 1
+          fi
+
+      - name: Cleanup forked workspace
+        if: always()
+        run: |
+          wmill workspace delete-fork sage-test-dev -y \
+            --workspace ${{ env.WMILL_WORKSPACE }} \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }}
+        continue-on-error: true

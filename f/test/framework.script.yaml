@@ -1,0 +1,9 @@
+summary: Test framework
+description: 'Core test framework with TestCase, TestSuite, assertions.'
+lock: '!inline f/test/framework.script.lock'
+kind: script
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  properties: {}
+  required: []

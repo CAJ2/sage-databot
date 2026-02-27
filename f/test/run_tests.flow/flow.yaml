@@ -1,0 +1,61 @@
+summary: Run integration tests
+description: |
+  Discovers and runs all test scripts in f/test/, collecting results
+  into a formatted markdown summary. Validates it is running in a
+  forked test workspace before proceeding.
+value:
+  modules:
+    - id: a
+      value:
+        lock: '!inline safety_check_-_verify_test_workspace.inline_script.lock'
+        type: rawscript
+        content: '!inline safety_check_-_verify_test_workspace.inline_script.py'
+        language: python3
+        input_transforms: {}
+      summary: Safety check - verify test workspace
+    - id: b
+      value:
+        lock: '!inline discover_test_scripts.inline_script.lock'
+        type: rawscript
+        content: '!inline discover_test_scripts.inline_script.py'
+        language: python3
+        input_transforms: {}
+      summary: Discover test scripts
+    - id: c
+      value:
+        type: forloopflow
+        modules:
+          - id: d
+            value:
+              lock: '!inline run_test_script.inline_script.lock'
+              type: rawscript
+              content: '!inline run_test_script.inline_script.py'
+              language: python3
+              input_transforms:
+                test_script:
+                  expr: flow_input.iter.value
+                  type: javascript
+            summary: Run test script
+        iterator:
+          expr: results.b
+          type: javascript
+        parallel: false
+        skip_failures: true
+      summary: Run all test scripts
+    - id: e
+      value:
+        lock: '!inline format_results.inline_script.lock'
+        type: rawscript
+        content: '!inline format_results.inline_script.py'
+        language: python3
+        input_transforms:
+          test_results:
+            expr: results.c
+            type: javascript
+      summary: Format results
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order: []
+  properties: {}
+  required: []
