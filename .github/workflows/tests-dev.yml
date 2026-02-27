@@ -5,7 +5,7 @@ on:
     branches: [dev]
 
 concurrency:
-  group: integration-tests-dev
+  group: tests-dev
 
 env:
   WMILL_BASE_URL: https://databot.dev.sageleaf.app
@@ -33,13 +33,21 @@ jobs:
 
       - name: Fork workspace (create if not exists)
         run: |
-          wmill workspace add ${{ env.WMILL_WORKSPACE }} ${{ env.WMILL_WORKSPACE }} \
-            ${{ env.WMILL_BASE_URL }} --token ${{ secrets.WMILL_TOKEN }}
-          wmill workspace fork test-dev ${{ env.TEST_WS_ID }} \
-            --workspace ${{ env.WMILL_WORKSPACE }} \
-            --base-url ${{ env.WMILL_BASE_URL }} \
-            --token ${{ secrets.WMILL_TOKEN }}
-        continue-on-error: true
+          EXISTS=$(curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"id\": \"${{ env.TEST_WS_ID }}\"}" \
+            "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
+          if [ "$EXISTS" = "true" ]; then
+            echo "Workspace ${{ env.TEST_WS_ID }} already exists, reusing"
+          else
+            curl -sf -X POST \
+              -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"id\": \"${{ env.TEST_WS_ID }}\", \"name\": \"${{ env.TEST_WS_ID }}\"}" \
+              "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
+            echo "Created forked workspace: ${{ env.TEST_WS_ID }}"
+          fi
 
       - name: Sync push to forked workspace
         run: |
