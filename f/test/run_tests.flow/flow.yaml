@@ -2,7 +2,8 @@ summary: Run integration tests
 description: |
   Discovers and runs all test scripts in f/test/, collecting results
   into a formatted markdown summary. Validates it is running in a
-  forked test workspace before proceeding.
+  forked test workspace before proceeding. Reports results to GitHub
+  via a check run and sticky PR comment.
 value:
   modules:
     - id: a
@@ -15,17 +16,29 @@ value:
       summary: Safety check - verify test workspace
     - id: b
       value:
+        type: script
+        path: f/test/github_status
+        input_transforms:
+          repo:
+            expr: flow_input.repo
+            type: javascript
+          head_sha:
+            expr: flow_input.head_sha
+            type: javascript
+      summary: Create pending GitHub check run
+    - id: c
+      value:
         lock: '!inline discover_test_scripts.inline_script.lock'
         type: rawscript
         content: '!inline discover_test_scripts.inline_script.py'
         language: python3
         input_transforms: {}
       summary: Discover test scripts
-    - id: c
+    - id: d
       value:
         type: forloopflow
         modules:
-          - id: d
+          - id: e
             value:
               lock: '!inline run_test_script.inline_script.lock'
               type: rawscript
@@ -37,12 +50,12 @@ value:
                   type: javascript
             summary: Run test script
         iterator:
-          expr: results.b
+          expr: results.c
           type: javascript
         parallel: false
         skip_failures: true
       summary: Run all test scripts
-    - id: e
+    - id: f
       value:
         lock: '!inline format_results.inline_script.lock'
         type: rawscript
@@ -50,12 +63,50 @@ value:
         language: python3
         input_transforms:
           test_results:
-            expr: results.c
+            expr: results.d
             type: javascript
       summary: Format results
+    - id: g
+      value:
+        type: script
+        path: f/test/github_status
+        input_transforms:
+          repo:
+            expr: flow_input.repo
+            type: javascript
+          check_run_id:
+            expr: results.b.check_run_id
+            type: javascript
+          results:
+            expr: results.f
+            type: javascript
+          pr_number:
+            expr: flow_input.pr_number
+            type: javascript
+      summary: Report results to GitHub
 schema:
   $schema: 'https://json-schema.org/draft/2020-12/schema'
   type: object
-  order: []
-  properties: {}
-  required: []
+  order:
+    - pr_number
+    - head_sha
+    - repo
+    - ref
+  properties:
+    pr_number:
+      type: integer
+      description: Pull request number (omit for non-PR runs)
+    head_sha:
+      type: string
+      description: Commit SHA to report check run status against
+    repo:
+      type: string
+      description: 'GitHub repository in owner/repo format'
+    ref:
+      type: string
+      description: Branch name or ref
+  required:
+    - head_sha
+    - repo
+    - ref
+

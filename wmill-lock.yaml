@@ -85,6 +85,7 @@ locks:
   f/tags/variant_tags: 51569068d08edeb855f6ffd2d711ba53fc4c5f18b203cd12bab0acdbd17c317c
   f/test/cleanup: ae0a269d293f9ce63e286946d9381571b835949ccb4c84aae9303dad5bd44ac2
   f/test/framework: 0ae490424743cea17196b5f21745a2a4d3410c88e5bba2f2e053c50faf0cc911
+  f/test/github_status: a00012d2c7b2f3e01414993052fb07da30c73aef4d6d73513b5d4e072cca5b01
   f/test/run_tests.flow+__flow_hash: b49ca075e9f4814eefd5fcf111885cc12f023967f3ce428f02fb022e01b0f1c0
   f/test/run_tests.flow+discover_test_scripts.inline_script.py: 95902ed017c414417cc8b03ca17866b0d646e4537cf5633f7d9ebd345330259d
   f/test/run_tests.flow+discover_tests.inline_script.py: 95902ed017c414417cc8b03ca17866b0d646e4537cf5633f7d9ebd345330259d

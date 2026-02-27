@@ -11,6 +11,7 @@ env:
   WMILL_BASE_URL: https://databot.dev.sageleaf.app
   WMILL_WORKSPACE: sage-dev
   TEST_WS_ID: wm-fork-test-dev
+  HEADERS: ${{ secrets.WMILL_HEADERS }}
 
 jobs:
   test:
@@ -32,21 +33,13 @@ jobs:
 
       - name: Fork workspace (create if not exists)
         run: |
-          EXISTS=$(curl -s -X POST \
-            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"id\": \"${{ env.TEST_WS_ID }}\"}" \
-            "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
-          if [ "$EXISTS" = "true" ]; then
-            echo "Workspace ${{ env.TEST_WS_ID }} already exists, reusing it"
-          else
-            curl -s -f -X POST \
-              -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d "{\"id\": \"${{ env.TEST_WS_ID }}\", \"name\": \"${{ env.TEST_WS_ID }}\"}" \
-              "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
-            echo "Created forked workspace: ${{ env.TEST_WS_ID }}"
-          fi
+          wmill workspace add ${{ env.WMILL_WORKSPACE }} ${{ env.WMILL_WORKSPACE }} \
+            ${{ env.WMILL_BASE_URL }} --token ${{ secrets.WMILL_TOKEN }}
+          wmill workspace fork test-dev ${{ env.TEST_WS_ID }} \
+            --workspace ${{ env.WMILL_WORKSPACE }} \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }}
+        continue-on-error: true
 
       - name: Sync push to forked workspace
         run: |
@@ -54,62 +47,17 @@ jobs:
             --workspace ${{ env.TEST_WS_ID }} \
             --base-url ${{ env.WMILL_BASE_URL }} \
             --token ${{ secrets.WMILL_TOKEN }} \
-            --branch dev
+            --branch dev --yes --locks-required
 
-      - name: Run integration tests
-        id: tests
+      - name: Trigger integration tests
         run: |
-          JOB_ID=$(wmill flow run f/test/run_tests \
-            --workspace ${{ env.TEST_WS_ID }} \
-            --base-url ${{ env.WMILL_BASE_URL }} \
-            --token ${{ secrets.WMILL_TOKEN }} 2>&1 | grep -Eo '[a-f0-9-]{36}')
-
-          if [ -z "$JOB_ID" ]; then
-            echo "Error: Failed to extract job ID from wmill output"
-            exit 1
-          fi
-
-          echo "job_id=$JOB_ID" >> "$GITHUB_OUTPUT"
-
-          for i in $(seq 1 60); do
-            sleep 10
-            STATUS=$(curl -s -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-              "${{ env.WMILL_BASE_URL }}/api/w/${{ env.TEST_WS_ID }}/jobs_u/get/$JOB_ID" \
-              | jq -r '.type // "unknown"')
-
-            if [ "$STATUS" = "CompletedJob" ]; then
-              echo "Tests completed"
-              break
-            fi
-
-            if [ $i -eq 60 ]; then
-              echo "Timeout waiting for test results"
-              exit 1
-            fi
-          done
-
-      - name: Check results
-        run: |
-          RESULT=$(curl -s -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.TEST_WS_ID }}/jobs_u/get/${{ steps.tests.outputs.job_id }}" \
-            | jq -r '.result')
-
-          SUCCESS=$(echo "$RESULT" | jq -r '.success // false')
-          SUMMARY=$(echo "$RESULT" | jq -r '.summary // "No summary"')
-
-          echo "## Integration Tests: $SUMMARY" >> "$GITHUB_STEP_SUMMARY"
-          echo "$RESULT" | jq -r '.markdown // "No results"' >> "$GITHUB_STEP_SUMMARY"
-
-          if [ "$SUCCESS" != "true" ]; then
-            echo "Integration tests failed"
-            exit 1
-          fi
-
-      - name: Cleanup forked workspace
-        if: always()
-        run: |
-          curl -s -X DELETE \
+          curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            "${{ env.WMILL_BASE_URL }}/api/workspaces/${{ env.TEST_WS_ID }}"
-          echo "Deleted workspace: ${{ env.TEST_WS_ID }}"
-        continue-on-error: true
+            -H "Content-Type: application/json" \
+            -d '{
+              "head_sha": "${{ github.sha }}",
+              "repo": "${{ github.repository }}",
+              "ref": "${{ github.ref_name }}"
+            }' \
+            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.TEST_WS_ID }}/jobs/run/f/f/test/run_tests"
+          echo "Integration tests triggered in workspace ${{ env.TEST_WS_ID }}"
