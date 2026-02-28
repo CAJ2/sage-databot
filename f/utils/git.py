@@ -21,30 +21,30 @@ def checkout_repo(branch: str = "dev") -> Path:
     head_sha = wmill.get_flow_user_state("head_sha")
 
     if head_sha:
+        # Only works with Git 2.49.0+
+        # subprocess.run(
+        #     [
+        #       "git", "clone", "--depth", "1", "--revision", head_sha, DATABOT_REPO_URL, "./databot",
+        #     ],
+        #     check=True,
+        # )
+        #
+        # Instead use this workaround
         subprocess.run(
             [
-                "git",
-                "clone",
-                "--depth",
-                "1",
-                "--revision",
-                head_sha,
-                DATABOT_REPO_URL,
-                "./databot",
+                "git", "init", "-q", "databot",
+                "&&", "cd", "databot",
+                "&&", "git", "remote", "add", "origin", DATABOT_REPO_URL,
+                "&&", "git", "fetch", "--depth", "1", "origin", head_sha,
+                "&&", "git", "checkout", "-q", "FETCH_HEAD",
             ],
             check=True,
         )
     else:
         subprocess.run(
             [
-                "git",
-                "clone",
-                "--branch",
-                branch,
-                "--depth",
-                "1",
-                DATABOT_REPO_URL,
-                "./databot",
+                "git", "clone", "--branch", branch, "--depth", "1",
+                DATABOT_REPO_URL, "./databot",
             ],
             check=True,
         )
