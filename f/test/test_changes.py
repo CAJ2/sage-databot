@@ -5,11 +5,15 @@ Integration tests for f/changes/* and f/context/* scripts.
 Tests: analyze_*_edit, all context scripts.
 """
 
-from f.test.framework import (
-    Test, TestSuite, assert_true, assert_eq, assert_isinstance,
-    assert_contains,
-)
 from f.test.cleanup import ensure_test_workspace
+from f.test.framework import (
+    Test,
+    TestSuite,
+    assert_contains,
+    assert_eq,
+    assert_isinstance,
+    assert_true,
+)
 from f.utils.api import api_connect
 
 
@@ -17,8 +21,9 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
     """Find an existing entity ID to use for read-only tests."""
     try:
         if entity_type == "variant":
-            from f.utils.db.crdb import create_sql_engine
             from sqlalchemy import text
+
+            from f.utils.db.crdb import create_sql_engine
             engine = create_sql_engine()
             with engine.begin() as conn:
                 row = conn.execute(text(
@@ -30,8 +35,9 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
             if result and result.category:
                 return result.category.id
         elif entity_type == "item":
-            from f.utils.db.crdb import create_sql_engine
             from sqlalchemy import text
+
+            from f.utils.db.crdb import create_sql_engine
             engine = create_sql_engine()
             with engine.begin() as conn:
                 row = conn.execute(text(
@@ -120,8 +126,9 @@ def test_item_context(t: Test):
 
 def test_generic_context(t: Test):
     """Test generic_context with a component."""
-    from f.utils.db.crdb import create_sql_engine
     from sqlalchemy import text
+
+    from f.utils.db.crdb import create_sql_engine
 
     engine = create_sql_engine()
     with engine.begin() as conn:
@@ -184,21 +191,15 @@ def test_analyze_category_edit_structure(t: Test):
 
     from f.changes.analyze_category_edit import main as analyze_category
 
-    try:
-        result = analyze_category(
-            change_id="__test_change_2",
-            edit_id="__test_edit_2",
-            entity_name="Category",
-            create_changes=None,
-            update_changes={"nameTr": [{"lang": "en", "text": "Test Category"}]},
-            proposed_id=None,
-            original_id=cat_id,
-        )
-    except Exception as e:
-        if "llm" in str(e).lower() or "model" in str(e).lower():
-            print(f"  ⚠️  Skipping LLM-dependent test: {e}")
-            return
-        raise
+    result = analyze_category(
+        change_id="__test_change_2",
+        edit_id="__test_edit_2",
+        entity_name="Category",
+        create_changes=None,
+        update_changes={"nameTr": [{"lang": "en", "text": "Test Category"}]},
+        proposed_id=None,
+        original_id=cat_id,
+    )
 
     assert_true(result is not None, "Should return a result")
 

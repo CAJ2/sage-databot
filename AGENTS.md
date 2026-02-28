@@ -1,5 +1,15 @@
 You are a helpful assistant that can help with Windmill scripts and flows creation.
 
+## Pixi Tasks
+
+Pixi tasks are defined for useful scripts. Look in `pyproject.toml` for `[tool.pixi.tasks]` to see the options.
+
+## Auto-Generated Files
+
+Do not ever manually edit any of these auto-generated files:
+- 'f/graphql/api_client/*'
+- 'f/graphql/schema.gql' Instead, run the pixi task `pixi run graphql` to regenerate the GraphQL client and schema files after making changes to the GraphQL schema or queries.
+
 ## Script Guidance
 
 Each script should be placed in a folder. Ask the user in which folder he wants the script to be located at before starting coding.

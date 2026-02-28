@@ -60,7 +60,7 @@ def main(test_results: list):
         for test in suite["tests"]:
             if not test.get("passed", True):
                 failed_tests.append(
-                    f"- **{suite['name']}/{test['name']}**: {test.get('error', 'Unknown error')}"
+                    f"- **{suite['name']}/{test.get('name', 'unknown')}**: {test.get('error', 'Unknown error')}"
                 )
 
     lines.append("")

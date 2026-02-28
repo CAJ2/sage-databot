@@ -14,7 +14,7 @@ jobs:
       - name: Delete forked workspace
         run: |
           WS_ID="wm-fork-test-pr-${{ github.event.pull_request.number }}"
-          curl -s -X DELETE \
+          curl -sf -X DELETE \
             -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
             "${{ env.WMILL_BASE_URL }}/api/workspaces/$WS_ID"
           echo "Deleted workspace: $WS_ID"

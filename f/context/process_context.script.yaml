@@ -12,10 +12,13 @@ schema:
       default: null
       originalType: string
     mode:
-      type: object
+      type: string
       description: ''
       default: review
-      format: resource-ContextMode
+      enum:
+        - review
+        - suggest
+      originalType: string
     target_fields:
       type: array
       description: ''

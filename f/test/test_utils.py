@@ -78,6 +78,7 @@ def test_s3_client_upload_download(t: Test):
         tmp.write(content)
         tmp_path = tmp.name
 
+    tmp2_path = None
     try:
         with open(tmp_path, "rb") as f:
             result = s3.s3_upload(test_path, f)
@@ -98,7 +99,7 @@ def test_s3_client_upload_download(t: Test):
             assert_eq(downloaded, content, "Downloaded content should match uploaded content")
     finally:
         os.unlink(tmp_path)
-        if os.path.exists(tmp2_path):
+        if tmp2_path is not None and os.path.exists(tmp2_path):
             os.unlink(tmp2_path)
 
 

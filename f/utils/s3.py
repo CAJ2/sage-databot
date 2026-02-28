@@ -125,6 +125,7 @@ class S3Client:
         return True
 
     def s3_scan(self, prefix: str) -> Generator:
+        prefix = self._ensure_test_prefix(prefix)
         paginator = self.client.get_paginator("list_objects_v2")
         page_iterator = paginator.paginate(Bucket=self.bucket, Prefix=prefix)
         for page in page_iterator:

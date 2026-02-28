@@ -12,27 +12,75 @@ query GetChangeForReview($id: ID!) {
       nodes {
         id
         entityName
-        createChanges
-        updateChanges
+        createInput
+        updateInput
         changes {
-          ... on Item { __typename id }
-          ... on Variant { __typename id }
-          ... on Component { __typename id }
-          ... on Process { __typename id }
-          ... on Place { __typename id }
-          ... on Category { __typename id }
-          ... on Material { __typename id }
-          ... on Region { __typename id }
+          ... on Item {
+            __typename
+            id
+          }
+          ... on Variant {
+            __typename
+            id
+          }
+          ... on Component {
+            __typename
+            id
+          }
+          ... on Process {
+            __typename
+            id
+          }
+          ... on Place {
+            __typename
+            id
+          }
+          ... on Category {
+            __typename
+            id
+          }
+          ... on Material {
+            __typename
+            id
+          }
+          ... on Region {
+            __typename
+            id
+          }
         }
         original {
-          ... on Item { __typename id }
-          ... on Variant { __typename id }
-          ... on Component { __typename id }
-          ... on Process { __typename id }
-          ... on Place { __typename id }
-          ... on Category { __typename id }
-          ... on Material { __typename id }
-          ... on Region { __typename id }
+          ... on Item {
+            __typename
+            id
+          }
+          ... on Variant {
+            __typename
+            id
+          }
+          ... on Component {
+            __typename
+            id
+          }
+          ... on Process {
+            __typename
+            id
+          }
+          ... on Place {
+            __typename
+            id
+          }
+          ... on Category {
+            __typename
+            id
+          }
+          ... on Material {
+            __typename
+            id
+          }
+          ... on Region {
+            __typename
+            id
+          }
         }
       }
     }

@@ -34,8 +34,8 @@ class GetChangeForReviewChangeEdits(BaseModel):
 class GetChangeForReviewChangeEditsNodes(BaseModel):
     id: Optional[str]
     entity_name: str = Field(alias="entityName")
-    create_changes: Optional[Any] = Field(alias="createChanges")
-    update_changes: Optional[Any] = Field(alias="updateChanges")
+    create_input: Optional[Any] = Field(alias="createInput")
+    update_input: Optional[Any] = Field(alias="updateInput")
     changes: Optional[
         Annotated[
             Union[

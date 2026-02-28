@@ -15,7 +15,7 @@ class GetSource(BaseModel):
 
 class GetSourceSource(BaseModel):
     id: str
-    type: SourceType
+    type_: SourceType = Field(alias="type")
     processed_at: Optional[Any] = Field(alias="processedAt")
     location: Optional[str]
     content: Optional[Any]

@@ -148,23 +148,26 @@ class CleanupTracker:
 
         # Discover and drop any remaining databot.test_* tables
         try:
-            with engine.begin() as conn:
+            with engine.connect() as conn:
                 result = conn.execute(
                     text(
                         "SELECT table_name FROM information_schema.tables "
                         "WHERE table_schema = 'databot' AND table_name LIKE 'test_%'"
                     )
                 )
-                for row in result:
-                    table_name = f"databot.{row[0]}"
-                    if table_name not in self._test_tables:
-                        try:
-                            conn.execute(text(f"DROP TABLE IF EXISTS {table_name}"))
-                            print(f"[cleanup] Dropped discovered table {table_name}")
-                        except Exception as e:
-                            print(f"[cleanup] Failed to drop {table_name}: {e}")
+                discovered = [f"databot.{row[0]}" for row in result]
         except Exception as e:
             print(f"[cleanup] Failed to discover test tables: {e}")
+            discovered = []
+
+        for table_name in discovered:
+            if table_name not in self._test_tables:
+                try:
+                    with engine.begin() as conn:
+                        conn.execute(text(f"DROP TABLE IF EXISTS {table_name}"))
+                    print(f"[cleanup] Dropped discovered table {table_name}")
+                except Exception as e:
+                    print(f"[cleanup] Failed to drop {table_name}: {e}")
 
     def _cleanup_s3(self):
         """Delete tracked S3 objects and any objects under __test/ prefix."""

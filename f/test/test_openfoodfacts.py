@@ -6,13 +6,18 @@ Tests: f/openfoodfacts/off_variant.py
 """
 
 import json
+
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from f.test.framework import (
-    Test, TestSuite, assert_true, assert_eq, assert_gt,
-)
 from f.test.cleanup import ensure_test_workspace
+from f.test.framework import (
+    Test,
+    TestSuite,
+    assert_eq,
+    assert_gt,
+    assert_true,
+)
 from f.utils.db.crdb import create_sql_engine
 
 
@@ -83,30 +88,21 @@ def test_off_variant_creation(t: Test):
 
     _insert_test_off_product(engine, product_id)
 
-    try:
-        from f.openfoodfacts.off_variant import main as off_variant_main
-        off_variant_main(product_id=product_id)
+    from f.openfoodfacts.off_variant import main as off_variant_main
+    off_variant_main(product_id=product_id)
 
-        # Verify a variant was created (check DB for __test_ prefixed variant)
-        with engine.begin() as conn:
-            row = conn.execute(text(
-                "SELECT id FROM public.variants WHERE id LIKE '__test_%' ORDER BY created_at DESC LIMIT 1"
-            )).fetchone()
+    # Verify a variant was created (check DB for __test_ prefixed variant)
+    with engine.begin() as conn:
+        row = conn.execute(text(
+            "SELECT id FROM public.variants WHERE id LIKE '__test_%' ORDER BY created_at DESC LIMIT 1"
+        )).fetchone()
 
-        if row:
-            t.cleanup.track_entity("variants", row[0])
-            assert_true(row is not None, "Should have created a __test_ variant")
-        else:
-            # The API might not support x-env:test yet, just verify no exception
-            print("  ⚠️  No __test_ variant found — API may not support x-env: test yet")
-    except Exception as e:
-        # off_variant may fail if API doesn't support test mode yet
-        if "sign in" in str(e).lower() or "api" in str(e).lower():
-            print(f"  ⚠️  off_variant failed (API issue): {e}")
-            return
-        raise
-    finally:
-        _cleanup_test_off_product(engine, product_id)
+    if row:
+        t.cleanup.track_entity("variants", row[0])
+        assert_true(row is not None, "Should have created a __test_ variant")
+    else:
+        print("  ⚠️  No __test_ variant found, off_variant may have failed to create it")
+    _cleanup_test_off_product(engine, product_id)
 
 
 def main() -> dict:

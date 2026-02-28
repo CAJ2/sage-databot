@@ -158,7 +158,7 @@ class CreateSourceInput(BaseModel):
     content_url: Optional[str] = Field(alias="contentURL", default=None)
     location: Optional[str] = None
     metadata: Optional[Any] = None
-    type: SourceType
+    type_: SourceType = Field(alias="type")
 
 
 class CreateTagDefinitionInput(BaseModel):
@@ -167,7 +167,7 @@ class CreateTagDefinitionInput(BaseModel):
     image: Optional[str] = None
     meta_template: Optional[Any] = Field(alias="metaTemplate", default=None)
     name: str
-    type: TagType
+    type_: TagType = Field(alias="type")
 
 
 class CreateVariantInput(BaseModel):
@@ -404,7 +404,7 @@ class UpdateSourceInput(BaseModel):
     id: str
     location: Optional[str] = None
     metadata: Optional[Any] = None
-    type: Optional[SourceType] = None
+    type_: Optional[SourceType] = Field(alias="type", default=None)
 
 
 class UpdateTagDefinitionInput(BaseModel):
@@ -414,7 +414,7 @@ class UpdateTagDefinitionInput(BaseModel):
     image: Optional[str] = None
     meta_template: Optional[Any] = Field(alias="metaTemplate", default=None)
     name: Optional[str] = None
-    type: Optional[TagType] = None
+    type_: Optional[TagType] = Field(alias="type", default=None)
 
 
 class UpdateVariantInput(BaseModel):
