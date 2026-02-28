@@ -18,26 +18,34 @@ def checkout_repo(branch: str = "dev") -> Path:
     if is_production() and branch != "main":
         raise ValueError("In production, only the 'main' branch can be cloned.")
 
-    subprocess.run(
-        [
-            "git",
-            "clone",
-            "--branch",
-            branch,
-            "--depth",
-            "1",
-            DATABOT_REPO_URL,
-            "./databot",
-        ],
-        check=True,
-    )
-
     head_sha = wmill.get_flow_user_state("head_sha")
+
     if head_sha:
-        # Check out the head_sha
         subprocess.run(
-            ["git", "checkout", head_sha],
-            cwd="./databot",
+            [
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--revision",
+                head_sha,
+                DATABOT_REPO_URL,
+                "./databot",
+            ],
+            check=True,
+        )
+    else:
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--branch",
+                branch,
+                "--depth",
+                "1",
+                DATABOT_REPO_URL,
+                "./databot",
+            ],
             check=True,
         )
 
