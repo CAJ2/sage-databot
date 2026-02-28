@@ -8,9 +8,9 @@ value:
   modules:
     - id: a
       value:
-        lock: '!inline safety_check_-_verify_test_workspace.inline_script.lock'
+        lock: '!inline safety_check_verify_test_workspace.inline_script.lock'
         type: rawscript
-        content: '!inline safety_check_-_verify_test_workspace.inline_script.py'
+        content: '!inline safety_check_verify_test_workspace.inline_script.py'
         language: python3
         input_transforms: {}
       summary: Safety check - verify test workspace
@@ -32,7 +32,10 @@ value:
         type: rawscript
         content: '!inline discover_test_scripts.inline_script.py'
         language: python3
-        input_transforms: {}
+        input_transforms:
+          head_sha:
+            expr: flow_input.head_sha
+            type: javascript
       summary: Discover test scripts
     - id: d
       value:
@@ -109,4 +112,3 @@ schema:
     - head_sha
     - repo
     - ref
-

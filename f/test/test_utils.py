@@ -8,8 +8,8 @@ Tests: DB connection, S3Client, Meilisearch connection, api_connect,
 
 from sqlalchemy import text
 
-from f.test.framework import Test, TestSuite, assert_true, assert_eq
 from f.test.cleanup import ensure_test_workspace
+from f.test.framework import Test, TestSuite, assert_eq, assert_true
 
 
 def test_crdb_connection(t: Test):
@@ -73,7 +73,8 @@ def test_s3_client_upload_download(t: Test):
 
     # Upload
     content = b"integration test content\n"
-    import tempfile, os
+    import os
+    import tempfile
     with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as tmp:
         tmp.write(content)
         tmp_path = tmp.name
@@ -126,7 +127,7 @@ def test_slugify(t: Test):
 
     assert_eq(slugify("Hello World"), "hello-world")
     assert_eq(slugify("  Some Brand™  "), "some-brand")
-    assert_eq(slugify("café-latte"), "caf-latte")
+    assert_eq(slugify("Café Latte"), "café-latte")
     assert_eq(slugify("Multiple   Spaces"), "multiple-spaces")
 
 
@@ -151,8 +152,9 @@ def test_check_lang(t: Test):
 
 def test_git_checkout(t: Test):
     """Test git repo checkout."""
-    from f.utils.git import checkout_repo
     import shutil
+
+    from f.utils.git import checkout_repo
 
     path = checkout_repo(branch="dev")
     assert_true(path.exists(), "Cloned repo path should exist")

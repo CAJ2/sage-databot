@@ -1,7 +1,7 @@
 import wmill
 
 
-def main():
+def main(head_sha: str):
     """Discover all test scripts in f/test/ matching test_*.py pattern."""
     wmill_client = wmill.client.Windmill()
     res = wmill_client.get(
@@ -19,4 +19,8 @@ def main():
             to_run.append(path)
 
     print(f"Discovered {len(to_run)} test scripts: {to_run}")
+
+    # Set flow state SHA
+    wmill.set_flow_user_state("head_sha", head_sha)
+
     return to_run

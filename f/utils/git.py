@@ -1,8 +1,9 @@
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
+import wmill
 
 from f.utils.general import is_production
-
 
 DATABOT_REPO_URL = "https://github.com/CAJ2/sage-databot.git"
 
@@ -30,4 +31,14 @@ def checkout_repo(branch: str = "dev") -> Path:
         ],
         check=True,
     )
+
+    head_sha = wmill.get_flow_user_state("head_sha")
+    if head_sha:
+        # Check out the head_sha
+        subprocess.run(
+            ["git", "checkout", head_sha],
+            cwd="./databot",
+            check=True,
+        )
+
     return Path("./databot")
