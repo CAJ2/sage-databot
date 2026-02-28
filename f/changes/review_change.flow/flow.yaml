@@ -11,9 +11,9 @@ value:
   modules:
     - id: a
       value:
-        lock: '!inline fetch_change_edits.inline_script.lock'
+        lock: "!inline fetch_change_edits.inline_script.lock"
         type: rawscript
-        content: '!inline fetch_change_edits.inline_script.py'
+        content: "!inline fetch_change_edits.inline_script.py"
         language: python3
         input_transforms:
           change_id:
@@ -189,9 +189,9 @@ value:
       summary: Analyze each edit
     - id: k
       value:
-        lock: '!inline write_review_results_to_crdb.inline_script.lock'
+        lock: "!inline write_review_results_to_crdb.inline_script.lock"
         type: rawscript
-        content: '!inline write_review_results_to_crdb.inline_script.py'
+        content: "!inline write_review_results_to_crdb.inline_script.py"
         language: python3
         input_transforms:
           change_id:
@@ -204,7 +204,7 @@ value:
       summary: Write review results to CRDB
       continue_on_error: false
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   order:
     - change_id

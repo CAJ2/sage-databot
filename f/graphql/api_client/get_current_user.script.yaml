@@ -1,7 +1,8 @@
-summary: 'Tests: data pipeline (categories, tags, gen_ids)'
+summary: ''
 description: ''
-lock: '!inline f/test/test_data_pipeline.script.lock'
+lock: '!inline f/graphql/api_client/get_current_user.script.lock'
 kind: script
+no_main_func: true
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object

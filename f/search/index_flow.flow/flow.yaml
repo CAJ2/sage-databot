@@ -1,65 +1,65 @@
 summary: Index changes from CRDB into Meilisearch
-description: ''
+description: ""
 value:
   modules:
     - id: a
-      summary: Parses incoming triggers
       value:
+        lock: "!inline parses_incoming_triggers.inline_script.lock"
         type: rawscript
-        content: '!inline parses_incoming_triggers.inline_script.py'
+        content: "!inline parses_incoming_triggers.inline_script.py"
+        language: python3
         input_transforms:
           length:
-            type: javascript
             expr: flow_input.length
-          payload:
             type: javascript
+          payload:
             expr: flow_input.payload
-        lock: '!inline parses_incoming_triggers.inline_script.lock'
+            type: javascript
         concurrency_time_window_s: 0
-        language: python3
+      summary: Parses incoming triggers
       continue_on_error: false
     - id: b
       value:
         type: forloopflow
+        squash: false
         modules:
           - id: c
-            summary: ''
             value:
               type: branchone
+              default: []
               branches:
-                - summary: Categories
+                - expr: flow_input.iter.value.table == "categories"
                   modules:
                     - id: d
-                      value:
-                        type: script
-                        input_transforms:
-                          keys:
-                            type: javascript
-                            expr: flow_input.iter.value.keys
-                        is_trigger: false
-                        path: f/search/categories/index_categories
-                      continue_on_error: false
                       retry:
                         constant:
-                          attempts: 0
                           seconds: 0
+                          attempts: 0
                         exponential:
+                          seconds: 5
                           attempts: 3
                           multiplier: 1
                           random_factor: 0
-                          seconds: 5
-                  expr: flow_input.iter.value.table == "categories"
+                      value:
+                        path: f/search/categories/index_categories
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Categories
                   parallel: true
                   skip_failure: true
-              default: []
+            summary: ""
         iterator:
-          type: javascript
           expr: results.a
+          type: javascript
         parallel: false
         skip_failures: true
-        squash: false
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   order:
     - payload
@@ -67,10 +67,10 @@ schema:
   properties:
     length:
       type: integer
-      description: ''
+      description: ""
     payload:
       type: array
-      description: ''
+      description: ""
       default: []
       items:
         type: string

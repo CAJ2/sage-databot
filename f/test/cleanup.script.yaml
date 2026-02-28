@@ -1,9 +1,9 @@
 summary: Test cleanup utilities
-description: 'Cleanup tracker for DB, S3, and Meilisearch test resources.'
+description: Cleanup tracker for DB, S3, and Meilisearch test resources.
 lock: '!inline f/test/cleanup.script.lock'
 kind: script
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties: {}
   required: []

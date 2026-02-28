@@ -7,88 +7,88 @@ description: |
 value:
   modules:
     - id: a
-      value:
-        lock: '!inline safety_check_verify_test_workspace.inline_script.lock'
-        type: rawscript
-        content: '!inline safety_check_verify_test_workspace.inline_script.py'
-        language: python3
-        input_transforms: {}
       summary: Safety check - verify test workspace
+      value:
+        type: rawscript
+        content: '!inline safety_check_-_verify_test_workspace.inline_script.py'
+        input_transforms: {}
+        lock: '!inline safety_check_-_verify_test_workspace.inline_script.lock'
+        language: python3
     - id: b
+      summary: Create pending GitHub check run
       value:
         type: script
-        path: f/test/github_status
         input_transforms:
-          repo:
-            expr: flow_input.repo
-            type: javascript
           head_sha:
-            expr: flow_input.head_sha
             type: javascript
-      summary: Create pending GitHub check run
+            expr: flow_input.head_sha
+          repo:
+            type: javascript
+            expr: flow_input.repo
+        path: f/test/github_status
     - id: c
+      summary: Discover test scripts
       value:
-        lock: '!inline discover_test_scripts.inline_script.lock'
         type: rawscript
         content: '!inline discover_test_scripts.inline_script.py'
-        language: python3
         input_transforms:
           head_sha:
-            expr: flow_input.head_sha
             type: javascript
-      summary: Discover test scripts
+            expr: flow_input.head_sha
+        lock: '!inline discover_test_scripts.inline_script.lock'
+        language: python3
     - id: d
+      summary: Run all test scripts
       value:
         type: forloopflow
         modules:
           - id: e
+            summary: Run test script
             value:
-              lock: '!inline run_test_script.inline_script.lock'
               type: rawscript
               content: '!inline run_test_script.inline_script.py'
-              language: python3
               input_transforms:
                 test_script:
-                  expr: flow_input.iter.value
                   type: javascript
-            summary: Run test script
+                  expr: flow_input.iter.value
+              lock: '!inline run_test_script.inline_script.lock'
+              language: python3
         iterator:
-          expr: results.c
           type: javascript
+          expr: results.c
         parallel: false
         skip_failures: true
-      summary: Run all test scripts
     - id: f
+      summary: Format results
       value:
-        lock: '!inline format_results.inline_script.lock'
         type: rawscript
         content: '!inline format_results.inline_script.py'
-        language: python3
         input_transforms:
           test_results:
-            expr: results.d
             type: javascript
-      summary: Format results
+            expr: results.d
+        lock: '!inline format_results.inline_script.lock'
+        language: python3
     - id: g
+      summary: Report results to GitHub
       value:
         type: script
-        path: f/test/github_status
         input_transforms:
-          repo:
-            expr: flow_input.repo
-            type: javascript
           check_run_id:
+            type: javascript
             expr: results.b.check_run_id
-            type: javascript
-          results:
-            expr: results.f
-            type: javascript
           pr_number:
-            expr: flow_input.pr_number
             type: javascript
-      summary: Report results to GitHub
+            expr: flow_input.pr_number
+          repo:
+            type: javascript
+            expr: flow_input.repo
+          results:
+            type: javascript
+            expr: results.f
+        path: f/test/github_status
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   order:
     - pr_number
@@ -96,18 +96,18 @@ schema:
     - repo
     - ref
   properties:
-    pr_number:
-      type: integer
-      description: Pull request number (omit for non-PR runs)
     head_sha:
       type: string
       description: Commit SHA to report check run status against
-    repo:
-      type: string
-      description: 'GitHub repository in owner/repo format'
+    pr_number:
+      type: integer
+      description: Pull request number (omit for non-PR runs)
     ref:
       type: string
       description: Branch name or ref
+    repo:
+      type: string
+      description: GitHub repository in owner/repo format
   required:
     - head_sha
     - repo
