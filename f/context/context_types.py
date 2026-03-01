@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 from pydantic import BaseModel
 
 
@@ -13,8 +13,8 @@ class EntityContext(BaseModel):
 
     entity_name: str
     entity_id: str | None = None
-    entity_data: dict
-    related_data: dict
+    entity_data: dict[str, Any]
+    related_data: dict[str, Any]
     # Model-specific guidance for the AI, tailored to the requested mode.
     # In "review" mode: explains what makes changes to this entity valid/invalid.
     # In "suggest" mode: describes what good field values look like given the context.

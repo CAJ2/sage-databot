@@ -1,4 +1,7 @@
-def generate_name(tags) -> dict:
+from typing import Any
+
+
+def generate_name(tags) -> dict[str, Any]:
     """
     Generate a name from the tags.
 
@@ -33,7 +36,7 @@ def generate_name(tags) -> dict:
     return name
 
 
-def generate_address(tags) -> dict | None:
+def generate_address(tags) -> dict[str, Any] | None:
     """
     Generate an address from the tags.
 

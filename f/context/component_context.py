@@ -1,5 +1,7 @@
 # requirements: project
 
+from typing import Any
+
 from f.context.context_types import ContextMode, EntityContext
 from f.utils.api import api_connect
 
@@ -15,8 +17,8 @@ def main(
     """
     client, _ = api_connect()
 
-    entity_data: dict = {}
-    related_data: dict = {}
+    entity_data: dict[str, Any] = {}
+    related_data: dict[str, Any] = {}
 
     try:
         result = client.get_component_for_review(id=entity_id)

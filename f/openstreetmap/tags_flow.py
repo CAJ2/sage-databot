@@ -1,5 +1,6 @@
 # requirements: project
 
+from typing import Any
 from sqlalchemy import JSON, select, text
 from sqlalchemy.orm import Mapped, mapped_column
 import json
@@ -12,9 +13,9 @@ class Tags(Base):
     __tablename__ = "tags"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    type: Mapped[str]
-    meta_template: Mapped[dict] = mapped_column(JSON)
-    tag_id: Mapped[str]
+    type: Mapped[str] = mapped_column()
+    meta_template: Mapped[dict[str, Any]] = mapped_column(JSON)
+    tag_id: Mapped[str] = mapped_column()
 
 
 def process_tag(tag_defs: dict[str, Tags], t: str, v: str) -> tuple[str, str] | None:

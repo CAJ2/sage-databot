@@ -1,4 +1,4 @@
-from typing import Generator
+from typing import Any, Generator
 import os
 import wmill
 import boto3
@@ -45,7 +45,7 @@ class S3Client:
             raise ValueError(f"Invalid path '{path}'")
         return url
 
-    def polars_options(self) -> dict:
+    def polars_options(self) -> dict[str, Any]:
         if self.resource is None:
             raise ValueError("S3 resource is not defined")
         endpoint = self.resource.get("endPoint", "")
@@ -127,7 +127,7 @@ class S3Client:
         )
         return True
 
-    def s3_scan(self, prefix: str) -> Generator:
+    def s3_scan(self, prefix: str) -> Generator[Any, None, None]:
         prefix = self._ensure_test_prefix(prefix)
         paginator = self.client.get_paginator("list_objects_v2")
         page_iterator = paginator.paginate(Bucket=self.bucket, Prefix=prefix)

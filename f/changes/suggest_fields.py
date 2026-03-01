@@ -1,12 +1,14 @@
 # requirements: project
 
+from typing import Any
+
 from f.changes.ai_suggest import SuggestResult, suggest_fields
 from f.context.context_types import EntityContext
 from f.utils.general import llm_agent
 
 
 def main(
-    entity_context: dict,
+    entity_context: dict[str, Any],
     target_fields: list[str],
 ) -> SuggestResult:
     """

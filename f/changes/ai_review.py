@@ -1,6 +1,7 @@
 # requirements: project
 
 import json
+from typing import Any
 
 from pydantic import BaseModel
 from pydantic_ai import Agent
@@ -65,7 +66,7 @@ def analyze_edit(
     entity_name: str,
     entity_id: str | None,
     change_description: str,
-    context: dict,
+    context: dict[str, Any],
     model: Model,
     prompt_hints: str = "",
 ) -> EditAnalysis:

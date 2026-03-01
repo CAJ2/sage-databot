@@ -2,6 +2,7 @@
 
 from wmill import S3Object
 import polars as pl
+import polars.selectors as cs
 import json
 from sqlalchemy import text
 
@@ -61,7 +62,7 @@ def main(s3_file: S3Object):
     lang_df = lang_df.with_columns(
         pl.struct(pl.all().exclude(["id", "placetype"])).alias("name")
     )
-    lang_df = lang_df.drop(pl.all().exclude(["id", "placetype", "name"]))
+    lang_df = lang_df.drop(cs.exclude(["id", "placetype", "name"]))
     lang_df = lang_df.with_columns(pl.col("name").struct.json_encode())
 
     allowed_placetypes = [i[0] for i in placetype_admin]

@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import Any, TypedDict
 
 
 class ChangeSet(TypedDict):
@@ -6,7 +6,7 @@ class ChangeSet(TypedDict):
     keys: list[str]
 
 
-def main(payload: list, length: int):
+def main(payload: list[Any], length: int):
     if len(payload) != length:
         raise ValueError("invalid length")
     changes = dict()

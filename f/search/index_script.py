@@ -1,6 +1,6 @@
 # requirements: project
 
-from typing import Iterator
+from typing import Any, Iterator
 import wmill
 from sqlalchemy import Engine
 import polars as pl
@@ -32,7 +32,9 @@ index_settings = {
 }
 
 
-def check_create_index(meili: meilisearch.Client, index_name: str, settings: dict = {}):
+def check_create_index(
+    meili: meilisearch.Client, index_name: str, settings: dict[str, Any] = {}
+):
     op = meili.create_index(index_name, {"primaryKey": "id"})
     meili.wait_for_task(op.task_uid, timeout_in_ms=120000, interval_in_ms=500)
     settings_copy = copy.deepcopy(index_settings)
@@ -45,7 +47,7 @@ def export_table(
     crdb: Engine,
     table: str,
     cols: str = "*",
-    schema: dict | None = None,
+    schema: dict[str, Any] | None = None,
     batch_size: int = 5000,
 ) -> Iterator[pl.DataFrame]:
     """
@@ -308,7 +310,7 @@ def search_index_import(index: list[str] | None, clear: bool = False):
     if meili_res is None:
         raise ValueError("Unable to find meilisearch resource")
     meili = meilisearch.Client(
-        meili_res.get("api_url"),
+        str(meili_res["api_url"]),
         api_key=meili_res.get("api_key", None),
     )
 

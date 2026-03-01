@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Any
 
 import wmill
 import yaml
@@ -20,7 +21,7 @@ def is_production() -> bool:
     return env == "sage-prod"
 
 
-def find_path_or_default(cfg: dict) -> str:
+def find_path_or_default(cfg: dict[str, Any]) -> str:
     """
     Looks for a config value based on:
     1. The current script path (from WM_JOB_PATH)

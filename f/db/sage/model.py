@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -12,7 +13,7 @@ class Variant(Base):
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[dict[str, str]] = mapped_column(Translated())
     desc: Mapped[dict[str, str]] = mapped_column(Translated())
-    code: Mapped[str]
+    code: Mapped[str] = mapped_column()
 
     sources: Mapped[list["VariantSources"]] = relationship(
         "VariantSources", back_populates="variant", lazy="joined"
@@ -23,12 +24,12 @@ class Source(Base):
     __tablename__ = "sources"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    type: Mapped[str]
-    processed_at: Mapped[datetime | None]
-    location: Mapped[str | None]
-    content: Mapped[dict | None] = mapped_column(JSONData(dict))
-    content_url: Mapped[str | None]
-    user_id: Mapped[str | None]
+    type: Mapped[str] = mapped_column()
+    processed_at: Mapped[datetime | None] = mapped_column()
+    location: Mapped[str | None] = mapped_column()
+    content: Mapped[dict[str, Any] | None] = mapped_column(JSONData(dict))
+    content_url: Mapped[str | None] = mapped_column()
+    user_id: Mapped[str | None] = mapped_column()
 
     variants: Mapped[list["VariantSources"]] = relationship(
         "VariantSources", back_populates="source", lazy="joined"
@@ -54,10 +55,10 @@ class ExternalSource(Base):
 
     source: Mapped[str] = mapped_column(primary_key=True)
     source_id: Mapped[str] = mapped_column(primary_key=True)
-    org_id: Mapped[str | None]
-    variant_id: Mapped[str | None]
-    component_id: Mapped[str | None]
-    process_id: Mapped[str | None]
+    org_id: Mapped[str | None] = mapped_column()
+    variant_id: Mapped[str | None] = mapped_column()
+    component_id: Mapped[str | None] = mapped_column()
+    process_id: Mapped[str | None] = mapped_column()
 
 
 class Change(Base):
@@ -65,6 +66,6 @@ class Change(Base):
     __table_args__ = {"schema": "public"}
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    status: Mapped[str]
-    metadata_: Mapped[dict | None] = mapped_column("metadata", JSONB)
-    updated_at: Mapped[datetime]
+    status: Mapped[str] = mapped_column()
+    metadata_: Mapped[dict[str, Any] | None] = mapped_column("metadata", JSONB)
+    updated_at: Mapped[datetime] = mapped_column()

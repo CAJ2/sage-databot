@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypedDict
+from typing import Any, TypedDict
 from sqlalchemy.orm import Mapped, mapped_column
 
 from f.db.base import Base, JSONData
@@ -25,12 +25,12 @@ class EcoscoreData:
     status: str | None = None
     score: int | None = None
     grade: str | None = None
-    adjustments: dict | None = None
+    adjustments: dict[str, Any] | None = None
 
 
 @dataclass
 class GenericName:
-    generic_name: list[dict]
+    generic_name: list[dict[str, Any]]
 
 
 class Image(TypedDict):
@@ -49,20 +49,20 @@ class Images:
 
 @dataclass
 class Packagings:
-    packagings: list[dict]
+    packagings: list[dict[str, Any]]
 
 
 @dataclass
 class ProductName:
-    product_name: list[dict]
+    product_name: list[dict[str, Any]]
 
 
 class OFFProduct(Base):
     __tablename__ = "off_products"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    brands: Mapped[str | None]
-    categories: Mapped[str | None]
+    brands: Mapped[str | None] = mapped_column()
+    categories: Mapped[str | None] = mapped_column()
     cities_tags: Mapped[CitiesTags | None] = mapped_column(JSONData(CitiesTags))
     countries_tags: Mapped[CountriesTags | None] = mapped_column(
         JSONData(CountriesTags)
@@ -71,16 +71,16 @@ class OFFProduct(Base):
         JSONData(DataSourcesTags)
     )
     ecoscore_data: Mapped[EcoscoreData | None] = mapped_column(JSONData(EcoscoreData))
-    emb_codes: Mapped[str | None]
+    emb_codes: Mapped[str | None] = mapped_column()
     generic_name: Mapped[GenericName | None] = mapped_column(JSONData(GenericName))
     images: Mapped[Images | None] = mapped_column(JSONData(Images))
-    labels: Mapped[str | None]
-    lang: Mapped[str | None]
-    link: Mapped[str | None]
-    manufacturing_places: Mapped[str | None]
-    origins: Mapped[str | None]
+    labels: Mapped[str | None] = mapped_column()
+    lang: Mapped[str | None] = mapped_column()
+    link: Mapped[str | None] = mapped_column()
+    manufacturing_places: Mapped[str | None] = mapped_column()
+    origins: Mapped[str | None] = mapped_column()
     packagings: Mapped[Packagings | None] = mapped_column(JSONData(Packagings))
     product_name: Mapped[ProductName | None] = mapped_column(JSONData(ProductName))
-    product_quantity: Mapped[str | None]
-    product_quantity_unit: Mapped[str | None]
-    stores: Mapped[str | None]
+    product_quantity: Mapped[str | None] = mapped_column()
+    product_quantity_unit: Mapped[str | None] = mapped_column()
+    stores: Mapped[str | None] = mapped_column()

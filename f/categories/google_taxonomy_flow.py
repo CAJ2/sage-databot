@@ -177,6 +177,9 @@ def categories_flow():
                 new_categories_df, on="id", how="inner", suffix=code
             )
 
+    if categories_df is None or cat_edge_df is None:
+        raise ValueError("No category data found for any language code")
+
     root_row = categories_df.filter(pl.col("id").eq("CATEGORY_ROOT")).to_dicts()[0]
     root_row["google_id"] = "CATEGORY_ROOT"
     categories_df = categories_df.rename({"id": "google_id"})
