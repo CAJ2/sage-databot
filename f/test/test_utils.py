@@ -6,35 +6,41 @@ Tests: DB connection, S3Client, Meilisearch connection, api_connect,
        general utilities, lang, git.
 """
 
+import os
+import shutil
+import tempfile
+
 from sqlalchemy import text
 
+from f.search.index_script import check_lang
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_eq, assert_true
+from f.utils.api import api_connect
+from f.utils.db.crdb import create_polars_uri, create_sql_engine
+from f.utils.db.meili import meili_connect
+from f.utils.general import is_production, slugify
+from f.utils.git import checkout_repo
+from f.utils.s3 import S3Client
 
 
 def test_crdb_connection(t: Test):
     """Test that we can connect to CockroachDB and execute a query."""
-    from f.utils.db.crdb import create_sql_engine
-
     engine = create_sql_engine()
     with engine.begin() as conn:
         result = conn.execute(text("SELECT 1"))
         row = result.fetchone()
+        assert row is not None
         assert_eq(row[0], 1, "SELECT 1 should return 1")
 
 
 def test_crdb_polars_uri(t: Test):
     """Test that Polars URI is generated correctly."""
-    from f.utils.db.crdb import create_polars_uri
-
     uri = create_polars_uri()
     assert_true(uri.startswith("postgresql://"), "Polars URI should start with postgresql://")
 
 
 def test_crdb_test_table(t: Test):
     """Test that we can create and use a databot.test_* table."""
-    from f.utils.db.crdb import create_sql_engine
-
     engine = create_sql_engine()
     t.cleanup.track_test_table("test_integration_check")
 
@@ -51,13 +57,12 @@ def test_crdb_test_table(t: Test):
             "SELECT value FROM databot.test_integration_check WHERE id = 'test1'"
         ))
         row = result.fetchone()
+        assert row is not None
         assert_eq(row[0], "hello")
 
 
 def test_s3_client_exists(t: Test):
     """Test S3Client instantiation and exists check."""
-    from f.utils.s3 import S3Client
-
     s3 = S3Client()
     assert_true(not s3.s3_exists("__test/nonexistent_file_12345.txt"),
                 "Nonexistent file should not exist")
@@ -65,16 +70,12 @@ def test_s3_client_exists(t: Test):
 
 def test_s3_client_upload_download(t: Test):
     """Test S3Client upload and download with __test/ prefix."""
-    from f.utils.s3 import S3Client
-
     s3 = S3Client()
     test_path = "__test/integration_test_file.txt"
     t.cleanup.track_s3_path(test_path)
 
     # Upload
     content = b"integration test content\n"
-    import os
-    import tempfile
     with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as tmp:
         tmp.write(content)
         tmp_path = tmp.name
@@ -106,16 +107,12 @@ def test_s3_client_upload_download(t: Test):
 
 def test_meilisearch_connection(t: Test):
     """Test Meilisearch connection."""
-    from f.utils.db.meili import meili_connect
-
     meili = meili_connect()
     assert_true(meili.is_healthy(), "Meilisearch should be healthy")
 
 
 def test_api_connect(t: Test):
     """Test API connection."""
-    from f.utils.api import api_connect
-
     client, user = api_connect()
     assert_true(user is not None, "User should not be None")
     assert_true("id" in user, "User should have an id")
@@ -123,8 +120,6 @@ def test_api_connect(t: Test):
 
 def test_slugify(t: Test):
     """Test slugify utility."""
-    from f.utils.general import slugify
-
     assert_eq(slugify("Hello World"), "hello-world")
     assert_eq(slugify("  Some Brand™  "), "some-brand")
     assert_eq(slugify("Café Latte"), "café-latte")
@@ -133,16 +128,12 @@ def test_slugify(t: Test):
 
 def test_is_production(t: Test):
     """Test is_production in test workspace."""
-    from f.utils.general import is_production
-
     # In a test workspace, this should always be False
     assert_true(not is_production(), "Should not be production in test workspace")
 
 
 def test_check_lang(t: Test):
     """Test language validation."""
-    from f.search.index_script import check_lang
-
     assert_eq(check_lang("en"), "en")
     assert_eq(check_lang("xx"), "xx")
     assert_eq(check_lang("sv"), "sv")
@@ -152,9 +143,6 @@ def test_check_lang(t: Test):
 
 def test_git_checkout(t: Test):
     """Test git repo checkout."""
-    import shutil
-
-    from f.utils.git import checkout_repo
 
     path = checkout_repo(branch="dev")
     assert_true(path.exists(), "Cloned repo path should exist")
@@ -163,7 +151,7 @@ def test_git_checkout(t: Test):
     shutil.rmtree(path, ignore_errors=True)
 
 
-def main() -> dict:
+def main() -> dict[str, object]:
     ensure_test_workspace()
     suite = TestSuite("utils")
     suite.run(test_crdb_connection)

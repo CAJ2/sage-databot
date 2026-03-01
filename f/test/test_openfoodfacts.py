@@ -10,6 +10,8 @@ import json
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from f.db.databot.model import OFFProduct
+from f.openfoodfacts.off_variant import main as off_variant_main
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import (
     Test,
@@ -62,16 +64,15 @@ def test_off_product_insert_and_query(t: Test):
     _insert_test_off_product(engine, product_id)
 
     try:
-        from f.db.databot.model import OFFProduct
-
         with Session(engine) as session:
             product = session.query(OFFProduct).where(OFFProduct.id == product_id).first()
 
-        assert_true(product is not None, "Should find the test product")
+        assert product is not None, "Should find the test product"
         assert_eq(product.id, product_id)
         assert_eq(product.brands, "Test Brand")
         assert_eq(product.lang, "en")
         assert_true(product.product_name is not None, "Should have product_name")
+        assert product.product_name is not None
         assert_gt(len(product.product_name.product_name), 0, "Should have name translations")
     finally:
         _cleanup_test_off_product(engine, product_id)
@@ -88,7 +89,6 @@ def test_off_variant_creation(t: Test):
 
     _insert_test_off_product(engine, product_id)
 
-    from f.openfoodfacts.off_variant import main as off_variant_main
     off_variant_main(product_id=product_id)
 
     # Verify a variant was created (check DB for __test_ prefixed variant)
@@ -105,7 +105,7 @@ def test_off_variant_creation(t: Test):
     _cleanup_test_off_product(engine, product_id)
 
 
-def main() -> dict:
+def main() -> dict[str, object]:
     ensure_test_workspace()
     suite = TestSuite("openfoodfacts")
     suite.run(test_off_product_insert_and_query)

@@ -1,4 +1,7 @@
-def main(test_results: list):
+from typing import Any
+
+
+def main(test_results: list[dict[str, Any]]):
     """Format test results into a markdown summary for PR comments."""
     all_suites = []
     total_tests = 0

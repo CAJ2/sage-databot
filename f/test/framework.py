@@ -84,7 +84,7 @@ class TestSuite:
         """Execute cleanup for all tracked resources."""
         self._cleanup.execute()
 
-    def results(self) -> dict:
+    def results(self) -> dict[str, object]:
         """Return serializable results dict. Runs cleanup first."""
         self.cleanup()
         total = len(self._results)

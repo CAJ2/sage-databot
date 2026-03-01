@@ -208,7 +208,7 @@ class CleanupTracker:
                 print("[cleanup] No Meilisearch resource found")
                 return
             meili = meilisearch.Client(
-                meili_res.get("api_url"),
+                str(meili_res.get("api_url", "")),
                 api_key=meili_res.get("api_key", None),
             )
         except Exception as e:
@@ -250,7 +250,7 @@ class DBTracker:
     """
 
     def __init__(self, engine: Engine):
-        self.operations: list[dict] = []
+        self.operations: list[dict[str, str]] = []
         event.listen(engine, "before_cursor_execute", self._on_execute)
 
     def _on_execute(self, conn, cursor, statement, parameters, context, executemany):

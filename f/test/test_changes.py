@@ -5,6 +5,14 @@ Integration tests for f/changes/* and f/context/* scripts.
 Tests: analyze_*_edit, all context scripts.
 """
 
+from sqlalchemy import text
+
+from f.changes.analyze_category_edit import main as analyze_category
+from f.changes.analyze_variant_edit import main as analyze_variant
+from f.context.category_context import main as category_context_main
+from f.context.component_context import main as component_context_main
+from f.context.item_context import main as item_context_main
+from f.context.variant_context import main as variant_context_main
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import (
     Test,
@@ -15,15 +23,13 @@ from f.test.framework import (
     assert_true,
 )
 from f.utils.api import api_connect
+from f.utils.db.crdb import create_sql_engine
 
 
 def _find_existing_entity(client, entity_type: str) -> str | None:
     """Find an existing entity ID to use for read-only tests."""
     try:
         if entity_type == "variant":
-            from sqlalchemy import text
-
-            from f.utils.db.crdb import create_sql_engine
             engine = create_sql_engine()
             with engine.begin() as conn:
                 row = conn.execute(text(
@@ -35,9 +41,6 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
             if result and result.category:
                 return result.category.id
         elif entity_type == "item":
-            from sqlalchemy import text
-
-            from f.utils.db.crdb import create_sql_engine
             engine = create_sql_engine()
             with engine.begin() as conn:
                 row = conn.execute(text(
@@ -59,7 +62,6 @@ def test_variant_context(t: Test):
         print("  ⚠️  No variant found, skipping")
         return
 
-    from f.context.variant_context import main as variant_context_main
     result = variant_context_main(entity_id=variant_id, mode="review")
     result = result.model_dump()
 
@@ -78,7 +80,6 @@ def test_variant_context_suggest_mode(t: Test):
         print("  ⚠️  No variant found, skipping")
         return
 
-    from f.context.variant_context import main as variant_context_main
     result = variant_context_main(
         entity_id=variant_id,
         mode="suggest",
@@ -99,7 +100,6 @@ def test_category_context(t: Test):
         print("  ⚠️  No category found, skipping")
         return
 
-    from f.context.category_context import main as category_context_main
     result = category_context_main(entity_id=cat_id, mode="review")
     result = result.model_dump()
 
@@ -116,7 +116,6 @@ def test_item_context(t: Test):
         print("  ⚠️  No item found, skipping")
         return
 
-    from f.context.item_context import main as item_context_main
     result = item_context_main(entity_id=item_id, mode="review")
     result = result.model_dump()
 
@@ -126,10 +125,6 @@ def test_item_context(t: Test):
 
 def test_generic_context(t: Test):
     """Test generic_context with a component."""
-    from sqlalchemy import text
-
-    from f.utils.db.crdb import create_sql_engine
-
     engine = create_sql_engine()
     with engine.begin() as conn:
         row = conn.execute(text(
@@ -140,7 +135,6 @@ def test_generic_context(t: Test):
         print("  ⚠️  No component found, skipping")
         return
 
-    from f.context.component_context import main as component_context_main
     result = component_context_main(entity_id=row[0], mode="review")
     result = result.model_dump()
 
@@ -157,8 +151,6 @@ def test_analyze_variant_edit_structure(t: Test):
     if not variant_id:
         print("  ⚠️  No variant found, skipping")
         return
-
-    from f.changes.analyze_variant_edit import main as analyze_variant
 
     try:
         result = analyze_variant(
@@ -189,8 +181,6 @@ def test_analyze_category_edit_structure(t: Test):
         print("  ⚠️  No category found, skipping")
         return
 
-    from f.changes.analyze_category_edit import main as analyze_category
-
     result = analyze_category(
         change_id="__test_change_2",
         edit_id="__test_edit_2",
@@ -204,7 +194,7 @@ def test_analyze_category_edit_structure(t: Test):
     assert_true(result is not None, "Should return a result")
 
 
-def main() -> dict:
+def main() -> dict[str, object]:
     ensure_test_workspace()
     suite = TestSuite("changes_and_context")
     suite.run(test_variant_context)
