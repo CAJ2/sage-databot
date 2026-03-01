@@ -1,0 +1,114 @@
+summary: Run integration tests
+description: |
+  Discovers and runs all test scripts in f/test/, collecting results
+  into a formatted markdown summary. Validates it is running in a
+  forked test workspace before proceeding. Reports results to GitHub
+  via a check run and sticky PR comment.
+value:
+  modules:
+    - id: a
+      summary: Safety check - verify test workspace
+      value:
+        type: rawscript
+        content: '!inline safety_check_-_verify_test_workspace.inline_script.py'
+        input_transforms: {}
+        lock: '!inline safety_check_-_verify_test_workspace.inline_script.lock'
+        language: python3
+    - id: b
+      summary: Create pending GitHub check run
+      value:
+        type: script
+        input_transforms:
+          head_sha:
+            type: javascript
+            expr: flow_input.head_sha
+          repo:
+            type: javascript
+            expr: flow_input.repo
+        path: f/test/github_status
+    - id: c
+      summary: Discover test scripts
+      value:
+        type: rawscript
+        content: '!inline discover_test_scripts.inline_script.py'
+        input_transforms:
+          head_sha:
+            type: javascript
+            expr: flow_input.head_sha
+        lock: '!inline discover_test_scripts.inline_script.lock'
+        language: python3
+    - id: d
+      summary: Run all test scripts
+      value:
+        type: forloopflow
+        modules:
+          - id: e
+            summary: Run test script
+            value:
+              type: rawscript
+              content: '!inline run_test_script.inline_script.py'
+              input_transforms:
+                test_script:
+                  type: javascript
+                  expr: flow_input.iter.value
+              lock: '!inline run_test_script.inline_script.lock'
+              language: python3
+        iterator:
+          type: javascript
+          expr: results.c
+        parallel: false
+        skip_failures: true
+    - id: f
+      summary: Format results
+      value:
+        type: rawscript
+        content: '!inline format_results.inline_script.py'
+        input_transforms:
+          test_results:
+            type: javascript
+            expr: results.d
+        lock: '!inline format_results.inline_script.lock'
+        language: python3
+    - id: g
+      summary: Report results to GitHub
+      value:
+        type: script
+        input_transforms:
+          check_run_id:
+            type: javascript
+            expr: results.b.check_run_id
+          pr_number:
+            type: javascript
+            expr: flow_input.pr_number
+          repo:
+            type: javascript
+            expr: flow_input.repo
+          results:
+            type: javascript
+            expr: results.f
+        path: f/test/github_status
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - pr_number
+    - head_sha
+    - repo
+    - ref
+  properties:
+    head_sha:
+      type: string
+      description: Commit SHA to report check run status against
+    pr_number:
+      type: integer
+      description: Pull request number (omit for non-PR runs)
+    ref:
+      type: string
+      description: Branch name or ref
+    repo:
+      type: string
+      description: GitHub repository in owner/repo format
+  required:
+    - head_sha
+    - repo
+    - ref

@@ -1,0 +1,77 @@
+name: Integration Tests (PR)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: tests-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  WMILL_BASE_URL: https://databot.dev.sageleaf.app
+  WMILL_WORKSPACE: sage-dev
+  HEADERS: ${{ secrets.WMILL_HEADERS }}
+
+jobs:
+  test:
+    name: 'Run tests'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '>=20'
+
+      - name: Install wmill CLI
+        run: |
+          npm install -g windmill-cli
+          wmill --version
+
+      - name: Set workspace ID
+        id: ws
+        run: echo "id=wm-fork-test-pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Fork workspace (create if not exists)
+        run: |
+          WS_ID="${{ steps.ws.outputs.id }}"
+          EXISTS=$(curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"id\": \"$WS_ID\"}" \
+            "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
+          if [ "$EXISTS" = "true" ]; then
+            echo "Workspace $WS_ID already exists, reusing"
+          else
+            curl -sf -X POST \
+              -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              -d "{\"id\": \"$WS_ID\", \"name\": \"$WS_ID\"}" \
+              "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
+            echo "Created forked workspace: $WS_ID"
+          fi
+
+      - name: Sync push to forked workspace
+        run: |
+          wmill sync push \
+            --workspace ${{ steps.ws.outputs.id }} \
+            --base-url ${{ env.WMILL_BASE_URL }} \
+            --token ${{ secrets.WMILL_TOKEN }} \
+            --branch dev --yes --locks-required
+
+      - name: Trigger integration tests
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "pr_number": ${{ github.event.pull_request.number }},
+              "head_sha": "${{ github.event.pull_request.head.sha }}",
+              "repo": "${{ github.repository }}",
+              "ref": "${{ github.head_ref }}"
+            }' \
+            "${{ env.WMILL_BASE_URL }}/api/w/${{ steps.ws.outputs.id }}/jobs/run/f/f/test/run_tests"
+          echo "Integration tests triggered in workspace ${{ steps.ws.outputs.id }}"

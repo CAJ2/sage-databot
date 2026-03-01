@@ -1,4 +1,5 @@
 from typing import Generator
+import os
 import wmill
 import boto3
 import time
@@ -6,6 +7,10 @@ from datetime import timedelta
 from smart_open import open
 from urllib.parse import urlparse
 from urllib.request import urlretrieve
+
+
+def _is_test_workspace() -> bool:
+    return os.environ.get("WM_WORKSPACE", "").startswith("wm-fork-test")
 
 
 class S3Client:
@@ -22,7 +27,14 @@ class S3Client:
             )
         self.client = boto3.client("s3", **args)
 
+    def _ensure_test_prefix(self, path: str) -> str:
+        """Prepend __test/ to paths when running in a test workspace."""
+        if _is_test_workspace() and not path.startswith("__test/") and not path.startswith("s3://"):
+            return f"__test/{path}"
+        return path
+
     def create_url(self, path: str, bucket="") -> str:
+        path = self._ensure_test_prefix(path)
         if bucket == "":
             bucket = self.bucket
         url = self._ensure_url(f"s3://{bucket}/{path}")
@@ -67,6 +79,7 @@ class S3Client:
         return wmill.S3Object(s3=url_path)
 
     def s3_exists(self, url: str) -> bool:
+        url = self._ensure_test_prefix(url)
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
             raise ValueError(f"Invalid url '{url}'")
@@ -82,6 +95,7 @@ class S3Client:
         return False
 
     def s3_upload(self, url: str, f, mode="wb") -> bool:
+        url = self._ensure_test_prefix(url)
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
             return False
@@ -96,6 +110,7 @@ class S3Client:
         return True
 
     def s3_download(self, url: str, f) -> bool:
+        url = self._ensure_test_prefix(url)
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
             return False
@@ -110,6 +125,7 @@ class S3Client:
         return True
 
     def s3_scan(self, prefix: str) -> Generator:
+        prefix = self._ensure_test_prefix(prefix)
         paginator = self.client.get_paginator("list_objects_v2")
         page_iterator = paginator.paginate(Bucket=self.bucket, Prefix=prefix)
         for page in page_iterator:

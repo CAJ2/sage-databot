@@ -12,6 +12,7 @@ from .base_model import UNSET, UnsetType
 from .get_category_for_review import GetCategoryForReview
 from .get_change_for_review import GetChangeForReview
 from .get_component_for_review import GetComponentForReview
+from .get_current_user import GetCurrentUser
 from .get_item_for_link import GetItemForLink
 from .get_item_for_review import GetItemForReview
 from .get_material_for_review import GetMaterialForReview
@@ -46,15 +47,13 @@ def gql(q: str) -> str:
 
 class Client(BaseClient):
     def get_root_category(self, **kwargs: Any) -> GetRootCategory:
-        query = gql(
-            """
+        query = gql("""
             query GetRootCategory {
               categoryRoot {
                 id
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {}
         response = self.execute(
             query=query, operation_name="GetRootCategory", variables=variables, **kwargs
@@ -63,8 +62,7 @@ class Client(BaseClient):
         return GetRootCategory.model_validate(data)
 
     def get_category_for_review(self, id: str, **kwargs: Any) -> GetCategoryForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetCategoryForReview($id: ID!) {
               category(id: $id) {
                 id
@@ -90,8 +88,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -103,8 +100,7 @@ class Client(BaseClient):
         return GetCategoryForReview.model_validate(data)
 
     def get_change_for_review(self, id: str, **kwargs: Any) -> GetChangeForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetChangeForReview($id: ID!) {
               change(id: $id) {
                 id
@@ -119,8 +115,8 @@ class Client(BaseClient):
                   nodes {
                     id
                     entityName
-                    createChanges
-                    updateChanges
+                    createInput
+                    updateInput
                     changes {
                       ... on Item {
                         __typename
@@ -193,8 +189,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -208,8 +203,7 @@ class Client(BaseClient):
     def update_change_status(
         self, input: UpdateChangeInput, **kwargs: Any
     ) -> UpdateChangeStatus:
-        query = gql(
-            """
+        query = gql("""
             mutation UpdateChangeStatus($input: UpdateChangeInput!) {
               updateChange(input: $input) {
                 change {
@@ -218,8 +212,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query,
@@ -231,8 +224,7 @@ class Client(BaseClient):
         return UpdateChangeStatus.model_validate(data)
 
     def get_component_for_review(self, id: str, **kwargs: Any) -> GetComponentForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetComponentForReview($id: ID!) {
               component(id: $id) {
                 id
@@ -251,8 +243,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -264,8 +255,7 @@ class Client(BaseClient):
         return GetComponentForReview.model_validate(data)
 
     def get_item_for_review(self, id: str, **kwargs: Any) -> GetItemForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetItemForReview($id: ID!) {
               item(id: $id) {
                 id
@@ -285,8 +275,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -298,8 +287,7 @@ class Client(BaseClient):
         return GetItemForReview.model_validate(data)
 
     def get_item_for_link(self, id: str, **kwargs: Any) -> GetItemForLink:
-        query = gql(
-            """
+        query = gql("""
             query GetItemForLink($id: ID!) {
               item(id: $id) {
                 id
@@ -313,8 +301,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query, operation_name="GetItemForLink", variables=variables, **kwargs
@@ -323,8 +310,7 @@ class Client(BaseClient):
         return GetItemForLink.model_validate(data)
 
     def add_item(self, input: CreateItemInput, **kwargs: Any) -> AddItem:
-        query = gql(
-            """
+        query = gql("""
             mutation AddItem($input: CreateItemInput!) {
               createItem(input: $input) {
                 item {
@@ -334,8 +320,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="AddItem", variables=variables, **kwargs
@@ -344,8 +329,7 @@ class Client(BaseClient):
         return AddItem.model_validate(data)
 
     def update_item(self, input: UpdateItemInput, **kwargs: Any) -> UpdateItem:
-        query = gql(
-            """
+        query = gql("""
             mutation UpdateItem($input: UpdateItemInput!) {
               updateItem(input: $input) {
                 item {
@@ -355,8 +339,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="UpdateItem", variables=variables, **kwargs
@@ -365,8 +348,7 @@ class Client(BaseClient):
         return UpdateItem.model_validate(data)
 
     def get_material_for_review(self, id: str, **kwargs: Any) -> GetMaterialForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetMaterialForReview($id: ID!) {
               material(id: $id) {
                 id
@@ -374,8 +356,7 @@ class Client(BaseClient):
                 desc
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -387,8 +368,7 @@ class Client(BaseClient):
         return GetMaterialForReview.model_validate(data)
 
     def get_org(self, org_id: str, **kwargs: Any) -> GetOrg:
-        query = gql(
-            """
+        query = gql("""
             query GetOrg($orgId: ID!) {
               org(id: $orgId) {
                 id
@@ -397,8 +377,7 @@ class Client(BaseClient):
                 slug
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"orgId": org_id}
         response = self.execute(
             query=query, operation_name="GetOrg", variables=variables, **kwargs
@@ -407,8 +386,7 @@ class Client(BaseClient):
         return GetOrg.model_validate(data)
 
     def add_org(self, input: CreateOrgInput, **kwargs: Any) -> AddOrg:
-        query = gql(
-            """
+        query = gql("""
             mutation AddOrg($input: CreateOrgInput!) {
               createOrg(input: $input) {
                 org {
@@ -419,8 +397,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="AddOrg", variables=variables, **kwargs
@@ -429,8 +406,7 @@ class Client(BaseClient):
         return AddOrg.model_validate(data)
 
     def update_org(self, input: UpdateOrgInput, **kwargs: Any) -> UpdateOrg:
-        query = gql(
-            """
+        query = gql("""
             mutation UpdateOrg($input: UpdateOrgInput!) {
               updateOrg(input: $input) {
                 org {
@@ -441,8 +417,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="UpdateOrg", variables=variables, **kwargs
@@ -451,8 +426,7 @@ class Client(BaseClient):
         return UpdateOrg.model_validate(data)
 
     def get_place_for_review(self, id: str, **kwargs: Any) -> GetPlaceForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetPlaceForReview($id: ID!) {
               place(id: $id) {
                 id
@@ -476,8 +450,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -489,8 +462,7 @@ class Client(BaseClient):
         return GetPlaceForReview.model_validate(data)
 
     def get_process_for_review(self, id: str, **kwargs: Any) -> GetProcessForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetProcessForReview($id: ID!) {
               process(id: $id) {
                 id
@@ -523,8 +495,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -536,8 +507,7 @@ class Client(BaseClient):
         return GetProcessForReview.model_validate(data)
 
     def get_source(self, id: str, **kwargs: Any) -> GetSource:
-        query = gql(
-            """
+        query = gql("""
             query GetSource($id: ID!) {
               source(id: $id) {
                 id
@@ -549,8 +519,7 @@ class Client(BaseClient):
                 metadata
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query, operation_name="GetSource", variables=variables, **kwargs
@@ -559,8 +528,7 @@ class Client(BaseClient):
         return GetSource.model_validate(data)
 
     def add_source(self, input: CreateSourceInput, **kwargs: Any) -> AddSource:
-        query = gql(
-            """
+        query = gql("""
             mutation AddSource($input: CreateSourceInput!) {
               createSource(input: $input) {
                 source {
@@ -571,8 +539,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="AddSource", variables=variables, **kwargs
@@ -581,8 +548,7 @@ class Client(BaseClient):
         return AddSource.model_validate(data)
 
     def update_source(self, input: UpdateSourceInput, **kwargs: Any) -> UpdateSource:
-        query = gql(
-            """
+        query = gql("""
             mutation UpdateSource($input: UpdateSourceInput!) {
               updateSource(input: $input) {
                 source {
@@ -593,8 +559,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="UpdateSource", variables=variables, **kwargs
@@ -602,9 +567,26 @@ class Client(BaseClient):
         data = self.get_data(response)
         return UpdateSource.model_validate(data)
 
+    def get_current_user(self, **kwargs: Any) -> GetCurrentUser:
+        query = gql("""
+            query GetCurrentUser {
+              me {
+                id
+                email
+                name
+                username
+              }
+            }
+            """)
+        variables: dict[str, object] = {}
+        response = self.execute(
+            query=query, operation_name="GetCurrentUser", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return GetCurrentUser.model_validate(data)
+
     def get_variant_for_review(self, id: str, **kwargs: Any) -> GetVariantForReview:
-        query = gql(
-            """
+        query = gql("""
             query GetVariantForReview($id: ID!) {
               variant(id: $id) {
                 id
@@ -638,8 +620,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"id": id}
         response = self.execute(
             query=query,
@@ -656,8 +637,7 @@ class Client(BaseClient):
         after: Union[Optional[str], UnsetType] = UNSET,
         **kwargs: Any
     ) -> GetVariant:
-        query = gql(
-            """
+        query = gql("""
             query GetVariant($first: Int, $after: String) {
               variants(first: $first, after: $after) {
                 edges {
@@ -675,8 +655,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"first": first, "after": after}
         response = self.execute(
             query=query, operation_name="GetVariant", variables=variables, **kwargs
@@ -685,8 +664,7 @@ class Client(BaseClient):
         return GetVariant.model_validate(data)
 
     def add_variant(self, input: CreateVariantInput, **kwargs: Any) -> AddVariant:
-        query = gql(
-            """
+        query = gql("""
             mutation AddVariant($input: CreateVariantInput!) {
               createVariant(input: $input) {
                 variant {
@@ -698,8 +676,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="AddVariant", variables=variables, **kwargs
@@ -708,8 +685,7 @@ class Client(BaseClient):
         return AddVariant.model_validate(data)
 
     def update_variant(self, input: UpdateVariantInput, **kwargs: Any) -> UpdateVariant:
-        query = gql(
-            """
+        query = gql("""
             mutation UpdateVariant($input: UpdateVariantInput!) {
               updateVariant(input: $input) {
                 variant {
@@ -721,8 +697,7 @@ class Client(BaseClient):
                 }
               }
             }
-            """
-        )
+            """)
         variables: dict[str, object] = {"input": input}
         response = self.execute(
             query=query, operation_name="UpdateVariant", variables=variables, **kwargs

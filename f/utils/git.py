@@ -1,8 +1,9 @@
-from pathlib import Path
 import subprocess
+from pathlib import Path
+
+import wmill
 
 from f.utils.general import is_production
-
 
 DATABOT_REPO_URL = "https://github.com/CAJ2/sage-databot.git"
 
@@ -14,20 +15,37 @@ def checkout_repo(branch: str = "dev") -> Path:
     Clones the databot git repository and checks out the specified branch.
     Returns the path to the cloned repository.
     """
+    # Check if the repo already exists
+    if Path("./databot").exists():
+        print("Databot repo already exists, skipping clone.")
+        return Path("./databot")
+
     if is_production() and branch != "main":
         raise ValueError("In production, only the 'main' branch can be cloned.")
 
-    subprocess.run(
-        [
-            "git",
-            "clone",
-            "--branch",
-            branch,
-            "--depth",
-            "1",
-            DATABOT_REPO_URL,
-            "./databot",
-        ],
-        check=True,
-    )
+    head_sha = wmill.get_flow_user_state("head_sha")
+
+    if head_sha:
+        # Only works with Git 2.49.0+
+        # subprocess.run(
+        #     [
+        #       "git", "clone", "--depth", "1", "--revision", head_sha, DATABOT_REPO_URL, "./databot",
+        #     ],
+        #     check=True,
+        # )
+        #
+        # Instead use this workaround
+        subprocess.run(["git", "init", "-q", "databot"], check=True)
+        subprocess.run(["git", "remote", "add", "origin", DATABOT_REPO_URL], cwd="databot", check=True)
+        subprocess.run(["git", "fetch", "--depth", "1", "origin", head_sha], cwd="databot", check=True)
+        subprocess.run(["git", "checkout", "-q", "FETCH_HEAD"], cwd="databot", check=True)
+    else:
+        subprocess.run(
+            [
+                "git", "clone", "--branch", branch, "--depth", "1",
+                DATABOT_REPO_URL, "./databot",
+            ],
+            check=True,
+        )
+
     return Path("./databot")

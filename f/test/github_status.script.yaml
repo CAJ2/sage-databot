@@ -1,0 +1,27 @@
+summary: GitHub status utilities
+description: 'Creates and updates GitHub check runs, posts sticky PR comments
+  via GitHub App. Called twice by run_tests flow: once with head_sha to create a
+  pending check run, once with check_run_id + results to report final status.'
+lock: '!inline f/test/github_status.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    check_run_id:
+      type: integer
+      description: Check run ID — provide together with results to report final status
+    head_sha:
+      type: string
+      description: Commit SHA — provide to create a pending check run
+    pr_number:
+      type: integer
+      description: PR number — if set, posts/updates a sticky comment on the PR
+    repo:
+      type: string
+      description: GitHub repository in owner/repo format
+    results:
+      type: object
+      description: Formatted test results from format_results step
+  required:
+    - repo

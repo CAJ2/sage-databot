@@ -10,6 +10,7 @@ dependencies = [
   "psycopg[binary]>=3.3.2",
   "python-dotenv>=1.2.1",
   "ruff>=0.14.10",
+  "basedpyright>=1.29.1",
   "gitpython>=3.1.44",
   "duckdb>=1.4.3",
   "polars>=1.36.1",
@@ -60,6 +61,8 @@ packages = ["src/sage_databot"]
 deps = "python src/pyproject_deps.py"
 graphql = "python src/graphql_gen.py"
 nanoids = "python src/scripts/gen_ids.py"
+lint = "ruff check ."
+typecheck = "basedpyright"
 
 [tool.ariadne-codegen]
 schema_path = "f/graphql/schema.gql"

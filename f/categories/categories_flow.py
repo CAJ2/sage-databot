@@ -1,19 +1,22 @@
 # requirements: project
 
-import polars as pl
 import networkx as nx
+import polars as pl
 from sqlalchemy import text
 
 from f.utils.db.crdb import create_sql_engine, db_write_dataframe
+from f.utils.git import checkout_repo
+
 
 def categories_flow():
     """
     This flow orchestrates the categories pipeline.
     The main steps are: validation of the categories graph and SQL data loading.
     """
+    checkout_repo()
 
     categories_df = pl.read_csv(
-        "f/categories/categories.tsv", separator="\t", has_header=True
+        "databot/src/categories/categories.tsv", separator="\t", has_header=True
     )
     name_cols = {}
     desc_short_cols = {}
@@ -44,7 +47,7 @@ def categories_flow():
     )
     categories_df = categories_df.drop(desc_cols.values())
     cat_edge_df = pl.read_csv(
-        "f/categories/categories_edges.tsv", separator="\t", has_header=True
+        "databot/src/categories/categories_edges.tsv", separator="\t", has_header=True
     )
 
     # Add all nodes and edges to the graph and validate

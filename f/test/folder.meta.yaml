@@ -1,5 +1,5 @@
 summary: Integration tests
-display_name: tests
+display_name: test
 extra_perms:
   u/databot: true
 owners:

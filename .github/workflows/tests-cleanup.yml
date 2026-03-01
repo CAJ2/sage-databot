@@ -1,0 +1,22 @@
+name: Integration Tests Cleanup (PR)
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  WMILL_BASE_URL: https://databot.dev.sageleaf.app
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete forked workspace
+        run: |
+          WS_ID="wm-fork-test-pr-${{ github.event.pull_request.number }}"
+          curl -sf -X DELETE \
+            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            "${{ env.WMILL_BASE_URL }}/api/workspaces/$WS_ID"
+          echo "Deleted workspace: $WS_ID"
+        continue-on-error: true # Don't fail if workspace doesn't exist
+

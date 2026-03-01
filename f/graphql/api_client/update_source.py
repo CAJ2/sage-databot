@@ -19,7 +19,7 @@ class UpdateSourceUpdateSource(BaseModel):
 
 class UpdateSourceUpdateSourceSource(BaseModel):
     id: str
-    type: SourceType
+    type_: SourceType = Field(alias="type")
     processed_at: Optional[Any] = Field(alias="processedAt")
     location: Optional[str]
 
