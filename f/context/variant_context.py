@@ -1,6 +1,5 @@
 # requirements: project
 
-from typing import Literal
 
 from f.context.context_types import ContextMode, EntityContext
 from f.utils.api import api_connect
@@ -36,7 +35,11 @@ def main(
             "- Whether the org roles (manufacturer, distributor, etc.) are plausible."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for a Variant, consider:\n"
             "- The name should be specific, product-level (e.g. brand + product name).\n"

@@ -21,6 +21,7 @@ index_settings = {
     ),
 }
 
+
 def meili_connect() -> meilisearch.Client:
     # Connect to Meilisearch
     # Connect to Meilisearch
@@ -35,6 +36,7 @@ def meili_connect() -> meilisearch.Client:
     if not health:
         raise ValueError("Meilisearch is not healthy or not reachable.")
     return meili
+
 
 def check_create_index(meili: meilisearch.Client, index_name: str, settings: dict = {}):
     try:

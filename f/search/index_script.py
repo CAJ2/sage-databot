@@ -42,13 +42,22 @@ def check_create_index(meili: meilisearch.Client, index_name: str, settings: dic
 
 
 def export_table(
-    crdb: Engine, table: str, cols: str = "*", schema: dict | None = None, batch_size: int = 5000
+    crdb: Engine,
+    table: str,
+    cols: str = "*",
+    schema: dict | None = None,
+    batch_size: int = 5000,
 ) -> Iterator[pl.DataFrame]:
     """
     Export a table from the database to a Polars DataFrame.
     """
-    df_iter = pl.read_database(f"SELECT {cols} FROM {table}", connection=crdb, schema_overrides=schema,
-                          iter_batches=True, batch_size=batch_size)
+    df_iter = pl.read_database(
+        f"SELECT {cols} FROM {table}",
+        connection=crdb,
+        schema_overrides=schema,
+        iter_batches=True,
+        batch_size=batch_size,
+    )
     return df_iter
 
 
@@ -266,7 +275,9 @@ def index_places(
     for df in df_iter:
         print(f"Exported {df.height} rows from public.places")
         print(f"Columns: {df.describe()}")
-        df = df.cast({pl.Datetime: pl.String}).with_columns(cs.string().str.strip_chars())
+        df = df.cast({pl.Datetime: pl.String}).with_columns(
+            cs.string().str.strip_chars()
+        )
         docs = df.to_dicts()
         for doc in docs:
             name_json = json.loads(doc["name"])
@@ -400,6 +411,7 @@ def search_index_import(index: list[str] | None, clear: bool = False):
                 },
             )
         index_places(crdb, meili)
+
 
 def main(index: list[str] | None, clear: bool = False):
     if not index:

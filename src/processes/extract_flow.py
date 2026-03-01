@@ -8,7 +8,6 @@ import json
 
 from src.cli import setup_cli
 from src.utils.api import api_connect
-from src.graphql.api_client.client import CreateSourceInput, UpdateSourceInput
 from src.utils.logging.loggers import get_logger
 from src.utils.lang import LANG_TO_SPACY_MODEL
 

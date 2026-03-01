@@ -10,7 +10,6 @@ dependencies = [
   "psycopg[binary]>=3.3.2",
   "python-dotenv>=1.2.1",
   "ruff>=0.14.10",
-  "basedpyright>=1.29.1",
   "gitpython>=3.1.44",
   "duckdb>=1.4.3",
   "polars>=1.36.1",
@@ -61,8 +60,14 @@ packages = ["src/sage_databot"]
 deps = "python src/pyproject_deps.py"
 graphql = "python src/graphql_gen.py"
 nanoids = "python src/scripts/gen_ids.py"
-lint = "ruff check ."
+lint = "ruff check --fix"
+fmt = "ruff format && npx oxfmt"
 typecheck = "basedpyright"
+
+[tool.pixi.dependencies]
+prek = ">=0.3.4,<0.4"
+basedpyright = ">=1.38.2,<2"
+ruff = ">=0.15.2,<0.16"
 
 [tool.ariadne-codegen]
 schema_path = "f/graphql/schema.gql"

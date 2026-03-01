@@ -33,7 +33,9 @@ def main(
         try:
             mat_result = client.get_material_for_review(id=material_id)
             if mat_result.material:
-                related_data["material"] = mat_result.material.model_dump(by_alias=False)
+                related_data["material"] = mat_result.material.model_dump(
+                    by_alias=False
+                )
         except Exception as e:
             print(f"Could not fetch Material {material_id}: {e}")
 
@@ -46,7 +48,11 @@ def main(
             "- Process intents include: production, transformation, transport, end-of-life, etc."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for a Process, consider:\n"
             "- The name should describe what the process does (e.g. 'Cold-pressed extraction').\n"

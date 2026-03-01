@@ -6,7 +6,6 @@ import time
 from datetime import timedelta
 from smart_open import open
 from urllib.parse import urlparse
-from urllib.request import urlretrieve
 
 
 def _is_test_workspace() -> bool:
@@ -29,7 +28,11 @@ class S3Client:
 
     def _ensure_test_prefix(self, path: str) -> str:
         """Prepend __test/ to paths when running in a test workspace."""
-        if _is_test_workspace() and not path.startswith("__test/") and not path.startswith("s3://"):
+        if (
+            _is_test_workspace()
+            and not path.startswith("__test/")
+            and not path.startswith("s3://")
+        ):
             return f"__test/{path}"
         return path
 

@@ -3,11 +3,11 @@
 import wmill
 import os
 import bz2
-import boto3
 from smart_open import open
 from urllib.request import urlretrieve
 
 from f.utils.s3 import S3Client
+
 
 def main(country: str):
     """
@@ -35,7 +35,9 @@ def main(country: str):
     print(f"Extracting {filepath}")
     with bz2.BZ2File(filepath, "rb") as f_in:
         with open(
-            f"s3://{s3client.bucket}/{s3_file.s3}", "wb", transport_params={"client": s3client.client}
+            f"s3://{s3client.bucket}/{s3_file.s3}",
+            "wb",
+            transport_params={"client": s3client.client},
         ) as f_out:
             for line in f_in:
                 f_out.write(line)

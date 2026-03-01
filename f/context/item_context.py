@@ -33,7 +33,11 @@ def main(
             "- Items are generic types (e.g. 'Oat Milk'); Variants are specific products."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for an Item, consider:\n"
             "- The name should represent a generic product type, not a brand.\n"

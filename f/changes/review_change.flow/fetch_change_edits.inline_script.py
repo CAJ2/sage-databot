@@ -7,6 +7,7 @@ from f.utils.api import api_connect
 
 class ChangeEditInput(BaseModel):
     """Input data for a single edit, passed into the for-loop iterator."""
+
     change_id: str
     edit_id: str
     entity_name: str

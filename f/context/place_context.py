@@ -33,7 +33,11 @@ def main(
             "- Whether the place type (factory, warehouse, farm, etc.) matches the description."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for a Place, consider:\n"
             "- The name should identify the facility or location clearly.\n"

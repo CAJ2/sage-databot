@@ -29,7 +29,9 @@ def main(
     if entity_id:
         try:
             result = client.get_category_for_review(id=entity_id)
-            category_context = result.category.model_dump(by_alias=False) if result.category else None
+            category_context = (
+                result.category.model_dump(by_alias=False) if result.category else None
+            )
         except Exception as e:
             print(f"Could not fetch category context for {entity_id}: {e}")
 

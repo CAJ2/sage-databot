@@ -13,7 +13,7 @@ from f.search.categories.index_categories import main as index_categories_main
 from f.search.index_script import check_create_index
 from f.search.regions.index_regions import main as index_regions_main
 from f.test.cleanup import ensure_test_workspace
-from f.test.framework import Test, TestSuite, assert_gt, assert_true
+from f.test.framework import Test, TestSuite, assert_true
 from f.utils.db.crdb import create_sql_engine
 
 
@@ -34,23 +34,26 @@ def test_index_settings(t: Test):
     index_name = "test_settings_check"
     t.cleanup.track_meili_index(index_name)
 
-    check_create_index(meili, index_name, {
-        "searchableAttributes": ["name", "desc"],
-        "filterableAttributes": ["category"],
-    })
+    check_create_index(
+        meili,
+        index_name,
+        {
+            "searchableAttributes": ["name", "desc"],
+            "filterableAttributes": ["category"],
+        },
+    )
 
     settings = meili.index(index_name).get_settings()
-    assert_true("name" in settings["searchableAttributes"],
-                "name should be searchable")
+    assert_true("name" in settings["searchableAttributes"], "name should be searchable")
 
 
 def test_index_categories(t: Test):
     """Test category indexing via the real index_categories script."""
     crdb = create_sql_engine()
     with crdb.begin() as conn:
-        rows = conn.execute(text(
-            "SELECT id FROM public.categories WHERE id != 'CATEGORY_ROOT' LIMIT 3"
-        )).fetchall()
+        rows = conn.execute(
+            text("SELECT id FROM public.categories WHERE id != 'CATEGORY_ROOT' LIMIT 3")
+        ).fetchall()
 
     if len(rows) == 0:
         print("  ⚠️  No categories in DB, skipping")
@@ -70,9 +73,7 @@ def test_index_regions(t: Test):
     """Test region indexing via the real index_regions script."""
     crdb = create_sql_engine()
     with crdb.begin() as conn:
-        rows = conn.execute(text(
-            "SELECT id FROM public.regions LIMIT 3"
-        )).fetchall()
+        rows = conn.execute(text("SELECT id FROM public.regions LIMIT 3")).fetchall()
 
     if len(rows) == 0:
         print("  ⚠️  No regions in DB, skipping")

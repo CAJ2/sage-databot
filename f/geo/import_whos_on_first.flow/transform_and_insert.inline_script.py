@@ -28,6 +28,7 @@ placetype_admin = [
     ["locality", "11"],
 ]
 
+
 def main(s3_file: S3Object):
     """
     Transform the Whos On First data.
@@ -149,11 +150,16 @@ def main(s3_file: S3Object):
     )
 
     with crdb.begin() as c:
-        c.execute(text("ALTER TABLE databot.regions_wof_load ALTER COLUMN id SET NOT NULL"))
-        c.execute(text(
-            "ALTER TABLE databot.regions_wof_load ALTER PRIMARY KEY USING COLUMNS (id)"
-        ))
-        c.execute(text("""
+        c.execute(
+            text("ALTER TABLE databot.regions_wof_load ALTER COLUMN id SET NOT NULL")
+        )
+        c.execute(
+            text(
+                "ALTER TABLE databot.regions_wof_load ALTER PRIMARY KEY USING COLUMNS (id)"
+            )
+        )
+        c.execute(
+            text("""
             INSERT INTO public.regions (id, created_at, updated_at, name, geo, properties, placetype, admin_level)
             SELECT 'wof_' || id, NOW(), NOW(), JSON_STRIP_NULLS(name::JSONB),
                 ST_MULTIPOLYFROMWKB(ST_ASEWKB(ST_MULTI(ST_GEOMFROMGEOJSON(geo::JSONB)))),
@@ -166,8 +172,11 @@ def main(s3_file: S3Object):
                 properties = EXCLUDED.properties::JSONB,
                 admin_level = EXCLUDED.admin_level,
                 updated_at = NOW();
-        """))
+        """)
+        )
         c.execute(text("DROP TABLE IF EXISTS databot.regions_wof_load"))
-        c.execute(text(
-            "UPDATE regions SET \"name\" = jsonb_set(\"name\", '{xx}', properties->'wof:name')"
-        ))
+        c.execute(
+            text(
+                "UPDATE regions SET \"name\" = jsonb_set(\"name\", '{xx}', properties->'wof:name')"
+            )
+        )

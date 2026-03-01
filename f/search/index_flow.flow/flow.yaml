@@ -1,12 +1,12 @@
 summary: Index changes from CRDB into Meilisearch
-description: ""
+description: ''
 value:
   modules:
     - id: a
       value:
-        lock: "!inline parses_incoming_triggers.inline_script.lock"
+        lock: '!inline parses_incoming_triggers.inline_script.lock'
         type: rawscript
-        content: "!inline parses_incoming_triggers.inline_script.py"
+        content: '!inline parses_incoming_triggers.inline_script.py'
         language: python3
         input_transforms:
           length:
@@ -52,7 +52,7 @@ value:
                   summary: Categories
                   parallel: true
                   skip_failure: true
-            summary: ""
+            summary: ''
         iterator:
           expr: results.a
           type: javascript
@@ -67,10 +67,10 @@ schema:
   properties:
     length:
       type: integer
-      description: ""
+      description: ''
     payload:
       type: array
-      description: ""
+      description: ''
       default: []
       items:
         type: string

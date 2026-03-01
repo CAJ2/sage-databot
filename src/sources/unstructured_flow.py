@@ -4,7 +4,6 @@ from prefect_aws import AwsCredentials, S3Bucket
 from unstructured.partition.auto import partition
 from unstructured.documents.elements import Element
 from unstructured.staging.base import (
-    elements_to_json,
     _fix_metadata_field_precision,
     elements_to_dicts,
 )

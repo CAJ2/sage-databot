@@ -36,7 +36,9 @@ def test_crdb_connection(t: Test):
 def test_crdb_polars_uri(t: Test):
     """Test that Polars URI is generated correctly."""
     uri = create_polars_uri()
-    assert_true(uri.startswith("postgresql://"), "Polars URI should start with postgresql://")
+    assert_true(
+        uri.startswith("postgresql://"), "Polars URI should start with postgresql://"
+    )
 
 
 def test_crdb_test_table(t: Test):
@@ -45,17 +47,21 @@ def test_crdb_test_table(t: Test):
     t.cleanup.track_test_table("test_integration_check")
 
     with engine.begin() as conn:
-        conn.execute(text(
-            "CREATE TABLE IF NOT EXISTS databot.test_integration_check "
-            "(id STRING PRIMARY KEY, value STRING)"
-        ))
-        conn.execute(text(
-            "INSERT INTO databot.test_integration_check (id, value) "
-            "VALUES ('test1', 'hello')"
-        ))
-        result = conn.execute(text(
-            "SELECT value FROM databot.test_integration_check WHERE id = 'test1'"
-        ))
+        conn.execute(
+            text(
+                "CREATE TABLE IF NOT EXISTS databot.test_integration_check "
+                "(id STRING PRIMARY KEY, value STRING)"
+            )
+        )
+        conn.execute(
+            text(
+                "INSERT INTO databot.test_integration_check (id, value) "
+                "VALUES ('test1', 'hello')"
+            )
+        )
+        result = conn.execute(
+            text("SELECT value FROM databot.test_integration_check WHERE id = 'test1'")
+        )
         row = result.fetchone()
         assert row is not None
         assert_eq(row[0], "hello")
@@ -64,8 +70,10 @@ def test_crdb_test_table(t: Test):
 def test_s3_client_exists(t: Test):
     """Test S3Client instantiation and exists check."""
     s3 = S3Client()
-    assert_true(not s3.s3_exists("__test/nonexistent_file_12345.txt"),
-                "Nonexistent file should not exist")
+    assert_true(
+        not s3.s3_exists("__test/nonexistent_file_12345.txt"),
+        "Nonexistent file should not exist",
+    )
 
 
 def test_s3_client_upload_download(t: Test):
@@ -98,7 +106,9 @@ def test_s3_client_upload_download(t: Test):
 
         with open(tmp2_path, "rb") as f:
             downloaded = f.read()
-            assert_eq(downloaded, content, "Downloaded content should match uploaded content")
+            assert_eq(
+                downloaded, content, "Downloaded content should match uploaded content"
+            )
     finally:
         os.unlink(tmp_path)
         if tmp2_path is not None and os.path.exists(tmp2_path):

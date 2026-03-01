@@ -8,7 +8,6 @@ from urllib.parse import urlparse, urlencode, parse_qs
 from sqlalchemy import create_engine, Engine, text, JSON
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.types import TypeDecorator
-import json
 from dataclasses import asdict
 
 

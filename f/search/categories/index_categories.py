@@ -8,6 +8,7 @@ import json
 from f.utils.db.meili import meili_connect, check_create_index
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 
+
 def index_categories(
     crdb: Engine,
     meili: meilisearch.Client,
@@ -36,6 +37,7 @@ def index_categories(
             desc_short_json = json.loads(doc["desc_short"] or "{}")
             doc["desc_short"] = desc_short_json
         meili.index("categories").add_documents(docs)
+
 
 def main(keys: list[str]):
     crdb = create_sql_engine()

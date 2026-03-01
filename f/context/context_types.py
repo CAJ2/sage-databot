@@ -10,6 +10,7 @@ class EntityContext(BaseModel):
     Structured context produced by a model-specific context script.
     Consumed by both the review and auto-suggest flows.
     """
+
     entity_name: str
     entity_id: str | None = None
     entity_data: dict

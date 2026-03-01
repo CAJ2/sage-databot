@@ -33,7 +33,11 @@ def main(
             "- Components represent material inputs used by variants (e.g. 'Steel frame: 2 kg')."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for a Component, consider:\n"
             "- The name should identify the specific material component.\n"

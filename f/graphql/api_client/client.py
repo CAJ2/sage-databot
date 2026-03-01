@@ -94,7 +94,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetCategoryForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetCategoryForReview.model_validate(data)
@@ -195,7 +195,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetChangeForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetChangeForReview.model_validate(data)
@@ -218,7 +218,7 @@ class Client(BaseClient):
             query=query,
             operation_name="UpdateChangeStatus",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return UpdateChangeStatus.model_validate(data)
@@ -249,7 +249,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetComponentForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetComponentForReview.model_validate(data)
@@ -281,7 +281,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetItemForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetItemForReview.model_validate(data)
@@ -362,7 +362,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetMaterialForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetMaterialForReview.model_validate(data)
@@ -456,7 +456,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetPlaceForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetPlaceForReview.model_validate(data)
@@ -501,7 +501,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetProcessForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetProcessForReview.model_validate(data)
@@ -626,7 +626,7 @@ class Client(BaseClient):
             query=query,
             operation_name="GetVariantForReview",
             variables=variables,
-            **kwargs
+            **kwargs,
         )
         data = self.get_data(response)
         return GetVariantForReview.model_validate(data)
@@ -635,7 +635,7 @@ class Client(BaseClient):
         self,
         first: Union[Optional[int], UnsetType] = UNSET,
         after: Union[Optional[str], UnsetType] = UNSET,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> GetVariant:
         query = gql("""
             query GetVariant($first: Int, $after: String) {

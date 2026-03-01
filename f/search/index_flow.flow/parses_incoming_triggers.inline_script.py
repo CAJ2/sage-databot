@@ -1,8 +1,10 @@
 from typing import TypedDict
 
+
 class ChangeSet(TypedDict):
     table: str
     keys: list[str]
+
 
 def main(payload: list, length: int):
     if len(payload) != length:

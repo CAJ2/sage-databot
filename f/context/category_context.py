@@ -33,7 +33,11 @@ def main(
             "- Whether newly linked items are appropriate members of this category."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for a Category, consider:\n"
             "- The name should be a clear, concise product category label.\n"

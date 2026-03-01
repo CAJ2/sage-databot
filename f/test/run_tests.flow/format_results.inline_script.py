@@ -18,14 +18,16 @@ def main(test_results: list[dict[str, Any]]):
         failed = result.get("failed", 0)
         duration_ms = result.get("duration_ms", 0.0)
 
-        all_suites.append({
-            "name": suite_name,
-            "total": len(tests),
-            "passed": passed,
-            "failed": failed,
-            "duration_ms": duration_ms,
-            "tests": tests,
-        })
+        all_suites.append(
+            {
+                "name": suite_name,
+                "total": len(tests),
+                "passed": passed,
+                "failed": failed,
+                "duration_ms": duration_ms,
+                "tests": tests,
+            }
+        )
         total_tests += len(tests)
         total_passed += passed
         total_failed += failed
@@ -39,7 +41,9 @@ def main(test_results: list[dict[str, Any]]):
         duration_str = f"{total_secs:.1f}s"
 
     status_emoji = "✅" if total_failed == 0 else "❌"
-    status_line = f"{status_emoji} {total_passed}/{total_tests} passed | ⏱️ {duration_str}"
+    status_line = (
+        f"{status_emoji} {total_passed}/{total_tests} passed | ⏱️ {duration_str}"
+    )
 
     # Build markdown
     lines = [

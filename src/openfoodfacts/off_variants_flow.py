@@ -1,24 +1,17 @@
 from prefect import flow
-from prefect.variables import Variable
-from prefect.blocks.system import Secret
 import polars as pl
 from prefect_sqlalchemy import SqlAlchemyConnector
 import json
-import httpx
 import time
-import meilisearch
 
 from src.graphql.api_client.client import (
-    Client,
     CreateVariantInput,
     UpdateVariantInput,
     CreateOrgInput,
-    UpdateOrgInput,
 )
 from src.utils.logging.loggers import get_logger
 from src.utils import slugify
 from src.utils.api import api_connect
-from src.utils.db.crdb import create_polars_uri, db_write_dataframe
 from src.utils.db.meili import meili_connect
 
 
@@ -168,7 +161,7 @@ def off_variants_flow():
                         matching_orgs = meili.index("orgs").search(
                             brand, {"rankingScoreThreshold": 0.5, "limit": 1}
                         )
-                    except Exception as e:
+                    except Exception:
                         time.sleep(5)
                         matching_orgs = meili.index("orgs").search(
                             brand, {"rankingScoreThreshold": 0.5, "limit": 1}

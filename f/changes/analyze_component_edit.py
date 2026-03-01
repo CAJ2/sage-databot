@@ -29,7 +29,11 @@ def main(
     if entity_id:
         try:
             result = client.get_component_for_review(id=entity_id)
-            component_context = result.component.model_dump(by_alias=False) if result.component else None
+            component_context = (
+                result.component.model_dump(by_alias=False)
+                if result.component
+                else None
+            )
         except Exception as e:
             print(f"Could not fetch component context for {entity_id}: {e}")
 

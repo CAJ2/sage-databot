@@ -1,7 +1,7 @@
 # requirements: project
 
 import time
-from sqlalchemy import insert, select, text
+from sqlalchemy import insert, text
 from sqlalchemy.orm import Session
 
 from f.db.databot.model import OFFProduct
@@ -10,7 +10,6 @@ from f.graphql.api_client.client import (
     CreateVariantInput,
     UpdateVariantInput,
     CreateOrgInput,
-    UpdateOrgInput,
 )
 from f.graphql.api_client.input_types import SourceInput, VariantOrgsInput
 from f.utils.general import slugify
@@ -139,7 +138,7 @@ def off_variant(product_id: str):
                 matching_orgs = meili.index("orgs").search(
                     brand, {"rankingScoreThreshold": 0.5, "limit": 1}
                 )
-            except Exception as e:
+            except Exception:
                 time.sleep(5)
                 matching_orgs = meili.index("orgs").search(
                     brand, {"rankingScoreThreshold": 0.5, "limit": 1}

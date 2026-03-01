@@ -30,12 +30,16 @@ def main(
     if entity_id:
         try:
             result = client.get_item_for_review(id=entity_id)
-            item_context = result.item.model_dump(by_alias=False) if result.item else None
+            item_context = (
+                result.item.model_dump(by_alias=False) if result.item else None
+            )
         except Exception as e:
             print(f"Could not fetch item context for {entity_id}: {e}")
 
     if create_changes:
-        change_description = f"CREATE a new Item with fields:\n{json.dumps(create_changes, indent=2)}"
+        change_description = (
+            f"CREATE a new Item with fields:\n{json.dumps(create_changes, indent=2)}"
+        )
     elif update_changes:
         change_description = (
             f"UPDATE Item (id={entity_id}).\n"

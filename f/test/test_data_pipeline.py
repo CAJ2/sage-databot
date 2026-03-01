@@ -29,10 +29,16 @@ def test_tags_definitions_valid(t: Test):
     required_keys = {"id", "name", "type", "tag_id"}
     for tag in all_tags:
         for key in required_keys:
-            assert_true(key in tag, f"Tag {tag.get('id', '?')} missing required key '{key}'")
-        assert_true(isinstance(tag["name"], dict), f"Tag {tag['id']} name should be a dict")
-        assert_true(tag["type"] in ("VARIANT", "COMPONENT", "PLACE"),
-                    f"Tag {tag['id']} has invalid type '{tag['type']}'")
+            assert_true(
+                key in tag, f"Tag {tag.get('id', '?')} missing required key '{key}'"
+            )
+        assert_true(
+            isinstance(tag["name"], dict), f"Tag {tag['id']} name should be a dict"
+        )
+        assert_true(
+            tag["type"] in ("VARIANT", "COMPONENT", "PLACE"),
+            f"Tag {tag['id']} has invalid type '{tag['type']}'",
+        )
 
 
 def test_categories_flow(t: Test):
@@ -60,9 +66,7 @@ def test_tags_flow(t: Test):
 
     engine = create_sql_engine()
     with engine.begin() as conn:
-        tag_count = conn.execute(
-            text("SELECT COUNT(*) FROM public.tags")
-        ).scalar()
+        tag_count = conn.execute(text("SELECT COUNT(*) FROM public.tags")).scalar()
         assert_gt(tag_count, 0, "Should have tags in DB after flow")
 
 

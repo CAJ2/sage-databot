@@ -32,7 +32,9 @@ def main(
     if entity_id:
         try:
             result = client.get_variant_for_review(id=entity_id)
-            variant_context = result.variant.model_dump(by_alias=False) if result.variant else None
+            variant_context = (
+                result.variant.model_dump(by_alias=False) if result.variant else None
+            )
         except Exception as e:
             print(f"Could not fetch variant context for {entity_id}: {e}")
 
@@ -54,7 +56,9 @@ def main(
             print(f"Could not fetch item {item_id}: {e}")
 
     if create_changes:
-        change_description = f"CREATE a new Variant with fields:\n{json.dumps(create_changes, indent=2)}"
+        change_description = (
+            f"CREATE a new Variant with fields:\n{json.dumps(create_changes, indent=2)}"
+        )
     elif update_changes:
         change_description = f"UPDATE Variant (id={entity_id}).\nChanged fields: {json.dumps(update_changes, indent=2)}"
         if item_ids_to_link:
