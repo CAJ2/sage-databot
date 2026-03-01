@@ -36,14 +36,30 @@ def checkout_repo(branch: str = "dev") -> Path:
         #
         # Instead use this workaround
         subprocess.run(["git", "init", "-q", "databot"], check=True)
-        subprocess.run(["git", "remote", "add", "origin", DATABOT_REPO_URL], cwd="databot", check=True)
-        subprocess.run(["git", "fetch", "--depth", "1", "origin", head_sha], cwd="databot", check=True)
-        subprocess.run(["git", "checkout", "-q", "FETCH_HEAD"], cwd="databot", check=True)
+        subprocess.run(
+            ["git", "remote", "add", "origin", DATABOT_REPO_URL],
+            cwd="databot",
+            check=True,
+        )
+        subprocess.run(
+            ["git", "fetch", "--depth", "1", "origin", head_sha],
+            cwd="databot",
+            check=True,
+        )
+        subprocess.run(
+            ["git", "checkout", "-q", "FETCH_HEAD"], cwd="databot", check=True
+        )
     else:
         subprocess.run(
             [
-                "git", "clone", "--branch", branch, "--depth", "1",
-                DATABOT_REPO_URL, "./databot",
+                "git",
+                "clone",
+                "--branch",
+                branch,
+                "--depth",
+                "1",
+                DATABOT_REPO_URL,
+                "./databot",
             ],
             check=True,
         )

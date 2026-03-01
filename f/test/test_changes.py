@@ -32,9 +32,9 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
         if entity_type == "variant":
             engine = create_sql_engine()
             with engine.begin() as conn:
-                row = conn.execute(text(
-                    "SELECT id FROM public.variants LIMIT 1"
-                )).fetchone()
+                row = conn.execute(
+                    text("SELECT id FROM public.variants LIMIT 1")
+                ).fetchone()
                 return row[0] if row else None
         elif entity_type == "category":
             result = client.get_root_category()
@@ -43,9 +43,9 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
         elif entity_type == "item":
             engine = create_sql_engine()
             with engine.begin() as conn:
-                row = conn.execute(text(
-                    "SELECT id FROM public.items LIMIT 1"
-                )).fetchone()
+                row = conn.execute(
+                    text("SELECT id FROM public.items LIMIT 1")
+                ).fetchone()
                 return row[0] if row else None
     except Exception as e:
         print(f"  Could not find existing {entity_type}: {e}")
@@ -53,6 +53,7 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
 
 
 # --- Context tests ---
+
 
 def test_variant_context(t: Test):
     """Test that variant_context returns valid EntityContext."""
@@ -88,8 +89,11 @@ def test_variant_context_suggest_mode(t: Test):
     result = result.model_dump()
 
     assert_isinstance(result, dict)
-    assert_contains(result["prompt_hints"], "suggest",
-                    "Suggest mode should mention 'suggest' in hints")
+    assert_contains(
+        result["prompt_hints"],
+        "suggest",
+        "Suggest mode should mention 'suggest' in hints",
+    )
 
 
 def test_category_context(t: Test):
@@ -127,9 +131,7 @@ def test_generic_context(t: Test):
     """Test generic_context with a component."""
     engine = create_sql_engine()
     with engine.begin() as conn:
-        row = conn.execute(text(
-            "SELECT id FROM public.components LIMIT 1"
-        )).fetchone()
+        row = conn.execute(text("SELECT id FROM public.components LIMIT 1")).fetchone()
 
     if not row:
         print("  ⚠️  No component found, skipping")
@@ -143,6 +145,7 @@ def test_generic_context(t: Test):
 
 
 # --- Changes tests ---
+
 
 def test_analyze_variant_edit_structure(t: Test):
     """Test that analyze_variant_edit returns a valid EditAnalysis structure."""
@@ -163,7 +166,11 @@ def test_analyze_variant_edit_structure(t: Test):
             original_id=variant_id,
         )
     except Exception as e:
-        if "llm" in str(e).lower() or "model" in str(e).lower() or "api" in str(e).lower():
+        if (
+            "llm" in str(e).lower()
+            or "model" in str(e).lower()
+            or "api" in str(e).lower()
+        ):
             print(f"  ⚠️  Skipping LLM-dependent test: {e}")
             return
         raise

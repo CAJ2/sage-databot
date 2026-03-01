@@ -1,5 +1,5 @@
 import json
-from typing import Iterator
+from typing import Any, Iterator
 import wmill
 import os
 import stat
@@ -8,7 +8,6 @@ from urllib.parse import urlparse, urlencode, parse_qs
 from sqlalchemy import create_engine, Engine, text, JSON
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.types import TypeDecorator
-import json
 from dataclasses import asdict
 
 
@@ -27,7 +26,7 @@ def create_crdb_uri(resource="f/db_config/db_sage") -> str:
     If TLS/SSL is used, the certs/key need to be extracted from the resource,
     stored as temporary files, and injected into the connection string.
     """
-    c: dict | None = wmill.get_resource(resource)
+    c: dict[str, Any] | None = wmill.get_resource(resource)
     if c is None:
         raise ValueError(f"Invalid resource '{resource}'")
 
@@ -85,7 +84,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class JSONData(TypeDecorator):
+class JSONData(TypeDecorator[Any]):
     impl = JSON
 
     def __init__(self, dataclass, *args, **kwargs):
@@ -109,7 +108,7 @@ def export_table_by_ids(
     table: str,
     ids: list[str],
     cols: str = "*",
-    schema: dict | None = None,
+    schema: dict[str, Any] | None = None,
     batch_size: int = 5000,
 ) -> Iterator[pl.DataFrame]:
     """

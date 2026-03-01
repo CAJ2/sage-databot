@@ -3,7 +3,6 @@ import wmill
 import httpx
 import json
 from http import cookies
-from urllib.parse import unquote
 
 from f.graphql.api_client.client import Client
 
@@ -44,7 +43,12 @@ def api_connect(extra_headers: dict[str, str] | None = None):
         if not result.me:
             raise ValueError("Failed to fetch current user: no me in response")
         me = result.me
-        user = {"id": me.id, "email": me.email, "name": me.name, "username": me.username}
+        user = {
+            "id": me.id,
+            "email": me.email,
+            "name": me.name,
+            "username": me.username,
+        }
     else:
         # Email/password auth
         r = httpx.post(
@@ -65,7 +69,9 @@ def api_connect(extra_headers: dict[str, str] | None = None):
         body = r.json()
         if "user" not in body:
             raise ValueError("Failed to sign in to the API: user key not found")
-        httpx_client = httpx.Client(base_url=api_url + "/graphql", cookies=cx, headers=headers)
+        httpx_client = httpx.Client(
+            base_url=api_url + "/graphql", cookies=cx, headers=headers
+        )
         user = body["user"]
         client = Client(http_client=httpx_client)
     # Test the API connection

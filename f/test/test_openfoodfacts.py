@@ -37,12 +37,14 @@ def _insert_test_off_product(engine, product_id: str):
                 "brands": "Test Brand",
                 "categories": "Test Category",
                 "lang": "en",
-                "product_name": json.dumps({
-                    "product_name": [
-                        {"lang": "en", "text": "Test Product for Integration"},
-                        {"lang": "main", "text": "Test Product for Integration"},
-                    ]
-                }),
+                "product_name": json.dumps(
+                    {
+                        "product_name": [
+                            {"lang": "en", "text": "Test Product for Integration"},
+                            {"lang": "main", "text": "Test Product for Integration"},
+                        ]
+                    }
+                ),
             },
         )
 
@@ -65,7 +67,9 @@ def test_off_product_insert_and_query(t: Test):
 
     try:
         with Session(engine) as session:
-            product = session.query(OFFProduct).where(OFFProduct.id == product_id).first()
+            product = (
+                session.query(OFFProduct).where(OFFProduct.id == product_id).first()
+            )
 
         assert product is not None, "Should find the test product"
         assert_eq(product.id, product_id)
@@ -73,7 +77,9 @@ def test_off_product_insert_and_query(t: Test):
         assert_eq(product.lang, "en")
         assert_true(product.product_name is not None, "Should have product_name")
         assert product.product_name is not None
-        assert_gt(len(product.product_name.product_name), 0, "Should have name translations")
+        assert_gt(
+            len(product.product_name.product_name), 0, "Should have name translations"
+        )
     finally:
         _cleanup_test_off_product(engine, product_id)
 
@@ -93,9 +99,11 @@ def test_off_variant_creation(t: Test):
 
     # Verify a variant was created (check DB for __test_ prefixed variant)
     with engine.begin() as conn:
-        row = conn.execute(text(
-            "SELECT id FROM public.variants WHERE id LIKE '__test_%' ORDER BY created_at DESC LIMIT 1"
-        )).fetchone()
+        row = conn.execute(
+            text(
+                "SELECT id FROM public.variants WHERE id LIKE '__test_%' ORDER BY created_at DESC LIMIT 1"
+            )
+        ).fetchone()
 
     if row:
         t.cleanup.track_entity("variants", row[0])

@@ -11,6 +11,7 @@ from f.context.context_types import EntityContext
 
 class FieldSuggestion(BaseModel):
     """A single AI-generated field value suggestion."""
+
     field: str
     suggested_value: str
     confidence: float = Field(ge=0.0, le=1.0)  # 0.0 – 1.0
@@ -19,6 +20,7 @@ class FieldSuggestion(BaseModel):
 
 class SuggestResult(BaseModel):
     """All field suggestions for a single entity, returned by the auto-suggest flow."""
+
     entity_name: str
     entity_id: str | None
     suggestions: list[FieldSuggestion]
@@ -26,6 +28,7 @@ class SuggestResult(BaseModel):
 
 class LLMSuggestOutput(BaseModel):
     """Structured output from the AI suggestion agent."""
+
     suggestions: list[FieldSuggestion]
 
 

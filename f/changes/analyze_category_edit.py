@@ -1,6 +1,7 @@
 # requirements: project
 
 import json
+from typing import Any
 
 from f.utils.general import llm_agent
 from f.utils.api import api_connect
@@ -11,8 +12,8 @@ def main(
     change_id: str,
     edit_id: str,
     entity_name: str,
-    create_changes: dict | None,
-    update_changes: dict | None,
+    create_changes: dict[str, Any] | None,
+    update_changes: dict[str, Any] | None,
     proposed_id: str | None,
     original_id: str | None,
 ) -> EditAnalysis:
@@ -29,7 +30,9 @@ def main(
     if entity_id:
         try:
             result = client.get_category_for_review(id=entity_id)
-            category_context = result.category.model_dump(by_alias=False) if result.category else None
+            category_context = (
+                result.category.model_dump(by_alias=False) if result.category else None
+            )
         except Exception as e:
             print(f"Could not fetch category context for {entity_id}: {e}")
 

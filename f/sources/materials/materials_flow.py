@@ -1,22 +1,22 @@
-from prefect import flow
+# requirements: project
+
 import polars as pl
 import networkx as nx
-from prefect_sqlalchemy import SqlAlchemyConnector
+from sqlalchemy import text
 
-from src.utils.db.crdb import db_write_dataframe
-from src.utils.logging.loggers import get_logger
+from f.utils.db.crdb import create_sql_engine, db_write_dataframe
+from f.utils.git import checkout_repo
 
 
-@flow
-def materials_flow():
+def main():
     """
-    This flow orchestrates the materials pipeline.
-    The main steps are: validation of the materials graph and SQL data loading.
+    Orchestrates the materials pipeline.
+    Validates the materials graph (DAG) and loads materials into CockroachDB.
     """
-    log = get_logger()
+    checkout_repo()
 
     materials_df = pl.read_csv(
-        "src/materials/materials.tsv", separator="\t", has_header=True
+        "databot/src/materials/materials.tsv", separator="\t", has_header=True
     )
     name_cols = {}
     desc_cols = {}
@@ -37,7 +37,7 @@ def materials_flow():
     )
     materials_df = materials_df.drop(desc_cols.values())
     mat_edge_df = pl.read_csv(
-        "src/materials/materials_edges.tsv", separator="\t", has_header=True
+        "databot/src/materials/materials_edges.tsv", separator="\t", has_header=True
     )
 
     # Add all nodes and edges to the graph and validate
@@ -50,9 +50,9 @@ def materials_flow():
     for row in mat_edge_df.iter_rows(named=True):
         graph.add_edge(row["id_from"], row["id_to"])
 
-    log.info(f"Number of nodes: {graph.number_of_nodes()}")
-    log.info(f"Number of edges: {graph.number_of_edges()}")
-    log.info("Running graph validation...")
+    print(f"Number of nodes: {graph.number_of_nodes()}")
+    print(f"Number of edges: {graph.number_of_edges()}")
+    print("Running graph validation...")
     if not nx.is_directed_acyclic_graph(graph):
         raise ValueError("Graph is not a directed acyclic graph (DAG)")
     if not nx.is_weakly_connected(graph):
@@ -63,11 +63,9 @@ def materials_flow():
             .to_series()
             .to_list()
         )
-        log.error(
-            f"Graph is not weakly connected. Smallest component: {named_smallest}"
-        )
+        print(f"Graph is not weakly connected. Smallest component: {named_smallest}")
         raise ValueError("Graph is not weakly connected")
-    log.info("Graph is a valid Materials DAG")
+    print("Graph is a valid Materials DAG")
 
     tree_df = pl.DataFrame(
         schema={
@@ -105,7 +103,7 @@ def materials_flow():
                 }
             )
         )
-    log.info(tree_df.glimpse())
+    print(tree_df.glimpse())
 
     db_write_dataframe(materials_df, "materials_load")
     db_write_dataframe(
@@ -115,41 +113,42 @@ def materials_flow():
         edges_df, "materials_edges_load", id_cols=["parent_id", "child_id"]
     )
 
-    crdb = SqlAlchemyConnector.load("crdb-sage")
-    crdb.execute("""
-        UPSERT INTO public.materials (id, updated_at, name, source, technical)
-        VALUES ('MATERIAL_ROOT', NOW(), '{"xx": "Material Root"}', '{}', FALSE);
-    """)
-    crdb.execute("""
-        INSERT INTO public.materials (id, created_at, updated_at, name, "desc", source, technical, shape)
-        SELECT id, NOW(), NOW(), name::JSONB, "desc"::JSONB, source::JSONB, technical::BOOLEAN, shape
-        FROM databot.materials_load
-        ON CONFLICT (id) DO UPDATE
-        SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
-            "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
-            source = EXCLUDED.source::JSONB,
-            technical = EXCLUDED.technical::BOOLEAN,
-            shape = EXCLUDED.shape,
-            updated_at = NOW();
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.materials_load;")
-    crdb.execute("""
-        UPSERT INTO public.material_tree (ancestor_id, descendant_id, depth)
-        SELECT ancestor_id, descendant_id, depth
-        FROM databot.materials_tree_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.materials_tree_load;")
-    crdb.execute("""
-        UPSERT INTO public.material_edges (parent_id, child_id)
-        SELECT parent_id, child_id
-        FROM databot.materials_edges_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.materials_edges_load;")
-
-
-if __name__ == "__main__":
-    from dotenv import load_dotenv
-
-    load_dotenv()
-
-    materials_flow()
+    engine = create_sql_engine()
+    with engine.begin() as crdb:
+        crdb.execute(
+            text("""
+            UPSERT INTO public.materials (id, updated_at, name, source, technical)
+            VALUES ('MATERIAL_ROOT', NOW(), '{"xx": "Material Root"}', '{}', FALSE);
+        """)
+        )
+        crdb.execute(
+            text("""
+            INSERT INTO public.materials (id, created_at, updated_at, name, "desc", source, technical, shape)
+            SELECT id, NOW(), NOW(), name::JSONB, "desc"::JSONB, source::JSONB, technical::BOOLEAN, shape
+            FROM databot.materials_load
+            ON CONFLICT (id) DO UPDATE
+            SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
+                "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
+                source = EXCLUDED.source::JSONB,
+                technical = EXCLUDED.technical::BOOLEAN,
+                shape = EXCLUDED.shape,
+                updated_at = NOW();
+        """)
+        )
+        crdb.execute(text("DROP TABLE IF EXISTS databot.materials_load;"))
+        crdb.execute(
+            text("""
+            UPSERT INTO public.material_tree (ancestor_id, descendant_id, depth)
+            SELECT ancestor_id, descendant_id, depth
+            FROM databot.materials_tree_load;
+        """)
+        )
+        crdb.execute(text("DROP TABLE IF EXISTS databot.materials_tree_load;"))
+        crdb.execute(
+            text("""
+            UPSERT INTO public.material_edges (parent_id, child_id)
+            SELECT parent_id, child_id
+            FROM databot.materials_edges_load;
+        """)
+        )
+        crdb.execute(text("DROP TABLE IF EXISTS databot.materials_edges_load;"))

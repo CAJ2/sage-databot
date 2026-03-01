@@ -1,6 +1,7 @@
 # requirements: project
 
 import json
+from typing import Any
 
 from pydantic import BaseModel
 from pydantic_ai import Agent
@@ -15,6 +16,7 @@ class FieldAnalysis(BaseModel):
 
 class LLMEditVerdict(BaseModel):
     """Structured output returned by the AI review agent."""
+
     approved: bool
     reasoning: str
     field_analyses: list[FieldAnalysis] = []
@@ -22,6 +24,7 @@ class LLMEditVerdict(BaseModel):
 
 class EditAnalysis(BaseModel):
     """Result of analyzing a single Edit within a Change. Returned by each analyzer script."""
+
     edit_id: str
     entity_name: str
     entity_id: str | None = None
@@ -32,6 +35,7 @@ class EditAnalysis(BaseModel):
 
 class ReviewSummary(BaseModel):
     """Final review outcome written to the Change record. Returned by the write-results script."""
+
     change_id: str
     status: str  # APPROVED or REJECTED
     overall_approved: bool
@@ -62,7 +66,7 @@ def analyze_edit(
     entity_name: str,
     entity_id: str | None,
     change_description: str,
-    context: dict,
+    context: dict[str, Any],
     model: Model,
     prompt_hints: str = "",
 ) -> EditAnalysis:
@@ -71,7 +75,9 @@ def analyze_edit(
     prompt_hints is optional model-specific guidance injected into the prompt.
     """
     context_str = json.dumps(context, indent=2, default=str)
-    hints_section = f"\nMODEL-SPECIFIC GUIDANCE:\n{prompt_hints}\n" if prompt_hints else ""
+    hints_section = (
+        f"\nMODEL-SPECIFIC GUIDANCE:\n{prompt_hints}\n" if prompt_hints else ""
+    )
     prompt = (
         f"Review the following proposed change to a {entity_name} record.\n\n"
         f"CHANGE DESCRIPTION:\n{change_description}\n\n"

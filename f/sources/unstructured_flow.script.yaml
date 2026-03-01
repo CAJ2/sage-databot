@@ -1,0 +1,15 @@
+summary: ''
+description: ''
+lock: '!inline f/sources/unstructured_flow.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    source_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - source_id

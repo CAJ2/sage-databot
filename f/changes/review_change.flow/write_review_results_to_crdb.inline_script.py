@@ -61,7 +61,9 @@ def main(change_id: str, edit_analyses: list[EditAnalysis]) -> ReviewSummary:
         change.updated_at = datetime.now(timezone.utc)
         session.commit()
 
-    print(f"Updated change {change_id}: status={new_status.value}, {len(results)} edits analyzed")
+    print(
+        f"Updated change {change_id}: status={new_status.value}, {len(results)} edits analyzed"
+    )
 
     # Also update status via GraphQL API for consistency
     try:

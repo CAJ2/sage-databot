@@ -1,5 +1,7 @@
 # requirements: project
 
+from typing import Any
+
 from f.context.context_types import ContextMode, EntityContext
 from f.utils.api import api_connect
 
@@ -15,8 +17,8 @@ def main(
     """
     client, _ = api_connect()
 
-    entity_data: dict = {}
-    related_data: dict = {}
+    entity_data: dict[str, Any] = {}
+    related_data: dict[str, Any] = {}
 
     try:
         result = client.get_item_for_review(id=entity_id)
@@ -33,7 +35,11 @@ def main(
             "- Items are generic types (e.g. 'Oat Milk'); Variants are specific products."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for an Item, consider:\n"
             "- The name should represent a generic product type, not a brand.\n"

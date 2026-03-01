@@ -73,9 +73,7 @@ def categories_flow():
             .to_series()
             .to_list()
         )
-        print(
-            f"Graph is not weakly connected. Smallest component: {named_smallest}"
-        )
+        print(f"Graph is not weakly connected. Smallest component: {named_smallest}")
         raise ValueError("Graph is not weakly connected")
     print("Graph is a valid categories DAG")
 
@@ -127,11 +125,14 @@ def categories_flow():
 
     engine = create_sql_engine()
     with engine.begin() as crdb:
-        crdb.execute(text("""
+        crdb.execute(
+            text("""
             UPSERT INTO public.categories (id, updated_at, name)
             VALUES ('CATEGORY_ROOT', NOW(), '{"xx": "Category Root"}');
-        """))
-        crdb.execute(text("""
+        """)
+        )
+        crdb.execute(
+            text("""
             INSERT INTO public.categories (id, created_at, updated_at, name, "desc_short", "desc", image_url)
             SELECT id, NOW(), NOW(), name::JSONB, "desc_short"::JSONB, "desc"::JSONB, image_url::STRING
             FROM databot.categories_load
@@ -141,20 +142,26 @@ def categories_flow():
                 "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
                 image_url = EXCLUDED.image_url::STRING,
                 updated_at = NOW();
-        """))
+        """)
+        )
         crdb.execute(text("DROP TABLE IF EXISTS databot.categories_load;"))
-        crdb.execute(text("""
+        crdb.execute(
+            text("""
             UPSERT INTO public.category_tree (ancestor_id, descendant_id, depth)
             SELECT ancestor_id, descendant_id, depth
             FROM databot.categories_tree_load;
-        """))
+        """)
+        )
         crdb.execute(text("DROP TABLE IF EXISTS databot.categories_tree_load;"))
-        crdb.execute(text("""
+        crdb.execute(
+            text("""
             UPSERT INTO public.category_edges (parent_id, child_id)
             SELECT parent_id, child_id
             FROM databot.categories_edges_load;
-        """))
+        """)
+        )
         crdb.execute(text("DROP TABLE IF EXISTS databot.categories_edges_load;"))
+
 
 def main():
     categories_flow()

@@ -1,6 +1,6 @@
 # requirements: project
 
-from typing import cast
+from typing import Any, cast
 import os
 import polars as pl
 import osmium
@@ -64,12 +64,12 @@ def transform_osm(filepath: str):
     pbf = (
         osmium.FileProcessor(filepath)
         .with_locations()
-        .with_filter(osmium.filter.TagFilter(*waste_tags))  # type: ignore
+        .with_filter(osmium.filter.TagFilter(*waste_tags))  # pyright: ignore[reportAttributeAccessIssue]
     )
     rows = []
     total = 0
     for o in pbf:
-        o = cast(osm.OSMObject, o)
+        o = cast(osm.OSMObject[Any], o)
         if o.is_node():
             o = cast(osm.Node, o)
             node = (

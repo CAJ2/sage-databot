@@ -119,8 +119,10 @@ class CleanupTracker:
                         {"pattern": "__test_%"},
                     )
                     if result.rowcount > 0:
-                        print(f"[cleanup] Deleted {result.rowcount} __test_ rows from {table}")
-            except Exception as e:
+                        print(
+                            f"[cleanup] Deleted {result.rowcount} __test_ rows from {table}"
+                        )
+            except Exception:
                 # Table might not exist, that's fine
                 pass
 
@@ -133,7 +135,9 @@ class CleanupTracker:
                         {"pattern": "__test_%"},
                     )
                     if result.rowcount > 0:
-                        print(f"[cleanup] Deleted {result.rowcount} __test_ rows from {table}.{col}")
+                        print(
+                            f"[cleanup] Deleted {result.rowcount} __test_ rows from {table}.{col}"
+                        )
             except Exception:
                 pass
 
@@ -256,10 +260,12 @@ class DBTracker:
     def _on_execute(self, conn, cursor, statement, parameters, context, executemany):
         stmt_upper = statement.strip().upper()
         if stmt_upper.startswith(("INSERT", "UPDATE", "DELETE", "UPSERT")):
-            self.operations.append({
-                "statement": statement[:500],  # truncate for readability
-                "type": stmt_upper.split()[0],
-            })
+            self.operations.append(
+                {
+                    "statement": statement[:500],  # truncate for readability
+                    "type": stmt_upper.split()[0],
+                }
+            )
 
     def detach(self, engine: Engine):
         """Stop listening to engine events."""

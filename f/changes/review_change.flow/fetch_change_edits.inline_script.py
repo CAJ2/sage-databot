@@ -1,5 +1,7 @@
 # requirements: project
 
+from typing import Any
+
 from pydantic import BaseModel
 
 from f.utils.api import api_connect
@@ -7,12 +9,13 @@ from f.utils.api import api_connect
 
 class ChangeEditInput(BaseModel):
     """Input data for a single edit, passed into the for-loop iterator."""
+
     change_id: str
     edit_id: str
     entity_name: str
     entity_id: str | None = None  # resolved from original_id or proposed_id
-    create_changes: dict | None = None
-    update_changes: dict | None = None
+    create_changes: dict[str, Any] | None = None
+    update_changes: dict[str, Any] | None = None
 
 
 def main(change_id: str) -> list[ChangeEditInput]:
@@ -46,8 +49,8 @@ def main(change_id: str) -> list[ChangeEditInput]:
                 edit_id=edit.id or "",
                 entity_name=edit.entity_name,
                 entity_id=entity_id,
-                create_changes=edit.create_changes,
-                update_changes=edit.update_changes,
+                create_changes=edit.create_input,
+                update_changes=edit.update_input,
             )
         )
 

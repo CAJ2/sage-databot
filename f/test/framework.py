@@ -53,7 +53,9 @@ class TestSuite:
         try:
             test_fn(t)
             elapsed = (time.monotonic() - start) * 1000
-            self._results.append(TestResult(name=name, passed=True, duration_ms=elapsed))
+            self._results.append(
+                TestResult(name=name, passed=True, duration_ms=elapsed)
+            )
             print(f"  ✅ {name} ({elapsed:.0f}ms)")
         except AssertionError as e:
             elapsed = (time.monotonic() - start) * 1000
@@ -102,6 +104,7 @@ class TestSuite:
 
 
 # --- Assertion helpers ---
+
 
 def assert_eq(actual, expected, msg: str = ""):
     """Assert that actual == expected."""
@@ -152,7 +155,9 @@ def assert_raises(exc_type, fn, *args, **kwargs):
     except exc_type:
         return
     except Exception as e:
-        raise AssertionError(f"Expected {exc_type.__name__}, got {type(e).__name__}: {e}")
+        raise AssertionError(
+            f"Expected {exc_type.__name__}, got {type(e).__name__}: {e}"
+        )
     raise AssertionError(f"Expected {exc_type.__name__}, but no exception was raised")
 
 
@@ -201,6 +206,7 @@ def main():
     def test_assert_raises_pass(t: Test):
         def raise_value_error():
             raise ValueError("test")
+
         assert_raises(ValueError, raise_value_error)
 
     suite.run(test_assert_eq_pass)

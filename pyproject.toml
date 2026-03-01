@@ -3,14 +3,13 @@ name = "sage-databot"
 version = "0.1.0"
 description = "Collects and parses information for the Sage database"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
   "sqlalchemy>=2.0.45",
   "sqlalchemy-cockroachdb>=2.0.3",
   "psycopg[binary]>=3.3.2",
   "python-dotenv>=1.2.1",
   "ruff>=0.14.10",
-  "basedpyright>=1.29.1",
   "gitpython>=3.1.44",
   "duckdb>=1.4.3",
   "polars>=1.36.1",
@@ -38,7 +37,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-extract = ["unstructured[all-docs]>=0.18.26", "scrapy>=2.14.0", "spacy>=3.8.11"]
+all = ["sage-databot[extract]"]
+extract = ["unstructured[all-docs]>=0.21.5", "scrapy>=2.14.0", "spacy>=3.8.11"]
 
 [build-system]
 build-backend = "hatchling.build"
@@ -61,8 +61,17 @@ packages = ["src/sage_databot"]
 deps = "python src/pyproject_deps.py"
 graphql = "python src/graphql_gen.py"
 nanoids = "python src/scripts/gen_ids.py"
-lint = "ruff check ."
+lint = "ruff check --fix"
+fmt = "ruff format && npx oxfmt"
 typecheck = "basedpyright"
+
+[tool.pixi.dependencies]
+prek = ">=0.3.4,<0.4"
+basedpyright = ">=1.38.2,<2"
+ruff = ">=0.15.2,<0.16"
+
+[tool.pixi.environments]
+default = { features = ["all"], solve-group = "default" }
 
 [tool.ariadne-codegen]
 schema_path = "f/graphql/schema.gql"

@@ -14,6 +14,7 @@ def import_gql_from_repo():
     output_path = root / "f/graphql/schema.gql"
     urlretrieve(url, output_path)
 
+
 if __name__ == "__main__":
     import_gql_from_repo()
     main.main()

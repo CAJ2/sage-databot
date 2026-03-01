@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Any
 
 import wmill
 import yaml
@@ -19,7 +20,8 @@ def is_production() -> bool:
     env = os.environ.get("WM_WORKSPACE")
     return env == "sage-prod"
 
-def find_path_or_default(cfg: dict) -> str:
+
+def find_path_or_default(cfg: dict[str, Any]) -> str:
     """
     Looks for a config value based on:
     1. The current script path (from WM_JOB_PATH)
@@ -35,7 +37,10 @@ def find_path_or_default(cfg: dict) -> str:
     elif "default" in cfg:
         return cfg["default"]
     else:
-        raise ValueError(f"No path found for script {script_path} and no default provided.")
+        raise ValueError(
+            f"No path found for script {script_path} and no default provided."
+        )
+
 
 def llm_agent() -> Model:
     models = wmill.get_variable("llm_models")
@@ -44,12 +49,16 @@ def llm_agent() -> Model:
     if model_name.startswith("gateway/"):
         # Pydantic AI Gateway
         provider_name = normalize_gateway_provider(model_name)
-        provider = gateway_provider(provider_name, api_key=wmill.get_variable("llm_pydantic_gateway_key"))
+        provider = gateway_provider(
+            provider_name, api_key=wmill.get_variable("llm_pydantic_gateway_key")
+        )
         if isinstance(provider, GoogleProvider):
-            model = GoogleModel(model_name.split(':')[1], provider=provider)
+            model = GoogleModel(model_name.split(":")[1], provider=provider)
             return model
         else:
-            raise ValueError(f"Gateway provider {provider_name} is not supported for llm_agent.")
+            raise ValueError(
+                f"Gateway provider {provider_name} is not supported for llm_agent."
+            )
     try:
         ollama = wmill.get_variable("llm_ollama_api")
     except Exception:

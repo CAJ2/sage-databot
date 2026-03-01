@@ -1,4 +1,5 @@
 import inspect
+from typing import Any
 from sqlalchemy import JSON
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.types import TypeDecorator
@@ -10,7 +11,7 @@ class Base(DeclarativeBase):
     pass
 
 
-class JSONData(TypeDecorator):
+class JSONData(TypeDecorator[Any]):
     impl = JSON
 
     def __init__(self, dataclass, *args, **kwargs):
@@ -36,7 +37,7 @@ class JSONData(TypeDecorator):
         return value
 
 
-class Translated(TypeDecorator):
+class Translated(TypeDecorator[Any]):
     impl = JSON
 
     def __init__(self, *args, **kwargs):

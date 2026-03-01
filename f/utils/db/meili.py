@@ -1,5 +1,7 @@
+from typing import Any
 import wmill
 import meilisearch
+from meilisearch.errors import MeilisearchApiError
 from stopwordsiso import stopwords
 import copy
 
@@ -21,6 +23,7 @@ index_settings = {
     ),
 }
 
+
 def meili_connect() -> meilisearch.Client:
     # Connect to Meilisearch
     # Connect to Meilisearch
@@ -28,7 +31,7 @@ def meili_connect() -> meilisearch.Client:
     if meili_res is None:
         raise ValueError("Unable to find meilisearch resource")
     meili = meilisearch.Client(
-        meili_res.get("api_url"),
+        str(meili_res["api_url"]),
         api_key=meili_res.get("api_key", None),
     )
     health = meili.is_healthy()
@@ -36,10 +39,13 @@ def meili_connect() -> meilisearch.Client:
         raise ValueError("Meilisearch is not healthy or not reachable.")
     return meili
 
-def check_create_index(meili: meilisearch.Client, index_name: str, settings: dict = {}):
+
+def check_create_index(
+    meili: meilisearch.Client, index_name: str, settings: dict[str, Any] = {}
+):
     try:
         meili.get_index(index_name)
-    except meilisearch.errors.MeiliSearchApiError:
+    except MeilisearchApiError:
         return
     op = meili.create_index(index_name, {"primaryKey": "id"})
     meili.wait_for_task(op.task_uid, timeout_in_ms=120000, interval_in_ms=500)

@@ -17,6 +17,12 @@ After writing a script, you do not need to create .lock and .yaml files manually
 
 You can use `wmill resource-type list --schema` to list all resource types available. You should use that to know the type of the resource you need to use in your script. You can use grep if the output is too long.
 
+## Important Tips
+
+- Only top level folders under `f/` can have `folder.meta.yaml` files. Subfolders can be created (and are a good idea for organization) but do not include a `folder.meta.yaml` file.
+- Non-source files (`.tsv`, `.json`, `.txt`, `.jinja`, etc.) should only be created under the `src/` hierarchy. If you reference once of these files in a script/flow under `f/`, you must use checkout_repo() within the script and access it under `databot/src/` in the worker environment.
+- Running `pixi run prek run` after making changes is a good idea to ensure there are no critical errors to fix and files are properly formatted.
+
 # Windmill Script Writing Guide
 
 ## General Principles

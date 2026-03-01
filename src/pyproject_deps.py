@@ -9,6 +9,7 @@ def extract_python_version(requires_python: str) -> str:
     m = re.search(r"(\d+\.\d+)", requires_python)
     return m.group(1) if m else "3.12"
 
+
 def main():
     root = Path(__file__).parents[1]
     pyproject = root / "pyproject.toml"
@@ -24,7 +25,9 @@ def main():
         f.write(f"# py: {py_version}\n")
     subprocess.run(
         f"uv export --no-hashes --format requirements-txt -q >> {out_path} && sed -i '' '/-e \\./d' {out_path}",
-        shell=True, check=True, cwd=root
+        shell=True,
+        check=True,
+        cwd=root,
     )
     # Optional dependencies
     opt_deps = data.get("project", {}).get("optional-dependencies", {})
@@ -34,8 +37,11 @@ def main():
             f.write(f"# py: {py_version}\n")
         subprocess.run(
             f"uv export --no-hashes --format requirements-txt -q --extra {name} >> {out_path} && sed -i '' '/-e \\./d' {out_path}",
-            shell=True, check=True, cwd=root
+            shell=True,
+            check=True,
+            cwd=root,
         )
+
 
 if __name__ == "__main__":
     main()

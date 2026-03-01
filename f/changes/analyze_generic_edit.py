@@ -1,6 +1,7 @@
 # requirements: project
 
 import json
+from typing import Any
 
 from f.utils.general import llm_agent
 from f.changes.ai_review import EditAnalysis, analyze_edit
@@ -10,8 +11,8 @@ def main(
     change_id: str,
     edit_id: str,
     entity_name: str,
-    create_changes: dict | None,
-    update_changes: dict | None,
+    create_changes: dict[str, Any] | None,
+    update_changes: dict[str, Any] | None,
     proposed_id: str | None,
     original_id: str | None,
 ) -> EditAnalysis:

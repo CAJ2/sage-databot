@@ -1,6 +1,7 @@
 # requirements: project
 
 import json
+from typing import Any
 
 from f.changes.ai_review import EditAnalysis, analyze_edit
 from f.context.context_types import EntityContext
@@ -8,10 +9,10 @@ from f.utils.general import llm_agent
 
 
 def main(
-    entity_context: dict,
+    entity_context: dict[str, Any],
     edit_id: str,
-    create_changes: dict | None,
-    update_changes: dict | None,
+    create_changes: dict[str, Any] | None,
+    update_changes: dict[str, Any] | None,
 ) -> EditAnalysis:
     """
     Generic AI review of a single edit using pre-fetched EntityContext.

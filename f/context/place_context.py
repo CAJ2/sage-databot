@@ -1,5 +1,7 @@
 # requirements: project
 
+from typing import Any
+
 from f.context.context_types import ContextMode, EntityContext
 from f.utils.api import api_connect
 
@@ -15,8 +17,8 @@ def main(
     """
     client, _ = api_connect()
 
-    entity_data: dict = {}
-    related_data: dict = {}
+    entity_data: dict[str, Any] = {}
+    related_data: dict[str, Any] = {}
 
     try:
         result = client.get_place_for_review(id=entity_id)
@@ -33,7 +35,11 @@ def main(
             "- Whether the place type (factory, warehouse, farm, etc.) matches the description."
         )
     else:
-        fields_hint = f" Focus especially on: {', '.join(target_fields)}." if target_fields else ""
+        fields_hint = (
+            f" Focus especially on: {', '.join(target_fields)}."
+            if target_fields
+            else ""
+        )
         prompt_hints = (
             "When suggesting values for a Place, consider:\n"
             "- The name should identify the facility or location clearly.\n"

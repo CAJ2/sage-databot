@@ -1,6 +1,7 @@
 # requirements: project
 
 import json
+from typing import Any
 
 from f.utils.general import llm_agent
 from f.utils.api import api_connect
@@ -11,8 +12,8 @@ def main(
     change_id: str,
     edit_id: str,
     entity_name: str,
-    create_changes: dict | None,
-    update_changes: dict | None,
+    create_changes: dict[str, Any] | None,
+    update_changes: dict[str, Any] | None,
     proposed_id: str | None,
     original_id: str | None,
 ) -> EditAnalysis:
@@ -29,12 +30,16 @@ def main(
     if entity_id:
         try:
             result = client.get_place_for_review(id=entity_id)
-            place_context = result.place.model_dump(by_alias=False) if result.place else None
+            place_context = (
+                result.place.model_dump(by_alias=False) if result.place else None
+            )
         except Exception as e:
             print(f"Could not fetch place context for {entity_id}: {e}")
 
     if create_changes:
-        change_description = f"CREATE a new Place with fields:\n{json.dumps(create_changes, indent=2)}"
+        change_description = (
+            f"CREATE a new Place with fields:\n{json.dumps(create_changes, indent=2)}"
+        )
     elif update_changes:
         change_description = f"UPDATE Place (id={entity_id}).\nChanged fields: {json.dumps(update_changes, indent=2)}"
     else:

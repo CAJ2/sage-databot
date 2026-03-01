@@ -8,6 +8,7 @@ import json
 from f.utils.db.meili import meili_connect, check_create_index
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 
+
 def index_regions(
     crdb: Engine,
     meili: meilisearch.Client,
@@ -38,6 +39,7 @@ def index_regions(
                 "lng": prop_json["geom:longitude"],
             }
         meili.index("regions").add_documents(docs)
+
 
 def main(keys: list[str]):
     crdb = create_sql_engine()
