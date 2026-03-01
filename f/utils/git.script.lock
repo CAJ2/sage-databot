@@ -13,8 +13,8 @@ attrs==25.4.0
 authlib==1.6.8
 beartype==0.22.9
 beautifulsoup4==4.14.3
-boto3==1.42.58
-botocore==1.42.58
+boto3==1.42.59
+botocore==1.42.59
 cachetools==7.0.1
 caio==0.9.25
 certifi==2026.2.25
@@ -34,7 +34,7 @@ exceptiongroup==1.3.1
 executing==2.2.1
 fastavro==1.12.1
 fastmcp==3.0.2
-filelock==3.24.3
+filelock==3.25.0
 frozenlist==1.8.0
 fsspec==2026.2.0
 genai-prices==0.0.55
@@ -46,7 +46,7 @@ griffelib==2.0.0
 groq==1.0.0
 grpcio==1.78.0
 h11==0.16.0
-hf-xet==1.3.1
+hf-xet==1.3.2
 httpcore==1.0.9
 httpx==0.28.1
 httpx-sse==0.4.3
@@ -62,7 +62,7 @@ jiter==0.13.0
 jmespath==1.1.0
 jsonref==1.1.0
 jsonschema==4.26.0
-jsonschema-path==0.4.2
+jsonschema-path==0.4.4
 jsonschema-specifications==2025.9.1
 keyring==25.7.0
 logfire==4.25.0
@@ -106,11 +106,11 @@ pygments==2.19.2
 pyjwt==2.11.0
 pyperclip==1.11.0
 python-dateutil==2.9.0.post0
-python-dotenv==1.2.1
+python-dotenv==1.2.2
 python-multipart==0.0.22
 pyyaml==6.0.3
 referencing==0.37.0
-regex==2026.2.19
+regex==2026.2.28
 requests==2.32.5
 rich==14.3.3
 rich-rst==1.3.2
@@ -122,7 +122,7 @@ shellingham==1.5.4
 six==1.17.0
 sniffio==1.3.1
 soupsieve==2.8.3
-sse-starlette==3.2.0
+sse-starlette==3.3.2
 starlette==0.52.1
 temporalio==1.20.0
 tenacity==9.1.4
@@ -139,7 +139,7 @@ uvicorn==0.41.0
 watchfiles==1.1.1
 wcwidth==0.6.0
 websockets==16.0
-wmill==1.646.0
+wmill==1.647.0
 wrapt==1.17.3
 xai-sdk==1.7.0
 yarl==1.22.0
