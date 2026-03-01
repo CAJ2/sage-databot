@@ -31,7 +31,7 @@ jobs:
           npm install -g windmill-cli
           wmill --version
 
-      - name: Fork workspace (create if not exists)
+      - name: Fork workspace (delete if exists, then create)
         run: |
           EXISTS=$(curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
@@ -39,15 +39,17 @@ jobs:
             -d "{\"id\": \"${{ env.TEST_WS_ID }}\"}" \
             "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
           if [ "$EXISTS" = "true" ]; then
-            echo "Workspace ${{ env.TEST_WS_ID }} already exists, reusing"
-          else
-            curl -sf -X POST \
+            curl -sf -X DELETE \
               -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-              -H "Content-Type: application/json" \
-              -d "{\"id\": \"${{ env.TEST_WS_ID }}\", \"name\": \"${{ env.TEST_WS_ID }}\"}" \
-              "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
-            echo "Created forked workspace: ${{ env.TEST_WS_ID }}"
+              "${{ env.WMILL_BASE_URL }}/api/workspaces/${{ env.TEST_WS_ID }}"
+            echo "Deleted existing workspace: ${{ env.TEST_WS_ID }}"
           fi
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"id\": \"${{ env.TEST_WS_ID }}\", \"name\": \"${{ env.TEST_WS_ID }}\"}" \
+            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
+          echo "Created forked workspace: ${{ env.TEST_WS_ID }}"
 
       - name: Sync push to forked workspace
         run: |
