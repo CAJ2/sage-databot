@@ -47,7 +47,7 @@ def categories_flow():
     )
     categories_df = categories_df.drop(desc_cols.values())
     cat_edge_df = pl.read_csv(
-        "f/categories/categories_edges.tsv", separator="\t", has_header=True
+        "databot/src/categories/categories_edges.tsv", separator="\t", has_header=True
     )
 
     # Add all nodes and edges to the graph and validate

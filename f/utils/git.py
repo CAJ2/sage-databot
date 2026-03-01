@@ -15,6 +15,11 @@ def checkout_repo(branch: str = "dev") -> Path:
     Clones the databot git repository and checks out the specified branch.
     Returns the path to the cloned repository.
     """
+    # Check if the repo already exists
+    if Path("./databot").exists():
+        print("Databot repo already exists, skipping clone.")
+        return Path("./databot")
+
     if is_production() and branch != "main":
         raise ValueError("In production, only the 'main' branch can be cloned.")
 
