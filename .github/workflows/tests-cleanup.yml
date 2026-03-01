@@ -14,9 +14,16 @@ jobs:
       - name: Delete forked workspace
         run: |
           WS_ID="wm-fork-test-pr-${{ github.event.pull_request.number }}"
-          curl -sf -X DELETE \
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
             -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            "${{ env.WMILL_BASE_URL }}/api/workspaces/$WS_ID"
-          echo "Deleted workspace: $WS_ID"
+            "${{ env.WMILL_BASE_URL }}/api/workspaces/delete/$WS_ID?only_delete_forks=true")
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "Deleted workspace: $WS_ID"
+          elif [ "$HTTP_STATUS" = "404" ]; then
+            echo "Workspace $WS_ID not found (already deleted or never created)"
+          else
+            echo "Warning: DELETE returned HTTP $HTTP_STATUS for workspace $WS_ID"
+            exit 1
+          fi
         continue-on-error: true # Don't fail if workspace doesn't exist
 

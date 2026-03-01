@@ -39,12 +39,16 @@ jobs:
             -d "{\"id\": \"${{ env.TEST_WS_ID }}\"}" \
             "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
           if [ "$EXISTS" = "true" ]; then
-            curl -sf -X DELETE \
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
               -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-              "${{ env.WMILL_BASE_URL }}/api/workspaces/${{ env.TEST_WS_ID }}"
-            echo "Deleted existing workspace: ${{ env.TEST_WS_ID }}"
+              "${{ env.WMILL_BASE_URL }}/api/workspaces/delete/${{ env.TEST_WS_ID }}?only_delete_forks=true")
+            if [ "$HTTP_STATUS" = "200" ]; then
+              echo "Deleted existing workspace: ${{ env.TEST_WS_ID }}"
+            else
+              echo "Warning: DELETE returned HTTP $HTTP_STATUS — will attempt create anyway"
+            fi
           fi
-          curl -sf -X POST \
+          curl -s --fail-with-body -X POST \
             -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
             -H "Content-Type: application/json" \
             -d "{\"id\": \"${{ env.TEST_WS_ID }}\", \"name\": \"${{ env.TEST_WS_ID }}\"}" \
