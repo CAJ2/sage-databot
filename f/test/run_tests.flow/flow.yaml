@@ -7,86 +7,86 @@ description: |
 value:
   modules:
     - id: a
-      summary: Safety check - verify test workspace
       value:
+        lock: '!inline safety_check_-_verify_test_workspace.inline_script.lock'
         type: rawscript
         content: '!inline safety_check_-_verify_test_workspace.inline_script.py'
-        input_transforms: {}
-        lock: '!inline safety_check_-_verify_test_workspace.inline_script.lock'
         language: python3
+        input_transforms: {}
+      summary: Safety check - verify test workspace
     - id: b
-      summary: Create pending GitHub check run
       value:
+        path: f/test/github_status
         type: script
         input_transforms:
-          head_sha:
-            type: javascript
-            expr: flow_input.head_sha
           repo:
-            type: javascript
             expr: flow_input.repo
-        path: f/test/github_status
+            type: javascript
+          head_sha:
+            expr: flow_input.head_sha
+            type: javascript
+      summary: Create pending GitHub check run
     - id: c
-      summary: Discover test scripts
       value:
+        lock: '!inline discover_test_scripts.inline_script.lock'
         type: rawscript
         content: '!inline discover_test_scripts.inline_script.py'
+        language: python3
         input_transforms:
           head_sha:
-            type: javascript
             expr: flow_input.head_sha
-        lock: '!inline discover_test_scripts.inline_script.lock'
-        language: python3
+            type: javascript
+      summary: Discover test scripts
     - id: d
-      summary: Run all test scripts
       value:
         type: forloopflow
         modules:
           - id: e
-            summary: Run test script
             value:
+              lock: '!inline run_test_script.inline_script.lock'
               type: rawscript
               content: '!inline run_test_script.inline_script.py'
+              language: python3
               input_transforms:
                 test_script:
-                  type: javascript
                   expr: flow_input.iter.value
-              lock: '!inline run_test_script.inline_script.lock'
-              language: python3
+                  type: javascript
+            summary: Run test script
         iterator:
-          type: javascript
           expr: results.c
+          type: javascript
         parallel: false
         skip_failures: true
+      summary: Run all test scripts
     - id: f
-      summary: Format results
       value:
+        lock: '!inline format_results.inline_script.lock'
         type: rawscript
         content: '!inline format_results.inline_script.py'
+        language: python3
         input_transforms:
           test_results:
-            type: javascript
             expr: results.d
-        lock: '!inline format_results.inline_script.lock'
-        language: python3
+            type: javascript
+      summary: Format results
     - id: g
-      summary: Report results to GitHub
       value:
+        path: f/test/github_status
         type: script
         input_transforms:
-          check_run_id:
-            type: javascript
-            expr: results.b.check_run_id
-          pr_number:
-            type: javascript
-            expr: flow_input.pr_number
           repo:
-            type: javascript
             expr: flow_input.repo
-          results:
             type: javascript
+          results:
             expr: results.f
-        path: f/test/github_status
+            type: javascript
+          pr_number:
+            expr: flow_input.pr_number
+            type: javascript
+          check_run_id:
+            expr: results.b.check_run_id
+            type: javascript
+      summary: Report results to GitHub
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object

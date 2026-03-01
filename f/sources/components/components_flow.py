@@ -1,28 +1,25 @@
-from prefect import flow
+# requirements: project
+
 import polars as pl
-from prefect.variables import Variable
-from prefect_sqlalchemy import SqlAlchemyConnector
-import meilisearch
+from sqlalchemy import text
 
-from src.cli import setup_cli
-from src.utils.db.crdb import db_write_dataframe
-from src.utils.logging.loggers import get_logger
+from f.utils.db.crdb import create_sql_engine, db_write_dataframe
+from f.utils.db.meili import meili_connect
+from f.utils.git import checkout_repo
 
 
-@flow
-def components_flow(**kwargs):
+def main():
     """
-    This flow orchestrates the components pipeline.
+    Orchestrates the components pipeline.
+    Reads components from the TSV file, resolves material IDs via Meilisearch,
+    and loads the data into CockroachDB.
     """
-    log = get_logger()
+    checkout_repo()
 
-    # Connect to Meilisearch
-    meili = meilisearch.Client(
-        Variable.get("meilisearch", default="http://localhost:7700"),
-    )
+    meili = meili_connect()
 
     comp_df = pl.read_csv(
-        "src/components/components.tsv", separator="\t", has_header=True
+        "databot/src/components/components.tsv", separator="\t", has_header=True
     )
     name_cols = {}
     desc_cols = {}
@@ -55,7 +52,7 @@ def components_flow(**kwargs):
         .map_elements(get_primary_mat)
         .alias("primary_material_id")
     )
-    comp_df = comp_df.drop_nulls(pl.col("primary_material_id")).with_columns(
+    comp_df = comp_df.drop_nulls("primary_material_id").with_columns(
         pl.lit(None).cast(pl.String).alias("region_id"),
         pl.lit(None).cast(pl.String).alias("visual"),
     )
@@ -70,9 +67,9 @@ def components_flow(**kwargs):
         .otherwise(pl.col("material_fraction"))
         .alias("material_fraction"),
     )
-    log.info(f"Df: {comp_mat_df.drop_nulls(pl.col('materials')).head(50)}")
+    print(f"Df: {comp_mat_df.drop_nulls('materials').head(50)}")
     comp_mat_df = (
-        comp_mat_df.drop_nulls(pl.col("materials"))
+        comp_mat_df.drop_nulls("materials")
         .explode(["materials", "material_fraction"])
         .with_columns(pl.col("material_fraction").cast(pl.Float32))
     )
@@ -87,12 +84,10 @@ def components_flow(**kwargs):
     comp_mat_df = comp_mat_df.with_columns(
         comp_mat_df.select(pl.col("materials")).map_rows(get_mat)
     )
-    comp_mat_df = comp_mat_df.rename({"map": "material_id"}).drop_nulls(
-        pl.col("material_id")
-    )
+    comp_mat_df = comp_mat_df.rename({"map": "material_id"}).drop_nulls("material_id")
     comp_mat_df = comp_mat_df.select(
         pl.col("component_id", "material_id", "material_fraction")
-    ).drop_nulls(pl.col("material_id"))
+    ).drop_nulls("material_id")
 
     db_write_dataframe(comp_df, "components_load")
     db_write_dataframe(
@@ -101,27 +96,28 @@ def components_flow(**kwargs):
         id_cols=["component_id", "material_id"],
     )
 
-    crdb = SqlAlchemyConnector.load("crdb-sage")
-    crdb.execute("""
-        INSERT INTO public.components (id, created_at, updated_at, name, "desc", region_id, primary_material_id, visual)
-        SELECT id, NOW(), NOW(), name::JSONB, "desc"::JSONB, region_id, primary_material_id, visual::JSONB
-        FROM databot.components_load
-        ON CONFLICT (id) DO UPDATE
-        SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
-            "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
-            region_id = EXCLUDED.region_id,
-            primary_material_id = EXCLUDED.primary_material_id,
-            visual = JSON_STRIP_NULLS(EXCLUDED.visual::JSONB),
-            updated_at = NOW();
-    """)
-    crdb.execute("""
-        UPSERT INTO public.components_materials (component_id, material_id, material_fraction)
-        SELECT component_id, material_id, material_fraction
-        FROM databot.components_materials_load;
-    """)
-    crdb.execute("DROP TABLE IF EXISTS databot.components_load;")
-    crdb.execute("DROP TABLE IF EXISTS databot.components_materials_load;")
-
-
-if __name__ == "__main__":
-    setup_cli(components_flow)
+    engine = create_sql_engine()
+    with engine.begin() as crdb:
+        crdb.execute(
+            text("""
+            INSERT INTO public.components (id, created_at, updated_at, name, "desc", region_id, primary_material_id, visual)
+            SELECT id, NOW(), NOW(), name::JSONB, "desc"::JSONB, region_id, primary_material_id, visual::JSONB
+            FROM databot.components_load
+            ON CONFLICT (id) DO UPDATE
+            SET name = JSON_STRIP_NULLS(EXCLUDED.name::JSONB),
+                "desc" = JSON_STRIP_NULLS(EXCLUDED."desc"::JSONB),
+                region_id = EXCLUDED.region_id,
+                primary_material_id = EXCLUDED.primary_material_id,
+                visual = JSON_STRIP_NULLS(EXCLUDED.visual::JSONB),
+                updated_at = NOW();
+        """)
+        )
+        crdb.execute(
+            text("""
+            UPSERT INTO public.components_materials (component_id, material_id, material_fraction)
+            SELECT component_id, material_id, material_fraction
+            FROM databot.components_materials_load;
+        """)
+        )
+        crdb.execute(text("DROP TABLE IF EXISTS databot.components_load;"))
+        crdb.execute(text("DROP TABLE IF EXISTS databot.components_materials_load;"))

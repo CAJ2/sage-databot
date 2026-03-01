@@ -1,0 +1,6 @@
+summary: Scripts for ingesting and processing sources
+display_name: sources
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot
