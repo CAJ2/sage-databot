@@ -1,11 +1,11 @@
-name: Integration Tests (Dev)
+name: Sync Project (Dev)
 
 on:
   push:
     branches: [dev]
 
 concurrency:
-  group: tests-dev
+  group: sync-dev
 
 env:
   WMILL_BASE_URL: https://databot.dev.sageleaf.app
@@ -13,8 +13,8 @@ env:
   HEADERS: ${{ secrets.WMILL_HEADERS }}
 
 jobs:
-  test:
-    name: 'Run tests'
+  sync:
+    name: 'Sync dev to Windmill'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,16 +37,3 @@ jobs:
             --base-url ${{ env.WMILL_BASE_URL }} \
             --token ${{ secrets.WMILL_TOKEN }} \
             --branch dev --yes --locks-required
-
-      - name: Trigger integration tests
-        run: |
-          curl -sf -X POST \
-            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "head_sha": "${{ github.sha }}",
-              "repo": "${{ github.repository }}",
-              "ref": "${{ github.ref_name }}"
-            }' \
-            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/jobs/run/f/f/test/run_tests"
-          echo "Integration tests triggered in workspace ${{ env.WMILL_WORKSPACE }}"
