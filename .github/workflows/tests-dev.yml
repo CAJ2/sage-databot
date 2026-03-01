@@ -10,7 +10,6 @@ concurrency:
 env:
   WMILL_BASE_URL: https://databot.dev.sageleaf.app
   WMILL_WORKSPACE: sage-dev
-  TEST_WS_ID: wm-fork-test-dev
   HEADERS: ${{ secrets.WMILL_HEADERS }}
 
 jobs:
@@ -31,34 +30,10 @@ jobs:
           npm install -g windmill-cli
           wmill --version
 
-      - name: Fork workspace (delete if exists, then create)
-        run: |
-          EXISTS=$(curl -sf -X POST \
-            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"id\": \"${{ env.TEST_WS_ID }}\"}" \
-            "${{ env.WMILL_BASE_URL }}/api/workspaces/exists")
-          if [ "$EXISTS" = "true" ]; then
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
-              -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-              "${{ env.WMILL_BASE_URL }}/api/workspaces/delete/${{ env.TEST_WS_ID }}?only_delete_forks=true")
-            if [ "$HTTP_STATUS" = "200" ]; then
-              echo "Deleted existing workspace: ${{ env.TEST_WS_ID }}"
-            else
-              echo "Warning: DELETE returned HTTP $HTTP_STATUS — will attempt create anyway"
-            fi
-          fi
-          curl -s --fail-with-body -X POST \
-            -H "Authorization: Bearer ${{ secrets.WMILL_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"id\": \"${{ env.TEST_WS_ID }}\", \"name\": \"${{ env.TEST_WS_ID }}\"}" \
-            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/workspaces/create_fork"
-          echo "Created forked workspace: ${{ env.TEST_WS_ID }}"
-
-      - name: Sync push to forked workspace
+      - name: Sync push to workspace
         run: |
           wmill sync push \
-            --workspace ${{ env.TEST_WS_ID }} \
+            --workspace ${{ env.WMILL_WORKSPACE }} \
             --base-url ${{ env.WMILL_BASE_URL }} \
             --token ${{ secrets.WMILL_TOKEN }} \
             --branch dev --yes --locks-required
@@ -73,5 +48,5 @@ jobs:
               "repo": "${{ github.repository }}",
               "ref": "${{ github.ref_name }}"
             }' \
-            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.TEST_WS_ID }}/jobs/run/f/f/test/run_tests"
-          echo "Integration tests triggered in workspace ${{ env.TEST_WS_ID }}"
+            "${{ env.WMILL_BASE_URL }}/api/w/${{ env.WMILL_WORKSPACE }}/jobs/run/f/f/test/run_tests"
+          echo "Integration tests triggered in workspace ${{ env.WMILL_WORKSPACE }}"
