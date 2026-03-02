@@ -1,10 +1,19 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from f.db.base import Base, JSONData, Translated
+
+
+@dataclass
+class SourceContent:
+    text: str | None = None
+    context: str | None = None
+    icon: str | None = None
 
 
 class Variant(Base):
@@ -27,7 +36,7 @@ class Source(Base):
     type: Mapped[str] = mapped_column()
     processed_at: Mapped[datetime | None] = mapped_column()
     location: Mapped[str | None] = mapped_column()
-    content: Mapped[dict[str, Any] | None] = mapped_column(JSONData(dict))
+    content: Mapped[SourceContent | None] = mapped_column(JSONData(SourceContent))
     content_url: Mapped[str | None] = mapped_column()
     user_id: Mapped[str | None] = mapped_column()
 

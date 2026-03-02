@@ -3,7 +3,7 @@ description: ''
 lock: '!inline f/changes/review_edit.script.lock'
 kind: script
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
     create_changes:

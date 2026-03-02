@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: project:6d8e623bcf99aa3f47f4c2656e91ec2a71a6671782ec14d1d920a6d5d34ea327
+# workspace-dependencies: project:90528a2df2684d26ccf6c9d52f4f2634f99d7d80dd6a113396ad6ba038c0f4ee
 # py: 3.12
 adbc-driver-manager==1.5.0
 adbc-driver-postgresql==1.9.0
@@ -23,7 +23,7 @@ cachetools==5.5.2
 camel-converter==4.0.1
 certifi==2025.1.31
 cffi==1.17.1
-charset-normalizer==3.4.1
+charset-normalizer==3.4.4
 click==8.3.1
 cohere==5.20.1
 colorama==0.4.6
@@ -85,7 +85,7 @@ logfire==4.16.0
 logfire-api==3.19.0
 loro==1.10.3
 marimo==0.18.4
-markdown==3.8
+markdown==3.10.2
 markdown-it-py==3.0.0
 markupsafe==3.0.2
 matplotlib==3.10.1
@@ -101,7 +101,7 @@ nanoid==2.0.0
 narwhals==2.14.0
 networkx==3.6.1
 nexus-rpc==1.2.0
-numpy==1.26.4
+numpy==2.4.2
 openai==2.14.0
 openapi-core==0.22.0
 openapi-pydantic==0.5.1
@@ -129,7 +129,7 @@ polars-runtime-32==1.36.1
 prompt-toolkit==3.0.51
 propcache==0.4.1
 protobuf==5.29.4
-psutil==6.1.1
+psutil==7.2.2
 psycopg==3.3.2
 psycopg-binary==3.3.2
 pyarrow==22.0.0
@@ -152,13 +152,13 @@ pyparsing==3.2.3
 pyperclip==1.11.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
-python-iso639==2025.11.16
+python-iso639==2026.1.31
 python-multipart==0.0.20
 pytz==2025.2
 pyyaml==6.0.2
 referencing==0.36.2
 regex==2024.11.6
-requests==2.32.4
+requests==2.32.5
 rfc3339-validator==0.1.4
 rich==14.0.0
 rich-rst==1.3.2
@@ -183,7 +183,7 @@ tiktoken==0.12.0
 tokenizers==0.21.1
 toml==0.10.2
 tomlkit==0.13.2
-tqdm==4.67.1
+tqdm==4.67.3
 types-protobuf==6.32.1.20251210
 types-requests==2.32.4.20250611
 typing-extensions==4.15.0

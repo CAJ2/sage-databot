@@ -14,5 +14,5 @@ six==1.17.0
 smart-open==7.5.1
 typing-extensions==4.15.0
 urllib3==2.6.3
-wmill==1.647.0
+wmill==1.648.0
 wrapt==2.1.1
