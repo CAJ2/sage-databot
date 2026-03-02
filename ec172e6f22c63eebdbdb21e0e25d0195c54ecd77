@@ -1,0 +1,25 @@
+f/openfoodfacts/off_download_images.py
+  582e48219e6f3031 3-5,8-9,16,21,87-114,199-200,206-207,209,212-215,217-220,222-227,232-258,260-274,287-292,295-296,298-302,304-305,307-308
+f/db/sage/model.py
+  582e48219e6f3031 14-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "ec172e6f22c63eebdbdb21e0e25d0195c54ecd77",
+  "prompts": {
+    "582e48219e6f3031": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6201c871-5afd-4f93-a603-9fa9bc75c4dc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 173,
+      "total_deletions": 112,
+      "accepted_lines": 119,
+      "overriden_lines": 5
+    }
+  }
+}
