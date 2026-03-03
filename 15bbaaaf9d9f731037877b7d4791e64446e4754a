@@ -1,0 +1,78 @@
+.claude/rules/go.md
+  ec010ed4413d7ba1 1,3-63
+.claude/rules/python.md
+  ec010ed4413d7ba1 1,3-191
+.claude/rules/graphql.md
+  ec010ed4413d7ba1 1,3-12,14-18
+.claude/rules/rust.md
+  ec010ed4413d7ba1 1,3-29,31-38,40-48,50-56,58-79
+.claude/CLAUDE.md
+  ec010ed4413d7ba1 1-2,4,14-18,20-57,59-66
+.claude/rules/typescript.md
+  ec010ed4413d7ba1 1,3-146
+.claude/rules/sql.md
+  ec010ed4413d7ba1 1,3-85
+.claude/rules/cli.md
+  ec010ed4413d7ba1 1-46,48-54,56-109,111-158,160-170,172-206,208-343,345-369
+.claude/rules/flows.md
+  ec010ed4413d7ba1 1,3-47,49-53,55-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "15bbaaaf9d9f731037877b7d4791e64446e4754a",
+  "prompts": {
+    "0524b5df51bc84d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84a67f75-8a94-437d-a480-5fc7d00a14ea",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 746,
+      "total_deletions": 154,
+      "accepted_lines": 541,
+      "overriden_lines": 4
+    },
+    "23341a672b609ebb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "714eb3bc-4487-447b-81e6-3914a9f9d878",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 26,
+      "total_deletions": 40,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    },
+    "2f8bfc6a5e5d2337": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ab4d2d7b-2bc6-414d-8d8a-5b2739141f9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 89,
+      "total_deletions": 3,
+      "accepted_lines": 93,
+      "overriden_lines": 0
+    },
+    "ec010ed4413d7ba1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1740cd78-07ad-48db-aa24-7ea6c44918f6",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 1117,
+      "total_deletions": 1843,
+      "accepted_lines": 1104,
+      "overriden_lines": 12
+    }
+  }
+}
