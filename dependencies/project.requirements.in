@@ -67,7 +67,7 @@ certifi==2025.1.31
     #   requests
 cffi==1.17.1 ; platform_python_implementation != 'PyPy'
     # via cryptography
-charset-normalizer==3.4.1
+charset-normalizer==3.4.4
     # via requests
 click==8.3.1
     # via
@@ -247,11 +247,11 @@ logfire-api==3.19.0
     # via
     #   pydantic-evals
     #   pydantic-graph
-loro==1.10.3 ; python_full_version < '3.14'
+loro==1.10.3
     # via marimo
 marimo==0.18.4
     # via sage-databot
-markdown==3.8
+markdown==3.10.2
     # via
     #   marimo
     #   pymdown-extensions
@@ -291,7 +291,7 @@ networkx==3.6.1
     # via sage-databot
 nexus-rpc==1.2.0
     # via temporalio
-numpy==1.26.4
+numpy==2.4.2
     # via
     #   contourpy
     #   fasttext
@@ -383,7 +383,7 @@ protobuf==5.29.4
     #   logfire
     #   opentelemetry-proto
     #   temporalio
-psutil==6.1.1
+psutil==7.2.2
     # via marimo
 psycopg==3.3.2
     # via sage-databot
@@ -464,7 +464,7 @@ python-dotenv==1.2.1
     #   fastmcp
     #   pydantic-settings
     #   sage-databot
-python-iso639==2025.11.16
+python-iso639==2026.1.31
     # via sage-databot
 python-multipart==0.0.20
     # via mcp
@@ -487,7 +487,7 @@ referencing==0.36.2
     #   jsonschema-specifications
 regex==2024.11.6
     # via tiktoken
-requests==2.32.4
+requests==2.32.5
     # via
     #   cohere
     #   google-auth
@@ -570,7 +570,7 @@ toml==0.10.2
     # via ariadne-codegen
 tomlkit==0.13.2
     # via marimo
-tqdm==4.67.1
+tqdm==4.67.3
     # via
     #   huggingface-hub
     #   openai

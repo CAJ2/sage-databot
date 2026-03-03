@@ -5,9 +5,12 @@ import os
 import tempfile
 
 import fasttext  # pyright: ignore[reportMissingImports]
-import fasttext.util  # pyright: ignore[reportMissingImports]
-from unstructured.documents.elements import Element  # pyright: ignore[reportMissingImports]
-from unstructured.partition.auto import partition  # pyright: ignore[reportMissingImports]
+from unstructured.documents.elements import (  # pyright: ignore[reportMissingImports]
+    Element,
+)
+from unstructured.partition.auto import (  # pyright: ignore[reportMissingImports]
+    partition,
+)
 from unstructured.staging.base import (  # pyright: ignore[reportMissingImports]
     _fix_metadata_field_precision,
     elements_to_dicts,
@@ -21,10 +24,9 @@ from f.utils.s3 import S3Client
 def detect_language(text: str) -> str:
     """
     Detects the language of the given text using FastText.
-    Downloads the lid.176.bin model on first use.
+    Assumes the model exists on the worker at `/root/lid.176.bin`.
     """
-    _ = fasttext.util.download_model("lid.176.bin", if_exists="ignore")
-    model = fasttext.load_model("lid.176.bin")
+    model = fasttext.load_model("/root/lid.176.bin")
     predictions = model.predict(text)
     labels: tuple[str, ...] = predictions[0]  # type: ignore[assignment]
     return labels[0].split("__")[-1]  # pyright: ignore[reportGeneralTypeIssues]
@@ -74,12 +76,12 @@ def main(source_id: str):
     update_source = UpdateSourceInput(id=source.id)
     if len(elem_json) > 200_000:
         with tempfile.NamedTemporaryFile(
-            mode="w", suffix="_content.json", delete=False
+            mode="w", suffix=".unstructured.json", delete=False
         ) as tmp:
             tmp.write(elem_json)
             temp_file = tmp.name
         try:
-            s3_key = f"{source.id}_content.json"
+            s3_key = f"{source.id}.unstructured.json"
             with open(temp_file, "rb") as f:
                 s3.s3_upload(f"s3://{bucket}/{s3_key}", f, mode="wb")
             update_source.content_url = (

@@ -3,7 +3,7 @@ description: ''
 lock: '!inline f/context/variant_context.script.lock'
 kind: script
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
     entity_id:
@@ -12,12 +12,13 @@ schema:
       default: null
       originalType: string
     mode:
-      type: string
+      type: object
       description: ''
       default: review
       enum:
         - review
         - suggest
+      format: resource-ContextMode
       originalType: string
     target_fields:
       type: array
@@ -25,6 +26,6 @@ schema:
       default: null
       items:
         type: string
-      originalType: 'string[]'
+      originalType: string[]
   required:
     - entity_id

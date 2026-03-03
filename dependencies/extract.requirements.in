@@ -25,8 +25,6 @@ annotated-types==0.7.0
     # via pydantic
 anthropic==0.75.0
     # via pydantic-ai-slim
-antlr4-python3-runtime==4.9.3
-    # via omegaconf
 anyio==4.9.0
     # via
     #   anthropic
@@ -56,9 +54,7 @@ autoflake==2.3.1
     # via ariadne-codegen
 automat==25.4.16
     # via twisted
-backoff==2.2.1
-    # via unstructured
-beautifulsoup4==4.13.4
+beautifulsoup4==4.14.3
     # via unstructured
 black==25.1.0
     # via ariadne-codegen
@@ -88,7 +84,7 @@ certifi==2025.1.31
     #   requests
 cffi==1.17.1 ; platform_python_implementation != 'PyPy'
     # via cryptography
-charset-normalizer==3.4.1
+charset-normalizer==3.4.4
     # via
     #   pdfminer-six
     #   requests
@@ -98,7 +94,6 @@ click==8.3.1
     #   ariadne-codegen
     #   black
     #   marimo
-    #   nltk
     #   python-oxmsg
     #   typer-slim
     #   uvicorn
@@ -147,8 +142,6 @@ cymem==2.0.11
     #   preshed
     #   spacy
     #   thinc
-dataclasses-json==0.6.7
-    # via unstructured
 defusedxml==0.7.1
     # via scrapy
 deprecated==1.2.18
@@ -171,11 +164,9 @@ docutils==0.21.2
     #   rich-rst
 duckdb==1.4.3
     # via sage-databot
-effdet==0.4.1
-    # via unstructured
 email-validator==2.3.0
     # via pydantic
-emoji==2.14.1
+emoji==2.15.0
     # via unstructured
 et-xmlfile==2.0.0
     # via openpyxl
@@ -199,6 +190,7 @@ filelock==3.18.0
     #   tldextract
     #   torch
     #   transformers
+    #   unstructured
 filetype==1.2.0
     # via unstructured
 flatbuffers==25.2.10
@@ -227,7 +219,7 @@ google-auth==2.40.1
     #   google-cloud-vision
     #   google-genai
     #   pydantic-ai-slim
-google-cloud-vision==3.10.1
+google-cloud-vision==3.12.1
     # via unstructured
 google-genai==1.55.0
     # via pydantic-ai-slim
@@ -247,6 +239,7 @@ groq==0.28.0
 grpcio==1.71.0
     # via
     #   google-api-core
+    #   google-cloud-vision
     #   grpcio-status
 grpcio-status==1.71.0
     # via google-api-core
@@ -307,6 +300,8 @@ importlib-resources==6.5.2
     #   adbc-driver-sqlite
 incremental==24.7.2
     # via twisted
+installer==0.7.0
+    # via unstructured
 invoke==2.2.1
     # via mistralai
 isodate==0.7.2
@@ -338,8 +333,6 @@ jmespath==1.0.1
     #   botocore
     #   itemloaders
     #   parsel
-joblib==1.5.0
-    # via nltk
 jsonschema==4.25.1
     # via
     #   mcp
@@ -361,13 +354,15 @@ langdetect==1.0.9
     # via unstructured
 lazy-object-proxy==1.12.0
     # via openapi-spec-validator
+llvmlite==0.46.0
+    # via numba
 logfire==4.16.0
     # via pydantic-ai-slim
 logfire-api==3.19.0
     # via
     #   pydantic-evals
     #   pydantic-graph
-loro==1.10.3 ; python_full_version < '3.14'
+loro==1.10.3
     # via marimo
 lxml==5.3.2
     # via
@@ -379,7 +374,7 @@ lxml==5.3.2
     #   unstructured
 marimo==0.18.4
     # via sage-databot
-markdown==3.8
+markdown==3.10.2
     # via
     #   marimo
     #   pymdown-extensions
@@ -390,12 +385,9 @@ markupsafe==3.0.2
     # via
     #   jinja2
     #   werkzeug
-marshmallow==3.26.1
-    # via dataclasses-json
 matplotlib==3.10.1
     # via
     #   networkx
-    #   pycocotools
     #   unstructured-inference
 mcp==1.25.0
     # via
@@ -413,7 +405,7 @@ mpmath==1.3.0
     # via sympy
 msgspec==0.20.0
     # via marimo
-msoffcrypto-tool==5.4.2
+msoffcrypto-tool==6.0.0
     # via unstructured
 multidict==6.7.0
     # via
@@ -425,9 +417,7 @@ murmurhash==1.0.12
     #   spacy
     #   thinc
 mypy-extensions==1.1.0
-    # via
-    #   black
-    #   typing-inspect
+    # via black
 nanoid==2.0.0
     # via sage-databot
 narwhals==2.14.0
@@ -441,9 +431,9 @@ networkx==3.6.1
     #   unstructured
 nexus-rpc==1.2.0
     # via temporalio
-nltk==3.9.1
+numba==0.64.0
     # via unstructured
-numpy==1.26.4
+numpy==2.4.2
     # via
     #   accelerate
     #   blis
@@ -451,11 +441,11 @@ numpy==1.26.4
     #   fasttext
     #   matplotlib
     #   networkx
+    #   numba
     #   onnx
     #   onnxruntime
     #   opencv-python
     #   pandas
-    #   pycocotools
     #   scipy
     #   spacy
     #   thinc
@@ -504,16 +494,10 @@ olefile==0.47
     # via
     #   msoffcrypto-tool
     #   python-oxmsg
-omegaconf==2.3.0
-    # via effdet
 onnx==1.18.0
-    # via
-    #   unstructured
-    #   unstructured-inference
+    # via unstructured-inference
 onnxruntime==1.22.0
-    # via
-    #   unstructured
-    #   unstructured-inference
+    # via unstructured-inference
 openai==2.14.0
     # via pydantic-ai-slim
 openapi-core==0.22.0
@@ -526,7 +510,7 @@ openapi-schema-validator==0.6.3
     #   openapi-spec-validator
 openapi-spec-validator==0.7.2
     # via openapi-core
-opencv-python==4.11.0.86
+opencv-python==4.13.0.92
     # via unstructured-inference
 openpyxl==3.1.5
     # via unstructured
@@ -571,7 +555,6 @@ packaging==24.2
     #   black
     #   huggingface-hub
     #   marimo
-    #   marshmallow
     #   matplotlib
     #   onnxruntime
     #   opentelemetry-instrumentation
@@ -601,13 +584,13 @@ pathspec==0.12.1
     # via black
 pdf2image==1.17.0
     # via unstructured
-pdfminer-six==20250506
+pdfminer-six==20260107
     # via
     #   unstructured
     #   unstructured-inference
-pi-heif==0.22.0
+pi-heif==1.3.0
     # via unstructured
-pikepdf==9.7.0
+pikepdf==10.3.0
     # via unstructured
 pillow==11.2.1
     # via
@@ -652,7 +635,7 @@ protobuf==5.29.4
     #   opentelemetry-proto
     #   proto-plus
     #   temporalio
-psutil==6.1.1
+psutil==7.2.2
     # via
     #   accelerate
     #   marimo
@@ -674,8 +657,6 @@ pyasn1-modules==0.4.2
     #   service-identity
 pybind11==2.13.6
     # via fasttext
-pycocotools==2.0.8
-    # via effdet
 pycparser==2.22 ; platform_python_implementation != 'PyPy'
     # via cffi
 pydantic==2.12.5
@@ -733,15 +714,15 @@ pymdown-extensions==10.20
     # via marimo
 pyopenssl==25.0.0
     # via scrapy
-pypandoc==1.15
+pypandoc-binary==1.16.2
     # via unstructured
 pyparsing==3.2.3
     # via matplotlib
-pypdf==5.5.0
+pypdf==6.7.5
     # via
     #   unstructured
     #   unstructured-client
-pypdfium2==4.30.1
+pypdfium2==5.5.0
     # via unstructured-inference
 pyperclip==1.11.0
     # via
@@ -757,14 +738,14 @@ python-dateutil==2.9.0.post0
     #   matplotlib
     #   mistralai
     #   pandas
-python-docx==1.1.2
+python-docx==1.2.0
     # via unstructured
 python-dotenv==1.2.1
     # via
     #   fastmcp
     #   pydantic-settings
     #   sage-databot
-python-iso639==2025.11.16
+python-iso639==2026.1.31
     # via
     #   sage-databot
     #   unstructured
@@ -789,14 +770,13 @@ pyyaml==6.0.2
     #   jsonschema-path
     #   marimo
     #   mistralai
-    #   omegaconf
     #   pydantic-evals
     #   pymdown-extensions
     #   timm
     #   transformers
 queuelib==1.8.0
     # via scrapy
-rapidfuzz==3.13.0
+rapidfuzz==3.14.3
     # via
     #   unstructured
     #   unstructured-inference
@@ -807,10 +787,10 @@ referencing==0.36.2
     #   jsonschema-specifications
 regex==2024.11.6
     # via
-    #   nltk
     #   tiktoken
     #   transformers
-requests==2.32.4
+    #   unstructured
+requests==2.32.5
     # via
     #   cohere
     #   google-api-core
@@ -901,7 +881,9 @@ sniffio==1.3.1
 soupsieve==2.7
     # via beautifulsoup4
 spacy==3.8.11
-    # via sage-databot
+    # via
+    #   sage-databot
+    #   unstructured
 spacy-legacy==3.0.12
     # via spacy
 spacy-loggers==1.0.5
@@ -942,9 +924,7 @@ thinc==8.3.4
 tiktoken==0.12.0
     # via pydantic-ai-slim
 timm==1.0.15
-    # via
-    #   effdet
-    #   unstructured-inference
+    # via unstructured-inference
 tldextract==5.3.0
     # via scrapy
 tokenizers==0.21.1
@@ -958,18 +938,14 @@ tomlkit==0.13.2
 torch==2.7.0
     # via
     #   accelerate
-    #   effdet
     #   timm
     #   torchvision
     #   unstructured-inference
 torchvision==0.22.0
-    # via
-    #   effdet
-    #   timm
-tqdm==4.67.1
+    # via timm
+tqdm==4.67.3
     # via
     #   huggingface-hub
-    #   nltk
     #   openai
     #   spacy
     #   transformers
@@ -1023,11 +999,8 @@ typing-extensions==4.15.0
     #   torch
     #   twisted
     #   typer-slim
-    #   typing-inspect
     #   typing-inspection
     #   unstructured
-typing-inspect==0.9.0
-    # via dataclasses-json
 typing-inspection==0.4.2
     # via
     #   mcp
@@ -1040,11 +1013,11 @@ tzdata==2025.2
     # via
     #   pandas
     #   psycopg
-unstructured==0.18.26
+unstructured==0.21.5
     # via sage-databot
 unstructured-client==0.35.0
     # via unstructured
-unstructured-inference==1.1.1
+unstructured-inference==1.2.0
     # via unstructured
 unstructured-pytesseract==0.3.15
     # via unstructured

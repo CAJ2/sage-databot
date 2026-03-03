@@ -32,6 +32,8 @@ def main():
     # Optional dependencies
     opt_deps = data.get("project", {}).get("optional-dependencies", {})
     for name in opt_deps:
+        if name == "all":
+            continue
         out_path = deps_dir / f"{name}.requirements.in"
         with out_path.open("w") as f:
             f.write(f"# py: {py_version}\n")
