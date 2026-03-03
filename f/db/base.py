@@ -29,6 +29,8 @@ class JSONData(TypeDecorator[Any]):
 
     def process_result_value(self, value, dialect):
         if value is not None:
+            if isinstance(value, str):
+                value = json.loads(value)
             value = self.model.model_validate(value)
         return value
 
