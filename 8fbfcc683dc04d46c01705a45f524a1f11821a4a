@@ -1,0 +1,53 @@
+src/dev_sync.py
+  0524b5df51bc84d8 1-155
+pyproject.toml
+  0524b5df51bc84d8 65-68
+src/local_windmill.py
+  0524b5df51bc84d8 1-16,18-182,184-208,210-222,226-227,230-256,258-391
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "8fbfcc683dc04d46c01705a45f524a1f11821a4a",
+  "prompts": {
+    "0524b5df51bc84d8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84a67f75-8a94-437d-a480-5fc7d00a14ea",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 541,
+      "overriden_lines": 0
+    },
+    "23341a672b609ebb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "714eb3bc-4487-447b-81e6-3914a9f9d878",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    },
+    "2f8bfc6a5e5d2337": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ab4d2d7b-2bc6-414d-8d8a-5b2739141f9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 91,
+      "overriden_lines": 0
+    }
+  }
+}
