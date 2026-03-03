@@ -1,11 +1,12 @@
-from typing import Any, Generator
 import os
-import wmill
-import boto3
 import time
 from datetime import timedelta
-from smart_open import open
+from typing import Any, Generator
 from urllib.parse import urlparse
+
+import boto3
+import wmill
+from smart_open import open
 
 
 def _is_test_workspace() -> bool:
@@ -14,6 +15,7 @@ def _is_test_workspace() -> bool:
 
 class S3Client:
     def __init__(self, resource_id="f/s3_config/s3_databot"):
+        self.resource_id = resource_id
         self.resource = wmill.get_resource(resource_id)
         if self.resource is None:
             raise ValueError(f"Resource '{resource_id}' does not exist")
@@ -110,6 +112,11 @@ class S3Client:
         print(
             f"Successfully uploaded to {parsed_url} ({timedelta(seconds=(time.time() - start))})"
         )
+        if self.resource_id == "f/s3_config/s3_sources":
+            parsed = urlparse(parsed_url)
+            key = parsed.path.lstrip("/")
+            self.client.put_object_acl(Bucket=self.bucket, Key=key, ACL="public-read")
+            print(f"Set public-read ACL on {parsed_url}")
         return True
 
     def s3_download(self, url: str, f) -> bool:
