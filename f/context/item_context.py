@@ -10,7 +10,7 @@ def main(
     entity_id: str,
     mode: ContextMode = "review",
     target_fields: list[str] | None = None,
-) -> EntityContext:
+) -> dict[str, Any]:
     """
     Fetches rich context for an Item: its categories and linked variants.
     Used by both the review and auto-suggest flows.
@@ -54,4 +54,4 @@ def main(
         entity_data=entity_data,
         related_data=related_data,
         prompt_hints=prompt_hints,
-    )
+    ).model_dump()

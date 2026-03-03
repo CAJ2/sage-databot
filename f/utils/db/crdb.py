@@ -1,14 +1,15 @@
 import json
-from typing import Any, Iterator
-import wmill
 import os
 import stat
+from dataclasses import asdict
+from typing import Any, Iterator
+from urllib.parse import parse_qs, urlencode, urlparse
+
 import polars as pl
-from urllib.parse import urlparse, urlencode, parse_qs
-from sqlalchemy import create_engine, Engine, text, JSON
+import wmill
+from sqlalchemy import JSON, Engine, create_engine, text
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.types import TypeDecorator
-from dataclasses import asdict
 
 
 def _check_or_create_cert_file(content: str, file_name: str):
@@ -114,8 +115,9 @@ def export_table_by_ids(
     """
     Export a selection of rows keyed by primary id from the database to a Polars DataFrame.
     """
+    ids_join = "','".join(ids)
     df_iter = pl.read_database(
-        f"SELECT {cols} FROM {table} WHERE id IN ('{"','".join(ids)}')",
+        f"SELECT {cols} FROM {table} WHERE id IN ('{ids_join}')",
         connection=crdb,
         schema_overrides=schema,
         iter_batches=True,

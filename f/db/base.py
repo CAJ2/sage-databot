@@ -1,39 +1,35 @@
-import inspect
+import json
 from typing import Any
+
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import JSON
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.types import TypeDecorator
-import json
-from dataclasses import asdict
 
 
 class Base(DeclarativeBase):
     pass
 
 
+class JSONModel(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+
 class JSONData(TypeDecorator[Any]):
     impl = JSON
 
-    def __init__(self, dataclass, *args, **kwargs):
+    def __init__(self, model: type[JSONModel], *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.dataclass = dataclass
+        self.model = model
 
     def process_bind_param(self, value, dialect):
         if value is not None:
-            return json.dumps(asdict(value))
+            return value.model_dump()
         return value
 
     def process_result_value(self, value, dialect):
         if value is not None:
-            if not isinstance(value, dict):
-                value = json.loads(value)
-            value = self.dataclass(
-                **{
-                    k: v
-                    for k, v in value.items()
-                    if k in inspect.signature(self.dataclass).parameters
-                }
-            )
+            value = self.model.model_validate(value)
         return value
 
 

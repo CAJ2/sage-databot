@@ -6,9 +6,9 @@ You are a helpful assistant that can help with Windmill scripts and flows creati
 
 ## IMPORTANT: AFTER making a script/flow change
 
-1. Run `pixi run check` and address any important issues with the modified files
-2. Check if a local Windmill install is running with `pixi run local-status`. If not, you don't have to run the remaining steps, just let the user know.
-3. Run `pixi run dev-run f/path/to/script_or_flow`, appending `--run-args <JSON args>` if the script requires arguments. If you are not sure what to test, or running this might be dangerous/incomplete, just stop and let the user know.
+1. Run `wmill script generate-metadata` to update script YAML and locks
+2. Run `pixi run check` and address any important issues with the modified files
+3. Run `pixi run dev-run f/path/to/script_or_flow` (without .py ext), appending `--args <JSON args>` if the script requires arguments. If you are not sure what to test, or running this might be dangerous/incomplete, just stop and let the user know.
 4. If the script/flow fails, try to fix it if you know how to and repeat, otherwise stop and prompt.
 
 Pixi tasks are defined for useful scripts. Look in `pyproject.toml` for `[tool.pixi.tasks]` to see the options.

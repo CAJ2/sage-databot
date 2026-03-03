@@ -256,6 +256,7 @@ sync local with a remote workspaces or the opposite (push or pull)
   - `-e --excludes <patterns:file[]>` - Comma separated patterns to specify which file to NOT take into account. Overrides wmill.yaml excludes
   - `--repository <repo:string>` - Specify repository path (e.g., u/user/repo) when multiple repositories exist
   - `--promotion <branch:string>` - Use promotionOverrides from the specified branch instead of regular overrides
+  - `--branch <branch:string>` - Override the current git branch (works even outside a git repository)
 - `sync push` - Push any local changes and apply them remotely.
   - `--yes` - Push without needing confirmation
   - `--dry-run` - Show changes that would be pushed without actually pushing
@@ -283,6 +284,7 @@ sync local with a remote workspaces or the opposite (push or pull)
   - `--message <message:string>` - Include a message that will be added to all scripts/flows/apps updated during this push
   - `--parallel <number>` - Number of changes to process in parallel
   - `--repository <repo:string>` - Specify repository path (e.g., u/user/repo) when multiple repositories exist
+  - `--branch <branch:string>` - Override the current git branch (works even outside a git repository)
 
 ### trigger
 

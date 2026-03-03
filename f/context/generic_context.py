@@ -1,5 +1,7 @@
 # requirements: project
 
+from typing import Any
+
 from f.context.context_types import ContextMode, EntityContext
 
 
@@ -7,7 +9,7 @@ def main(
     entity_id: str,
     mode: ContextMode = "review",
     target_fields: list[str] | None = None,
-) -> EntityContext:
+) -> dict[str, Any]:
     """
     Generic fallback context script for model types without a dedicated script
     (e.g. Material, Region). Returns minimal context with no API fetch.
@@ -30,4 +32,4 @@ def main(
         entity_data={},
         related_data={},
         prompt_hints=prompt_hints,
-    )
+    ).model_dump()

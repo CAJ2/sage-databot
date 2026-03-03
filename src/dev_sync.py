@@ -12,8 +12,8 @@ import argparse
 import json
 import subprocess
 import sys
-import urllib.request
 import urllib.error
+import urllib.request
 from pathlib import Path
 
 LOCAL_URL = "http://localhost:8400"
@@ -65,6 +65,8 @@ def cmd_sync(workspace: str) -> None:
             "--workspace",
             workspace,
             "--yes",
+            "--branch",
+            "dev",
             *token_args,
         ],
         text=True,
@@ -75,7 +77,7 @@ def cmd_sync(workspace: str) -> None:
     print("Sync complete.")
 
 
-def cmd_run(script_path: str, run_args: str | None, workspace: str) -> None:
+def cmd_run(script_path: str, args: str | None, workspace: str) -> None:
     """Run a script in the local Windmill workspace."""
     token_args = get_token()
     cmd = [
@@ -87,14 +89,14 @@ def cmd_run(script_path: str, run_args: str | None, workspace: str) -> None:
         workspace,
         *token_args,
     ]
-    if run_args:
+    if args:
         # Validate JSON
         try:
-            json.loads(run_args)
+            json.loads(args)
         except json.JSONDecodeError as e:
             print(f"Invalid JSON in --run-args: {e}", file=sys.stderr)
             sys.exit(1)
-        cmd += ["-d", run_args]
+        cmd += ["-d", args]
 
     print(f"Running script: {script_path}")
     result = subprocess.run(cmd, text=True)
@@ -112,7 +114,7 @@ def main() -> None:
         help="Script path to run after syncing (e.g. f/scripts/gen_ids)",
     )
     parser.add_argument(
-        "--run-args",
+        "--args",
         metavar="JSON",
         help='JSON args to pass to the script (e.g. \'{"key": "value"}\')',
     )
@@ -148,7 +150,7 @@ def main() -> None:
         cmd_sync(args.workspace)
 
     if args.run:
-        cmd_run(args.run, args.run_args, args.workspace)
+        cmd_run(args.run, args.args, args.workspace)
 
 
 if __name__ == "__main__":

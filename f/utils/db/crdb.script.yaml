@@ -2,8 +2,9 @@ summary: CockroachDB utils
 description: ''
 lock: '!inline f/utils/db/crdb.script.lock'
 kind: script
+no_main_func: true
 schema:
-  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties: {}
   required: []
