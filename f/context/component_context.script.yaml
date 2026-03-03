@@ -15,11 +15,7 @@ schema:
       type: object
       description: ''
       default: review
-      enum:
-        - review
-        - suggest
       format: resource-ContextMode
-      originalType: string
     target_fields:
       type: array
       description: ''

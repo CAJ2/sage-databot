@@ -61,9 +61,12 @@ packages = ["src/sage_databot"]
 deps = "python src/pyproject_deps.py"
 graphql = "python src/graphql_gen.py"
 nanoids = "python src/scripts/gen_ids.py"
-lint = "ruff check --fix"
-fmt = "ruff format && npx oxfmt"
-typecheck = "basedpyright"
+check = "ruff check --fix && ruff format && npx oxfmt && basedpyright"
+local-up = "python src/local_windmill.py"
+local-stop = "python src/local_windmill.py --stop"
+local-status = "python src/local_windmill.py --status"
+dev-sync = "python src/dev_sync.py"
+dev-run = "python src/dev_sync.py --run"
 
 [tool.pixi.dependencies]
 prek = ">=0.3.4,<0.4"

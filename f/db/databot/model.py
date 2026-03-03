@@ -1,59 +1,50 @@
-from dataclasses import dataclass
-from typing import Any, TypedDict
+from typing import Any
 from sqlalchemy.orm import Mapped, mapped_column
 
-from f.db.base import Base, JSONData
+from f.db.base import Base, JSONData, JSONModel
 
 
-@dataclass
-class CitiesTags:
+class CitiesTags(JSONModel):
     cities_tags: list[str]
 
 
-@dataclass
-class CountriesTags:
+class CountriesTags(JSONModel):
     countries_tags: list[str]
 
 
-@dataclass
-class DataSourcesTags:
+class DataSourcesTags(JSONModel):
     data_sources_tags: list[str]
 
 
-@dataclass
-class EcoscoreData:
+class EcoscoreData(JSONModel):
     status: str | None = None
     score: int | None = None
     grade: str | None = None
     adjustments: dict[str, Any] | None = None
 
 
-@dataclass
-class GenericName:
+class GenericName(JSONModel):
     generic_name: list[dict[str, Any]]
 
 
-class Image(TypedDict):
+class Image(JSONModel):
     key: str
-    imgid: int | None
-    rev: int | None
-    sizes: dict[str, dict[str, str]]
-    uploaded_t: int | None
-    uploader: str | None
+    imgid: int | None = None
+    rev: int | None = None
+    sizes: dict[str, dict[str, str]] | None = None
+    uploaded_t: int | None = None
+    uploader: str | None = None
 
 
-@dataclass
-class Images:
+class Images(JSONModel):
     images: list[Image]
 
 
-@dataclass
-class Packagings:
+class Packagings(JSONModel):
     packagings: list[dict[str, Any]]
 
 
-@dataclass
-class ProductName:
+class ProductName(JSONModel):
     product_name: list[dict[str, Any]]
 
 

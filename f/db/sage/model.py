@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
@@ -6,11 +5,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from f.db.base import Base, JSONData, Translated
+from f.db.base import Base, JSONData, JSONModel, Translated
 
 
-@dataclass
-class SourceContent:
+class SourceContent(JSONModel):
     text: str | None = None
     context: str | None = None
     icon: str | None = None
@@ -43,6 +41,12 @@ class Source(Base):
     variants: Mapped[list["VariantSources"]] = relationship(
         "VariantSources", back_populates="source", lazy="joined"
     )
+    component_sources: Mapped[list["ComponentSources"]] = relationship(
+        "ComponentSources", back_populates="source", lazy="joined"
+    )
+    process_sources: Mapped[list["ProcessSources"]] = relationship(
+        "ProcessSources", back_populates="source", lazy="joined"
+    )
 
 
 class VariantSources(Base):
@@ -56,6 +60,32 @@ class VariantSources(Base):
     )
     source: Mapped["Source"] = relationship(
         "Source", back_populates="variants", lazy="joined"
+    )
+
+
+class ComponentSources(Base):
+    __tablename__ = "components_sources"
+
+    component_id: Mapped[str] = mapped_column(
+        ForeignKey("components.id"), primary_key=True
+    )
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), primary_key=True)
+
+    source: Mapped["Source"] = relationship(
+        "Source", back_populates="component_sources", lazy="joined"
+    )
+
+
+class ProcessSources(Base):
+    __tablename__ = "process_sources"
+
+    process_id: Mapped[str] = mapped_column(
+        ForeignKey("processes.id"), primary_key=True
+    )
+    source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), primary_key=True)
+
+    source: Mapped["Source"] = relationship(
+        "Source", back_populates="process_sources", lazy="joined"
     )
 
 

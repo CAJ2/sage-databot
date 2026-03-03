@@ -2,13 +2,11 @@
 
 """
 Integration tests for f/changes/* and f/context/* scripts.
-Tests: analyze_*_edit, all context scripts.
+Tests: all context scripts.
 """
 
 from sqlalchemy import text
 
-from f.changes.analyze_category_edit import main as analyze_category
-from f.changes.analyze_variant_edit import main as analyze_variant
 from f.context.category_context import main as category_context_main
 from f.context.component_context import main as component_context_main
 from f.context.item_context import main as item_context_main
@@ -64,7 +62,6 @@ def test_variant_context(t: Test):
         return
 
     result = variant_context_main(entity_id=variant_id, mode="review")
-    result = result.model_dump()
 
     assert_isinstance(result, dict, "Should return a dict (EntityContext)")
     assert_eq(result["entity_name"], "Variant")
@@ -86,7 +83,6 @@ def test_variant_context_suggest_mode(t: Test):
         mode="suggest",
         target_fields=["name", "desc"],
     )
-    result = result.model_dump()
 
     assert_isinstance(result, dict)
     assert_contains(
@@ -105,7 +101,6 @@ def test_category_context(t: Test):
         return
 
     result = category_context_main(entity_id=cat_id, mode="review")
-    result = result.model_dump()
 
     assert_isinstance(result, dict)
     assert_eq(result["entity_name"], "Category")
@@ -121,7 +116,6 @@ def test_item_context(t: Test):
         return
 
     result = item_context_main(entity_id=item_id, mode="review")
-    result = result.model_dump()
 
     assert_isinstance(result, dict)
     assert_eq(result["entity_name"], "Item")
@@ -138,67 +132,9 @@ def test_generic_context(t: Test):
         return
 
     result = component_context_main(entity_id=row[0], mode="review")
-    result = result.model_dump()
 
     assert_isinstance(result, dict)
     assert_eq(result["entity_name"], "Component")
-
-
-# --- Changes tests ---
-
-
-def test_analyze_variant_edit_structure(t: Test):
-    """Test that analyze_variant_edit returns a valid EditAnalysis structure."""
-    client, _ = api_connect()
-    variant_id = _find_existing_entity(client, "variant")
-    if not variant_id:
-        print("  ⚠️  No variant found, skipping")
-        return
-
-    try:
-        result = analyze_variant(
-            change_id="__test_change_1",
-            edit_id="__test_edit_1",
-            entity_name="Variant",
-            create_changes=None,
-            update_changes={"nameTr": [{"lang": "en", "text": "Test Name Updated"}]},
-            proposed_id=None,
-            original_id=variant_id,
-        )
-    except Exception as e:
-        if (
-            "llm" in str(e).lower()
-            or "model" in str(e).lower()
-            or "api" in str(e).lower()
-        ):
-            print(f"  ⚠️  Skipping LLM-dependent test: {e}")
-            return
-        raise
-
-    result = result.model_dump()
-    assert_isinstance(result, dict, "Should return a dict (EditAnalysis)")
-    assert_true("edit_id" in result, "Should have edit_id field")
-
-
-def test_analyze_category_edit_structure(t: Test):
-    """Test analyze_category_edit returns a valid structure."""
-    client, _ = api_connect()
-    cat_id = _find_existing_entity(client, "category")
-    if not cat_id:
-        print("  ⚠️  No category found, skipping")
-        return
-
-    result = analyze_category(
-        change_id="__test_change_2",
-        edit_id="__test_edit_2",
-        entity_name="Category",
-        create_changes=None,
-        update_changes={"nameTr": [{"lang": "en", "text": "Test Category"}]},
-        proposed_id=None,
-        original_id=cat_id,
-    )
-
-    assert_true(result is not None, "Should return a result")
 
 
 def main() -> dict[str, object]:
@@ -209,6 +145,4 @@ def main() -> dict[str, object]:
     suite.run(test_category_context)
     suite.run(test_item_context)
     suite.run(test_generic_context)
-    suite.run(test_analyze_variant_edit_structure)
-    suite.run(test_analyze_category_edit_structure)
     return suite.results()

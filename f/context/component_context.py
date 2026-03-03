@@ -2,15 +2,20 @@
 
 from typing import Any
 
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from f.context.context_types import ContextMode, EntityContext
+from f.db.sage.model import ComponentSources, Source
 from f.utils.api import api_connect
+from f.utils.db.crdb import create_sql_engine
 
 
 def main(
     entity_id: str,
     mode: ContextMode = "review",
     target_fields: list[str] | None = None,
-) -> EntityContext:
+) -> dict[str, Any]:
     """
     Fetches rich context for a Component: its material and usage in variants.
     Used by both the review and auto-suggest flows.
@@ -25,14 +30,31 @@ def main(
         if result.component:
             entity_data = result.component.model_dump(by_alias=False)
     except Exception as e:
-        print(f"Could not fetch Component {entity_id}: {e}")
+        raise ValueError(f"Could not fetch Component {entity_id}: {e}")
 
+    try:
+        crdb = create_sql_engine()
+        with Session(crdb) as session:
+            stmt = (
+                select(Source)
+                .join(ComponentSources, Source.id == ComponentSources.source_id)
+                .where(ComponentSources.component_id == entity_id)
+            )
+            sources = session.scalars(stmt).unique().all()
+        source_contexts = [
+            s.content.context for s in sources if s.content and s.content.context
+        ]
+        if source_contexts:
+            related_data["source_contexts"] = source_contexts
+    except Exception as e:
+        print(f"Could not fetch sources for Component {entity_id}: {e}")
     if mode == "review":
         prompt_hints = (
             "When reviewing changes to a Component, consider:\n"
             "- Whether the component name/description matches the underlying material.\n"
             "- Whether quantity and unit values are physically reasonable.\n"
-            "- Components represent material inputs used by variants (e.g. 'Steel frame: 2 kg')."
+            "- Components represent material inputs used by variants (e.g. 'Steel frame: 2 kg').\n"
+            "- If source_contexts are provided in related_data, use them as primary factual references."
         )
     else:
         fields_hint = (
@@ -45,6 +67,7 @@ def main(
             "- The name should identify the specific material component.\n"
             "- Quantities should reflect realistic material usage for the product.\n"
             "- Units should be standard physical units (kg, g, L, m, etc.).\n"
+            "- If source_contexts are provided in related_data, use them as primary factual references.\n"
             f"- Use the linked material and variant context as reference.{fields_hint}"
         )
 
@@ -54,4 +77,4 @@ def main(
         entity_data=entity_data,
         related_data=related_data,
         prompt_hints=prompt_hints,
-    )
+    ).model_dump()
