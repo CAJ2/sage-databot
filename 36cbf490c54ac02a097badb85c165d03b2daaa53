@@ -1,0 +1,47 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "36cbf490c54ac02a097badb85c165d03b2daaa53",
+  "prompts": {
+    "23341a672b609ebb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "714eb3bc-4487-447b-81e6-3914a9f9d878",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    },
+    "2f8bfc6a5e5d2337": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ab4d2d7b-2bc6-414d-8d8a-5b2739141f9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 90,
+      "overriden_lines": 0
+    },
+    "5ce21e723121dbec": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d7ca1e58-4b71-4d0c-a776-fd8f95862aef",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 2,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    }
+  }
+}
