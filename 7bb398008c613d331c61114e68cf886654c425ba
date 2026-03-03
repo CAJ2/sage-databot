@@ -1,0 +1,23 @@
+f/db/base.py
+  e229ae0cbd4598f3 32-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "7bb398008c613d331c61114e68cf886654c425ba",
+  "prompts": {
+    "e229ae0cbd4598f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b3b98adf-2bcf-4ac3-864b-be18ea214d09",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
