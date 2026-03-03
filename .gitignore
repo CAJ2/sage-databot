@@ -17,6 +17,7 @@ wheels/
 .env
 .dlt
 .local
+.mcp.json
 
 # Flow temporary files
 data
