@@ -1,6 +1,5 @@
 # requirements: project
 
-import time
 from sqlalchemy import insert, text
 from sqlalchemy.orm import Session
 
@@ -15,7 +14,7 @@ from f.graphql.api_client.input_types import SourceInput, VariantOrgsInput
 from f.utils.general import slugify
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
-from f.utils.db.meili import meili_connect
+from f.utils.db.meili import meili_client
 
 
 def off_variant(product_id: str):
@@ -24,7 +23,7 @@ def off_variant(product_id: str):
     """
 
     crdb = create_sql_engine()
-    meili = meili_connect()
+    meili = meili_client()
 
     # Create an API client
     client, user = api_connect()
@@ -134,19 +133,11 @@ def off_variant(product_id: str):
         brands = product.brands.split(",")
         for brand in brands:
             brand = brand.strip()
-            try:
-                matching_orgs = meili.index("orgs").search(
-                    brand, {"rankingScoreThreshold": 0.5, "limit": 1}
-                )
-            except Exception:
-                time.sleep(5)
-                matching_orgs = meili.index("orgs").search(
-                    brand, {"rankingScoreThreshold": 0.5, "limit": 1}
-                )
-            if len(matching_orgs["hits"]) > 0:
-                org = matching_orgs["hits"][0]
+            hits = meili.ranking_search("orgs", brand, threshold=0.5, limit=1)
+            if len(hits) > 0:
+                org = hits[0]
                 # Update the org
-                print(f"Matching orgs: {matching_orgs['hits']}")
+                print(f"Matching orgs: {hits}")
                 # Check if orgs already has this org ID
                 if not any(o.id == org["id"] for o in orgs):
                     orgs.append(VariantOrgsInput(id=org["id"]))

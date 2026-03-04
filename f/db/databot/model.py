@@ -1,4 +1,5 @@
 from typing import Any
+
 from sqlalchemy.orm import Mapped, mapped_column
 
 from f.db.base import Base, JSONData, JSONModel
@@ -27,11 +28,16 @@ class GenericName(JSONModel):
     generic_name: list[dict[str, Any]]
 
 
+class ImageSize(JSONModel):
+    h: int
+    w: int
+
+
 class Image(JSONModel):
     key: str
     imgid: int | None = None
     rev: int | None = None
-    sizes: dict[str, dict[str, str]] | None = None
+    sizes: dict[str, ImageSize | None] | None = None
     uploaded_t: int | None = None
     uploader: str | None = None
 

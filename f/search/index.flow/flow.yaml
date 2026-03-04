@@ -1,0 +1,221 @@
+summary: Index changes from CRDB into Meilisearch
+description: ''
+value:
+  modules:
+    - id: a
+      value:
+        lock: '!inline parses_incoming_triggers.inline_script.lock'
+        type: rawscript
+        content: '!inline parses_incoming_triggers.inline_script.py'
+        language: python3
+        input_transforms:
+          length:
+            expr: flow_input.length
+            type: javascript
+          payload:
+            expr: flow_input.payload
+            type: javascript
+        concurrency_time_window_s: 0
+      summary: Parses incoming triggers
+      continue_on_error: false
+    - id: b
+      value:
+        type: forloopflow
+        squash: false
+        modules:
+          - id: c
+            value:
+              type: branchone
+              default: []
+              branches:
+                - expr: flow_input.iter.value.table == "categories"
+                  modules:
+                    - id: d
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/categories/index_categories
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Categories
+                  parallel: true
+                  skip_failure: true
+                - expr: flow_input.iter.value.table == "regions"
+                  modules:
+                    - id: e
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/regions/index_regions
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Regions
+                  parallel: true
+                  skip_failure: true
+                - expr: flow_input.iter.value.table == "orgs"
+                  modules:
+                    - id: f
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/orgs/index_orgs
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Orgs
+                  parallel: true
+                  skip_failure: true
+                - expr: flow_input.iter.value.table == "variants"
+                  modules:
+                    - id: g
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/variants/index_variants
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Variants
+                  parallel: true
+                  skip_failure: true
+                - expr: flow_input.iter.value.table == "components"
+                  modules:
+                    - id: h
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/components/index_components
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Components
+                  parallel: true
+                  skip_failure: true
+                - expr: flow_input.iter.value.table == "materials"
+                  modules:
+                    - id: i
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/materials/index_materials
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Materials
+                  parallel: true
+                  skip_failure: true
+                - expr: flow_input.iter.value.table == "places"
+                  modules:
+                    - id: j
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/places/index_places
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Places
+                  parallel: true
+                  skip_failure: true
+            summary: ''
+        iterator:
+          expr: results.a
+          type: javascript
+        parallel: false
+        skip_failures: true
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - payload
+    - length
+  properties:
+    length:
+      type: integer
+      description: ''
+    payload:
+      type: array
+      description: ''
+      default: []
+      items:
+        type: string
+  required: []
