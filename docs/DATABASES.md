@@ -22,26 +22,24 @@ CREATE USER IF NOT EXISTS databot WITH PASSWORD '<password>';
 GRANT ALL ON DATABASE sage TO databot WITH GRANT OPTION;
 ```
 
-4. Run/Access the Prefect UI. If running locally, you can use `prefect server start` and click the UI link. Click on "Blocks", then the plus button, search for "sqlalchemy" and click "Create".
+4. Create a Windmill resource at path `f/db_config/db_sage` with resource type `c_cockroachdb`. In the Windmill UI, go to Resources → New Resource, select `c_cockroachdb`, and fill in:
 
 ```
-Block Name: crdb-sage
-Driver: string -> cockroachdb+psycopg2
-Database: sage
-Username: databot
-Password: <password>
-Host: Can leave blank if local or address of Docker/K8s container
-Port: 26257
+Path: f/db_config/db_sage
+uri: cockroachdb://databot:<password>@<host>:26257/sage
+ssl_rootcert: <contents of CA cert, or empty string>
+ssl_cert: <contents of client cert, or empty string>
+ssl_key: <contents of client key, or empty string>
 ```
 
-Click "Create"
+For local development, the resource is defined in `f/db_config/db_sage.dev.resource.yaml`. The `uri` and `ssl_rootcert` values are stored as Windmill variables (`f/db_config/db_sage_uri` and `f/db_config/db_sage_rootcert`).
 
-5. Now you should be able to access the credentials with:
+5. Scripts access the database via the `create_sql_engine` or `create_crdb_uri` helpers in `f/utils/db/crdb.py`:
 
 ```python
-from prefect_sqlalchemy import SqlAlchemyConnector
+from f.utils.db.crdb import create_sql_engine
 
-crdb = SqlAlchemyConnector.load("crdb-sage")
-# OR
-with SqlAlchemyConnector.load("crdb-sage") as database:
+engine = create_sql_engine(resource="f/db_config/db_sage")
 ```
+
+The resource path can be passed as a parameter to support different environments (dev/prod).

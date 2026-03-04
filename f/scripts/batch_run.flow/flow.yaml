@@ -1,0 +1,107 @@
+summary: Generic batch runner — run a script once per row from a CRDB SQL query
+description: |
+  Executes a SQL query against CockroachDB and runs a target Windmill script
+  once per result row. Supports configurable parallelism and inter-batch delays
+  for rate limiting. Column names in the SQL result must match the main()
+  parameter names of the target script.
+value:
+  modules:
+    - id: query
+      value:
+        lock: '!inline execute_sql_query_and_return_rows.inline_script.lock'
+        type: rawscript
+        content: '!inline execute_sql_query_and_return_rows.inline_script.py'
+        language: python3
+        input_transforms:
+          max_items:
+            expr: flow_input.max_items
+            type: javascript
+          sql_query:
+            expr: flow_input.sql_query
+            type: javascript
+          db_resource:
+            expr: flow_input.db_resource
+            type: javascript
+      summary: Execute SQL query and return rows
+    - id: run_items
+      value:
+        type: forloopflow
+        modules:
+          - id: run_item
+            value:
+              lock: '!inline run_script_with_row_args.inline_script.lock'
+              type: rawscript
+              content: '!inline run_script_with_row_args.inline_script.py'
+              language: python3
+              input_transforms:
+                row:
+                  expr: flow_input.iter.value
+                  type: javascript
+                batch_size:
+                  expr: flow_input.batch_size
+                  type: javascript
+                item_index:
+                  expr: flow_input.iter.index
+                  type: javascript
+                script_path:
+                  expr: flow_input.script_path
+                  type: javascript
+                static_args:
+                  expr: flow_input.static_args
+                  type: javascript
+                delay_between_batches_s:
+                  expr: flow_input.delay_between_batches_s
+                  type: javascript
+            summary: Run script with row args
+        iterator:
+          expr: results.query
+          type: javascript
+        parallel: true
+        parallelism:
+          expr: flow_input.batch_size
+          type: javascript
+        skip_failures: true
+      summary: Run script for each row
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - sql_query
+    - script_path
+    - static_args
+    - db_resource
+    - batch_size
+    - delay_between_batches_s
+    - max_items
+  properties:
+    sql_query:
+      type: string
+      description: SQL query executed against CRDB; each row becomes one script
+        invocation. Column names must match the main() parameter names of the
+        target script.
+    script_path:
+      type: string
+      description: Windmill script path to invoke per row (e.g. f/openfoodfacts/off_variant)
+    static_args:
+      type: object
+      description: Static arguments merged into every script invocation. Row columns
+        take precedence over static_args on key conflicts.
+    db_resource:
+      type: string
+      default: f/db_config/db_sage
+      description: CRDB resource path
+    batch_size:
+      type: integer
+      default: 5
+      description: Max concurrent script executions (parallelism)
+    delay_between_batches_s:
+      type: number
+      default: 0
+      description: Seconds to wait between each batch group of batch_size items
+    max_items:
+      type: integer
+      description: 'Safety cap: wraps query in SELECT * FROM (...) LIMIT N. Leave
+        empty for no limit.'
+  required:
+    - sql_query
+    - script_path

@@ -6,7 +6,6 @@ import json
 import os
 import tempfile
 import urllib.error
-from dataclasses import asdict
 from urllib.request import urlopen, urlretrieve
 
 from sqlalchemy import select
@@ -85,7 +84,7 @@ def download_off_image(url: str) -> tuple[str, str] | None:
 
 
 def merge_content(existing: SourceContent | None, new: dict | None) -> dict | None:
-    existing_dict = asdict(existing) if existing else {}
+    existing_dict = existing.model_dump() if existing else {}
     merged = {
         k: v for k, v in {**existing_dict, **(new or {})}.items() if v is not None
     }
@@ -181,9 +180,9 @@ def main(
         # Only get the primary images, not cropped sections
         # Some images have an imgid referring to the larger image it is cropped from
         for image in images_data:
-            if "imgid" not in image or image["imgid"] is None:
-                image_ids[image["key"]] = [
-                    k for k in image["sizes"].keys() if k in image_sizes
+            if image.imgid is None and image.sizes is not None:
+                image_ids[image.key] = [
+                    k for k in image.sizes.keys() if k in image_sizes
                 ]
     else:
         raise ValueError(f"Unexpected images data format: {type(images_data)}")

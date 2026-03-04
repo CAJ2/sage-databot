@@ -1,3 +1,4 @@
+import time
 from typing import Any
 import wmill
 import meilisearch
@@ -38,6 +39,82 @@ def meili_connect() -> meilisearch.Client:
     if not health:
         raise ValueError("Meilisearch is not healthy or not reachable.")
     return meili
+
+
+class MeiliClient:
+    def __init__(self, client: meilisearch.Client):
+        self._client = client
+
+    @property
+    def client(self) -> meilisearch.Client:
+        return self._client
+
+    def search(
+        self,
+        index: str,
+        query: str,
+        params: dict[str, Any] | None = None,
+        retries: int = 3,
+        retry_delay: float = 5.0,
+    ) -> dict[str, Any]:
+        """Search an index with automatic retry on failure."""
+        last_exc: Exception | None = None
+        for attempt in range(retries):
+            try:
+                return self._client.index(index).search(query, params or {})
+            except Exception as e:
+                last_exc = e
+                if attempt < retries - 1:
+                    print(
+                        f"Meilisearch search failed (attempt {attempt + 1}/{retries}): {e}"
+                    )
+                    time.sleep(retry_delay)
+        raise last_exc  # type: ignore[misc]
+
+    def ranking_search(
+        self,
+        index: str,
+        query: str,
+        threshold: float = 0.5,
+        limit: int = 1,
+        retries: int = 3,
+        retry_delay: float = 5.0,
+    ) -> list[dict[str, Any]]:
+        """Search with a ranking score threshold. Returns the hits list."""
+        result = self.search(
+            index,
+            query,
+            {"rankingScoreThreshold": threshold, "limit": limit},
+            retries=retries,
+            retry_delay=retry_delay,
+        )
+        return result.get("hits", [])
+
+    def multi_search(
+        self,
+        queries: list[dict[str, Any]],
+        retries: int = 3,
+        retry_delay: float = 5.0,
+    ) -> list[dict[str, Any]]:
+        """Search across multiple indexes. Returns list of result dicts per query."""
+        last_exc: Exception | None = None
+        for attempt in range(retries):
+            try:
+                result = self._client.multi_search(queries)
+                return result.get("results", [])
+            except Exception as e:
+                last_exc = e
+                if attempt < retries - 1:
+                    print(
+                        f"Meilisearch multi_search failed (attempt {attempt + 1}/{retries}): {e}"
+                    )
+                    time.sleep(retry_delay)
+        raise last_exc  # type: ignore[misc]
+
+
+def meili_client() -> MeiliClient:
+    """Return a MeiliClient wrapping the standard meili connection."""
+    return MeiliClient(meili_connect())
 
 
 def check_create_index(

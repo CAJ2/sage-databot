@@ -22,19 +22,10 @@ Do not ever manually edit any of these auto-generated files:
 
 Instead, run the pixi task `pixi run graphql` to regenerate the GraphQL client and schema files after making changes to the GraphQL schema or queries.
 
-## Script Guidance
-
-Each script should be placed in a folder. Ask the user in which folder they want the script to be located before starting coding.
-
-After writing a script, you do not need to create .lock and .yaml files manually. Instead, run `wmill script generate-metadata` (no arguments). After writing the script, ask the user if they want to push with `wmill sync push`. Both should be run at the root of the repository.
-
-You can use `wmill resource-type list --schema` to list all resource types available. Use grep if the output is too long.
-
 ## Important Tips
 
 - Only top level folders under `f/` can have `folder.meta.yaml` files. Subfolders can be created (and are a good idea for organization) but do not include a `folder.meta.yaml` file.
 - Non-source files (`.tsv`, `.json`, `.txt`, `.jinja`, etc.) should only be created under the `src/` hierarchy. If you reference one of these files in a script/flow under `f/`, you must use `checkout_repo()` within the script and access it under `databot/src/` in the worker environment.
-- Running `pixi run prek run` after making changes is a good idea to ensure there are no critical errors and files are properly formatted.
 
 ## Script Writing Principles
 
