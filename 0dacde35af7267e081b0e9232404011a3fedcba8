@@ -1,0 +1,33 @@
+f/context/process_context.py
+  98bf5ce58472f0c4 22,45,47-49
+f/graphql/queries/processes.graphql
+  98bf5ce58472f0c4 31-38
+f/graphql/queries/components.graphql
+  98bf5ce58472f0c4 17-24
+f/context/component_context.py
+  98bf5ce58472f0c4 27-31
+f/context/variant_context.py
+  98bf5ce58472f0c4 28-32
+f/graphql/queries/variants.graphql
+  98bf5ce58472f0c4 32-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "0dacde35af7267e081b0e9232404011a3fedcba8",
+  "prompts": {
+    "98bf5ce58472f0c4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "51bf8e25-c493-4ff9-9b6c-797e17b03619",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 55,
+      "total_deletions": 71,
+      "accepted_lines": 39,
+      "overriden_lines": 0
+    }
+  }
+}
