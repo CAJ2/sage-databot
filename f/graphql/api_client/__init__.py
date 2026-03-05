@@ -66,6 +66,9 @@ from .get_component_for_review import (
     GetComponentForReviewComponentMaterials,
     GetComponentForReviewComponentMaterialsMaterial,
     GetComponentForReviewComponentPrimaryMaterial,
+    GetComponentForReviewComponentSources,
+    GetComponentForReviewComponentSourcesNodes,
+    GetComponentForReviewComponentSourcesNodesSource,
 )
 from .get_current_user import GetCurrentUser, GetCurrentUserMe
 from .get_item_for_link import (
@@ -99,6 +102,9 @@ from .get_process_for_review import (
     GetProcessForReviewProcessOrg,
     GetProcessForReviewProcessPlace,
     GetProcessForReviewProcessRegion,
+    GetProcessForReviewProcessSources,
+    GetProcessForReviewProcessSourcesNodes,
+    GetProcessForReviewProcessSourcesNodesSource,
     GetProcessForReviewProcessVariant,
 )
 from .get_root_category import GetRootCategory, GetRootCategoryCategoryRoot
@@ -121,6 +127,9 @@ from .get_variant_for_review import (
     GetVariantForReviewVariantOrgs,
     GetVariantForReviewVariantOrgsNodes,
     GetVariantForReviewVariantOrgsNodesOrg,
+    GetVariantForReviewVariantSources,
+    GetVariantForReviewVariantSourcesNodes,
+    GetVariantForReviewVariantSourcesNodesSource,
 )
 from .input_types import (
     ComponentMaterialInput,
@@ -244,6 +253,9 @@ __all__ = [
     "GetComponentForReviewComponentMaterials",
     "GetComponentForReviewComponentMaterialsMaterial",
     "GetComponentForReviewComponentPrimaryMaterial",
+    "GetComponentForReviewComponentSources",
+    "GetComponentForReviewComponentSourcesNodes",
+    "GetComponentForReviewComponentSourcesNodesSource",
     "GetCurrentUser",
     "GetCurrentUserMe",
     "GetItemForLink",
@@ -272,6 +284,9 @@ __all__ = [
     "GetProcessForReviewProcessOrg",
     "GetProcessForReviewProcessPlace",
     "GetProcessForReviewProcessRegion",
+    "GetProcessForReviewProcessSources",
+    "GetProcessForReviewProcessSourcesNodes",
+    "GetProcessForReviewProcessSourcesNodesSource",
     "GetProcessForReviewProcessVariant",
     "GetRootCategory",
     "GetRootCategoryCategoryRoot",
@@ -288,6 +303,9 @@ __all__ = [
     "GetVariantForReviewVariantOrgs",
     "GetVariantForReviewVariantOrgsNodes",
     "GetVariantForReviewVariantOrgsNodesOrg",
+    "GetVariantForReviewVariantSources",
+    "GetVariantForReviewVariantSourcesNodes",
+    "GetVariantForReviewVariantSourcesNodesSource",
     "GetVariantVariants",
     "GetVariantVariantsEdges",
     "GetVariantVariantsEdgesNode",

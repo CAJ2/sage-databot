@@ -2,13 +2,8 @@
 
 from typing import Any
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
 from f.context.context_types import ContextMode, EntityContext
-from f.db.sage.model import ComponentSources, Source
 from f.utils.api import api_connect
-from f.utils.db.crdb import create_sql_engine
 
 
 def main(
@@ -29,25 +24,16 @@ def main(
         result = client.get_component_for_review(id=entity_id)
         if result.component:
             entity_data = result.component.model_dump(by_alias=False)
+            if result.component.sources:
+                source_contexts = [
+                    s.source.content["context"]
+                    for s in (result.component.sources.nodes or [])
+                    if s.source.content and s.source.content.get("context")
+                ]
+                if source_contexts:
+                    related_data["source_contexts"] = source_contexts
     except Exception as e:
         raise ValueError(f"Could not fetch Component {entity_id}: {e}")
-
-    try:
-        crdb = create_sql_engine()
-        with Session(crdb) as session:
-            stmt = (
-                select(Source)
-                .join(ComponentSources, Source.id == ComponentSources.source_id)
-                .where(ComponentSources.component_id == entity_id)
-            )
-            sources = session.scalars(stmt).unique().all()
-        source_contexts = [
-            s.content.context for s in sources if s.content and s.content.context
-        ]
-        if source_contexts:
-            related_data["source_contexts"] = source_contexts
-    except Exception as e:
-        print(f"Could not fetch sources for Component {entity_id}: {e}")
     if mode == "review":
         prompt_hints = (
             "When reviewing changes to a Component, consider:\n"

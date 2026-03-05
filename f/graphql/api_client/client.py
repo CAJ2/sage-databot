@@ -241,6 +241,14 @@ class Client(BaseClient):
                   }
                   materialFraction
                 }
+                sources(first: 10) {
+                  nodes {
+                    source {
+                      id
+                      content
+                    }
+                  }
+                }
               }
             }
             """)
@@ -493,6 +501,14 @@ class Client(BaseClient):
                   equivalency
                   valueRatio
                 }
+                sources(first: 10) {
+                  nodes {
+                    source {
+                      id
+                      content
+                    }
+                  }
+                }
               }
             }
             """)
@@ -616,6 +632,14 @@ class Client(BaseClient):
                       name
                     }
                     role
+                  }
+                }
+                sources(first: 10) {
+                  nodes {
+                    source {
+                      id
+                      content
+                    }
                   }
                 }
               }

@@ -14,5 +14,13 @@ query GetComponentForReview($id: ID!) {
       }
       materialFraction
     }
+    sources(first: 10) {
+      nodes {
+        source {
+          id
+          content
+        }
+      }
+    }
   }
 }

@@ -2,13 +2,8 @@
 
 from typing import Any
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
 from f.context.context_types import ContextMode, EntityContext
-from f.db.sage.model import ProcessSources, Source
 from f.utils.api import api_connect
-from f.utils.db.crdb import create_sql_engine
 
 
 def main(
@@ -24,6 +19,7 @@ def main(
 
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
+    result = None
 
     try:
         result = client.get_process_for_review(id=entity_id)
@@ -46,22 +42,14 @@ def main(
         except Exception as e:
             print(f"Could not fetch Material {material_id}: {e}")
 
-    try:
-        crdb = create_sql_engine()
-        with Session(crdb) as session:
-            stmt = (
-                select(Source)
-                .join(ProcessSources, Source.id == ProcessSources.source_id)
-                .where(ProcessSources.process_id == entity_id)
-            )
-            sources = session.scalars(stmt).unique().all()
+    if result and result.process and result.process.sources:
         source_contexts = [
-            s.content.context for s in sources if s.content and s.content.context
+            s.source.content["context"]
+            for s in (result.process.sources.nodes or [])
+            if s.source.content and s.source.content.get("context")
         ]
         if source_contexts:
             related_data["source_contexts"] = source_contexts
-    except Exception as e:
-        print(f"Could not fetch sources for Process {entity_id}: {e}")
 
     if mode == "review":
         prompt_hints = (
