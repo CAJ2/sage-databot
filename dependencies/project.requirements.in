@@ -11,15 +11,19 @@ adbc-driver-sqlite==1.9.0
     # via sage-databot
 ag-ui-protocol==0.1.10
     # via pydantic-ai-slim
+aiofile==3.9.0
+    # via py-key-value-aio
 aiohappyeyeballs==2.6.1
     # via aiohttp
 aiohttp==3.13.3
-    # via huggingface-hub
+    # via xai-sdk
 aiosignal==1.4.0
     # via aiohttp
+annotated-doc==0.0.4
+    # via typer
 annotated-types==0.7.0
     # via pydantic
-anthropic==0.75.0
+anthropic==0.84.0
     # via pydantic-ai-slim
 anyio==4.9.0
     # via
@@ -29,9 +33,11 @@ anyio==4.9.0
     #   httpx
     #   mcp
     #   openai
+    #   py-key-value-aio
     #   pydantic-evals
     #   sse-starlette
     #   starlette
+    #   watchfiles
 argcomplete==3.6.2
     # via pydantic-ai-slim
 ariadne-codegen==0.17.0
@@ -46,6 +52,8 @@ authlib==1.6.6
     # via fastmcp
 autoflake==2.3.1
     # via ariadne-codegen
+beartype==0.22.9
+    # via py-key-value-aio
 black==25.1.0
     # via ariadne-codegen
 boto3==1.42.22
@@ -57,7 +65,9 @@ botocore==1.42.22
     #   boto3
     #   s3transfer
 cachetools==5.5.2
-    # via google-auth
+    # via py-key-value-aio
+caio==0.9.25
+    # via aiofile
 camel-converter==4.0.1
     # via meilisearch
 certifi==2025.1.31
@@ -74,13 +84,13 @@ click==8.3.1
     #   ariadne-codegen
     #   black
     #   marimo
+    #   typer
     #   uvicorn
-cohere==5.20.1 ; sys_platform != 'emscripten'
+cohere==5.20.7 ; sys_platform != 'emscripten'
     # via pydantic-ai-slim
-colorama==0.4.6
+colorama==0.4.6 ; sys_platform == 'win32'
     # via
     #   click
-    #   griffe
     #   tqdm
 connectorx==0.4.4
     # via sage-databot
@@ -89,7 +99,9 @@ contourpy==1.3.2
 cryptography==44.0.2
     # via
     #   authlib
+    #   google-auth
     #   pyjwt
+    #   secretstorage
 cycler==0.12.1
     # via matplotlib
 cyclopts==4.4.4
@@ -124,7 +136,7 @@ fastavro==1.11.1 ; sys_platform != 'emscripten'
     # via cohere
 fastexcel==0.18.0
     # via sage-databot
-fastmcp==2.12.4
+fastmcp==3.1.0
     # via pydantic-ai-slim
 fasttext==0.9.3
     # via sage-databot
@@ -144,27 +156,31 @@ gitdb==4.0.12
     # via gitpython
 gitpython==3.1.44
     # via sage-databot
-google-auth==2.40.1
+google-auth==2.49.0
     # via
     #   google-genai
     #   pydantic-ai-slim
-google-genai==1.55.0
+google-genai==1.66.0
     # via pydantic-ai-slim
 googleapis-common-protos==1.70.0
-    # via opentelemetry-exporter-otlp-proto-http
+    # via
+    #   opentelemetry-exporter-otlp-proto-http
+    #   xai-sdk
 graphql-core==3.2.6
     # via ariadne-codegen
 greenlet==3.2.1 ; platform_machine == 'AMD64' or platform_machine == 'WIN32' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'ppc64le' or platform_machine == 'win32' or platform_machine == 'x86_64'
     # via sqlalchemy
-griffe==1.15.0
+griffelib==2.0.0
     # via pydantic-ai-slim
 groq==0.28.0
     # via pydantic-ai-slim
+grpcio==1.78.0
+    # via xai-sdk
 h11==0.14.0
     # via
     #   httpcore
     #   uvicorn
-hf-xet==1.2.0 ; platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'
+hf-xet==1.3.2 ; platform_machine == 'AMD64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'
     # via huggingface-hub
 httpcore==1.0.8
     # via httpx
@@ -177,6 +193,7 @@ httpx==0.28.1
     #   genai-prices
     #   google-genai
     #   groq
+    #   huggingface-hub
     #   mcp
     #   mistralai
     #   openai
@@ -185,7 +202,7 @@ httpx==0.28.1
     #   wmill
 httpx-sse==0.4.0
     # via mcp
-huggingface-hub==0.36.0
+huggingface-hub==1.6.0
     # via
     #   pydantic-ai-slim
     #   tokenizers
@@ -204,14 +221,22 @@ importlib-resources==6.5.2
     #   adbc-driver-sqlite
 invoke==2.2.1
     # via mistralai
-isodate==0.7.2
-    # via openapi-core
 isort==6.0.1
     # via ariadne-codegen
 itsdangerous==2.2.0
     # via marimo
+jaraco-classes==3.4.0
+    # via keyring
+jaraco-context==6.1.1
+    # via keyring
+jaraco-functools==4.4.0
+    # via keyring
 jedi==0.19.2
     # via marimo
+jeepney==0.9.0 ; sys_platform == 'linux'
+    # via
+    #   keyring
+    #   secretstorage
 jinja2==3.1.6
     # via sage-databot
 jiter==0.10.0
@@ -222,27 +247,24 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
+jsonref==1.1.0
+    # via fastmcp
 jsonschema==4.25.1
     # via
     #   mcp
-    #   openapi-core
-    #   openapi-schema-validator
-    #   openapi-spec-validator
     #   sage-databot
 jsonschema-path==0.3.4
-    # via
-    #   openapi-core
-    #   openapi-spec-validator
+    # via fastmcp
 jsonschema-specifications==2024.10.1
-    # via
-    #   jsonschema
-    #   openapi-schema-validator
+    # via jsonschema
+keyring==25.7.0
+    # via py-key-value-aio
 kiwisolver==1.4.8
     # via matplotlib
-lazy-object-proxy==1.12.0
-    # via openapi-spec-validator
-logfire==4.16.0
-    # via pydantic-ai-slim
+logfire==4.27.0
+    # via
+    #   pydantic-ai-slim
+    #   sage-databot
 logfire-api==3.19.0
     # via
     #   pydantic-evals
@@ -258,9 +280,7 @@ markdown==3.10.2
 markdown-it-py==3.0.0
     # via rich
 markupsafe==3.0.2
-    # via
-    #   jinja2
-    #   werkzeug
+    # via jinja2
 matplotlib==3.10.1
     # via networkx
 mcp==1.25.0
@@ -274,7 +294,9 @@ meilisearch==0.38.0
 mistralai==1.9.11
     # via pydantic-ai-slim
 more-itertools==10.8.0
-    # via openapi-core
+    # via
+    #   jaraco-classes
+    #   jaraco-functools
 msgspec==0.20.0
     # via marimo
 multidict==6.7.0
@@ -299,20 +321,13 @@ numpy==2.4.2
     #   networkx
     #   pandas
     #   scipy
-openai==2.14.0
+openai==2.26.0
     # via pydantic-ai-slim
-openapi-core==0.22.0
-    # via fastmcp
 openapi-pydantic==0.5.1
     # via fastmcp
-openapi-schema-validator==0.6.3
-    # via
-    #   openapi-core
-    #   openapi-spec-validator
-openapi-spec-validator==0.7.2
-    # via openapi-core
 opentelemetry-api==1.39.1
     # via
+    #   fastmcp
     #   opentelemetry-exporter-otlp-proto-http
     #   opentelemetry-instrumentation
     #   opentelemetry-instrumentation-httpx
@@ -337,6 +352,7 @@ opentelemetry-sdk==1.39.1
     # via
     #   logfire
     #   opentelemetry-exporter-otlp-proto-http
+    #   xai-sdk
 opentelemetry-semantic-conventions==0.60b1
     # via
     #   opentelemetry-instrumentation
@@ -346,13 +362,15 @@ opentelemetry-util-http==0.60b1
     # via opentelemetry-instrumentation-httpx
 osmium==4.2.0
     # via sage-databot
-packaging==24.2
+packaging==25.0
     # via
     #   black
+    #   fastmcp
     #   huggingface-hub
     #   marimo
     #   matplotlib
     #   opentelemetry-instrumentation
+    #   xai-sdk
 pandas==2.3.3
     # via
     #   networkx
@@ -366,7 +384,9 @@ pathspec==0.12.1
 pillow==11.2.1
     # via matplotlib
 platformdirs==4.3.7
-    # via black
+    # via
+    #   black
+    #   fastmcp
 polars==1.36.1
     # via sage-databot
 polars-runtime-32==1.36.1
@@ -383,12 +403,15 @@ protobuf==5.29.4
     #   logfire
     #   opentelemetry-proto
     #   temporalio
+    #   xai-sdk
 psutil==7.2.2
     # via marimo
 psycopg==3.3.2
     # via sage-databot
 psycopg-binary==3.3.2 ; implementation_name != 'pypy'
     # via psycopg
+py-key-value-aio==0.4.4
+    # via fastmcp
 pyarrow==22.0.0
     # via sage-databot
 pyasn1==0.6.1
@@ -421,9 +444,10 @@ pydantic==2.12.5
     #   pydantic-graph
     #   pydantic-settings
     #   sage-databot
-pydantic-ai==1.39.1
+    #   xai-sdk
+pydantic-ai==1.67.0
     # via sage-databot
-pydantic-ai-slim==1.39.1
+pydantic-ai-slim==1.67.0
     # via
     #   pydantic-ai
     #   pydantic-evals
@@ -431,9 +455,9 @@ pydantic-core==2.41.5
     # via
     #   cohere
     #   pydantic
-pydantic-evals==1.39.1
+pydantic-evals==1.67.0
     # via pydantic-ai-slim
-pydantic-graph==1.39.1
+pydantic-graph==1.67.0
     # via pydantic-ai-slim
 pydantic-settings==2.9.1
     # via mcp
@@ -472,8 +496,11 @@ pytz==2025.2
     # via pandas
 pywin32==311 ; sys_platform == 'win32'
     # via mcp
+pywin32-ctypes==0.2.3 ; sys_platform == 'win32'
+    # via keyring
 pyyaml==6.0.2
     # via
+    #   fastmcp
     #   huggingface-hub
     #   jsonschema-path
     #   marimo
@@ -492,7 +519,6 @@ requests==2.32.5
     #   cohere
     #   google-auth
     #   google-genai
-    #   huggingface-hub
     #   jsonschema-path
     #   meilisearch
     #   opentelemetry-exporter-otlp-proto-http
@@ -500,8 +526,7 @@ requests==2.32.5
     #   pydantic-ai-slim
     #   smart-open
     #   tiktoken
-rfc3339-validator==0.1.4
-    # via openapi-schema-validator
+    #   xai-sdk
 rich==14.0.0
     # via
     #   cyclopts
@@ -510,6 +535,7 @@ rich==14.0.0
     #   pydantic-ai-slim
     #   pydantic-evals
     #   rich-rst
+    #   typer
 rich-rst==1.3.2
     # via cyclopts
 rpds-py==0.24.0
@@ -524,12 +550,14 @@ s3transfer==0.16.0
     # via boto3
 scipy==1.15.2
     # via networkx
+secretstorage==3.5.0 ; sys_platform == 'linux'
+    # via keyring
 setuptools==79.0.0
     # via fasttext
+shellingham==1.5.4
+    # via typer
 six==1.17.0
-    # via
-    #   python-dateutil
-    #   rfc3339-validator
+    # via python-dateutil
 smart-open==7.1.0
     # via sage-databot
 smmap==5.0.2
@@ -564,7 +592,7 @@ tenacity==9.1.2
     #   pydantic-ai-slim
 tiktoken==0.12.0
     # via pydantic-ai-slim
-tokenizers==0.21.1 ; sys_platform != 'emscripten'
+tokenizers==0.22.2 ; sys_platform != 'emscripten'
     # via cohere
 toml==0.10.2
     # via ariadne-codegen
@@ -574,6 +602,8 @@ tqdm==4.67.3
     # via
     #   huggingface-hub
     #   openai
+typer==0.24.1
+    # via huggingface-hub
 types-protobuf==6.32.1.20251210
     # via temporalio
 types-requests==2.32.4.20250611 ; sys_platform != 'emscripten'
@@ -588,17 +618,18 @@ typing-extensions==4.15.0
     #   exceptiongroup
     #   google-genai
     #   groq
+    #   grpcio
     #   huggingface-hub
     #   logfire
     #   mcp
     #   nexus-rpc
     #   openai
-    #   openapi-core
     #   opentelemetry-api
     #   opentelemetry-exporter-otlp-proto-http
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
     #   psycopg
+    #   py-key-value-aio
     #   pydantic
     #   pydantic-core
     #   referencing
@@ -617,23 +648,27 @@ tzdata==2025.2
     # via
     #   pandas
     #   psycopg
+uncalled-for==0.2.0
+    # via fastmcp
 urllib3==2.4.0
     # via
     #   botocore
     #   requests
     #   types-requests
-uvicorn==0.34.2
+uvicorn==0.41.0
     # via
+    #   fastmcp
     #   marimo
     #   mcp
+watchfiles==1.1.1
+    # via fastmcp
 wcwidth==0.2.13
     # via prompt-toolkit
 websockets==15.0.1
     # via
+    #   fastmcp
     #   google-genai
     #   marimo
-werkzeug==3.1.4
-    # via openapi-core
 wmill==1.601.1
     # via sage-databot
 wrapt==1.17.2
@@ -641,6 +676,8 @@ wrapt==1.17.2
     #   opentelemetry-instrumentation
     #   opentelemetry-instrumentation-httpx
     #   smart-open
+xai-sdk==1.8.0
+    # via pydantic-ai-slim
 yarl==1.22.0
     # via aiohttp
 zipp==3.21.0

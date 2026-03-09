@@ -1,0 +1,53 @@
+query Search($query: String!, $types: [SearchType!], $limit: Int) {
+  search(query: $query, types: $types, limit: $limit) {
+    nodes {
+      ... on Variant {
+        id
+        name
+        desc
+        imageURL
+      }
+      ... on Item {
+        id
+        name
+        desc
+        imageURL
+      }
+      ... on Component {
+        id
+        name
+        desc
+        imageURL
+      }
+      ... on Category {
+        id
+        label: name
+        desc
+        descShort
+        imageURL
+      }
+      ... on Org {
+        id
+        label: name
+        desc
+        slug
+        websiteURL
+      }
+      ... on Place {
+        id
+        name
+        desc
+      }
+      ... on Region {
+        id
+        name
+        placetype
+      }
+      ... on Material {
+        id
+        name
+        desc
+      }
+    }
+  }
+}

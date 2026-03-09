@@ -216,6 +216,12 @@ class ItemTagsInput(BaseModel):
     meta: Optional[Any] = None
 
 
+class LinkSourceInput(BaseModel):
+    id: str
+    jsonld: Any
+    "JSON-LD document with @id and @type"
+
+
 class ProcessMaterialInput(BaseModel):
     id: str
 
@@ -249,6 +255,12 @@ class TranslatedInput(BaseModel):
     lang: str
     'BCP 47 language code (e.g. "en", "fr-CA")'
     text: Optional[str] = None
+
+
+class UnlinkSourceInput(BaseModel):
+    id: str
+    jsonld: Any
+    "JSON-LD document identifying the node by @id"
 
 
 class UpdateCategoryInput(BaseModel):

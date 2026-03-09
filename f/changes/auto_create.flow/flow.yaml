@@ -1,0 +1,174 @@
+summary: AI auto-suggest field values for creating a new entity
+description: >
+  Given an entity_name and a natural language prompt, fetches the create schema
+  for the entity type using the model-specific context script (with schema_mode=create),
+  then uses an AI agent with a multi-type search tool to find relevant related entities
+  and suggests all field values needed to create the new entity. Returns a SuggestResult
+  with a mutation-ready data payload and per-field suggestions with confidence scores
+  and reasoning.
+value:
+  modules:
+    - id: a
+      value:
+        type: branchone
+        default:
+          - id: a_generic
+            value:
+              path: f/context/generic_context
+              type: script
+              is_trigger: false
+              input_transforms:
+                schema_mode:
+                  expr: '"create"'
+                  type: javascript
+                entity_id:
+                  type: static
+                  value: null
+            summary: Fetch generic context
+            continue_on_error: false
+        branches:
+          - expr: flow_input.entity_name == "Variant"
+            modules:
+              - id: a_variant
+                value:
+                  path: f/context/variant_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    schema_mode:
+                      expr: '"create"'
+                      type: javascript
+                    entity_id:
+                      type: static
+                      value: null
+                summary: Fetch Variant context
+                continue_on_error: false
+            summary: Variant
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Item"
+            modules:
+              - id: a_item
+                value:
+                  path: f/context/item_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    schema_mode:
+                      expr: '"create"'
+                      type: javascript
+                    entity_id:
+                      type: static
+                      value: null
+                summary: Fetch Item context
+                continue_on_error: false
+            summary: Item
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Process"
+            modules:
+              - id: a_process
+                value:
+                  path: f/context/process_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    schema_mode:
+                      expr: '"create"'
+                      type: javascript
+                    entity_id:
+                      type: static
+                      value: null
+                summary: Fetch Process context
+                continue_on_error: false
+            summary: Process
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Component"
+            modules:
+              - id: a_component
+                value:
+                  path: f/context/component_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    schema_mode:
+                      expr: '"create"'
+                      type: javascript
+                    entity_id:
+                      type: static
+                      value: null
+                summary: Fetch Component context
+                continue_on_error: false
+            summary: Component
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Place"
+            modules:
+              - id: a_place
+                value:
+                  path: f/context/place_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    schema_mode:
+                      expr: '"create"'
+                      type: javascript
+                    entity_id:
+                      type: static
+                      value: null
+                summary: Fetch Place context
+                continue_on_error: false
+            summary: Place
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Category"
+            modules:
+              - id: a_category
+                value:
+                  path: f/context/category_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    schema_mode:
+                      expr: '"create"'
+                      type: javascript
+                    entity_id:
+                      type: static
+                      value: null
+                summary: Fetch Category context
+                continue_on_error: false
+            summary: Category
+            parallel: false
+            skip_failure: false
+      summary: Fetch entity context (create schema)
+    - id: b
+      value:
+        path: f/changes/ai_create
+        type: script
+        is_trigger: false
+        input_transforms:
+          entity_context:
+            expr: results.a
+            type: javascript
+          prompt:
+            expr: flow_input.prompt
+            type: javascript
+      summary: AI create suggestion
+      continue_on_error: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - entity_name
+    - prompt
+  properties:
+    entity_name:
+      type: string
+      description: Model type to create (e.g. Variant, Item, Process, Component, Category)
+    prompt:
+      type: string
+      description: Natural language description of the new entity to create
+  required:
+    - entity_name
+    - prompt

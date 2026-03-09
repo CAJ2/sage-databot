@@ -31,3 +31,11 @@ mutation UpdateSource($input: UpdateSourceInput!) {
     }
   }
 }
+
+mutation LinkSource($input: LinkSourceInput!) {
+  linkSource(input: $input) {
+    source {
+      id
+    }
+  }
+}

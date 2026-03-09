@@ -1,5 +1,7 @@
-from typing import Any
+from datetime import datetime
+from typing import Any, cast
 
+from sqlalchemy import JSON, DateTime, Engine, Table
 from sqlalchemy.orm import Mapped, mapped_column
 
 from f.db.base import Base, JSONData, JSONModel
@@ -81,3 +83,25 @@ class OFFProduct(Base):
     product_quantity: Mapped[str | None] = mapped_column()
     product_quantity_unit: Mapped[str | None] = mapped_column()
     stores: Mapped[str | None] = mapped_column()
+
+
+class KGCache(Base):
+    __tablename__ = "kg_cache"
+
+    mid: Mapped[str] = mapped_column(primary_key=True)
+    jsonld: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class WikidataCache(Base):
+    __tablename__ = "wikidata_cache"
+
+    qid: Mapped[str] = mapped_column(primary_key=True)
+    jsonld: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+def ensure_cache_tables(engine: Engine) -> None:
+    """Create KGCache and WikidataCache tables if they don't already exist."""
+    for table in (KGCache.__table__, WikidataCache.__table__):
+        cast(Table, table).create(engine, checkfirst=True)

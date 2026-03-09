@@ -28,5 +28,13 @@ query GetProcessForReview($id: ID!) {
       equivalency
       valueRatio
     }
+    sources(first: 10) {
+      nodes {
+        source {
+          id
+          content
+        }
+      }
+    }
   }
 }

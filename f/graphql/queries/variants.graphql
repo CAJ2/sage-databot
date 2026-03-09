@@ -29,6 +29,14 @@ query GetVariantForReview($id: ID!) {
         role
       }
     }
+    sources(first: 10) {
+      nodes {
+        source {
+          id
+          content
+        }
+      }
+    }
   }
 }
 

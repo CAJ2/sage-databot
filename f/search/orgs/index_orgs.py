@@ -1,12 +1,13 @@
 # requirements: project
 
-from sqlalchemy import Engine
-import polars as pl
-import meilisearch
 import json
 
-from f.utils.db.meili import meili_connect, check_create_index
+import meilisearch
+import polars as pl
+from sqlalchemy import Engine
+
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
+from f.utils.db.meili import check_create_index, meili_connect
 
 
 def index_orgs(
@@ -21,7 +22,7 @@ def index_orgs(
         crdb,
         "public.orgs",
         ids=keys,
-        cols='id, updated_at, name, "desc"::string, avatar_url',
+        cols='id, updated_at, name, slug, "desc"::string, avatar_url',
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.orgs")

@@ -1,0 +1,214 @@
+summary: AI auto-suggest reference field changes for a model entity
+description: >
+  Given an entity_name, entity_id, ref_field, and ref_entity_type, fetches rich
+  structured context for the entity, then runs an AI agent that searches for
+  relevant entities and suggests add/remove/change operations for the reference
+  field. Returns a SuggestResult with a mutation-ready data payload and
+  per-operation suggestions with confidence scores and reasoning.
+value:
+  modules:
+    - id: a
+      value:
+        type: branchone
+        default:
+          - id: a_generic
+            value:
+              path: f/context/generic_context
+              type: script
+              is_trigger: false
+              input_transforms:
+                mode:
+                  expr: '"suggest"'
+                  type: javascript
+                entity_id:
+                  expr: flow_input.entity_id
+                  type: javascript
+                target_fields:
+                  expr: '[]'
+                  type: javascript
+            summary: Fetch generic context
+            continue_on_error: false
+        branches:
+          - expr: flow_input.entity_name == "Variant"
+            modules:
+              - id: a_variant
+                value:
+                  path: f/context/variant_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    mode:
+                      expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    target_fields:
+                      expr: '[]'
+                      type: javascript
+                summary: Fetch Variant context
+                continue_on_error: false
+            summary: Variant
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Item"
+            modules:
+              - id: a_item
+                value:
+                  path: f/context/item_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    mode:
+                      expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    target_fields:
+                      expr: '[]'
+                      type: javascript
+                summary: Fetch Item context
+                continue_on_error: false
+            summary: Item
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Process"
+            modules:
+              - id: a_process
+                value:
+                  path: f/context/process_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    mode:
+                      expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    target_fields:
+                      expr: '[]'
+                      type: javascript
+                summary: Fetch Process context
+                continue_on_error: false
+            summary: Process
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Component"
+            modules:
+              - id: a_component
+                value:
+                  path: f/context/component_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    mode:
+                      expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    target_fields:
+                      expr: '[]'
+                      type: javascript
+                summary: Fetch Component context
+                continue_on_error: false
+            summary: Component
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Place"
+            modules:
+              - id: a_place
+                value:
+                  path: f/context/place_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    mode:
+                      expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    target_fields:
+                      expr: '[]'
+                      type: javascript
+                summary: Fetch Place context
+                continue_on_error: false
+            summary: Place
+            parallel: false
+            skip_failure: false
+          - expr: flow_input.entity_name == "Category"
+            modules:
+              - id: a_category
+                value:
+                  path: f/context/category_context
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    mode:
+                      expr: '"suggest"'
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    target_fields:
+                      expr: '[]'
+                      type: javascript
+                summary: Fetch Category context
+                continue_on_error: false
+            summary: Category
+            parallel: false
+            skip_failure: false
+      summary: Fetch entity context
+    - id: b
+      value:
+        path: f/changes/ai_ref
+        type: script
+        is_trigger: false
+        input_transforms:
+          prompt:
+            expr: flow_input.prompt
+            type: javascript
+          ref_field:
+            expr: flow_input.ref_field
+            type: javascript
+          entity_context:
+            expr: results.a
+            type: javascript
+          ref_entity_type:
+            expr: flow_input.ref_entity_type
+            type: javascript
+      summary: AI reference field suggestion
+      continue_on_error: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - entity_name
+    - entity_id
+    - ref_field
+    - ref_entity_type
+    - prompt
+  properties:
+    entity_name:
+      type: string
+      description: Model type (e.g. Variant, Item, Process, Component, Place, Category)
+    entity_id:
+      type: string
+      description: The ID of the entity to manage references for
+    ref_field:
+      type: string
+      description: The reference field to manage (e.g. "items", "components", "regionID")
+    ref_entity_type:
+      type: string
+      description: The entity type to search (e.g. "Item", "Component", "Region")
+    prompt:
+      type: string
+      description: Optional additional guidance for the AI agent
+  required:
+    - entity_name
+    - entity_id
+    - ref_field
+    - ref_entity_type

@@ -2,18 +2,14 @@
 
 from typing import Any
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from f.context.context_types import ContextMode, EntityContext
-from f.db.sage.model import ComponentSources, Source
+from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
-from f.utils.db.crdb import create_sql_engine
 
 
 def main(
-    entity_id: str,
+    entity_id: str | None = None,
     mode: ContextMode = "review",
+    schema_mode: SchemaMode = "update",
     target_fields: list[str] | None = None,
 ) -> dict[str, Any]:
     """
@@ -22,39 +18,46 @@ def main(
     """
     client, _ = api_connect()
 
+    entity_schema: Any = None
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
 
-    try:
-        result = client.get_component_for_review(id=entity_id)
-        if result.component:
-            entity_data = result.component.model_dump(by_alias=False)
-    except Exception as e:
-        raise ValueError(f"Could not fetch Component {entity_id}: {e}")
+    if entity_id is not None:
+        try:
+            result = client.get_component_for_review(id=entity_id)
+            if result.component:
+                entity_data = result.component.model_dump(by_alias=False)
+                if result.component.sources:
+                    source_contexts = [
+                        s.source.content["context"]
+                        for s in (result.component.sources.nodes or [])
+                        if s.source.content and s.source.content.get("context")
+                    ]
+                    if source_contexts:
+                        related_data["source_contexts"] = source_contexts
+        except Exception as e:
+            raise ValueError(f"Could not fetch Component {entity_id}: {e}")
 
     try:
-        crdb = create_sql_engine()
-        with Session(crdb) as session:
-            stmt = (
-                select(Source)
-                .join(ComponentSources, Source.id == ComponentSources.source_id)
-                .where(ComponentSources.component_id == entity_id)
+        schema_result = client.get_component_schema()
+        if schema_result.component_schema:
+            schema_obj = (
+                schema_result.component_schema.create
+                if schema_mode == "create"
+                else schema_result.component_schema.update
             )
-            sources = session.scalars(stmt).unique().all()
-        source_contexts = [
-            s.content.context for s in sources if s.content and s.content.context
-        ]
-        if source_contexts:
-            related_data["source_contexts"] = source_contexts
+            entity_schema = schema_obj.schema_ if schema_obj else None
     except Exception as e:
-        print(f"Could not fetch sources for Component {entity_id}: {e}")
+        print(f"Could not fetch Component schema: {e}")
+
     if mode == "review":
         prompt_hints = (
             "When reviewing changes to a Component, consider:\n"
             "- Whether the component name/description matches the underlying material.\n"
             "- Whether quantity and unit values are physically reasonable.\n"
             "- Components represent material inputs used by variants (e.g. 'Steel frame: 2 kg').\n"
-            "- If source_contexts are provided in related_data, use them as primary factual references."
+            "- If source_contexts are provided in related_data, use them as primary factual references.\n"
+            "- The json_schema in related_data defines the valid structure and constraints for this entity's fields."
         )
     else:
         fields_hint = (
@@ -68,12 +71,14 @@ def main(
             "- Quantities should reflect realistic material usage for the product.\n"
             "- Units should be standard physical units (kg, g, L, m, etc.).\n"
             "- If source_contexts are provided in related_data, use them as primary factual references.\n"
+            "- The json_schema in related_data defines the valid structure and constraints for this entity's fields.\n"
             f"- Use the linked material and variant context as reference.{fields_hint}"
         )
 
     return EntityContext(
         entity_name="Component",
         entity_id=entity_id,
+        entity_schema=entity_schema,
         entity_data=entity_data,
         related_data=related_data,
         prompt_hints=prompt_hints,

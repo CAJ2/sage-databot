@@ -3,7 +3,7 @@
 import json
 from typing import Any
 
-from f.changes.ai_review import EditAnalysis, analyze_edit
+from f.changes.ai_shared import EditAnalysis, analyze_edit
 from f.context.context_types import EntityContext
 from f.utils.general import llm_agent
 

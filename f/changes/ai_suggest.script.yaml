@@ -2,9 +2,21 @@ summary: ''
 description: ''
 lock: '!inline f/changes/ai_suggest.script.lock'
 kind: script
-no_main_func: true
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
-  properties: {}
-  required: []
+  properties:
+    entity_context:
+      type: ''
+      description: ''
+      default: null
+    target_fields:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+  required:
+    - entity_context
+    - target_fields

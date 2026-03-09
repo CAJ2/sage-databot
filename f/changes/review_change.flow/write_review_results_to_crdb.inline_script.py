@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
-from f.changes.ai_review import EditAnalysis, ReviewSummary
+from f.changes.ai_shared import EditAnalysis, ReviewSummary
 from f.db.sage.model import Change
 from f.graphql.api_client.enums import ChangeStatus
 from f.graphql.api_client.input_types import UpdateChangeInput

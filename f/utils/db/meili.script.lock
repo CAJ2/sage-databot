@@ -1,7 +1,7 @@
 # py: 3.12
 annotated-types==0.7.0
 anyio==4.12.1
-camel-converter==5.0.0
+camel-converter==5.1.0
 certifi==2026.2.25
 charset-normalizer==3.4.4
 h11==0.16.0
@@ -16,4 +16,4 @@ stopwordsiso==0.6.1
 typing-extensions==4.15.0
 typing-inspection==0.4.2
 urllib3==2.6.3
-wmill==1.647.0
+wmill==1.651.1

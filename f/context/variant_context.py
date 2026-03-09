@@ -3,18 +3,14 @@
 
 from typing import Any
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from f.context.context_types import ContextMode, EntityContext
-from f.db.sage.model import VariantSources, Source
+from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
-from f.utils.db.crdb import create_sql_engine
 
 
 def main(
-    entity_id: str,
+    entity_id: str | None = None,
     mode: ContextMode = "review",
+    schema_mode: SchemaMode = "update",
     target_fields: list[str] | None = None,
 ) -> dict[str, Any]:
     """
@@ -23,32 +19,37 @@ def main(
     """
     client, _ = api_connect()
 
+    entity_schema: Any = None
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
 
-    try:
-        result = client.get_variant_for_review(id=entity_id)
-        if result.variant:
-            entity_data = result.variant.model_dump(by_alias=False)
-    except Exception as e:
-        print(f"Could not fetch Variant {entity_id}: {e}")
+    if entity_id is not None:
+        try:
+            result = client.get_variant_for_review(id=entity_id)
+            if result.variant:
+                entity_data = result.variant.model_dump(by_alias=False)
+                if result.variant.sources:
+                    source_contexts = [
+                        s.source.content["context"]
+                        for s in (result.variant.sources.nodes or [])
+                        if s.source.content and s.source.content.get("context")
+                    ]
+                    if source_contexts:
+                        related_data["source_contexts"] = source_contexts
+        except Exception as e:
+            print(f"Could not fetch Variant {entity_id}: {e}")
 
     try:
-        crdb = create_sql_engine()
-        with Session(crdb) as session:
-            stmt = (
-                select(Source)
-                .join(VariantSources, Source.id == VariantSources.source_id)
-                .where(VariantSources.variant_id == entity_id)
+        schema_result = client.get_variant_schema()
+        if schema_result.variant_schema:
+            schema_obj = (
+                schema_result.variant_schema.create
+                if schema_mode == "create"
+                else schema_result.variant_schema.update
             )
-            sources = session.scalars(stmt).unique().all()
-        source_contexts = [
-            s.content.context for s in sources if s.content and s.content.context
-        ]
-        if source_contexts:
-            related_data["source_contexts"] = source_contexts
+            entity_schema = schema_obj.schema_ if schema_obj else None
     except Exception as e:
-        print(f"Could not fetch sources for Variant {entity_id}: {e}")
+        print(f"Could not fetch Variant schema: {e}")
 
     if mode == "review":
         prompt_hints = (
@@ -57,7 +58,8 @@ def main(
             "- Whether new Item links are semantically appropriate (same product category).\n"
             "- Whether component quantities and units are physically reasonable.\n"
             "- Whether the org roles (manufacturer, distributor, etc.) are plausible.\n"
-            "- If source_contexts are provided in related_data, use them as primary factual references."
+            "- If source_contexts are provided in related_data, use them as primary factual references.\n"
+            "- The json_schema in related_data defines the valid structure and constraints for this entity's fields."
         )
     else:
         fields_hint = (
@@ -71,12 +73,14 @@ def main(
             "- The description should explain what the product is and its key attributes.\n"
             "- Linked Items represent the generic product type this variant belongs to.\n"
             "- If source_contexts are provided in related_data, use them as primary factual references.\n"
+            "- The json_schema in related_data defines the valid structure and constraints for this entity's fields.\n"
             f"- Use existing linked data as style/format guidance.{fields_hint}"
         )
 
     return EntityContext(
         entity_name="Variant",
         entity_id=entity_id,
+        entity_schema=entity_schema,
         entity_data=entity_data,
         related_data=related_data,
         prompt_hints=prompt_hints,
