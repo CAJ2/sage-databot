@@ -5,7 +5,7 @@ import tempfile
 
 from wmill import S3Object
 
-from f.graphql.api_client.client import CreateSourceInput, UpdateSourceInput
+from f.graphql.api_client.input_types import CreateSourceInput, UpdateSourceInput
 from f.graphql.api_client.enums import SourceType
 from f.utils.api import api_connect
 from f.utils.s3 import S3Client

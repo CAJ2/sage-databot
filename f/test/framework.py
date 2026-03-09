@@ -10,12 +10,15 @@ Each test script returns results via TestSuite.results().
 import time
 import traceback
 from dataclasses import dataclass, field, asdict
+from typing import Any
 
 from f.test.cleanup import CleanupTracker
 
 
 class Test:
     """Context object passed to each test function."""
+
+    cleanup: CleanupTracker
 
     def __init__(self, cleanup: CleanupTracker):
         self.cleanup = cleanup
@@ -45,7 +48,7 @@ class TestSuite:
     _results: list[TestResult] = field(default_factory=list, repr=False)
     _cleanup: CleanupTracker = field(default_factory=CleanupTracker, repr=False)
 
-    def run(self, test_fn):
+    def run(self, test_fn: Any) -> None:
         """Run a test function, passing a Test context with cleanup."""
         name = test_fn.__name__
         t = Test(self._cleanup)
@@ -106,49 +109,49 @@ class TestSuite:
 # --- Assertion helpers ---
 
 
-def assert_eq(actual, expected, msg: str = ""):
+def assert_eq(actual: Any, expected: Any, msg: str = ""):
     """Assert that actual == expected."""
     if actual != expected:
         detail = f"Expected {expected!r}, got {actual!r}"
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_ne(actual, not_expected, msg: str = ""):
+def assert_ne(actual: Any, not_expected: Any, msg: str = ""):
     """Assert that actual != not_expected."""
     if actual == not_expected:
         detail = f"Did not expect {not_expected!r}"
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_true(value, msg: str = ""):
+def assert_true(value: Any, msg: str = ""):
     """Assert that value is truthy."""
     if not value:
         detail = f"Expected truthy, got {value!r}"
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_false(value, msg: str = ""):
+def assert_false(value: Any, msg: str = ""):
     """Assert that value is falsy."""
     if value:
         detail = f"Expected falsy, got {value!r}"
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_contains(container, item, msg: str = ""):
+def assert_contains(container: Any, item: Any, msg: str = ""):
     """Assert that item is in container."""
     if item not in container:
         detail = f"{item!r} not found in {container!r}"
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_isinstance(obj, cls, msg: str = ""):
+def assert_isinstance(obj: Any, cls: type, msg: str = ""):
     """Assert that obj is an instance of cls."""
     if not isinstance(obj, cls):
         detail = f"Expected instance of {cls.__name__}, got {type(obj).__name__}"
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_raises(exc_type, fn, *args, **kwargs):
+def assert_raises(exc_type: type[Exception], fn: Any, *args: Any, **kwargs: Any):
     """Assert that fn(*args, **kwargs) raises exc_type."""
     try:
         fn(*args, **kwargs)
@@ -161,7 +164,7 @@ def assert_raises(exc_type, fn, *args, **kwargs):
     raise AssertionError(f"Expected {exc_type.__name__}, but no exception was raised")
 
 
-def assert_len(container, expected_len: int, msg: str = ""):
+def assert_len(container: Any, expected_len: int, msg: str = ""):
     """Assert that len(container) == expected_len."""
     actual = len(container)
     if actual != expected_len:
@@ -176,7 +179,7 @@ def assert_startswith(s: str, prefix: str, msg: str = ""):
         raise AssertionError(f"{msg}: {detail}" if msg else detail)
 
 
-def assert_gt(actual, threshold, msg: str = ""):
+def assert_gt(actual: Any, threshold: Any, msg: str = ""):
     """Assert that actual > threshold."""
     if not actual > threshold:
         detail = f"Expected > {threshold!r}, got {actual!r}"
@@ -187,23 +190,23 @@ def main():
     """Self-test the framework."""
     suite = TestSuite("framework_self_test")
 
-    def test_assert_eq_pass(t: Test):
+    def test_assert_eq_pass(_t: Test):
         assert_eq(1, 1)
         assert_eq("hello", "hello")
 
-    def test_assert_eq_fail(t: Test):
+    def test_assert_eq_fail(_t: Test):
         assert_raises(AssertionError, assert_eq, 1, 2)
 
-    def test_assert_true_pass(t: Test):
+    def test_assert_true_pass(_t: Test):
         assert_true(True)
         assert_true(1)
         assert_true("nonempty")
 
-    def test_assert_contains_pass(t: Test):
+    def test_assert_contains_pass(_t: Test):
         assert_contains([1, 2, 3], 2)
         assert_contains("hello world", "world")
 
-    def test_assert_raises_pass(t: Test):
+    def test_assert_raises_pass(_t: Test):
         def raise_value_error():
             raise ValueError("test")
 

@@ -12,7 +12,7 @@ import tempfile
 
 from sqlalchemy import text
 
-from f.search.index_script import check_lang
+from f.utils.db.meili import check_lang
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_eq, assert_true
 from f.utils.api import api_connect
@@ -23,7 +23,7 @@ from f.utils.git import checkout_repo
 from f.utils.s3 import S3Client
 
 
-def test_crdb_connection(t: Test):
+def test_crdb_connection(_t: Test):
     """Test that we can connect to CockroachDB and execute a query."""
     engine = create_sql_engine()
     with engine.begin() as conn:
@@ -33,7 +33,7 @@ def test_crdb_connection(t: Test):
         assert_eq(row[0], 1, "SELECT 1 should return 1")
 
 
-def test_crdb_polars_uri(t: Test):
+def test_crdb_polars_uri(_t: Test):
     """Test that Polars URI is generated correctly."""
     uri = create_polars_uri()
     assert_true(
@@ -47,16 +47,14 @@ def test_crdb_test_table(t: Test):
     t.cleanup.track_test_table("test_integration_check")
 
     with engine.begin() as conn:
-        conn.execute(
+        _ = conn.execute(
             text(
-                "CREATE TABLE IF NOT EXISTS databot.test_integration_check "
-                "(id STRING PRIMARY KEY, value STRING)"
+                "CREATE TABLE IF NOT EXISTS databot.test_integration_check (id STRING PRIMARY KEY, value STRING)"
             )
         )
-        conn.execute(
+        _ = conn.execute(
             text(
-                "INSERT INTO databot.test_integration_check (id, value) "
-                "VALUES ('test1', 'hello')"
+                "INSERT INTO databot.test_integration_check (id, value) VALUES ('test1', 'hello')"
             )
         )
         result = conn.execute(
@@ -67,7 +65,7 @@ def test_crdb_test_table(t: Test):
         assert_eq(row[0], "hello")
 
 
-def test_s3_client_exists(t: Test):
+def test_s3_client_exists(_t: Test):
     """Test S3Client instantiation and exists check."""
     s3 = S3Client()
     assert_true(
@@ -85,7 +83,7 @@ def test_s3_client_upload_download(t: Test):
     # Upload
     content = b"integration test content\n"
     with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as tmp:
-        tmp.write(content)
+        _ = tmp.write(content)
         tmp_path = tmp.name
 
     tmp2_path = None
@@ -115,20 +113,20 @@ def test_s3_client_upload_download(t: Test):
             os.unlink(tmp2_path)
 
 
-def test_meilisearch_connection(t: Test):
+def test_meilisearch_connection(_t: Test):
     """Test Meilisearch connection."""
     meili = meili_connect()
     assert_true(meili.is_healthy(), "Meilisearch should be healthy")
 
 
-def test_api_connect(t: Test):
+def test_api_connect(_t: Test):
     """Test API connection."""
-    client, user = api_connect()
+    _, user = api_connect()
     assert_true(user is not None, "User should not be None")
     assert_true("id" in user, "User should have an id")
 
 
-def test_slugify(t: Test):
+def test_slugify(_t: Test):
     """Test slugify utility."""
     assert_eq(slugify("Hello World"), "hello-world")
     assert_eq(slugify("  Some Brand™  "), "some-brand")
@@ -136,13 +134,13 @@ def test_slugify(t: Test):
     assert_eq(slugify("Multiple   Spaces"), "multiple-spaces")
 
 
-def test_is_production(t: Test):
+def test_is_production(_t: Test):
     """Test is_production in test workspace."""
     # In a test workspace, this should always be False
     assert_true(not is_production(), "Should not be production in test workspace")
 
 
-def test_check_lang(t: Test):
+def test_check_lang(_t: Test):
     """Test language validation."""
     assert_eq(check_lang("en"), "en")
     assert_eq(check_lang("xx"), "xx")
@@ -151,7 +149,7 @@ def test_check_lang(t: Test):
     assert_true(result is None, "Invalid language should return None")
 
 
-def test_git_checkout(t: Test):
+def test_git_checkout(_t: Test):
     """Test git repo checkout."""
 
     path = checkout_repo(branch="dev")
@@ -162,7 +160,7 @@ def test_git_checkout(t: Test):
 
 
 def main() -> dict[str, object]:
-    ensure_test_workspace()
+    _ = ensure_test_workspace()
     suite = TestSuite("utils")
     suite.run(test_crdb_connection)
     suite.run(test_crdb_polars_uri)

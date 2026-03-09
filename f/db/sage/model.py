@@ -15,7 +15,7 @@ class SourceContent(JSONModel):
 
 
 class Variant(Base):
-    __tablename__ = "variants"
+    __tablename__: str = "variants"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[dict[str, str]] = mapped_column(Translated())
@@ -28,7 +28,7 @@ class Variant(Base):
 
 
 class Source(Base):
-    __tablename__ = "sources"
+    __tablename__: str = "sources"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     type: Mapped[str] = mapped_column()
@@ -50,7 +50,7 @@ class Source(Base):
 
 
 class VariantSources(Base):
-    __tablename__ = "variants_sources"
+    __tablename__: str = "variants_sources"
 
     variant_id: Mapped[str] = mapped_column(ForeignKey("variants.id"), primary_key=True)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), primary_key=True)
@@ -64,7 +64,7 @@ class VariantSources(Base):
 
 
 class ComponentSources(Base):
-    __tablename__ = "components_sources"
+    __tablename__: str = "components_sources"
 
     component_id: Mapped[str] = mapped_column(
         ForeignKey("components.id"), primary_key=True
@@ -77,7 +77,7 @@ class ComponentSources(Base):
 
 
 class ProcessSources(Base):
-    __tablename__ = "process_sources"
+    __tablename__: str = "process_sources"
 
     process_id: Mapped[str] = mapped_column(
         ForeignKey("processes.id"), primary_key=True
@@ -90,7 +90,7 @@ class ProcessSources(Base):
 
 
 class ExternalSource(Base):
-    __tablename__ = "external_sources"
+    __tablename__: str = "external_sources"
 
     source: Mapped[str] = mapped_column(primary_key=True)
     source_id: Mapped[str] = mapped_column(primary_key=True)
@@ -101,8 +101,8 @@ class ExternalSource(Base):
 
 
 class Change(Base):
-    __tablename__ = "changes"
-    __table_args__ = {"schema": "public"}
+    __tablename__: str = "changes"
+    __table_args__: dict[str, str] = {"schema": "public"}
 
     id: Mapped[str] = mapped_column(primary_key=True)
     status: Mapped[str] = mapped_column()

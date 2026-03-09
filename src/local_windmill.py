@@ -126,7 +126,7 @@ def wait_for_windmill(timeout: int = 90) -> bool:
     return False
 
 
-def api_post(path: str, payload: dict, bearer: str) -> str:
+def api_post(path: str, payload: dict[str, object], bearer: str) -> str:
     """POST JSON to the local Windmill API and return the response body."""
     data = json.dumps(payload).encode()
     request = urllib.request.Request(

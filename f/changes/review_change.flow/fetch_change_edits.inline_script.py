@@ -33,8 +33,7 @@ def main(change_id: str) -> list[ChangeEditInput]:
     edits = result.change.edits.nodes
     if not edits:
         raise ValueError(
-            f"Change {change_id} has no edits. "
-            "Cannot review a Change with no Edits defined."
+            f"Change {change_id} has no edits. Cannot review a Change with no Edits defined."
         )
 
     inputs: list[ChangeEditInput] = []

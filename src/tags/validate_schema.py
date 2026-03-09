@@ -1,9 +1,11 @@
+from typing import Any
+
 from jsonschema import validate
 import json
 import sys
 
 
-def validate_schema(schema, instance):
+def validate_schema(schema: Any, instance: Any) -> None:
     """
     Validate a JSON instance against a JSON schema.
 

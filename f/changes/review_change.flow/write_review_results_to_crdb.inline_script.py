@@ -23,13 +23,12 @@ def main(change_id: str, edit_analyses: list[EditAnalysis]) -> ReviewSummary:
     results = [
         EditAnalysis.model_validate(r) if isinstance(r, dict) else r
         for r in (edit_analyses or [])
-        if r is not None
+        if r is not None  # pyright: ignore[reportUnnecessaryComparison]
     ]
 
     if not results:
         raise ValueError(
-            f"No edit analyses received for change {change_id}. "
-            "The for-loop produced no results — check that edits exist and analyzers succeeded."
+            f"No edit analyses received for change {change_id}. The for-loop produced no results — check that edits exist and analyzers succeeded."
         )
 
     overall_approved = all(r.approved for r in results)

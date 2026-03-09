@@ -1,7 +1,7 @@
 from typing import Any
 
 
-def generate_name(tags) -> dict[str, Any]:
+def generate_name(tags: Any) -> dict[str, Any]:
     """
     Generate a name from the tags.
 
@@ -36,7 +36,7 @@ def generate_name(tags) -> dict[str, Any]:
     return name
 
 
-def generate_address(tags) -> dict[str, Any] | None:
+def generate_address(tags: Any) -> dict[str, Any] | None:
     """
     Generate an address from the tags.
 

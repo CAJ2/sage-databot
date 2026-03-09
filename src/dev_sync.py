@@ -13,7 +13,6 @@ import argparse
 import json
 import subprocess
 import sys
-import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -47,8 +46,7 @@ def ensure_workspace(workspace: str) -> None:
     )
     if result.returncode != 0:
         print(
-            f"Workspace '{workspace}' not configured in wmill.\n"
-            f"Run: pixi run local-up  (to initialize and start local Windmill)",
+            f"Workspace '{workspace}' not configured in wmill.\nRun: pixi run local-up  (to initialize and start local Windmill)",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -68,6 +66,8 @@ def cmd_sync(workspace: str) -> None:
             "--yes",
             "--branch",
             "dev",
+            "--excludes",
+            "f/*_config/**",
             *token_args,
         ],
         text=True,
@@ -145,8 +145,7 @@ def main() -> None:
     # Check Windmill is up
     if not check_windmill_up():
         print(
-            f"Local Windmill is not running at {LOCAL_URL}.\n"
-            "Start it with: pixi run local-up",
+            f"Local Windmill is not running at {LOCAL_URL}.\nStart it with: pixi run local-up",
             file=sys.stderr,
         )
         sys.exit(1)

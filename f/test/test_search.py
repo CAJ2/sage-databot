@@ -10,11 +10,11 @@ import wmill
 from sqlalchemy import text
 
 from f.search.categories.index_categories import main as index_categories_main
-from f.search.index_script import check_create_index
 from f.search.regions.index_regions import main as index_regions_main
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_true
 from f.utils.db.crdb import create_sql_engine
+from f.utils.db.meili import check_create_index
 
 
 def _get_meili_client() -> meilisearch.Client:
@@ -47,7 +47,7 @@ def test_index_settings(t: Test):
     assert_true("name" in settings["searchableAttributes"], "name should be searchable")
 
 
-def test_index_categories(t: Test):
+def test_index_categories(_t: Test):
     """Test category indexing via the real index_categories script."""
     crdb = create_sql_engine()
     with crdb.begin() as conn:
@@ -59,17 +59,17 @@ def test_index_categories(t: Test):
         print("  ⚠️  No categories in DB, skipping")
         return
 
-    category_ids = [row[0] for row in rows]
+    category_ids = [str(row[0]) for row in rows]
     index_categories_main(keys=category_ids)
 
     meili = _get_meili_client()
-    index = meili.index("categories")
+    index = meili.index("categories_en")
     for cid in category_ids:
         doc = index.get_document(cid)
-        assert_true(doc is not None, f"Category {cid} should be indexed")
+        assert_true(bool(doc), f"Category {cid} should be indexed")
 
 
-def test_index_regions(t: Test):
+def test_index_regions(_t: Test):
     """Test region indexing via the real index_regions script."""
     crdb = create_sql_engine()
     with crdb.begin() as conn:
@@ -79,18 +79,18 @@ def test_index_regions(t: Test):
         print("  ⚠️  No regions in DB, skipping")
         return
 
-    region_ids = [row[0] for row in rows]
+    region_ids = [str(row[0]) for row in rows]
     index_regions_main(keys=region_ids)
 
     meili = _get_meili_client()
-    index = meili.index("regions")
+    index = meili.index("regions_en")
     for rid in region_ids:
         doc = index.get_document(rid)
-        assert_true(doc is not None, f"Region {rid} should be indexed")
+        assert_true(bool(doc), f"Region {rid} should be indexed")
 
 
 def main() -> dict[str, object]:
-    ensure_test_workspace()
+    _ = ensure_test_workspace()
     suite = TestSuite("search")
     suite.run(test_index_settings)
     suite.run(test_index_categories)

@@ -11,14 +11,14 @@ from typing import Any
 from urllib.request import urlopen, urlretrieve
 
 import wmill
-from sqlalchemy import select
+from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
 
 from f.db.databot.model import KGCache, OFFProduct, WikidataCache, ensure_cache_tables
 from f.db.sage.model import ExternalSource, Source, SourceContent, VariantSources
-from f.graphql.api_client.client import CreateSourceInput
 from f.graphql.api_client.enums import SourceType
 from f.graphql.api_client.input_types import (
+    CreateSourceInput,
     LinkSourceInput,
     SourceInput,
     UpdateSourceInput,
@@ -118,7 +118,7 @@ def download_off_json(url: str) -> bytes | None:
 
 
 def fetch_kg_entities(
-    mids: list[str], crdb, api_key: str
+    mids: list[str], crdb: Engine, api_key: str
 ) -> dict[str, dict[str, Any] | None]:
     """
     Fetch Google Knowledge Graph entities for the given MIDs, using CRDB cache.
@@ -185,7 +185,7 @@ def fetch_kg_entities(
 
 
 def fetch_wikidata_entities(
-    wiki_urls: list[str], crdb
+    wiki_urls: list[str], crdb: Engine
 ) -> dict[str, dict[str, Any] | None]:
     """
     Fetch minimal Wikidata JSON-LD for Wikipedia URLs extracted from KG results.
@@ -342,7 +342,7 @@ def fetch_wikidata_entities(
 
 def main(
     variant_id: str,
-    image_sizes: list[str] = ["full"],
+    image_sizes: list[str] | None = None,
 ):
     """
     Download OpenFoodFacts product images and upload them to S3.
@@ -352,9 +352,11 @@ def main(
         image_sizes: List of image sizes to download (e.g., ["full", "400"])
     """
 
+    if image_sizes is None:
+        image_sizes = ["full"]
     crdb = create_sql_engine()
     ensure_cache_tables(crdb)
-    client, user = api_connect()
+    client, _ = api_connect()
     kg_api_key = wmill.get_variable("f/api_config/gcp_kg_api_key")
 
     # Initialize S3 client for sources bucket
@@ -406,17 +408,12 @@ def main(
 
     # Step 4: Extract image IDs from images field
     images_data = product.images.images
-    if isinstance(images_data, list):
-        image_ids: dict[str, list[str]] = {}
-        # Only get the primary images, not cropped sections
-        # Some images have an imgid referring to the larger image it is cropped from
-        for image in images_data:
-            if image.imgid is None and image.sizes is not None:
-                image_ids[image.key] = [
-                    k for k in image.sizes.keys() if k in image_sizes
-                ]
-    else:
-        raise ValueError(f"Unexpected images data format: {type(images_data)}")
+    image_ids: dict[str, list[str]] = {}
+    # Only get the primary images, not cropped sections
+    # Some images have an imgid referring to the larger image it is cropped from
+    for image in images_data:
+        if image.imgid is None and image.sizes is not None:
+            image_ids[image.key] = [k for k in image.sizes.keys() if k in image_sizes]
 
     if not image_ids:
         raise ValueError(f"No valid image IDs found in product {off_product_id}")
@@ -547,7 +544,7 @@ def main(
                     except Exception as e:
                         print(f"Warning: Failed to delete temp file {temp_path}: {e}")
 
-            if source_id is None:
+            if source_id is None:  # pyright: ignore[reportUnnecessaryComparison]
                 continue
 
             # Link KG entities to this source

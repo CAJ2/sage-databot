@@ -1,0 +1,21 @@
+{
+  "exclude": [
+    "f/graphql/api_client/**",
+    "f/graphql/schema.gql",
+    ".pixi/**",
+    ".venv/**",
+    "__pycache__/**",
+    "build/**",
+    "dist/**"
+  ],
+  "reportDeprecated": false,
+  "reportAny": false,
+  "reportExplicitAny": false,
+  "reportUnknownMemberType": false,
+  "reportUnknownArgumentType": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownParameterType": false,
+  "reportImplicitOverride": false,
+  "reportMissingTypeStubs": false,
+  "reportUnusedCallResult": false
+}

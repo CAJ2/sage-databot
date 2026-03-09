@@ -9,7 +9,7 @@ from f.utils.api import api_connect
 def main(
     entity_id: str | None = None,
     mode: ContextMode = "review",
-    schema_mode: SchemaMode = "update",
+    schema_mode: SchemaMode = "update",  # noqa: ARG001  # pyright: ignore[reportUnusedParameter]
     target_fields: list[str] | None = None,
 ) -> dict[str, Any]:
     """

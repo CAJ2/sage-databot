@@ -125,7 +125,9 @@ def main(s3_file: S3Object):
         if len(new_props["hierarchy"]) < 2 and props_json["wof:placetype"] != "country":
             return None
         new_props["hierarchy"] = sorted(
-            new_props["hierarchy"], key=lambda x: x["admin_level"], reverse=True
+            new_props["hierarchy"],
+            key=lambda x: x["admin_level"],  # pyright: ignore[reportUnknownLambdaType]
+            reverse=True,
         )
 
         return json.dumps(new_props)

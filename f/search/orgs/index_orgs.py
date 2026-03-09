@@ -7,7 +7,14 @@ import polars as pl
 from sqlalchemy import Engine
 
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
-from f.utils.db.meili import check_create_index, meili_connect
+from f.utils.db.meili import (
+    check_create_lang_indexes,
+    meili_connect,
+    split_docs_by_lang,
+    SUPPORTED_LANGS,
+)
+
+LANG_FIELDS = ["desc"]
 
 
 def index_orgs(
@@ -30,17 +37,19 @@ def index_orgs(
         df = df.cast({pl.Datetime: pl.String})
         docs = df.to_dicts()
         for doc in docs:
-            desc_json = json.loads(doc["desc"] or "{}")
-            doc["desc"] = desc_json
-        meili.index("orgs").add_documents(docs)
+            doc["desc"] = json.loads(str(doc["desc"] or "{}"))
+        for lang in SUPPORTED_LANGS:
+            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            _ = meili.index(f"orgs_{lang}").add_documents(lang_docs)
 
 
 def main(keys: list[str]):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_index(
+    check_create_lang_indexes(
         meili,
         "orgs",
         {"searchableAttributes": ["name", "desc"]},
+        lang_fields=LANG_FIELDS,
     )
     index_orgs(crdb, meili, keys)

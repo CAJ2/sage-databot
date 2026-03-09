@@ -1,5 +1,7 @@
 # requirements: project
 
+from typing import Any
+
 import polars as pl
 from sqlalchemy import text
 
@@ -40,7 +42,7 @@ def main():
     )
     comp_df = comp_df.drop(desc_cols.values())
 
-    def get_primary_mat(row):
+    def get_primary_mat(row: str):
         mat = meili.index("materials").search(row, {"limit": 1})
         if len(mat["hits"]) == 0:
             return None
@@ -74,7 +76,7 @@ def main():
         .with_columns(pl.col("material_fraction").cast(pl.Float32))
     )
 
-    def get_mat(row):
+    def get_mat(row: Any):
         mat = meili.index("materials").search(row[0], {"limit": 1})
         if len(mat["hits"]) == 0:
             return None

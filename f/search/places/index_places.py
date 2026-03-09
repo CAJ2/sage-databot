@@ -5,8 +5,15 @@ import polars as pl
 import meilisearch
 import json
 
-from f.utils.db.meili import meili_connect, check_create_index
+from f.utils.db.meili import (
+    meili_connect,
+    check_create_lang_indexes,
+    split_docs_by_lang,
+    SUPPORTED_LANGS,
+)
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
+
+LANG_FIELDS = ["name", "address", "desc"]
 
 
 def index_places(
@@ -47,18 +54,21 @@ def index_places(
                 if len(coords) >= 2:
                     doc["_geo"] = {"lat": coords[1], "lng": coords[0]}
             del doc["location"]
-        meili.index("places").add_documents(docs)
+        for lang in SUPPORTED_LANGS:
+            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            _ = meili.index(f"places_{lang}").add_documents(lang_docs)
 
 
 def main(keys: list[str]):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_index(
+    check_create_lang_indexes(
         meili,
         "places",
         {
             "searchableAttributes": ["name", "address", "desc"],
             "filterableAttributes": ["_geo"],
         },
+        lang_fields=LANG_FIELDS,
     )
     index_places(crdb, meili, keys)

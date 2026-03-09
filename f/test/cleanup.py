@@ -8,6 +8,8 @@ tests and cleans them up afterwards.
 """
 
 import os
+from typing import Any
+
 from sqlalchemy import text, event, Engine
 
 import wmill
@@ -155,8 +157,7 @@ class CleanupTracker:
             with engine.connect() as conn:
                 result = conn.execute(
                     text(
-                        "SELECT table_name FROM information_schema.tables "
-                        "WHERE table_schema = 'databot' AND table_name LIKE 'test_%'"
+                        "SELECT table_name FROM information_schema.tables WHERE table_schema = 'databot' AND table_name LIKE 'test_%'"
                     )
                 )
                 discovered = [f"databot.{row[0]}" for row in result]
@@ -257,7 +258,15 @@ class DBTracker:
         self.operations: list[dict[str, str]] = []
         event.listen(engine, "before_cursor_execute", self._on_execute)
 
-    def _on_execute(self, conn, cursor, statement, parameters, context, executemany):
+    def _on_execute(
+        self,
+        _conn: Any,
+        _cursor: Any,
+        statement: str,
+        _parameters: Any,
+        _context: Any,
+        _executemany: bool,
+    ) -> None:
         stmt_upper = statement.strip().upper()
         if stmt_upper.startswith(("INSERT", "UPDATE", "DELETE", "UPSERT")):
             self.operations.append(
@@ -288,8 +297,7 @@ def ensure_test_workspace():
     workspace = os.environ.get("WM_WORKSPACE", "")
     if not workspace.startswith("wm-fork-test"):
         raise RuntimeError(
-            f"Safety check failed: workspace is '{workspace}', expected 'wm-fork-test*'. "
-            "Tests must run in a forked test workspace."
+            f"Safety check failed: workspace is '{workspace}', expected 'wm-fork-test*'. Tests must run in a forked test workspace."
         )
     return workspace
 

@@ -17,6 +17,6 @@ def main(
     )
     with engine.connect() as conn:
         result = conn.execute(text(q))
-        rows = [dict(row._mapping) for row in result]
+        rows = [dict(row) for row in result.mappings()]
     print(f"Query returned {len(rows)} rows")
     return rows
