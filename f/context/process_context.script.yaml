@@ -20,6 +20,11 @@ schema:
         - suggest
       format: resource-ContextMode
       originalType: string
+    schema_mode:
+      type: object
+      description: ''
+      default: update
+      format: resource-SchemaMode
     target_fields:
       type: array
       description: ''
@@ -27,5 +32,4 @@ schema:
       items:
         type: string
       originalType: string[]
-  required:
-    - entity_id
+  required: []

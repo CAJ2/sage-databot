@@ -1,8 +1,9 @@
 from typing import Any, Literal
+
 from pydantic import BaseModel
 
-
 ContextMode = Literal["review", "suggest"]
+SchemaMode = Literal["create", "update"]
 
 
 class EntityContext(BaseModel):
@@ -13,6 +14,7 @@ class EntityContext(BaseModel):
 
     entity_name: str
     entity_id: str | None = None
+    entity_schema: Any = None
     entity_data: dict[str, Any]
     related_data: dict[str, Any]
     # Model-specific guidance for the AI, tailored to the requested mode.

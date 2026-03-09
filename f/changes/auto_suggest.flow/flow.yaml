@@ -164,7 +164,7 @@ value:
       summary: Fetch entity context
     - id: b
       value:
-        path: f/changes/suggest_fields
+        path: f/changes/ai_suggest
         type: script
         is_trigger: false
         input_transforms:

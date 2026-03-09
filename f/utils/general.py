@@ -2,6 +2,7 @@ import os
 import re
 from typing import Any
 
+import logfire
 import wmill
 import yaml
 from google.oauth2 import service_account
@@ -21,7 +22,20 @@ def is_production() -> bool:
     return env == "sage-prod"
 
 
-def find_path_or_default(cfg: dict[str, Any]) -> str:
+def environment() -> str:
+    """
+    Get the environment name (prod or dev).
+    """
+    env = os.environ.get("WM_WORKSPACE")
+    if env == "sage-prod":
+        return "prod"
+    elif env == "localdev":
+        return "local"
+    else:
+        return "dev"
+
+
+def find_path_or_default(cfg: dict[str, Any]) -> dict:
     """
     Looks for a config value based on:
     1. The current script path (from WM_JOB_PATH)
@@ -43,14 +57,23 @@ def find_path_or_default(cfg: dict[str, Any]) -> str:
 
 
 def llm_agent() -> Model:
-    models = wmill.get_variable("llm_models")
+    # Configure logfire
+    logfire_token = wmill.get_variable("f/api_config/llm_logfire_token")
+    if logfire_token:
+        logfire.configure(token=logfire_token, environment=environment())
+        logfire.instrument_pydantic_ai()
+
+    models = wmill.get_variable("f/api_config/llm_models")
     model_dict = yaml.full_load(models)
-    model_name = find_path_or_default(model_dict)
+    model_opts = find_path_or_default(model_dict)
+    model_name = model_opts["model"]
     if model_name.startswith("gateway/"):
         # Pydantic AI Gateway
-        provider_name = normalize_gateway_provider(model_name)
+        provider_name = normalize_gateway_provider(model_name.split(":")[0])
         provider = gateway_provider(
-            provider_name, api_key=wmill.get_variable("llm_pydantic_gateway_key")
+            provider_name,
+            api_key=wmill.get_variable("f/api_config/llm_pydantic_gateway_key"),
+            route=model_opts["route"],
         )
         if isinstance(provider, GoogleProvider):
             model = GoogleModel(model_name.split(":")[1], provider=provider)
@@ -60,7 +83,7 @@ def llm_agent() -> Model:
                 f"Gateway provider {provider_name} is not supported for llm_agent."
             )
     try:
-        ollama = wmill.get_variable("llm_ollama_api")
+        ollama = wmill.get_variable("f/api_config/llm_ollama_api")
     except Exception:
         ollama = None
     if ollama:
@@ -68,7 +91,7 @@ def llm_agent() -> Model:
         llm = OpenAIChatModel(model_name=model_name, provider=provider)
         return llm
     creds = service_account.Credentials.from_service_account_info(
-        wmill.get_variable("api_gcp_key"),
+        wmill.get_variable("f/api_config/gcp_service_account_key"),
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
     provider = GoogleProvider(credentials=creds)

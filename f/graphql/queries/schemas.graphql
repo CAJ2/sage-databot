@@ -1,0 +1,54 @@
+query GetVariantSchema {
+  variantSchema {
+    create {
+      schema
+    }
+    update {
+      schema
+    }
+  }
+}
+
+query GetItemSchema {
+  itemSchema {
+    create {
+      schema
+    }
+    update {
+      schema
+    }
+  }
+}
+
+query GetCategorySchema {
+  categorySchema {
+    create {
+      schema
+    }
+    update {
+      schema
+    }
+  }
+}
+
+query GetComponentSchema {
+  componentSchema {
+    create {
+      schema
+    }
+    update {
+      schema
+    }
+  }
+}
+
+query GetProcessSchema {
+  processSchema {
+    create {
+      schema
+    }
+    update {
+      schema
+    }
+  }
+}

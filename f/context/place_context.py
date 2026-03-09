@@ -2,13 +2,14 @@
 
 from typing import Any
 
-from f.context.context_types import ContextMode, EntityContext
+from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
 
 
 def main(
-    entity_id: str,
+    entity_id: str | None = None,
     mode: ContextMode = "review",
+    schema_mode: SchemaMode = "update",
     target_fields: list[str] | None = None,
 ) -> dict[str, Any]:
     """
@@ -17,15 +18,17 @@ def main(
     """
     client, _ = api_connect()
 
+    entity_schema: Any = None
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
 
-    try:
-        result = client.get_place_for_review(id=entity_id)
-        if result.place:
-            entity_data = result.place.model_dump(by_alias=False)
-    except Exception as e:
-        print(f"Could not fetch Place {entity_id}: {e}")
+    if entity_id is not None:
+        try:
+            result = client.get_place_for_review(id=entity_id)
+            if result.place:
+                entity_data = result.place.model_dump(by_alias=False)
+        except Exception as e:
+            print(f"Could not fetch Place {entity_id}: {e}")
 
     if mode == "review":
         prompt_hints = (
@@ -51,6 +54,7 @@ def main(
     return EntityContext(
         entity_name="Place",
         entity_id=entity_id,
+        entity_schema=entity_schema,
         entity_data=entity_data,
         related_data=related_data,
         prompt_hints=prompt_hints,

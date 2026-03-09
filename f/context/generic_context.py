@@ -2,12 +2,13 @@
 
 from typing import Any
 
-from f.context.context_types import ContextMode, EntityContext
+from f.context.context_types import ContextMode, EntityContext, SchemaMode
 
 
 def main(
-    entity_id: str,
+    entity_id: str | None = None,
     mode: ContextMode = "review",
+    schema_mode: SchemaMode = "update",
     target_fields: list[str] | None = None,
 ) -> dict[str, Any]:
     """

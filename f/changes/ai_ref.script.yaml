@@ -1,0 +1,31 @@
+summary: ''
+description: ''
+lock: '!inline f/changes/ai_ref.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    entity_context:
+      type: ''
+      description: ''
+      default: null
+    prompt:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    ref_entity_type:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    ref_field:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - entity_context
+    - ref_field
+    - ref_entity_type

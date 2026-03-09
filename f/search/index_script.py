@@ -1,15 +1,16 @@
 # requirements: project
 
+import copy
+import json
 from typing import Any, Iterator
-import wmill
-from sqlalchemy import Engine
+
+import iso639
+import meilisearch
 import polars as pl
 import polars.selectors as cs
-import meilisearch
+import wmill
+from sqlalchemy import Engine
 from stopwordsiso import stopwords
-import json
-import iso639
-import copy
 
 from f.utils.db.crdb import create_sql_engine
 
@@ -120,7 +121,7 @@ def index_orgs(
     df_iter = export_table(
         crdb,
         "public.orgs",
-        cols='id, updated_at, name, "desc"::string, avatar_url',
+        cols='id, updated_at, name, slug, "desc"::string, avatar_url',
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.orgs")

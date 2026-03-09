@@ -9,31 +9,40 @@ from .add_source import AddSource
 from .add_variant import AddVariant
 from .base_client import BaseClient
 from .base_model import UNSET, UnsetType
+from .enums import SearchType
 from .get_category_for_review import GetCategoryForReview
+from .get_category_schema import GetCategorySchema
 from .get_change_for_review import GetChangeForReview
 from .get_component_for_review import GetComponentForReview
+from .get_component_schema import GetComponentSchema
 from .get_current_user import GetCurrentUser
 from .get_item_for_link import GetItemForLink
 from .get_item_for_review import GetItemForReview
+from .get_item_schema import GetItemSchema
 from .get_material_for_review import GetMaterialForReview
 from .get_org import GetOrg
 from .get_place_for_review import GetPlaceForReview
 from .get_process_for_review import GetProcessForReview
+from .get_process_schema import GetProcessSchema
 from .get_root_category import GetRootCategory
 from .get_source import GetSource
 from .get_variant import GetVariant
 from .get_variant_for_review import GetVariantForReview
+from .get_variant_schema import GetVariantSchema
 from .input_types import (
     CreateItemInput,
     CreateOrgInput,
     CreateSourceInput,
     CreateVariantInput,
+    LinkSourceInput,
     UpdateChangeInput,
     UpdateItemInput,
     UpdateOrgInput,
     UpdateSourceInput,
     UpdateVariantInput,
 )
+from .link_source import LinkSource
+from .search import Search
 from .update_change_status import UpdateChangeStatus
 from .update_item import UpdateItem
 from .update_org import UpdateOrg
@@ -522,6 +531,188 @@ class Client(BaseClient):
         data = self.get_data(response)
         return GetProcessForReview.model_validate(data)
 
+    def get_variant_schema(self, **kwargs: Any) -> GetVariantSchema:
+        query = gql("""
+            query GetVariantSchema {
+              variantSchema {
+                create {
+                  schema
+                }
+                update {
+                  schema
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {}
+        response = self.execute(
+            query=query,
+            operation_name="GetVariantSchema",
+            variables=variables,
+            **kwargs,
+        )
+        data = self.get_data(response)
+        return GetVariantSchema.model_validate(data)
+
+    def get_item_schema(self, **kwargs: Any) -> GetItemSchema:
+        query = gql("""
+            query GetItemSchema {
+              itemSchema {
+                create {
+                  schema
+                }
+                update {
+                  schema
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {}
+        response = self.execute(
+            query=query, operation_name="GetItemSchema", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return GetItemSchema.model_validate(data)
+
+    def get_category_schema(self, **kwargs: Any) -> GetCategorySchema:
+        query = gql("""
+            query GetCategorySchema {
+              categorySchema {
+                create {
+                  schema
+                }
+                update {
+                  schema
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {}
+        response = self.execute(
+            query=query,
+            operation_name="GetCategorySchema",
+            variables=variables,
+            **kwargs,
+        )
+        data = self.get_data(response)
+        return GetCategorySchema.model_validate(data)
+
+    def get_component_schema(self, **kwargs: Any) -> GetComponentSchema:
+        query = gql("""
+            query GetComponentSchema {
+              componentSchema {
+                create {
+                  schema
+                }
+                update {
+                  schema
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {}
+        response = self.execute(
+            query=query,
+            operation_name="GetComponentSchema",
+            variables=variables,
+            **kwargs,
+        )
+        data = self.get_data(response)
+        return GetComponentSchema.model_validate(data)
+
+    def get_process_schema(self, **kwargs: Any) -> GetProcessSchema:
+        query = gql("""
+            query GetProcessSchema {
+              processSchema {
+                create {
+                  schema
+                }
+                update {
+                  schema
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {}
+        response = self.execute(
+            query=query,
+            operation_name="GetProcessSchema",
+            variables=variables,
+            **kwargs,
+        )
+        data = self.get_data(response)
+        return GetProcessSchema.model_validate(data)
+
+    def search(
+        self,
+        query: str,
+        types: Union[Optional[list[SearchType]], UnsetType] = UNSET,
+        limit: Union[Optional[int], UnsetType] = UNSET,
+        **kwargs: Any,
+    ) -> Search:
+        _query = gql("""
+            query Search($query: String!, $types: [SearchType!], $limit: Int) {
+              search(query: $query, types: $types, limit: $limit) {
+                nodes {
+                  __typename
+                  ... on Variant {
+                    id
+                    name
+                    desc
+                    imageURL
+                  }
+                  ... on Item {
+                    id
+                    name
+                    desc
+                    imageURL
+                  }
+                  ... on Component {
+                    id
+                    name
+                    desc
+                    imageURL
+                  }
+                  ... on Category {
+                    id
+                    label: name
+                    desc
+                    descShort
+                    imageURL
+                  }
+                  ... on Org {
+                    id
+                    label: name
+                    desc
+                    slug
+                    websiteURL
+                  }
+                  ... on Place {
+                    id
+                    name
+                    desc
+                  }
+                  ... on Region {
+                    id
+                    name
+                    placetype
+                  }
+                  ... on Material {
+                    id
+                    name
+                    desc
+                  }
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"query": query, "types": types, "limit": limit}
+        response = self.execute(
+            query=_query, operation_name="Search", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return Search.model_validate(data)
+
     def get_source(self, id: str, **kwargs: Any) -> GetSource:
         query = gql("""
             query GetSource($id: ID!) {
@@ -582,6 +773,23 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return UpdateSource.model_validate(data)
+
+    def link_source(self, input: LinkSourceInput, **kwargs: Any) -> LinkSource:
+        query = gql("""
+            mutation LinkSource($input: LinkSourceInput!) {
+              linkSource(input: $input) {
+                source {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="LinkSource", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return LinkSource.model_validate(data)
 
     def get_current_user(self, **kwargs: Any) -> GetCurrentUser:
         query = gql("""

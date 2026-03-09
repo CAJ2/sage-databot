@@ -164,7 +164,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/70/90/6d240beb0f24b74371762873e9b7f499f1e02166a2d9c5801f4dbf8fa12e/kiwisolver-1.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/0e/72/a3add0e4eec4eb9e2569554f7c70f4a3c27712f40e3284d483e88094cc0e/langdetect-1.0.9.tar.gz
         - pypi: https://files.pythonhosted.org/packages/aa/85/4890a7c14b4fa54400945cb52ac3cd88545bbdb973c440f98ca41591cdc5/llvmlite-0.46.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
-        - pypi: https://files.pythonhosted.org/packages/05/cc/a3eb3a5fff27a6bfe2f626624c7c781322151f3228d4ea98c31003dc2d4c/logfire-4.25.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/cb/b1/24eca9932376df4fba6902394c03532a138e87478a5a810799f0a22217a5/logfire-4.27.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/e2/39/83414c0fadb4f11f90e6b80b631aa79f62a605664f0c4693e2ebc7ee73f3/logfire_api-4.25.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/b2/70/00dc4246d9f3c69ecbb9bc36d5ad1a359884464a44711c665cb0afb1e9de/loro-1.10.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/c6/d1/232b3309a02d60f11e71857778bfcd4acbdb86c07db8260caf7d008b08f8/lxml-6.0.2-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl
@@ -209,7 +209,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/17/d3/b64c356a907242d719fc668b71befd73324e47ab46c8ebbbede252c154b2/olefile-0.47-py2.py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/fb/71/d3fec0dcf9a7a99e7368112d9c765154e81da70fcba1e3121131a45c245b/onnx-1.20.1-cp312-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/35/af/ad86cfbfd65d5a86204b3a30893e92c0cf3f1a56280efc5a12e69d81f52d/onnxruntime-1.24.2-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
-        - pypi: https://files.pythonhosted.org/packages/c9/30/844dc675ee6902579b8eef01ed23917cc9319a1c9c0c14ec6e39340c96d0/openai-2.24.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/c6/2e/3f73e8ca53718952222cacd0cf7eecc9db439d020f0c1fe7ae717e4e199a/openai-2.26.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/12/cf/03675d8bd8ecbf4445504d8071adab19f5f993676795708e36402ab38263/openapi_pydantic-0.5.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/fd/55/b3b49a1b97aabcfbbd6c7326df9cb0b6fa0c0aefa8e89d500939e04aa229/opencv_python-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl
@@ -253,11 +253,11 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/88/c5/e98d9c51f3d5300d5e40ad9037dd6b3b60736fd02ab68dcc98c96be7592d/pybind11-3.0.2-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/0c/c3/44f3fbbfa403ea2a7c779186dc20772604442dde72947e7d01069cbe98e3/pycparser-3.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/a6/4b/7cf9f5b2f8971a176be6ef218ffe6a30a5461bc2bfe914356881808ce159/pydantic_ai-1.63.0-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/f2/ca/c4e39eec1cff5a294b64313a8a959b38d326819e0f0a41f48e61ce019a22/pydantic_ai_slim-1.63.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/01/e3/2e6f8dad1f5f7c20d54dabb8f4b50505268093078a905bfb10b77ba204dc/pydantic_ai-1.67.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/2f/bc/401bf11e4615a7adf8c00fb8f62313eb15ae7ee191fa77438cb9a27fa745/pydantic_ai_slim-1.67.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/0d/76/941cc9f73529988688a665a5c0ecff1112b3d95ab48f81db5f7606f522d3/pydantic_core-2.41.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-        - pypi: https://files.pythonhosted.org/packages/9b/f2/7174ad6abca2457e35a1b902ca4fa78aa8ee72e4ec2e9cd5dc8904014ec9/pydantic_evals-1.63.0-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/a4/1c/8dcae24c824dd2690fbe7375083b369b10ed1ad773e2b9d1122bb6c0fcdc/pydantic_graph-1.63.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/69/a4/5cf9caf529a523d8039598988f9c0fce87c59d928abb5d42b7b3347f336e/pydantic_evals-1.67.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/22/b8/fc47a5151b274c354c8e15a7a02fe306d0c4d6e050cdf0cc0060f36d1ac2/pydantic_graph-1.67.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/00/4b/ccc026168948fec4f7555b9164c724cf4125eac006e176541483d2c959be/pydantic_settings-2.13.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/66/0e/9ee7bc0b48ec45d93b302fa2d787830dca4dc454d31a237faa5815995988/PyDispatcher-2.0.7-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/c2/2f/81d580a0fb83baeb066698975cb14a618bdbed7720678566f1b046a95fe8/pyflakes-3.4.0-py2.py3-none-any.whl
@@ -503,7 +503,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/5b/5a/51f5464373ce2aeb5194508298a508b6f21d3867f499556263c64c621914/kiwisolver-1.4.9-cp312-cp312-macosx_11_0_arm64.whl
         - pypi: https://files.pythonhosted.org/packages/0e/72/a3add0e4eec4eb9e2569554f7c70f4a3c27712f40e3284d483e88094cc0e/langdetect-1.0.9.tar.gz
         - pypi: https://files.pythonhosted.org/packages/2b/f8/4db016a5e547d4e054ff2f3b99203d63a497465f81ab78ec8eb2ff7b2304/llvmlite-0.46.0-cp312-cp312-macosx_11_0_arm64.whl
-        - pypi: https://files.pythonhosted.org/packages/05/cc/a3eb3a5fff27a6bfe2f626624c7c781322151f3228d4ea98c31003dc2d4c/logfire-4.25.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/cb/b1/24eca9932376df4fba6902394c03532a138e87478a5a810799f0a22217a5/logfire-4.27.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/e2/39/83414c0fadb4f11f90e6b80b631aa79f62a605664f0c4693e2ebc7ee73f3/logfire_api-4.25.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/78/e4/7b614260bf16c5e33c0bea6ac47ab0284efd21f89f2e5e4e15cd93bead40/loro-1.10.3-cp312-cp312-macosx_11_0_arm64.whl
         - pypi: https://files.pythonhosted.org/packages/f3/c8/8ff2bc6b920c84355146cd1ab7d181bc543b89241cfb1ebee824a7c81457/lxml-6.0.2-cp312-cp312-macosx_10_13_universal2.whl
@@ -533,7 +533,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/17/d3/b64c356a907242d719fc668b71befd73324e47ab46c8ebbbede252c154b2/olefile-0.47-py2.py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/7c/4c/4b17e82f91ab9aa07ff595771e935ca73547b035030dc5f5a76e63fbfea9/onnx-1.20.1-cp312-abi3-macosx_12_0_universal2.whl
         - pypi: https://files.pythonhosted.org/packages/1b/9e/f748cd64161213adeef83d0cb16cb8ace1e62fa501033acdd9f9341fff57/onnxruntime-1.23.2-cp312-cp312-macosx_13_0_arm64.whl
-        - pypi: https://files.pythonhosted.org/packages/c9/30/844dc675ee6902579b8eef01ed23917cc9319a1c9c0c14ec6e39340c96d0/openai-2.24.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/c6/2e/3f73e8ca53718952222cacd0cf7eecc9db439d020f0c1fe7ae717e4e199a/openai-2.26.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/12/cf/03675d8bd8ecbf4445504d8071adab19f5f993676795708e36402ab38263/openapi_pydantic-0.5.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/fc/6f/5a28fef4c4a382be06afe3938c64cc168223016fa520c5abaf37e8862aa5/opencv_python-4.13.0.92-cp37-abi3-macosx_13_0_arm64.whl
         - pypi: https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl
@@ -577,11 +577,11 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/88/c5/e98d9c51f3d5300d5e40ad9037dd6b3b60736fd02ab68dcc98c96be7592d/pybind11-3.0.2-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/0c/c3/44f3fbbfa403ea2a7c779186dc20772604442dde72947e7d01069cbe98e3/pycparser-3.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/a6/4b/7cf9f5b2f8971a176be6ef218ffe6a30a5461bc2bfe914356881808ce159/pydantic_ai-1.63.0-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/f2/ca/c4e39eec1cff5a294b64313a8a959b38d326819e0f0a41f48e61ce019a22/pydantic_ai_slim-1.63.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/01/e3/2e6f8dad1f5f7c20d54dabb8f4b50505268093078a905bfb10b77ba204dc/pydantic_ai-1.67.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/2f/bc/401bf11e4615a7adf8c00fb8f62313eb15ae7ee191fa77438cb9a27fa745/pydantic_ai_slim-1.67.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/aa/32/9c2e8ccb57c01111e0fd091f236c7b371c1bccea0fa85247ac55b1e2b6b6/pydantic_core-2.41.5-cp312-cp312-macosx_11_0_arm64.whl
-        - pypi: https://files.pythonhosted.org/packages/9b/f2/7174ad6abca2457e35a1b902ca4fa78aa8ee72e4ec2e9cd5dc8904014ec9/pydantic_evals-1.63.0-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/a4/1c/8dcae24c824dd2690fbe7375083b369b10ed1ad773e2b9d1122bb6c0fcdc/pydantic_graph-1.63.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/69/a4/5cf9caf529a523d8039598988f9c0fce87c59d928abb5d42b7b3347f336e/pydantic_evals-1.67.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/22/b8/fc47a5151b274c354c8e15a7a02fe306d0c4d6e050cdf0cc0060f36d1ac2/pydantic_graph-1.67.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/00/4b/ccc026168948fec4f7555b9164c724cf4125eac006e176541483d2c959be/pydantic_settings-2.13.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/66/0e/9ee7bc0b48ec45d93b302fa2d787830dca4dc454d31a237faa5815995988/PyDispatcher-2.0.7-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/c2/2f/81d580a0fb83baeb066698975cb14a618bdbed7720678566f1b046a95fe8/pyflakes-3.4.0-py2.py3-none-any.whl
@@ -3201,10 +3201,10 @@ packages:
     version: 0.46.0
     sha256: 3535bd2bb6a2d7ae4012681ac228e5132cdb75fefb1bcb24e33f2f3e0c865ed4
     requires_python: '>=3.10'
-  - pypi: https://files.pythonhosted.org/packages/05/cc/a3eb3a5fff27a6bfe2f626624c7c781322151f3228d4ea98c31003dc2d4c/logfire-4.25.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/cb/b1/24eca9932376df4fba6902394c03532a138e87478a5a810799f0a22217a5/logfire-4.27.0-py3-none-any.whl
     name: logfire
-    version: 4.25.0
-    sha256: 1865b832e08c58a3fb0d21b24460ee9c6cbeff12db6038c508fb966699ce81c2
+    version: 4.27.0
+    sha256: c1db6357d59ed4d58d614bdc9a90fcc46ddb7d1a7410e2bd56fa441e7c61f4e4
     requires_dist:
       - executing>=2.0.1
       - opentelemetry-exporter-otlp-proto-http>=1.39.0,<1.40.0
@@ -3900,10 +3900,10 @@ packages:
       - protobuf
       - sympy
     requires_python: '>=3.10'
-  - pypi: https://files.pythonhosted.org/packages/c9/30/844dc675ee6902579b8eef01ed23917cc9319a1c9c0c14ec6e39340c96d0/openai-2.24.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/c6/2e/3f73e8ca53718952222cacd0cf7eecc9db439d020f0c1fe7ae717e4e199a/openai-2.26.0-py3-none-any.whl
     name: openai
-    version: 2.24.0
-    sha256: fed30480d7d6c884303287bde864980a4b137b60553ffbcf9ab4a233b7a73d94
+    version: 2.26.0
+    sha256: 6151bf8f83802f036117f06cc8a57b3a4da60da9926826cc96747888b57f394f
     requires_dist:
       - anyio>=3.5.0,<5
       - distro>=1.7.0,<2
@@ -4857,35 +4857,35 @@ packages:
       - email-validator>=2.0.0 ; extra == 'email'
       - tzdata ; python_full_version >= '3.9' and sys_platform == 'win32' and extra == 'timezone'
     requires_python: '>=3.9'
-  - pypi: https://files.pythonhosted.org/packages/a6/4b/7cf9f5b2f8971a176be6ef218ffe6a30a5461bc2bfe914356881808ce159/pydantic_ai-1.63.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/01/e3/2e6f8dad1f5f7c20d54dabb8f4b50505268093078a905bfb10b77ba204dc/pydantic_ai-1.67.0-py3-none-any.whl
     name: pydantic-ai
-    version: 1.63.0
-    sha256: 586f63f391aa24e8b06bd0aeafbb1058de1d4f3bfe34c5f13d4f29a2d870afa5
+    version: 1.67.0
+    sha256: bc1f3264f73658891ef023861944c567a5aee96fa45eeeb4c10286550ec71ade
     requires_dist:
-      - pydantic-ai-slim[ag-ui,anthropic,bedrock,cli,cohere,evals,fastmcp,google,groq,huggingface,logfire,mcp,mistral,openai,retries,temporal,ui,vertexai,xai]==1.63.0
+      - pydantic-ai-slim[ag-ui,anthropic,bedrock,cli,cohere,evals,fastmcp,google,groq,huggingface,logfire,mcp,mistral,openai,retries,temporal,ui,vertexai,xai]==1.67.0
       - fasta2a>=0.4.1 ; extra == 'a2a'
-      - pydantic-ai-slim[dbos]==1.63.0 ; extra == 'dbos'
-      - pydantic-ai-examples==1.63.0 ; extra == 'examples'
-      - pydantic-ai-slim[outlines-llamacpp]==1.63.0 ; extra == 'outlines-llamacpp'
-      - pydantic-ai-slim[outlines-mlxlm]==1.63.0 ; platform_machine == 'arm64' and sys_platform == 'darwin' and extra == 'outlines-mlxlm'
-      - pydantic-ai-slim[outlines-sglang]==1.63.0 ; extra == 'outlines-sglang'
-      - pydantic-ai-slim[outlines-transformers]==1.63.0 ; extra == 'outlines-transformers'
-      - pydantic-ai-slim[outlines-vllm-offline]==1.63.0 ; extra == 'outlines-vllm-offline'
-      - pydantic-ai-slim[prefect]==1.63.0 ; extra == 'prefect'
-      - pydantic-ai-slim[sentence-transformers]==1.63.0 ; extra == 'sentence-transformers'
-      - pydantic-ai-slim[voyageai]==1.63.0 ; extra == 'voyageai'
+      - pydantic-ai-slim[dbos]==1.67.0 ; extra == 'dbos'
+      - pydantic-ai-examples==1.67.0 ; extra == 'examples'
+      - pydantic-ai-slim[outlines-llamacpp]==1.67.0 ; extra == 'outlines-llamacpp'
+      - pydantic-ai-slim[outlines-mlxlm]==1.67.0 ; platform_machine == 'arm64' and sys_platform == 'darwin' and extra == 'outlines-mlxlm'
+      - pydantic-ai-slim[outlines-sglang]==1.67.0 ; extra == 'outlines-sglang'
+      - pydantic-ai-slim[outlines-transformers]==1.67.0 ; extra == 'outlines-transformers'
+      - pydantic-ai-slim[outlines-vllm-offline]==1.67.0 ; extra == 'outlines-vllm-offline'
+      - pydantic-ai-slim[prefect]==1.67.0 ; extra == 'prefect'
+      - pydantic-ai-slim[sentence-transformers]==1.67.0 ; extra == 'sentence-transformers'
+      - pydantic-ai-slim[voyageai]==1.67.0 ; extra == 'voyageai'
     requires_python: '>=3.10'
-  - pypi: https://files.pythonhosted.org/packages/f2/ca/c4e39eec1cff5a294b64313a8a959b38d326819e0f0a41f48e61ce019a22/pydantic_ai_slim-1.63.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/2f/bc/401bf11e4615a7adf8c00fb8f62313eb15ae7ee191fa77438cb9a27fa745/pydantic_ai_slim-1.67.0-py3-none-any.whl
     name: pydantic-ai-slim
-    version: 1.63.0
-    sha256: ed393b0f871b748171f65bec5191c3025b5abb8a4fc616afee17eb9dc2dfa15d
+    version: 1.67.0
+    sha256: 241290e634298a38ed60c135eca2f9efbfa269811bf1e95aad33b234b6880945
     requires_dist:
       - exceptiongroup>=1.2.2 ; python_full_version < '3.11'
       - genai-prices>=0.0.48
       - griffelib>=2.0
       - httpx>=0.27
       - opentelemetry-api>=1.28.0
-      - pydantic-graph==1.63.0
+      - pydantic-graph==1.67.0
       - pydantic>=2.12
       - typing-inspection>=0.4.0
       - fasta2a>=0.4.1 ; extra == 'a2a'
@@ -4900,7 +4900,7 @@ packages:
       - cohere>=5.20.6 ; sys_platform != 'emscripten' and extra == 'cohere'
       - dbos>=2.10.0 ; extra == 'dbos'
       - ddgs>=9.0.0 ; extra == 'duckduckgo'
-      - pydantic-evals==1.63.0 ; extra == 'evals'
+      - pydantic-evals==1.67.0 ; extra == 'evals'
       - exa-py>=2.0.0 ; extra == 'exa'
       - fastmcp>=2.14.0 ; extra == 'fastmcp'
       - google-genai>=1.56.0 ; extra == 'google'
@@ -4909,7 +4909,7 @@ packages:
       - logfire[httpx]>=4.16.0 ; extra == 'logfire'
       - mcp>=1.25.0,<2.0 ; extra == 'mcp'
       - mistralai>=1.9.11 ; extra == 'mistral'
-      - openai>=2.11.0 ; extra == 'openai'
+      - openai>=2.25.0 ; extra == 'openai'
       - tiktoken>=0.12.0 ; extra == 'openai'
       - openai>=2.8.0 ; extra == 'openrouter'
       - outlines[llamacpp]>=1.0.0,<1.3.0 ; python_full_version < '3.14' and extra == 'outlines-llamacpp'
@@ -4951,23 +4951,23 @@ packages:
     requires_dist:
       - typing-extensions>=4.14.1
     requires_python: '>=3.9'
-  - pypi: https://files.pythonhosted.org/packages/9b/f2/7174ad6abca2457e35a1b902ca4fa78aa8ee72e4ec2e9cd5dc8904014ec9/pydantic_evals-1.63.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/69/a4/5cf9caf529a523d8039598988f9c0fce87c59d928abb5d42b7b3347f336e/pydantic_evals-1.67.0-py3-none-any.whl
     name: pydantic-evals
-    version: 1.63.0
-    sha256: 2e92a3af579a5670b2babf2044081d0ef99ab5a9ef141972616d71fd7e5bfd0e
+    version: 1.67.0
+    sha256: aa1bb0e9c5f87901420a9c60d84bbabc56ee90bf243509a2a60027762414b031
     requires_dist:
       - anyio>=0
       - logfire-api>=3.14.1
-      - pydantic-ai-slim==1.63.0
+      - pydantic-ai-slim==1.67.0
       - pydantic>=2.12
       - pyyaml>=6.0.2
       - rich>=13.9.4
       - logfire>=3.14.1 ; extra == 'logfire'
     requires_python: '>=3.10'
-  - pypi: https://files.pythonhosted.org/packages/a4/1c/8dcae24c824dd2690fbe7375083b369b10ed1ad773e2b9d1122bb6c0fcdc/pydantic_graph-1.63.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/22/b8/fc47a5151b274c354c8e15a7a02fe306d0c4d6e050cdf0cc0060f36d1ac2/pydantic_graph-1.67.0-py3-none-any.whl
     name: pydantic-graph
-    version: 1.63.0
-    sha256: d9b7a387116f358d470c042b07aa08125cadfcfa8c08ef01769746a489aef0d5
+    version: 1.67.0
+    sha256: fd3ec24dcf1f93435c6ad8b2968f66d2a20505c488e6319f1d96cfac832322d5
     requires_dist:
       - httpx>=0.27
       - logfire-api>=3.14.1
@@ -5506,7 +5506,7 @@ packages:
   - pypi: ./
     name: sage-databot
     version: 0.1.0
-    sha256: 6ebbc561f12cb6bdaeeb0f0b5fe2f0794dafbed7970da1370d6f05893fd48925
+    sha256: f090cb1e9428969ad72514687b97ab79b88eee7745d2ac2b521c1deb3998ada3
     requires_dist:
       - sqlalchemy>=2.0.45
       - sqlalchemy-cockroachdb>=2.0.3
@@ -5533,10 +5533,11 @@ packages:
       - jinja2>=3.1.6
       - fasttext>=0.9.3
       - fastexcel>=0.18.0
-      - pydantic-ai>=1.39.1
+      - pydantic-ai>=1.67.0
       - pydantic>=2.12.5
       - smart-open[s3,http]>=7.1.0
       - wmill>=1.601.1
+      - logfire>=4.27.0
       - sage-databot[extract] ; extra == 'all'
       - unstructured[all-docs]>=0.21.5 ; extra == 'extract'
       - scrapy>=2.14.0 ; extra == 'extract'
