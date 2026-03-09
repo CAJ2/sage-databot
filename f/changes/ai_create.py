@@ -1,16 +1,19 @@
 # requirements: project
 
 import json
-from typing import Any
+from typing import Any, cast
 
 from google.genai.types import ThinkingLevel
 from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModelSettings
 
-from f.changes.ai_suggest import SuggestResult
+from f.agents.toolsets import search_multi_type_toolset
+from f.changes.ai_shared import (
+    FieldSuggestion,
+    SuggestResult,
+    build_suggestion_model,
+)
 from f.context.context_types import EntityContext
-from f.graphql.api_client.enums import SearchType
-from f.utils.api import api_connect
 from f.utils.general import llm_agent
 
 _SYSTEM_PROMPT = (
@@ -33,6 +36,9 @@ def main(entity_context: dict[str, Any], prompt: str) -> dict[str, Any]:
     ctx = EntityContext.model_validate(entity_context)
     entity_name = ctx.entity_name
     create_schema = ctx.entity_schema or {}
+
+    target_fields = list(create_schema.get("properties", {}).keys())
+    OutputModel = build_suggestion_model(create_schema, target_fields)
 
     context_str = ""
     if ctx.entity_data or ctx.related_data:
@@ -59,37 +65,15 @@ def main(entity_context: dict[str, Any], prompt: str) -> dict[str, Any]:
         f"{context_str}"
         f"{hints_str}"
         "Use the search tool to find IDs for any referenced entities (categories, orgs, items, etc.). "
-        f"Return a SuggestResult with entity_name='{entity_name}', entity_id=None, "
-        "a complete 'data' payload ready for the create mutation, and one FieldSuggestion per field."
+        f"Return a complete 'data' payload ready for the create mutation, and one FieldSuggestion per field."
     )
 
     agent = Agent(
         llm_agent(),
-        output_type=SuggestResult,
+        output_type=OutputModel,
         system_prompt=_SYSTEM_PROMPT,
+        toolsets=[search_multi_type_toolset()],
     )
-
-    @agent.tool_plain
-    def search(query: str, entity_type: str) -> list[dict[str, Any]]:
-        """Search for entities by name. Returns id and all available descriptive fields.
-        entity_type: Variant, Item, Component, Category, Org, Place, Region, Material"""
-        print(f"Search Tool: query={query}, entity_type={entity_type}")
-        try:
-            search_type = SearchType[entity_type.upper()]
-        except KeyError:
-            return []
-        c, _ = api_connect()
-        result = c.search(query=query, types=[search_type], limit=20)
-        print(
-            f"Search Result: query={query}, entity_type={entity_type}, nodes={len(result.search.nodes or [])}"
-        )
-        nodes = [
-            n.model_dump(exclude={"typename__"})
-            for n in (result.search.nodes or [])
-            if n is not None
-        ]
-        print(f"Search Nodes: {nodes}")
-        return nodes
 
     print("--- AI AGENT ---")
     result = agent.run_sync(
@@ -99,11 +83,13 @@ def main(entity_context: dict[str, Any], prompt: str) -> dict[str, Any]:
         ),
     )
     print("--- AI AGENT DONE ---")
-    output = result.output
+    typed = cast(Any, result.output)
+    suggestions: list[FieldSuggestion] = typed.suggestions
+    data = {k: v for k, v in typed.data.model_dump().items() if v is not None}
 
     return SuggestResult(
         entity_name=entity_name,
         entity_id=None,
-        data=output.data,
-        suggestions=output.suggestions,
+        data=data,
+        suggestions=suggestions,
     ).model_dump()

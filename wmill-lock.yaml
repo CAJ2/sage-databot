@@ -1,11 +1,13 @@
 version: v2
 locks:
+  f/agents/toolsets: e7de0c1d4a4f28d3d82e314388c4ff8f7f8bc047117f89ee4262e59aa5a67ed5
   f/categories/categories_flow: ff0b35cfcbb3c6b27bd6c0721b78ac5b584fd810f8c2a8cbc27bb930c47ad7b3
   f/categories/google_taxonomy_flow: f154ee3d26c045aa361efd585b48ec22cd256fca8c9bf48dbb2783fb228150cd
-  f/changes/ai_create: 38115fa71cd75ff22993eb8811da37ab8eeba11606b33b2b6fe0067def898126
-  f/changes/ai_ref: 49dd6a510c7c9c2db3acd4a4a7ed2e7f54acfce3e5bbb71d0a6224ed05c850b0
+  f/changes/ai_create: 4823e577a9f1edd925b2f2651846d511b799df5b308aed08284936d81c794743
+  f/changes/ai_ref: 60c5319e17cbe3e9ab11a99ae920e4b9cdc3420f816e96f3d47ec73664d5c204
   f/changes/ai_review: 841c291404bdd13139606a6440a30fcce21af0b0baf66175fe94b894f0234380
-  f/changes/ai_suggest: 9031ce8b5892d8a9b716d6262437eeb285138f1610e76ccfc24714db7a3c6a6d
+  f/changes/ai_shared: ecf2fe8e345d9724ca9c3cd0a9c19d271bfdb142987fc3de870653e12a40739d
+  f/changes/ai_suggest: 270bc5a13f27a4c5b69dea9c8076a4822c8a62912a2b28c3d3f665ce00f0bcdc
   f/changes/analyze_category_edit: fb9b4af688546cd478fc25f0ed8c27b77db756dd4847a36a187b531f8a9bf65c
   f/changes/analyze_component_edit: 89e862248ea315b2ee65df2f3a4de1ad844782a27a2196d6f3cf9dfbf4f0b7d7
   f/changes/analyze_generic_edit: c8516e7dc73c055edd541e83b5b4071c4a78e1d79cab697ae31b7f502f7abaad
@@ -16,10 +18,10 @@ locks:
   f/changes/auto_create.flow+__flow_hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
   f/changes/auto_ref.flow+__flow_hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
   f/changes/auto_suggest.flow+__flow_hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
-  f/changes/review_change.flow+__flow_hash: c5c4cdc16aeb8dae3680ebc2712debe85cf42f0ee90bcb3874b951779b63b2fe
+  f/changes/review_change.flow+__flow_hash: b88fede182a9cdc88d2563dc6148dba148e524f08ae0b75327a7a29bfd0094aa
   f/changes/review_change.flow+fetch_change_edits.inline_script.py: 409f7c988ed5b37db79ced3f14bee4e38a2197c8bb9c350e1f401c0d830e1c14
-  f/changes/review_change.flow+write_review_results_to_crdb.inline_script.py: ce9be7e7d12f4959cceb98f11e2f582c31fa0a23dfd3eaf14c09e1481b31c0d3
-  f/changes/review_edit: 9915c6911ef92c03d8ea2676f55533c23ca0b2090035723c3709cdcb8276fe05
+  f/changes/review_change.flow+write_review_results_to_crdb.inline_script.py: d37e4da5c3dd418fa6804ee51e8682ce73f442a9b43336f5157df10fa42be1c6
+  f/changes/review_edit: 0458de4665c7c7aaa29f58edaa78fb8696427dc2ce148cca8e68530e9a28330c
   f/changes/suggest_fields: 4c2bfefeea7eba38aa2eb244c01b4edb29b5c6ea8ea9a6f9c3caf135c00171ae
   f/context/category_context: 88b47facacad55e0620b682563710b61b844ce700f160b93fe403a88a6fcde62
   f/context/component_context: c67503326e0ebfa1e77d27ba41164d2b97804498a52e099da907d4e561b9652f
@@ -96,10 +98,13 @@ locks:
   f/search/index_script: a9369d316ce3ae88d2b6e8d6f67f0ca8a62f2b1709090995b091cff96d1a3168
   f/search/index.flow+__flow_hash: 946e8cd4bac9ef797477311e22d4136c4e4a99dc132ad36058c508dbf61dd265
   f/search/index.flow+parses_incoming_triggers.inline_script.py: 8b353e7c374e1b34e15b4d4a571910fd81db3026afef725fc32d67c5d55dc7a5
+  f/search/items/index_items: 879cbd5e427049edc8ac919e930952cce20f3441148d335aea4331d1f019c5ca
   f/search/materials/index_materials: 779ad59e28157608f0e12f5f14a231b46d3e545f0eb8e2d7218fe7d74eeb7f78
   f/search/orgs/index_orgs: e517467bee3cf4e55a7361bbb6e6ef6320f577c6cf0ca7851807f4355c67c3f1
   f/search/places/index_places: 40e07a8b34a402eaa17d5d5cac690802acd113bb36ce466703033efca5306dda
   f/search/regions/index_regions: bcb42122cc42e7b2b519d65af1bb46552b068e8c9f82244042fdef070741ba50
+  f/search/reindex.flow+__flow_hash: 7a187290a5ad8e65421d14227dae57928c14ff7dc148b18af5e81b9004adc5c9
+  f/search/reindex.flow+fetch_next_batch_of_ids.inline_script.py: 7637ed2c9913eb330ac864e1885063f29c11316c3413765587ed45a0e2bcef0f
   f/search/variants/index_variants: 34c7912e0c57e4b11b544bb8c4e2a8d09b8abf43f3ef289a1f490785cd9fcb01
   f/sources/components/components_flow: f6713c1e93429fcfbe9f468efed0e26475cf5371afce91a21f07feb7ca79e79d
   f/sources/extract_flow: 7fa63e10709a765caaec450d2351a15675f5ae665fdaeb7cf1700f558e729868
@@ -133,7 +138,7 @@ locks:
   f/utils/db/crdb: 97259c2427cad38fb39ab3c37b3fef9be9c10e9b9f4c01494f3fdc551dbd506f
   f/utils/db/meili: ffe4cba3c75d44a5956e9006e2fd1937ab37842afd8727c8b9191006ca670927
   f/utils/extract: 6ebb02aa39434db91ba421b7d82342331d553054114b04ca45431d489364ce86
-  f/utils/general: 31d47404e69c8bb3c2ab8b1163ac52dcea589fff5f009e41546f9f10eb66fe8a
+  f/utils/general: ca4b968fec27bf091f64da942caf03288203b6366ce1c6e4e0c5503aaf805e1c
   f/utils/git: a16750c3d44fa6b41be3be92f81ec835c7e1052003c13fd1da32b1f28a7d7891
   f/utils/lang: 25fea2ec8c2e5dcefc127aa37a7981c577f37b27b0ef0ab2ce2da864678992a8
   f/utils/s3: 4eedf570b2ee81a29d2a5e4b6687f66c4658733f693e71714a930acd2c8ea269

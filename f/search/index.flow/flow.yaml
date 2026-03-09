@@ -196,6 +196,30 @@ value:
                   summary: Places
                   parallel: true
                   skip_failure: true
+                - expr: flow_input.iter.value.table == "items"
+                  modules:
+                    - id: k
+                      retry:
+                        constant:
+                          seconds: 0
+                          attempts: 0
+                        exponential:
+                          seconds: 5
+                          attempts: 3
+                          multiplier: 1
+                          random_factor: 0
+                      value:
+                        path: f/search/items/index_items
+                        type: script
+                        is_trigger: false
+                        input_transforms:
+                          keys:
+                            expr: flow_input.iter.value.keys
+                            type: javascript
+                      continue_on_error: false
+                  summary: Items
+                  parallel: true
+                  skip_failure: true
             summary: ''
         iterator:
           expr: results.a

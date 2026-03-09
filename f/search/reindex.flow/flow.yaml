@@ -1,0 +1,73 @@
+summary: Full table reindex into Meilisearch
+description: Paginates through a table using cursor-based batching and calls
+  index.flow per batch. Gives per-batch visibility and retry granularity.
+value:
+  modules:
+    - id: loop
+      value:
+        type: whileloopflow
+        modules:
+          - id: fetch_batch
+            value:
+              lock: '!inline fetch_next_batch_of_ids.inline_script.lock'
+              type: rawscript
+              content: '!inline fetch_next_batch_of_ids.inline_script.py'
+              language: python3
+              input_transforms:
+                table:
+                  expr: flow_input.table
+                  type: javascript
+                batch_size:
+                  expr: flow_input.batch_size
+                  type: javascript
+                start_cursor:
+                  expr: flow_input.start_cursor
+                  type: javascript
+            summary: Fetch next batch of IDs
+            stop_after_if:
+              expr: results.fetch_batch.count == 0
+              error_message: null
+              skip_if_stopped: true
+          - id: call_index
+            sleep:
+              expr: flow_input.sleep_seconds
+              type: javascript
+            value:
+              path: f/search/index
+              type: flow
+              input_transforms:
+                length:
+                  expr: results.fetch_batch.count
+                  type: javascript
+                payload:
+                  expr: 'results.fetch_batch.ids.map(id => ({topic: flow_input.table, key:
+                    [id]}))'
+                  type: javascript
+            summary: Call index.flow with batch
+        skip_failures: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - table
+    - batch_size
+    - sleep_seconds
+    - start_cursor
+  properties:
+    table:
+      type: string
+      description: Table name to reindex (e.g. items, variants, categories)
+    batch_size:
+      type: integer
+      description: Number of rows per batch
+      default: 100
+    sleep_seconds:
+      type: integer
+      description: Seconds to sleep between batches
+      default: 30
+    start_cursor:
+      type: string
+      description: Resume from this ID (exclusive). Leave empty to start from the beginning.
+      default: ''
+  required:
+    - table

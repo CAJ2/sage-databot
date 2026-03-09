@@ -1,84 +1,18 @@
 # requirements: project
 
 import json
-from typing import Any, Optional, cast
+from typing import Any, cast
 
-from pydantic import BaseModel, Field, create_model
 from pydantic_ai import Agent
-from pydantic_ai.models import Model
 from pydantic_ai.usage import UsageLimits
 
+from f.changes.ai_shared import (
+    FieldSuggestion,
+    SuggestResult,
+    build_suggestion_model,
+)
 from f.context.context_types import EntityContext
 from f.utils.general import llm_agent
-
-
-class FieldSuggestion(BaseModel):
-    """Field suggestion metadata."""
-
-    field: str
-    confidence: float = Field(ge=0.0, le=1.0)  # 0.0 – 1.0
-    reasoning: str
-
-
-class SuggestResult(BaseModel):
-    """All field suggestions for a single entity, returned by the auto-suggest flow."""
-
-    entity_name: str
-    entity_id: str | None
-    data: dict[str, Any] | None = None
-    suggestions: list[FieldSuggestion]
-
-
-class LLMSuggestOutput(BaseModel):
-    """Structured output from the AI suggestion agent (fallback when no JSON schema available)."""
-
-    suggestions: list[FieldSuggestion]
-
-
-def _resolve_python_type(prop: dict[str, Any], defs: dict[str, Any]) -> Any:
-    """Map a JSON Schema property dict to a Python type for create_model()."""
-    if "$ref" in prop:
-        ref_name = prop["$ref"].split("/")[-1]
-        return _resolve_python_type(defs.get(ref_name, {}), defs)
-    # Handle anyOf (e.g. nullable fields: anyOf: [{type: string}, {type: null}])
-    if "anyOf" in prop:
-        non_null = [t for t in prop["anyOf"] if t.get("type") != "null"]
-        if len(non_null) == 1:
-            return _resolve_python_type(non_null[0], defs)
-        return Any
-    t = prop.get("type")
-    if t == "string":
-        return str
-    if t == "integer":
-        return int
-    if t == "number":
-        return float
-    if t == "boolean":
-        return bool
-    return Any  # arrays, objects, oneOf → untyped fallback
-
-
-def build_suggestion_model(
-    schema: dict[str, Any], target_fields: list[str]
-) -> type[BaseModel]:
-    """
-    Builds a dynamic Pydantic model for pydantic-ai's output_type.
-    Shape: {data: {field: <typed_value>, ...}, suggestions: [FieldSuggestion, ...]}
-    The LLM fills both independently: data is mutation-ready, suggestions carry confidence/reasoning.
-    """
-    defs: dict[str, Any] = schema.get("$defs", {})
-    properties: dict[str, Any] = schema.get("properties", {})
-    data_fields: dict[str, Any] = {}
-    for field in target_fields:
-        prop: dict[str, Any] = properties.get(field, {})
-        python_type = _resolve_python_type(prop, defs)
-        data_fields[field] = (Optional[python_type], None)
-    DataModel = create_model("DataModel", **data_fields)
-    return create_model(
-        "SuggestionOutput",
-        data=(DataModel, ...),
-        suggestions=(list[FieldSuggestion], ...),
-    )
 
 
 _SYSTEM_PROMPT = (
@@ -94,7 +28,7 @@ _SYSTEM_PROMPT = (
 def suggest_fields(
     context: EntityContext,
     target_fields: list[str],
-    model: Model,
+    model: Any,
 ) -> SuggestResult:
     """
     Runs AI suggestion for the given fields using the pre-built EntityContext.
@@ -129,7 +63,7 @@ def suggest_fields(
     output = result.output
 
     typed = cast(Any, output)
-    suggestions = typed.suggestions
+    suggestions: list[FieldSuggestion] = typed.suggestions
     data = {k: v for k, v in typed.data.model_dump().items() if v is not None}
 
     return SuggestResult(

@@ -1,14 +1,18 @@
 # requirements: project
 
 import json
-from typing import Any
+from typing import Any, cast
 
 from pydantic_ai import Agent
 
-from f.changes.ai_suggest import SuggestResult
+from f.agents.toolsets import search_fixed_type_toolset
+from f.changes.ai_shared import (
+    FieldSuggestion,
+    SuggestResult,
+    build_suggestion_model,
+)
 from f.context.context_types import EntityContext
 from f.graphql.api_client.enums import SearchType
-from f.utils.api import api_connect
 from f.utils.general import llm_agent
 
 _SYSTEM_PROMPT = (
@@ -45,6 +49,8 @@ def main(
     except KeyError:
         raise ValueError(f"Invalid ref_entity_type: {ref_entity_type}")
 
+    OutputModel = build_suggestion_model(schema, [ref_field])
+
     user_prompt = (
         f"Manage the '{ref_field}' reference field for this {ctx.entity_name}.\n\n"
         f"CURRENT ENTITY DATA:\n{json.dumps(ctx.entity_data, indent=2, default=str)}\n\n"
@@ -54,44 +60,26 @@ def main(
     if prompt:
         user_prompt += f"ADDITIONAL GUIDANCE: {prompt}\n\n"
     user_prompt += (
-        "Use the search tool to find relevant entities, then return a SuggestResult with:\n"
+        "Use the search tool to find relevant entities, then return a result with:\n"
         "- 'data': the mutation payload (e.g. {'addItems': ['id1'], 'removeItems': ['id2']})\n"
         "- 'suggestions': one FieldSuggestion per operation with field name, value, confidence, reasoning"
     )
 
     agent = Agent(
         llm_agent(),
-        output_type=SuggestResult,
+        output_type=OutputModel,
         system_prompt=_SYSTEM_PROMPT,
+        toolsets=[search_fixed_type_toolset(search_type)],
     )
 
-    @agent.tool_plain
-    def search(query: str) -> list[dict[str, Any]]:
-        """Search for matching entities. Returns id and all available descriptive fields."""
-        print(f"Search Tool: query={query}, entity_type={ref_entity_type}")
-        client, _ = api_connect()
-        result = client.search(
-            query=query,
-            types=[search_type],
-            limit=20,
-        )
-        print(
-            f"Search Result: query={query}, entity_type={ref_entity_type}, nodes={len(result.search.nodes or [])}"
-        )
-        nodes = [
-            n.model_dump(exclude={"typename__"})
-            for n in (result.search.nodes or [])
-            if n is not None
-        ]
-        print(f"Search Nodes: {nodes}")
-        return nodes
-
     result = agent.run_sync(user_prompt)
-    output = result.output
+    typed = cast(Any, result.output)
+    suggestions: list[FieldSuggestion] = typed.suggestions
+    data = {k: v for k, v in typed.data.model_dump().items() if v is not None}
 
     return SuggestResult(
         entity_name=ctx.entity_name,
         entity_id=ctx.entity_id,
-        data=output.data,
-        suggestions=output.suggestions,
+        data=data,
+        suggestions=suggestions,
     ).model_dump()
