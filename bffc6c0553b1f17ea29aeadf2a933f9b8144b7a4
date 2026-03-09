@@ -1,0 +1,155 @@
+f/search/components/index_components.py
+  3cb98ceee88599dc 10-11,16,39-42,49,53
+f/sources/components/components_flow.py
+  23eec3ef1bb9c0d9 3-4,45,79
+f/scripts/batch_run.flow/execute_sql_query_and_return_rows.inline_script.py
+  23eec3ef1bb9c0d9 20
+f/categories/google_taxonomy_flow.py
+  23eec3ef1bb9c0d9 24,175
+f/agents/toolsets.py
+  23eec3ef1bb9c0d9 17
+f/search/categories/index_categories.py
+  0ff4cff871d4580b 32
+  3cb98ceee88599dc 10-11,16,41-45,52,56
+f/test/test_changes.py
+  23eec3ef1bb9c0d9 8-9,29,58,75,97,112,126
+f/search/orgs/index_orgs.py
+  3cb98ceee88599dc 11-13,17,40-42,49,53
+f/openstreetmap/tags_flow.py
+  23eec3ef1bb9c0d9 4,14
+f/search/places/index_places.py
+  3cb98ceee88599dc 10-11,16,57-58,65,72
+f/openfoodfacts/off_variant.py
+  23eec3ef1bb9c0d9 8-9,11,13,30
+f/test/test_utils.py
+  3cb98ceee88599dc 15,26,36,50,52,55,57,68,86,116,122,124,129,137,143,152,163
+f/scripts/batch_run.flow/run_script_with_row_args.inline_script.py
+  23eec3ef1bb9c0d9 9,13
+f/changes/review_change.flow/fetch_change_edits.inline_script.py
+  23eec3ef1bb9c0d9 36
+f/geo/import_whos_on_first.flow/transform_and_insert.inline_script.py
+  23eec3ef1bb9c0d9 129-130
+f/db/sage/model.py
+  23eec3ef1bb9c0d9 18,31,53,67,80,93,104-105
+f/context/place_context.py
+  23eec3ef1bb9c0d9 12
+src/dev_sync.py
+  23eec3ef1bb9c0d9 49,148
+  0ff4cff871d4580b 69-70
+pyrightconfig.json
+  97786cd3a6cbea36 1-18,21
+f/sources/unstructured_flow.py
+  23eec3ef1bb9c0d9 19
+f/context/generic_context.py
+  23eec3ef1bb9c0d9 11
+f/utils/general.py
+  23eec3ef1bb9c0d9 38,102
+f/search/variants/index_variants.py
+  3cb98ceee88599dc 10-11,16,39-42,49,53
+f/search/index_script.py
+  3cb98ceee88599dc 3,13
+f/utils/db/crdb.py
+  23eec3ef1bb9c0d9 5,23,58,72,79,89-90,92,96,101,133,144-145
+f/db/databot/model.py
+  23eec3ef1bb9c0d9 60,89,97
+f/utils/s3.py
+  23eec3ef1bb9c0d9 17-22,46,107,127
+f/test/test_openfoodfacts.py
+  23eec3ef1bb9c0d9 10-11,27,53,62,111
+f/openstreetmap/osm.py
+  23eec3ef1bb9c0d9 35
+f/test/test_search.py
+  3cb98ceee88599dc 17,50,62,66,69,72,82,86,89,93
+src/local_windmill.py
+  23eec3ef1bb9c0d9 129
+f/test/cleanup.py
+  23eec3ef1bb9c0d9 11-12,160,263-267,269,300
+f/test/run_tests.flow/safety_check_-_verify_test_workspace.inline_script.py
+  23eec3ef1bb9c0d9 12
+f/sources/upload_source.py
+  23eec3ef1bb9c0d9 8
+f/db/base.py
+  23eec3ef1bb9c0d9 2,15,19-20,22,26,31,40,42,45,50
+f/search/items/index_items.py
+  3cb98ceee88599dc 10-11,16,39-43,50,54
+f/test/framework.py
+  23eec3ef1bb9c0d9 13,21-22,51,112,119,126,133,140,147,154,167,182,193,197,200,205,209
+f/search/index.flow/parses_incoming_triggers.inline_script.py
+  3cb98ceee88599dc 1,4-6,14,17
+f/changes/review_change.flow/write_review_results_to_crdb.inline_script.py
+  23eec3ef1bb9c0d9 26,31
+f/utils/db/meili.py
+  3cb98ceee88599dc 2,7,9,11,21,41-42,70-72,91,112-114,122-125,127-136,138,142-146,149-152,158-165,167-169,172-198
+  0ff4cff871d4580b 153-157,166,170-171
+f/openfoodfacts/off_download_images.py
+  23eec3ef1bb9c0d9 14,21,121,188,345,355-356,359,547
+f/test/test_data_pipeline.py
+  23eec3ef1bb9c0d9 20,44,62
+f/search/materials/index_materials.py
+  3cb98ceee88599dc 10-11,16,64-65,71,73,75,78-80,87,91
+f/search/regions/index_regions.py
+  3cb98ceee88599dc 3,11-12,17,41-43,45-46,48-49,56,64
+f/openstreetmap/generators.py
+  23eec3ef1bb9c0d9 4,39
+src/tags/validate_schema.py
+  23eec3ef1bb9c0d9 1-2,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "bffc6c0553b1f17ea29aeadf2a933f9b8144b7a4",
+  "prompts": {
+    "0ff4cff871d4580b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a33ba2bc-887d-4139-b57f-00614de6ac8f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 2,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    },
+    "23eec3ef1bb9c0d9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b227ba8-b5d9-416c-ac0a-163d8dc824cc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 162,
+      "total_deletions": 150,
+      "accepted_lines": 138,
+      "overriden_lines": 1
+    },
+    "3cb98ceee88599dc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "493dd61f-f92d-4bd9-aed7-880bf25cec56",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 221,
+      "total_deletions": 534,
+      "accepted_lines": 203,
+      "overriden_lines": 8
+    },
+    "97786cd3a6cbea36": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ef09fc66-e43c-4aff-8337-62bee8abcd16",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 21,
+      "total_deletions": 1,
+      "accepted_lines": 19,
+      "overriden_lines": 1
+    }
+  }
+}
