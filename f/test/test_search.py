@@ -5,6 +5,8 @@ Integration tests for f/search/* scripts.
 Tests: index settings, category indexing, region indexing.
 """
 
+import time
+
 import meilisearch
 import wmill
 from sqlalchemy import text
@@ -15,6 +17,17 @@ from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_true
 from f.utils.db.crdb import create_sql_engine
 from f.utils.db.meili import check_create_index
+
+
+def _wait_meili_idle(meili: meilisearch.Client, timeout: float = 30.0) -> None:
+    """Wait until Meilisearch has no enqueued or processing tasks."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        tasks = meili.get_tasks({"statuses": ["enqueued", "processing"]})
+        if not tasks.results:
+            return
+        time.sleep(0.5)
+    raise TimeoutError("Meilisearch did not finish processing tasks in time")
 
 
 def _get_meili_client() -> meilisearch.Client:
@@ -63,6 +76,7 @@ def test_index_categories(_t: Test):
     index_categories_main(keys=category_ids)
 
     meili = _get_meili_client()
+    _wait_meili_idle(meili)
     index = meili.index("categories_en")
     for cid in category_ids:
         doc = index.get_document(cid)
@@ -83,6 +97,7 @@ def test_index_regions(_t: Test):
     index_regions_main(keys=region_ids)
 
     meili = _get_meili_client()
+    _wait_meili_idle(meili)
     index = meili.index("regions_en")
     for rid in region_ids:
         doc = index.get_document(rid)
