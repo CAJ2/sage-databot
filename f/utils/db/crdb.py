@@ -2,7 +2,7 @@ import json
 import os
 import stat
 from dataclasses import asdict
-from typing import Any, Iterator
+from typing import Any, ClassVar, Iterator
 from urllib.parse import parse_qs, urlencode, urlparse
 
 import polars as pl
@@ -20,7 +20,7 @@ def _check_or_create_cert_file(content: str, file_name: str):
     os.chmod(file_name, stat.S_IREAD)
 
 
-def create_crdb_uri(resource="f/db_config/db_sage") -> str:
+def create_crdb_uri(resource: str = "f/db_config/db_sage") -> str:
     """
     Creates a connection string for CockroachDB
 
@@ -55,7 +55,7 @@ def create_crdb_uri(resource="f/db_config/db_sage") -> str:
     return uri.geturl()
 
 
-def create_polars_uri(resource="f/db_config/db_sage") -> str:
+def create_polars_uri(resource: str = "f/db_config/db_sage") -> str:
     """
     Create a connection string for use with Polars.
 
@@ -69,14 +69,14 @@ def create_polars_uri(resource="f/db_config/db_sage") -> str:
 _sql_engine = None
 
 
-def create_sql_engine(resource="f/db_config/db_sage") -> Engine:
+def create_sql_engine(resource: str = "f/db_config/db_sage") -> Engine:
     global _sql_engine
     if _sql_engine is None:
         _sql_engine = create_engine(
             create_crdb_uri(resource=resource).replace(
                 "cockroachdb", "cockroachdb+psycopg", 1
             ),
-            json_serializer=lambda obj: json.dumps(obj, ensure_ascii=False),
+            json_serializer=lambda obj: json.dumps(obj, ensure_ascii=False),  # pyright: ignore[reportUnknownLambdaType]
         )
     return _sql_engine
 
@@ -86,18 +86,19 @@ class Base(DeclarativeBase):
 
 
 class JSONData(TypeDecorator[Any]):
-    impl = JSON
+    impl: ClassVar[Any] = JSON
+    dataclass: type[Any]
 
-    def __init__(self, dataclass, *args, **kwargs):
+    def __init__(self, dataclass: type[Any], *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
         self.dataclass = dataclass
 
-    def process_bind_param(self, value, dialect):
+    def process_bind_param(self, value: Any, dialect: Any) -> Any:
         if value is not None:
             return json.dumps(asdict(value))
         return value
 
-    def process_result_value(self, value, dialect):
+    def process_result_value(self, value: Any, dialect: Any) -> Any:
         if value is not None:
             value = json.loads(value)
             value = self.dataclass(**value)
@@ -129,7 +130,7 @@ def export_table_by_ids(
 def db_write_dataframe(
     df: pl.DataFrame | pl.LazyFrame,
     table: str,
-    id_cols: list[str] = ["id"],
+    id_cols: list[str] | None = None,
     append: bool = False,
     resource: str = "f/db_config/db_sage",
     chunk_size: int = 5_000,
@@ -140,6 +141,8 @@ def db_write_dataframe(
 
     Converts struct columns to JSONB format.
     """
+    if id_cols is None:
+        id_cols = ["id"]
     crdb = create_sql_engine(resource=resource)
 
     print(f"Writing to table databot.{table} with chunk size {chunk_size}...")

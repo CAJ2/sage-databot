@@ -7,7 +7,8 @@ Tests: f/openfoodfacts/off_variant.py
 
 import json
 
-from sqlalchemy import text
+
+from sqlalchemy import text, Engine
 from sqlalchemy.orm import Session
 
 from f.db.databot.model import OFFProduct
@@ -23,7 +24,7 @@ from f.test.framework import (
 from f.utils.db.crdb import create_sql_engine
 
 
-def _insert_test_off_product(engine, product_id: str):
+def _insert_test_off_product(engine: Engine, product_id: str):
     """Insert a minimal test OFFProduct into databot.off_products."""
     with engine.begin() as conn:
         conn.execute(
@@ -49,7 +50,7 @@ def _insert_test_off_product(engine, product_id: str):
         )
 
 
-def _cleanup_test_off_product(engine, product_id: str):
+def _cleanup_test_off_product(engine: Engine, product_id: str):
     """Remove the test OFF product."""
     with engine.begin() as conn:
         conn.execute(
@@ -58,7 +59,7 @@ def _cleanup_test_off_product(engine, product_id: str):
         )
 
 
-def test_off_product_insert_and_query(t: Test):
+def test_off_product_insert_and_query(_t: Test):
     """Test that we can insert and query a test OFF product."""
     engine = create_sql_engine()
     product_id = "__test_off_product_1"
@@ -107,7 +108,7 @@ def test_off_variant_creation(t: Test):
 
     if row:
         t.cleanup.track_entity("variants", row[0])
-        assert_true(row is not None, "Should have created a __test_ variant")
+        assert_true(True, "Should have created a __test_ variant")
     else:
         print("  ⚠️  No __test_ variant found, off_variant may have failed to create it")
     _cleanup_test_off_product(engine, product_id)

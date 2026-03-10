@@ -35,7 +35,7 @@ def environment() -> str:
         return "dev"
 
 
-def find_path_or_default(cfg: dict[str, Any]) -> dict:
+def find_path_or_default(cfg: dict[str, Any]) -> dict[str, Any]:
     """
     Looks for a config value based on:
     1. The current script path (from WM_JOB_PATH)
@@ -99,7 +99,7 @@ def llm_agent() -> Model:
     return llm
 
 
-def slugify(s):
+def slugify(s: str) -> str:
     s = s.lower().strip()
     s = re.sub(r"[^\w\s-]", "", s)
     s = re.sub(r"[\s_-]+", "-", s)

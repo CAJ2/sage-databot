@@ -32,7 +32,7 @@ def load_osm(country: str, download_url: str):
     return filepath
 
 
-def construct_osm_json(o):
+def construct_osm_json(o: Any):
     """
     Construct the OSM json.
     """

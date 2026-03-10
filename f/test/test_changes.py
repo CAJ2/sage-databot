@@ -5,6 +5,8 @@ Integration tests for f/changes/* and f/context/* scripts.
 Tests: all context scripts.
 """
 
+from typing import Any
+
 from sqlalchemy import text
 
 from f.context.category_context import main as category_context_main
@@ -24,7 +26,7 @@ from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
 
 
-def _find_existing_entity(client, entity_type: str) -> str | None:
+def _find_existing_entity(client: Any, entity_type: str) -> str | None:
     """Find an existing entity ID to use for read-only tests."""
     try:
         if entity_type == "variant":
@@ -53,7 +55,7 @@ def _find_existing_entity(client, entity_type: str) -> str | None:
 # --- Context tests ---
 
 
-def test_variant_context(t: Test):
+def test_variant_context(_t: Test):
     """Test that variant_context returns valid EntityContext."""
     client, _ = api_connect()
     variant_id = _find_existing_entity(client, "variant")
@@ -70,7 +72,7 @@ def test_variant_context(t: Test):
     assert_true("prompt_hints" in result, "Should have prompt_hints")
 
 
-def test_variant_context_suggest_mode(t: Test):
+def test_variant_context_suggest_mode(_t: Test):
     """Test variant_context in suggest mode."""
     client, _ = api_connect()
     variant_id = _find_existing_entity(client, "variant")
@@ -92,7 +94,7 @@ def test_variant_context_suggest_mode(t: Test):
     )
 
 
-def test_category_context(t: Test):
+def test_category_context(_t: Test):
     """Test that category_context returns valid EntityContext."""
     client, _ = api_connect()
     cat_id = _find_existing_entity(client, "category")
@@ -107,7 +109,7 @@ def test_category_context(t: Test):
     assert_eq(result["entity_id"], cat_id)
 
 
-def test_item_context(t: Test):
+def test_item_context(_t: Test):
     """Test that item_context returns valid EntityContext."""
     client, _ = api_connect()
     item_id = _find_existing_entity(client, "item")
@@ -121,7 +123,7 @@ def test_item_context(t: Test):
     assert_eq(result["entity_name"], "Item")
 
 
-def test_generic_context(t: Test):
+def test_generic_context(_t: Test):
     """Test generic_context with a component."""
     engine = create_sql_engine()
     with engine.begin() as conn:

@@ -10,8 +10,6 @@ def main(test_results: list[dict[str, Any]]):
     total_duration_ms = 0.0
 
     for result in test_results:
-        if result is None or not isinstance(result, dict):
-            continue
         suite_name = result.get("suite_name", "unknown")
         tests = result.get("tests", [])
         passed = result.get("passed", 0)

@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-import fasttext  # pyright: ignore[reportMissingImports]
+import fasttext
 from unstructured.documents.elements import (  # pyright: ignore[reportMissingImports]
     Element,
 )
@@ -16,7 +16,7 @@ from unstructured.staging.base import (  # pyright: ignore[reportMissingImports]
     elements_to_dicts,
 )
 
-from f.graphql.api_client.client import UpdateSourceInput
+from f.graphql.api_client.input_types import UpdateSourceInput
 from f.utils.api import api_connect
 from f.utils.s3 import S3Client
 

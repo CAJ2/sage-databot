@@ -21,7 +21,7 @@ def get_product_df_from_language_code(code: str):
         )
     except Exception:
         try:
-            df: pl.DataFrame = pl.read_csv(
+            df = pl.read_csv(
                 f"https://www.google.com/basepages/producttype/taxonomy-with-ids.{code}.txt",
                 has_header=False,
                 infer_schema=True,
@@ -172,7 +172,7 @@ def categories_flow():
         if categories_df is None:
             categories_df, cat_edge_df = dfs
         else:
-            new_categories_df, new_cat_edge_df = dfs
+            new_categories_df, _ = dfs
             categories_df = categories_df.join(
                 new_categories_df, on="id", how="inner", suffix=code
             )

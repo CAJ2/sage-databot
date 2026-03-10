@@ -5,12 +5,13 @@ from sqlalchemy.orm import Session
 
 from f.db.databot.model import OFFProduct
 from f.db.sage.model import ExternalSource
-from f.graphql.api_client.client import (
-    CreateVariantInput,
-    UpdateVariantInput,
+from f.graphql.api_client.input_types import (
     CreateOrgInput,
+    CreateVariantInput,
+    SourceInput,
+    UpdateVariantInput,
+    VariantOrgsInput,
 )
-from f.graphql.api_client.input_types import SourceInput, VariantOrgsInput
 from f.utils.general import slugify
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
@@ -26,7 +27,7 @@ def off_variant(product_id: str):
     meili = meili_client()
 
     # Create an API client
-    client, user = api_connect()
+    client, _ = api_connect()
 
     # Ensure the OFF source exists
     off_source_id = "g6OJVnSzQkE0mHtYS31O9"

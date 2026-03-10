@@ -14,7 +14,12 @@ def _is_test_workspace() -> bool:
 
 
 class S3Client:
-    def __init__(self, resource_id="f/s3_config/s3_databot"):
+    resource_id: str
+    resource: dict[str, Any] | None
+    bucket: str
+    client: Any
+
+    def __init__(self, resource_id: str = "f/s3_config/s3_databot"):
         self.resource_id = resource_id
         self.resource = wmill.get_resource(resource_id)
         if self.resource is None:
@@ -38,7 +43,7 @@ class S3Client:
             return f"__test/{path}"
         return path
 
-    def create_url(self, path: str, bucket="") -> str:
+    def create_url(self, path: str, bucket: str = "") -> str:
         path = self._ensure_test_prefix(path)
         if bucket == "":
             bucket = self.bucket
@@ -99,7 +104,7 @@ class S3Client:
                 return True
         return False
 
-    def s3_upload(self, url: str, f, mode="wb") -> bool:
+    def s3_upload(self, url: str, f: Any, mode: str = "wb") -> bool:
         url = self._ensure_test_prefix(url)
         parsed_url = self._ensure_url(url)
         if parsed_url is None:
@@ -119,7 +124,7 @@ class S3Client:
             print(f"Set public-read ACL on {parsed_url}")
         return True
 
-    def s3_download(self, url: str, f) -> bool:
+    def s3_download(self, url: str, f: Any) -> bool:
         url = self._ensure_test_prefix(url)
         parsed_url = self._ensure_url(url)
         if parsed_url is None:

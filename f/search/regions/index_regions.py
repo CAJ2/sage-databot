@@ -1,12 +1,20 @@
 # requirements: project
 
+from typing import cast
 from sqlalchemy import Engine
 import polars as pl
 import meilisearch
 import json
 
-from f.utils.db.meili import meili_connect, check_create_index
+from f.utils.db.meili import (
+    meili_connect,
+    check_create_lang_indexes,
+    split_docs_by_lang,
+    SUPPORTED_LANGS,
+)
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
+
+LANG_FIELDS = ["name"]
 
 
 def index_regions(
@@ -30,21 +38,22 @@ def index_regions(
         df = df.cast({pl.Datetime: pl.String})
         docs = df.to_dicts()
         for doc in docs:
-            name_json = json.loads(doc["name"])
-            doc["name"] = name_json
-            prop_json = json.loads(doc["properties"])
-            doc["properties"] = prop_json
+            doc["name"] = json.loads(str(doc["name"]))
+            prop = cast(dict[str, object], json.loads(str(doc["properties"])))
+            doc["properties"] = prop
             doc["_geo"] = {
-                "lat": prop_json["geom:latitude"],
-                "lng": prop_json["geom:longitude"],
+                "lat": prop["geom:latitude"],
+                "lng": prop["geom:longitude"],
             }
-        meili.index("regions").add_documents(docs)
+        for lang in SUPPORTED_LANGS:
+            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            _ = meili.index(f"regions_{lang}").add_documents(lang_docs)
 
 
 def main(keys: list[str]):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_index(
+    check_create_lang_indexes(
         meili,
         "regions",
         {
@@ -52,5 +61,6 @@ def main(keys: list[str]):
             "filterableAttributes": ["placetype"],
             "sortableAttributes": ["admin_level"],
         },
+        lang_fields=LANG_FIELDS,
     )
     index_regions(crdb, meili, keys)

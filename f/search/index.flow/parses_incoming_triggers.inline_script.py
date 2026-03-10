@@ -1,4 +1,9 @@
-from typing import Any, TypedDict
+from typing import TypedDict
+
+
+class PayloadItem(TypedDict):
+    topic: str
+    key: list[str]
 
 
 class ChangeSet(TypedDict):
@@ -6,10 +11,10 @@ class ChangeSet(TypedDict):
     keys: list[str]
 
 
-def main(payload: list[Any], length: int):
+def main(payload: list[PayloadItem], length: int) -> list[ChangeSet]:
     if len(payload) != length:
         raise ValueError("invalid length")
-    changes = dict()
+    changes: dict[str, ChangeSet] = {}
     for p in payload:
         table = p["topic"]
         if table not in changes:

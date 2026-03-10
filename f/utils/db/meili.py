@@ -1,14 +1,14 @@
 import time
-from typing import Any
+from typing import Any, cast
 import wmill
 import meilisearch
-from meilisearch.errors import MeilisearchApiError
 from stopwordsiso import stopwords
 import copy
+import iso639
 
-locales = ["en", "sv"]
+SUPPORTED_LANGS = ["en", "fr", "sv"]
 
-index_settings = {
+index_settings: dict[str, Any] = {
     "rankingRules": [
         "words",
         "typo",
@@ -18,15 +18,11 @@ index_settings = {
         "exactness",
     ],
     "sortableAttributes": ["updated_at"],
-    "stopWords": list(stopwords(locales)),
-    "localizedAttributes": list(
-        {"locales": [o], "attributePatterns": ["*." + o]} for o in locales
-    ),
+    "stopWords": list(stopwords(SUPPORTED_LANGS)),
 }
 
 
 def meili_connect() -> meilisearch.Client:
-    # Connect to Meilisearch
     # Connect to Meilisearch
     meili_res = wmill.get_resource("f/api_config/api_meilisearch")
     if meili_res is None:
@@ -42,6 +38,8 @@ def meili_connect() -> meilisearch.Client:
 
 
 class MeiliClient:
+    _client: meilisearch.Client
+
     def __init__(self, client: meilisearch.Client):
         self._client = client
 
@@ -69,7 +67,9 @@ class MeiliClient:
                         f"Meilisearch search failed (attempt {attempt + 1}/{retries}): {e}"
                     )
                     time.sleep(retry_delay)
-        raise last_exc  # type: ignore[misc]
+        if last_exc is not None:
+            raise last_exc
+        raise RuntimeError("Meilisearch search failed with no retries")
 
     def ranking_search(
         self,
@@ -88,7 +88,7 @@ class MeiliClient:
             retries=retries,
             retry_delay=retry_delay,
         )
-        return result.get("hits", [])
+        return cast(list[dict[str, Any]], result.get("hits", []))
 
     def multi_search(
         self,
@@ -109,7 +109,9 @@ class MeiliClient:
                         f"Meilisearch multi_search failed (attempt {attempt + 1}/{retries}): {e}"
                     )
                     time.sleep(retry_delay)
-        raise last_exc  # type: ignore[misc]
+        if last_exc is not None:
+            raise last_exc
+        raise RuntimeError("Meilisearch multi_search failed with no retries")
 
 
 def meili_client() -> MeiliClient:
@@ -117,16 +119,80 @@ def meili_client() -> MeiliClient:
     return MeiliClient(meili_connect())
 
 
-def check_create_index(
-    meili: meilisearch.Client, index_name: str, settings: dict[str, Any] = {}
-):
+def check_lang(lang: str) -> str | None:
+    """
+    Check if the language is valid.
+    """
     try:
-        meili.get_index(index_name)
-    except MeilisearchApiError:
-        return
-    op = meili.create_index(index_name, {"primaryKey": "id"})
-    meili.wait_for_task(op.task_uid, timeout_in_ms=120000, interval_in_ms=500)
+        if lang == "xx":
+            return lang
+        language = iso639.Language.match(lang.split("-")[0])
+        if language.part1:
+            lang = language.part1
+        else:
+            lang = language.part3
+    except Exception:
+        return None
+    return lang
+
+
+def check_create_index(
+    meili: meilisearch.Client,
+    index_name: str,
+    settings: dict[str, Any] | None = None,
+) -> None:
+    settings = settings or {}
+    task = meili.create_index(index_name, {"primaryKey": "id"})
+    _ = meili.wait_for_task(task.task_uid, timeout_in_ms=120000, interval_in_ms=500)
     settings_copy = copy.deepcopy(index_settings)
     settings_copy.update(settings)
-    op = meili.index(index_name).update_settings(settings_copy)
-    meili.wait_for_task(op.task_uid, timeout_in_ms=120000, interval_in_ms=5000)
+    task = meili.index(index_name).update_settings(settings_copy)
+    _ = meili.wait_for_task(task.task_uid, timeout_in_ms=120000, interval_in_ms=5000)
+
+
+def _normalize_lang_keys(d: dict[str, Any]) -> dict[str, Any]:
+    """Strip qualifier suffixes from language keys (e.g. 'sv;a' -> 'sv')."""
+    return {k.split(";")[0]: v for k, v in d.items()}
+
+
+def split_docs_by_lang(
+    docs: list[dict[str, Any]], lang_fields: list[str], lang: str
+) -> list[dict[str, Any]]:
+    result = []
+    for doc in docs:
+        lang_doc: dict[str, Any] = {}
+        for k, v in doc.items():
+            if k in lang_fields and isinstance(v, dict):
+                v = _normalize_lang_keys(v)
+                lang_doc[k] = v.get(lang) or v.get("xx", "")
+            elif k in lang_fields and isinstance(v, list):
+                lang_doc[k] = [
+                    (lambda n: n.get(lang) or n.get("xx", ""))(
+                        _normalize_lang_keys(item)
+                    )
+                    if isinstance(item, dict)
+                    else item
+                    for item in v
+                ]
+            else:
+                lang_doc[k] = v
+        result.append(lang_doc)
+    return result
+
+
+def check_create_lang_indexes(
+    meili: meilisearch.Client,
+    base_name: str,
+    settings: dict[str, Any] | None = None,
+    lang_fields: list[str] | None = None,
+) -> None:
+    settings = settings or {}
+    lang_fields = lang_fields or []
+    for lang in SUPPORTED_LANGS:
+        lang_settings = copy.deepcopy(settings)
+        lang_settings["stopWords"] = list(stopwords([lang]))
+        if lang_fields:
+            lang_settings["localizedAttributes"] = [
+                {"locales": [lang], "attributePatterns": lang_fields}
+            ]
+        check_create_index(meili, f"{base_name}_{lang}", lang_settings)

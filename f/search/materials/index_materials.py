@@ -5,8 +5,15 @@ import polars as pl
 import meilisearch
 import json
 
-from f.utils.db.meili import meili_connect, check_create_index
+from f.utils.db.meili import (
+    meili_connect,
+    check_create_lang_indexes,
+    split_docs_by_lang,
+    SUPPORTED_LANGS,
+)
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
+
+LANG_FIELDS = ["name", "desc", "technical_descendants"]
 
 
 def _load_material_tree(crdb: Engine) -> pl.DataFrame:
@@ -54,31 +61,33 @@ def index_materials(
         df = df.filter(pl.col("id").ne("MATERIAL_ROOT"))
         docs = df.to_dicts()
         for doc in docs:
-            name_json = json.loads(doc["name"])
-            doc["name"] = name_json
-            desc_json = json.loads(doc["desc"] or "{}")
-            doc["desc"] = desc_json
+            doc["name"] = json.loads(str(doc["name"]))
+            doc["desc"] = json.loads(str(doc["desc"] or "{}"))
         for doc in docs:
             if not doc["technical"]:
                 tree_df_filtered = tree_df.filter(
                     (pl.col("ancestor_id") == doc["id"]) & (pl.col("depth") > 0)
                 )
+                tech_desc: list[object] = []
                 if tree_df_filtered.height > 0:
-                    doc["technical_descendants"] = []
+                    doc["technical_descendants"] = tech_desc
                 for row in tree_df_filtered.iter_rows():
-                    descendant_id = row[1]
+                    descendant_id = str(row[1])
                     for doc2 in docs:
                         if doc2["id"] == descendant_id and doc2["technical"]:
-                            doc["technical_descendants"].append(doc2["name"])
-        meili.index("materials").add_documents(docs)
+                            tech_desc.append(doc2["name"])
+        for lang in SUPPORTED_LANGS:
+            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            _ = meili.index(f"materials_{lang}").add_documents(lang_docs)
 
 
 def main(keys: list[str]):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_index(
+    check_create_lang_indexes(
         meili,
         "materials",
         {"searchableAttributes": ["name", "desc", "technical_descendants"]},
+        lang_fields=LANG_FIELDS,
     )
     index_materials(crdb, meili, keys)

@@ -1,6 +1,7 @@
 # requirements: project
 
 from typing import Any
+
 from sqlalchemy import JSON, select, text
 from sqlalchemy.orm import Mapped, mapped_column
 import json
@@ -10,7 +11,7 @@ from f.utils.db.crdb import create_sql_engine, Base
 
 
 class Tags(Base):
-    __tablename__ = "tags"
+    __tablename__: str = "tags"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     type: Mapped[str] = mapped_column()

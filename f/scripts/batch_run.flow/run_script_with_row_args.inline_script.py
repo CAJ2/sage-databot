@@ -6,11 +6,11 @@ import wmill
 
 def main(
     script_path: str,
-    row: dict,
+    row: dict[str, object],
     item_index: int,
     batch_size: int,
     delay_between_batches_s: float,
-    static_args: dict | None = None,
+    static_args: dict[str, object] | None = None,
 ):
     if delay_between_batches_s > 0 and batch_size > 0:
         batch_index = item_index // batch_size

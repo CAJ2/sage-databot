@@ -14,7 +14,7 @@ def _run_search(query: str, types: list[SearchType]) -> list[dict[str, Any]]:
     return [
         n.model_dump(exclude={"typename__"})
         for n in (result.search.nodes or [])
-        if n is not None
+        if n is not None  # pyright: ignore[reportUnnecessaryComparison]
     ]
 
 

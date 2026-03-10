@@ -57,7 +57,7 @@ class ProductName(JSONModel):
 
 
 class OFFProduct(Base):
-    __tablename__ = "off_products"
+    __tablename__: str = "off_products"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     brands: Mapped[str | None] = mapped_column()
@@ -86,7 +86,7 @@ class OFFProduct(Base):
 
 
 class KGCache(Base):
-    __tablename__ = "kg_cache"
+    __tablename__: str = "kg_cache"
 
     mid: Mapped[str] = mapped_column(primary_key=True)
     jsonld: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
@@ -94,7 +94,7 @@ class KGCache(Base):
 
 
 class WikidataCache(Base):
-    __tablename__ = "wikidata_cache"
+    __tablename__: str = "wikidata_cache"
 
     qid: Mapped[str] = mapped_column(primary_key=True)
     jsonld: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)

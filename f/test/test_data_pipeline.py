@@ -17,7 +17,7 @@ from f.test.framework import Test, TestSuite, assert_gt, assert_true
 from f.utils.db.crdb import create_sql_engine
 
 
-def test_tags_definitions_valid(t: Test):
+def test_tags_definitions_valid(_t: Test):
     """Test that tag definitions are valid and have required fields."""
 
     all_tags = []
@@ -41,7 +41,7 @@ def test_tags_definitions_valid(t: Test):
         )
 
 
-def test_categories_flow(t: Test):
+def test_categories_flow(_t: Test):
     """Test that the categories flow reads TSVs, validates DAG, and upserts to CRDB."""
 
     categories_flow_main()
@@ -59,7 +59,7 @@ def test_categories_flow(t: Test):
         assert_gt(edge_count, 0, "Should have category_edges in DB after flow")
 
 
-def test_tags_flow(t: Test):
+def test_tags_flow(_t: Test):
     """Test that the tags flow reads definitions and upserts to CRDB."""
 
     tags_flow_main()
