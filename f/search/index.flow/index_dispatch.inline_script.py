@@ -3,7 +3,7 @@
 from collections.abc import Callable
 from typing import TypedDict
 
-from tenacity import retry, stop_after_attempt, wait_exponential
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 from f.search.categories.index_categories import main as index_categories
 from f.search.regions.index_regions import main as index_regions
@@ -46,10 +46,12 @@ def main(changes: list[ChangeSet]):
 
         @retry(
             stop=stop_after_attempt(3),
-            wait=wait_exponential(multiplier=1, min=5, max=5),
+            wait=wait_fixed(5),
             reraise=True,
         )
-        def run_with_retry():
+        def run_with_retry(
+            fn: Callable[[list[str]], None] = fn, keys: list[str] = keys
+        ):
             fn(keys)
 
         print(f"Indexing {len(keys)} keys for table: {table}")

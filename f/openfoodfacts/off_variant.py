@@ -159,22 +159,24 @@ def off_variant(product_id: str):
     # Find and possibly create orgs
     orgs: list[VariantOrgsInput] = []
     if product.brands:
-        brands = product.brands.split(",")
-        for brand in brands:
-            brand = brand.strip()
-            slug = slugify(brand)
-            with crdb.begin() as conn:
-                row = conn.execute(
-                    text("SELECT id FROM public.orgs WHERE slug = :slug LIMIT 1"),
-                    {"slug": slug},
-                ).fetchone()
-            if row:
-                org_id = row[0]
-                if not any(o.id == org_id for o in orgs):
+        brands = [b.strip() for b in product.brands.split(",")]
+        slugs = [slugify(b) for b in brands]
+        with crdb.begin() as conn:
+            rows = conn.execute(
+                text("SELECT id, slug FROM public.orgs WHERE slug = ANY(:slugs)"),
+                {"slugs": slugs},
+            ).fetchall()
+        slug_to_id = {row[1]: row[0] for row in rows}
+        seen_ids: set[str] = set()
+        for brand, slug in zip(brands, slugs):
+            if slug in slug_to_id:
+                org_id = slug_to_id[slug]
+                if org_id not in seen_ids:
+                    seen_ids.add(org_id)
                     orgs.append(VariantOrgsInput(id=org_id))
             else:
                 # Create a new org
-                org = CreateOrgInput(name=brand, slug=slugify(brand))
+                org = CreateOrgInput(name=brand, slug=slug)
                 try:
                     op = client.add_org(org)
                 except Exception as e:
@@ -182,7 +184,10 @@ def off_variant(product_id: str):
                     print(f"Failed to create org: {e}")
                     return
                 if op.create_org and op.create_org.org:
-                    orgs.append(VariantOrgsInput(id=op.create_org.org.id))
+                    new_id = op.create_org.org.id
+                    if new_id not in seen_ids:
+                        seen_ids.add(new_id)
+                        orgs.append(VariantOrgsInput(id=new_id))
 
     # Resolve countries_tags to region IDs
     regions: list[VariantRegionsInput] = []
