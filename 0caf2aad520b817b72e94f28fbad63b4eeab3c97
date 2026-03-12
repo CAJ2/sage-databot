@@ -1,0 +1,88 @@
+f/search/index.flow/index_dispatch.inline_script.py
+  339003a8236f9c13 1-59
+f/utils/db/meili.py
+  d1cd2ba99c72a1cc 80,85-87,91
+f/geo/import_wof_countries.flow/load_wof_countries_data.inline_script.py
+  b7c7a6747e974ff9 1-43
+f/geo/import_wof_countries.flow/transform_and_insert.inline_script.py
+  b7c7a6747e974ff9 1-156
+f/geo/import_wof_countries.flow/flow.yaml
+  b7c7a6747e974ff9 1-32
+f/search/index.flow/flow.yaml
+  339003a8236f9c13 23-28,31
+f/openfoodfacts/off_variant.py
+  d1cd2ba99c72a1cc 37-38,40
+  7f8ade991c4476d2 14,18,20-36,39,41-46,165-174,187-191,200-202,215-217
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "0caf2aad520b817b72e94f28fbad63b4eeab3c97",
+  "prompts": {
+    "339003a8236f9c13": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e8afdfa1-9031-4c4e-b979-f25cf347a930",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 70,
+      "total_deletions": 207,
+      "accepted_lines": 66,
+      "overriden_lines": 0
+    },
+    "681f67696b186c4e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "752e686f-3bfc-485e-94d0-83877ec97874",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 64,
+      "total_deletions": 0,
+      "accepted_lines": 72,
+      "overriden_lines": 4
+    },
+    "7f8ade991c4476d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1cf015d6-30e6-44b3-b9c7-e3f314cd390b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 53,
+      "total_deletions": 15,
+      "accepted_lines": 47,
+      "overriden_lines": 2
+    },
+    "b7c7a6747e974ff9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4a9d9e5f-3c24-4457-b27d-57e0dd1eadf6",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 236,
+      "total_deletions": 5,
+      "accepted_lines": 231,
+      "overriden_lines": 0
+    },
+    "d1cd2ba99c72a1cc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "114afed9-aa34-4854-a635-a4c8e6f6c916",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 4,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    }
+  }
+}
