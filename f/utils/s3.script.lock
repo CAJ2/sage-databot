@@ -1,7 +1,7 @@
 # py: 3.12
 anyio==4.12.1
-boto3==1.42.59
-botocore==1.42.59
+boto3==1.42.65
+botocore==1.42.65
 certifi==2026.2.25
 h11==0.16.0
 httpcore==1.0.9
@@ -14,5 +14,5 @@ six==1.17.0
 smart-open==7.5.1
 typing-extensions==4.15.0
 urllib3==2.6.3
-wmill==1.648.0
-wrapt==2.1.1
+wmill==1.654.0
+wrapt==2.1.2

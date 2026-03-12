@@ -12,8 +12,7 @@ schema:
     image_sizes:
       type: array
       description: List of image sizes to download (e.g., ["full", "400"])
-      default:
-        - full
+      default: null
       items:
         type: string
       originalType: string[]
