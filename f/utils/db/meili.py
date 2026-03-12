@@ -77,14 +77,18 @@ class MeiliClient:
         query: str,
         threshold: float = 0.5,
         limit: int = 1,
+        filter: str | None = None,
         retries: int = 3,
         retry_delay: float = 5.0,
     ) -> list[dict[str, Any]]:
         """Search with a ranking score threshold. Returns the hits list."""
+        params: dict[str, Any] = {"rankingScoreThreshold": threshold, "limit": limit}
+        if filter is not None:
+            params["filter"] = filter
         result = self.search(
             index,
             query,
-            {"rankingScoreThreshold": threshold, "limit": limit},
+            params,
             retries=retries,
             retry_delay=retry_delay,
         )

@@ -1,0 +1,32 @@
+summary: Import WOF Countries
+description: Import Whos On First global countries data from Geocode Earth
+  (legacy GeoJSON format)
+value:
+  modules:
+    - id: a
+      value:
+        lock: '!inline load_wof_countries_data.inline_script.lock'
+        type: rawscript
+        content: '!inline load_wof_countries_data.inline_script.py'
+        language: python3
+        input_transforms: {}
+        concurrency_time_window_s: 0
+      summary: Load WOF countries data
+      continue_on_error: false
+    - id: b
+      value:
+        lock: '!inline transform_and_insert.inline_script.lock'
+        type: rawscript
+        content: '!inline transform_and_insert.inline_script.py'
+        language: python3
+        input_transforms:
+          s3_file:
+            expr: results.a
+            type: javascript
+        concurrency_time_window_s: 0
+      summary: Transform and insert
+      timeout:
+        type: static
+        value: 3600
+      continue_on_error: false
+  flow_env: {}

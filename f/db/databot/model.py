@@ -8,15 +8,15 @@ from f.db.base import Base, JSONData, JSONModel
 
 
 class CitiesTags(JSONModel):
-    cities_tags: list[str]
+    cities_tags: list[str] | None = None
 
 
 class CountriesTags(JSONModel):
-    countries_tags: list[str]
+    countries_tags: list[str] | None = None
 
 
 class DataSourcesTags(JSONModel):
-    data_sources_tags: list[str]
+    data_sources_tags: list[str] | None = None
 
 
 class EcoscoreData(JSONModel):
@@ -27,7 +27,7 @@ class EcoscoreData(JSONModel):
 
 
 class GenericName(JSONModel):
-    generic_name: list[dict[str, Any]]
+    generic_name: list[dict[str, Any]] | None = None
 
 
 class ImageSize(JSONModel):
@@ -45,15 +45,15 @@ class Image(JSONModel):
 
 
 class Images(JSONModel):
-    images: list[Image]
+    images: list[Image] | None = None
 
 
 class Packagings(JSONModel):
-    packagings: list[dict[str, Any]]
+    packagings: list[dict[str, Any]] | None = None
 
 
 class ProductName(JSONModel):
-    product_name: list[dict[str, Any]]
+    product_name: list[dict[str, Any]] | None = None
 
 
 class OFFProduct(Base):

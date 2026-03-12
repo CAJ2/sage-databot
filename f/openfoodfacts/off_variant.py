@@ -11,11 +11,39 @@ from f.graphql.api_client.input_types import (
     SourceInput,
     UpdateVariantInput,
     VariantOrgsInput,
+    VariantRegionsInput,
 )
-from f.utils.general import slugify
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
-from f.utils.db.meili import meili_client
+from f.utils.db.meili import MeiliClient, meili_client
+from f.utils.general import slugify
+
+
+def resolve_regions(
+    meili: MeiliClient,
+    countries_tags: list[str],
+) -> list[VariantRegionsInput]:
+    """Convert OFF countries_tags (e.g. ['en:france']) to CRDB region IDs via Meilisearch."""
+    regions = []
+    seen_ids: set[str] = set()
+    for tag in countries_tags:
+        # Strip language prefix (e.g. "en:france" -> "france")
+        parts = tag.split(":", 1)
+        country_name = parts[-1].replace("-", " ")
+        hits = meili.ranking_search(
+            "regions_en",
+            country_name,
+            threshold=0.6,
+            limit=1,
+            filter="placetype = country",
+        )
+        hit = hits[0] if hits else None
+        if hit:
+            region_id = hit["id"]
+            if region_id not in seen_ids:
+                seen_ids.add(region_id)
+                regions.append(VariantRegionsInput(id=region_id))
+    return regions
 
 
 def off_variant(product_id: str):
@@ -75,7 +103,7 @@ def off_variant(product_id: str):
         return
     name_list = product.product_name.product_name
     print(f"Product: {product.id} {name_list}")
-    if len(name_list) == 0:
+    if not name_list or len(name_list) == 0:
         print(f"No name translations found for product {product.id}, skipping")
         return
     input_names = []
@@ -134,14 +162,16 @@ def off_variant(product_id: str):
         brands = product.brands.split(",")
         for brand in brands:
             brand = brand.strip()
-            hits = meili.ranking_search("orgs", brand, threshold=0.5, limit=1)
-            if len(hits) > 0:
-                org = hits[0]
-                # Update the org
-                print(f"Matching orgs: {hits}")
-                # Check if orgs already has this org ID
-                if not any(o.id == org["id"] for o in orgs):
-                    orgs.append(VariantOrgsInput(id=org["id"]))
+            slug = slugify(brand)
+            with crdb.begin() as conn:
+                row = conn.execute(
+                    text("SELECT id FROM public.orgs WHERE slug = :slug LIMIT 1"),
+                    {"slug": slug},
+                ).fetchone()
+            if row:
+                org_id = row[0]
+                if not any(o.id == org_id for o in orgs):
+                    orgs.append(VariantOrgsInput(id=org_id))
             else:
                 # Create a new org
                 org = CreateOrgInput(name=brand, slug=slugify(brand))
@@ -154,6 +184,11 @@ def off_variant(product_id: str):
                 if op.create_org and op.create_org.org:
                     orgs.append(VariantOrgsInput(id=op.create_org.org.id))
 
+    # Resolve countries_tags to region IDs
+    regions: list[VariantRegionsInput] = []
+    if product.countries_tags and product.countries_tags.countries_tags:
+        regions = resolve_regions(meili, product.countries_tags.countries_tags)
+
     if variant_id:
         # Update the variant
         input = UpdateVariantInput(id=variant_id)
@@ -161,6 +196,10 @@ def off_variant(product_id: str):
         input.code = code
         input.add_tags = tags
         input.add_orgs = orgs
+        if len(regions) > 0:
+            input.region = regions[0]
+            if len(regions) > 1:
+                input.add_regions = regions[1:]
         op = client.update_variant(input)
         if not op.update_variant or not op.update_variant.variant:
             print(f"Failed to update variant for product {product.id}")
@@ -172,6 +211,10 @@ def off_variant(product_id: str):
     input.tags = tags
     input.add_sources = [SourceInput(id=off_source_id)]
     input.orgs = orgs
+    if len(regions) > 0:
+        input.region = regions[0]
+        if len(regions) > 1:
+            input.regions = regions[1:]
     op = client.add_variant(input)
     if not op.create_variant or not op.create_variant.variant:
         print(f"Failed to create variant for product {product.id}")

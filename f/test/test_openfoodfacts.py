@@ -7,8 +7,7 @@ Tests: f/openfoodfacts/off_variant.py
 
 import json
 
-
-from sqlalchemy import text, Engine
+from sqlalchemy import Engine, text
 from sqlalchemy.orm import Session
 
 from f.db.databot.model import OFFProduct
@@ -78,6 +77,7 @@ def test_off_product_insert_and_query(_t: Test):
         assert_eq(product.lang, "en")
         assert_true(product.product_name is not None, "Should have product_name")
         assert product.product_name is not None
+        assert product.product_name.product_name is not None
         assert_gt(
             len(product.product_name.product_name), 0, "Should have name translations"
         )
