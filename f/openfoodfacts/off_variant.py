@@ -1,6 +1,6 @@
 # requirements: project
 
-from sqlalchemy import insert, text
+from sqlalchemy import Engine, insert, text
 from sqlalchemy.orm import Session
 
 from f.db.databot.model import OFFProduct
@@ -13,10 +13,12 @@ from f.graphql.api_client.input_types import (
     VariantOrgsInput,
     VariantRegionsInput,
 )
+from f.graphql.api_client.client import Client
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
 from f.utils.db.meili import MeiliClient, meili_client
 from f.utils.general import slugify
+from f.utils.log import cfg_log
 
 
 def resolve_regions(
@@ -46,16 +48,26 @@ def resolve_regions(
     return regions
 
 
-def off_variant(product_id: str):
+def off_variant(
+    product_id: str,
+    crdb: Engine | None = None,
+    meili: MeiliClient | None = None,
+    client: Client | None = None,
+):
     """
     Processes an imported OpenFoodFacts product and creates/updates the variant.
+
+    Optional resource params allow callers to supply pre-created clients for
+    efficiency (e.g. batch processing). Note: client (httpx-based) is not
+    thread-safe — each thread must pass its own client instance.
     """
 
-    crdb = create_sql_engine()
-    meili = meili_client()
-
-    # Create an API client
-    client, _ = api_connect()
+    if crdb is None:
+        crdb = create_sql_engine()
+    if meili is None:
+        meili = meili_client()
+    if client is None:
+        client, _ = api_connect()
 
     # Ensure the OFF source exists
     off_source_id = "g6OJVnSzQkE0mHtYS31O9"
@@ -96,6 +108,7 @@ def off_variant(product_id: str):
     if not product:
         print(f"No OFF product found with id {product_id}")
         return
+    print("Queried OFF product")
 
     # Format name translations
     if not product.product_name:
@@ -208,6 +221,7 @@ def off_variant(product_id: str):
         op = client.update_variant(input)
         if not op.update_variant or not op.update_variant.variant:
             print(f"Failed to update variant for product {product.id}")
+        print(f"Updated variant {variant_id}")
         return
     # Create a new variant
     input = CreateVariantInput()
@@ -224,6 +238,7 @@ def off_variant(product_id: str):
     if not op.create_variant or not op.create_variant.variant:
         print(f"Failed to create variant for product {product.id}")
         return
+    print(f"Created variant {op.create_variant.variant.id}")
     with Session(crdb) as sess:
         sess.execute(
             insert(ExternalSource).values(
@@ -236,4 +251,5 @@ def off_variant(product_id: str):
 
 
 def main(product_id: str):
+    cfg_log()
     off_variant(product_id)

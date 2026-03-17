@@ -1,67 +1,101 @@
 summary: Generic batch runner — run a script once per row from a CRDB SQL query
-description: |
+description: >
   Executes a SQL query against CockroachDB and runs a target Windmill script
-  once per result row. Supports configurable parallelism and inter-batch delays
-  for rate limiting. Column names in the SQL result must match the main()
-  parameter names of the target script.
+
+  once per result row. Uses cursor-based pagination so large tables are
+  processed
+
+  in small batches without loading all rows into memory. The cursor is persisted
+
+  in flow state so runs can resume from where they left off. Column names in the
+
+  SQL result must match the main() parameter names of the target script.
 value:
   modules:
-    - id: query
+    - id: batch_loop
       value:
-        lock: '!inline execute_sql_query_and_return_rows.inline_script.lock'
-        type: rawscript
-        content: '!inline execute_sql_query_and_return_rows.inline_script.py'
-        language: python3
-        input_transforms:
-          max_items:
-            expr: flow_input.max_items
-            type: javascript
-          sql_query:
-            expr: flow_input.sql_query
-            type: javascript
-          db_resource:
-            expr: flow_input.db_resource
-            type: javascript
-      summary: Execute SQL query and return rows
-    - id: run_items
-      value:
-        type: forloopflow
+        type: whileloopflow
         modules:
-          - id: run_item
+          - id: fetch_cursors
             value:
-              lock: '!inline run_script_with_row_args.inline_script.lock'
+              lock: '!inline fetch_sub-cursors_for_this_iteration.inline_script.lock'
               type: rawscript
-              content: '!inline run_script_with_row_args.inline_script.py'
+              content: '!inline fetch_sub-cursors_for_this_iteration.inline_script.py'
               language: python3
               input_transforms:
-                row:
-                  expr: flow_input.iter.value
+                limit:
+                  expr: flow_input.limit
+                  type: javascript
+                sql_query:
+                  expr: flow_input.sql_query
                   type: javascript
                 batch_size:
                   expr: flow_input.batch_size
                   type: javascript
-                item_index:
-                  expr: flow_input.iter.index
+                db_resource:
+                  expr: flow_input.db_resource
                   type: javascript
-                script_path:
-                  expr: flow_input.script_path
+                start_cursor:
+                  expr: flow_input.start_cursor
                   type: javascript
-                static_args:
-                  expr: flow_input.static_args
+                cursor_column:
+                  expr: flow_input.cursor_column
                   type: javascript
-                delay_between_batches_s:
-                  expr: flow_input.delay_between_batches_s
-                  type: javascript
-            summary: Run script with row args
-        iterator:
-          expr: results.query
-          type: javascript
-        parallel: true
-        parallelism:
-          expr: flow_input.batch_size
-          type: javascript
-        skip_failures: true
-      summary: Run script for each row
+            summary: Fetch sub-cursors for this iteration
+            stop_after_if:
+              expr: result.done == true
+              error_message: null
+              skip_if_stopped: false
+          - id: run_batches
+            value:
+              type: forloopflow
+              modules:
+                - id: run_item
+                  value:
+                    lock: "!inline run_script_for_one_worker's_sub-batch.inline_script.lock"
+                    type: rawscript
+                    content: "!inline run_script_for_one_worker's_sub-batch.inline_script.py"
+                    language: python3
+                    input_transforms:
+                      limit:
+                        expr: flow_input.limit
+                        type: javascript
+                      sql_query:
+                        expr: flow_input.sql_query
+                        type: javascript
+                      item_index:
+                        expr: flow_input.iter.index
+                        type: javascript
+                      sub_cursor:
+                        expr: flow_input.iter.value
+                        type: javascript
+                      db_resource:
+                        expr: flow_input.db_resource
+                        type: javascript
+                      script_path:
+                        expr: flow_input.script_path
+                        type: javascript
+                      static_args:
+                        expr: flow_input.static_args
+                        type: javascript
+                      cursor_column:
+                        expr: flow_input.cursor_column
+                        type: javascript
+                      delay_between_batches_s:
+                        expr: flow_input.delay_between_batches_s
+                        type: javascript
+                  summary: Run script for one worker's sub-batch
+              iterator:
+                expr: results.fetch_cursors.sub_cursors
+                type: javascript
+              parallel: true
+              parallelism:
+                expr: flow_input.batch_size
+                type: javascript
+              skip_failures: true
+            summary: Run all workers in parallel
+        skip_failures: false
+      summary: Cursor-based batch loop
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
@@ -71,14 +105,17 @@ schema:
     - static_args
     - db_resource
     - batch_size
+    - limit
     - delay_between_batches_s
-    - max_items
+    - start_cursor
+    - cursor_column
   properties:
     sql_query:
       type: string
       description: SQL query executed against CRDB; each row becomes one script
         invocation. Column names must match the main() parameter names of the
-        target script.
+        target script. No WHERE/ORDER BY/LIMIT needed — the flow adds
+        cursor-based pagination automatically.
     script_path:
       type: string
       description: Windmill script path to invoke per row (e.g. f/openfoodfacts/off_variant)
@@ -93,15 +130,26 @@ schema:
     batch_size:
       type: integer
       default: 5
-      description: Max concurrent script executions (parallelism)
+      description: Number of parallel workers per iteration
+    limit:
+      type: integer
+      default: 10
+      description: Rows per worker per iteration
     delay_between_batches_s:
       type: number
       default: 0
-      description: Seconds to wait between each batch group of batch_size items
-    max_items:
-      type: integer
-      description: 'Safety cap: wraps query in SELECT * FROM (...) LIMIT N. Leave
-        empty for no limit.'
+      description: Seconds to wait between workers (except the first)
+    start_cursor:
+      type: string
+      default: ''
+      description: Resume from this ID. Leave empty to start from the beginning.
+        Overridden by persisted flow state cursor if one exists.
+    cursor_column:
+      type: string
+      default: id
+      description: Column used for cursor-based pagination. Must be present in the
+        sql_query result set. Change this if your query aliases the primary key
+        (e.g. "id AS product_id" → set cursor_column to "product_id").
   required:
     - sql_query
     - script_path

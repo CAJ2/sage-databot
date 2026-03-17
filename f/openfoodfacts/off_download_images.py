@@ -340,9 +340,13 @@ def fetch_wikidata_entities(
     return results
 
 
-def main(
+def off_download_images(
     variant_id: str,
     image_sizes: list[str] | None = None,
+    crdb: Engine | None = None,
+    client: Any | None = None,
+    kg_api_key: str | None = None,
+    s3_client: S3Client | None = None,
 ):
     """
     Download OpenFoodFacts product images and upload them to S3.
@@ -350,17 +354,23 @@ def main(
     Args:
         variant_id: The variant ID to process
         image_sizes: List of image sizes to download (e.g., ["full", "400"])
+        crdb: Optional SQLAlchemy engine (created if not supplied)
+        client: Optional GraphQL API client (created if not supplied)
+        kg_api_key: Optional Google KG API key (fetched if not supplied)
+        s3_client: Optional S3Client for sources bucket (created if not supplied)
     """
 
     if image_sizes is None:
-        image_sizes = ["full"]
-    crdb = create_sql_engine()
-    ensure_cache_tables(crdb)
-    client, _ = api_connect()
-    kg_api_key = wmill.get_variable("f/api_config/gcp_kg_api_key")
-
-    # Initialize S3 client for sources bucket
-    s3_client = S3Client(resource_id="f/s3_config/s3_sources")
+        image_sizes = ["400"]
+    if crdb is None:
+        crdb = create_sql_engine()
+        ensure_cache_tables(crdb)
+    if client is None:
+        client, _ = api_connect()
+    if kg_api_key is None:
+        kg_api_key = wmill.get_variable("f/api_config/gcp_kg_api_key")
+    if s3_client is None:
+        s3_client = S3Client(resource_id="f/s3_config/s3_sources")
 
     # Step 1: Validate variant exists in CRDB
     with Session(crdb) as session:
@@ -524,6 +534,7 @@ def main(
                             "parent_source": "g6OJVnSzQkE0mHtYS31O9",  # OFF source ID in CRDB
                             "key": image_id,
                             "size": size,
+                            "order": int(image_id),
                         },
                     )
 
@@ -544,7 +555,7 @@ def main(
                     except Exception as e:
                         print(f"Warning: Failed to delete temp file {temp_path}: {e}")
 
-            if source_id is None:  # pyright: ignore[reportUnnecessaryComparison]
+            if source_id is None:
                 continue
 
             # Link KG entities to this source
@@ -618,3 +629,22 @@ def main(
     print(f"Successfully created {len(created_sources)} source(s)")
 
     return created_sources
+
+
+def main(
+    variant_id: str,
+    image_sizes: list[str] | None = None,
+):
+    crdb = create_sql_engine()
+    ensure_cache_tables(crdb)
+    client, _ = api_connect()
+    kg_api_key = wmill.get_variable("f/api_config/gcp_kg_api_key")
+    s3_client = S3Client(resource_id="f/s3_config/s3_sources")
+    return off_download_images(
+        variant_id,
+        image_sizes=image_sizes,
+        crdb=crdb,
+        client=client,
+        kg_api_key=kg_api_key,
+        s3_client=s3_client,
+    )

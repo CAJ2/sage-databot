@@ -1,0 +1,49 @@
+summary: ''
+description: ''
+lock: '!inline f/scripts/batch_run.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    db_resource:
+      type: string
+      description: ''
+      default: f/db_config/db_sage
+      originalType: string
+    delay_between_batches_s:
+      type: number
+      description: ''
+      default: 0
+    item_index:
+      type: integer
+      description: ''
+      default: 0
+    limit:
+      type: integer
+      description: ''
+      default: null
+    script_path:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    sql_query:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    static_args:
+      type: ''
+      description: ''
+      default: null
+    sub_cursor:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - sql_query
+    - sub_cursor
+    - limit
+    - script_path
