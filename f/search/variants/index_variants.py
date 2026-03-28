@@ -43,13 +43,14 @@ def index_variants(
             _ = meili.index(f"variants_{lang}").add_documents(lang_docs)
 
 
-def main(keys: list[str]):
+def main(keys: list[str], check: bool = True):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_lang_indexes(
-        meili,
-        "variants",
-        {"searchableAttributes": ["name", "desc", "code"]},
-        lang_fields=LANG_FIELDS,
-    )
+    if check:
+        check_create_lang_indexes(
+            meili,
+            "variants",
+            {"searchableAttributes": ["name", "desc", "code"]},
+            lang_fields=LANG_FIELDS,
+        )
     index_variants(crdb, meili, keys)

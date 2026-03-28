@@ -9,6 +9,12 @@ class CacheControlScope(str, Enum):
     PUBLIC = "PUBLIC"
 
 
+class CaveatLevel(str, Enum):
+    HIGH = "HIGH"
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+
+
 class ChangeStatus(str, Enum):
     APPROVED = "APPROVED"
     DRAFT = "DRAFT"
@@ -26,6 +32,14 @@ class EditModelType(str, Enum):
     Process = "Process"
     Region = "Region"
     Variant = "Variant"
+
+
+class FeedFormat(str, Enum):
+    ANNOUNCEMENT = "ANNOUNCEMENT"
+    ARTICLE = "ARTICLE"
+    EXTERNAL = "EXTERNAL"
+    FEATURE = "FEATURE"
+    UPDATE = "UPDATE"
 
 
 class SearchType(str, Enum):
