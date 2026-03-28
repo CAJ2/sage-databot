@@ -1,7 +1,6 @@
 summary: ''
 description: ''
 lock: '!inline f/openfoodfacts/off_variant_batch.script.lock'
-timeout: 86400
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
@@ -10,7 +9,7 @@ schema:
     batch_size:
       type: integer
       description: ''
-      default: 10
+      default: 100
     end_cursor:
       type: string
       description: ''
@@ -23,3 +22,4 @@ schema:
       originalType: string
   required:
     - start_cursor
+timeout: 86400

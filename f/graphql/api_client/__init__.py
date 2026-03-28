@@ -13,8 +13,10 @@ from .base_model import BaseModel, Upload
 from .client import Client
 from .enums import (
     CacheControlScope,
+    CaveatLevel,
     ChangeStatus,
     EditModelType,
+    FeedFormat,
     SearchType,
     SourceType,
     StreamScoreRating,
@@ -248,6 +250,7 @@ __all__ = [
     "BaseClient",
     "BaseModel",
     "CacheControlScope",
+    "CaveatLevel",
     "ChangeStatus",
     "Client",
     "ComponentMaterialInput",
@@ -264,6 +267,7 @@ __all__ = [
     "CreateVariantInput",
     "DeleteInput",
     "EditModelType",
+    "FeedFormat",
     "GetCategoryForReview",
     "GetCategoryForReviewCategory",
     "GetCategoryForReviewCategoryChildren",

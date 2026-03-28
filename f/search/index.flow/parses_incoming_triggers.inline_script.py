@@ -3,7 +3,7 @@ from typing import TypedDict
 
 class PayloadItem(TypedDict):
     topic: str
-    key: list[str]
+    id: str
 
 
 class ChangeSet(TypedDict):
@@ -19,6 +19,6 @@ def main(payload: list[PayloadItem], length: int) -> list[ChangeSet]:
         table = p["topic"]
         if table not in changes:
             changes[table] = ChangeSet(table=table, keys=[])
-        key = p["key"][0]
+        key = p["id"]
         changes[table]["keys"].append(key)
     return list(changes.values())

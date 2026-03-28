@@ -6,7 +6,7 @@ from f.openfoodfacts.off_variant import off_variant
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
 from f.utils.db.meili import meili_client
-from f.utils.log import cfg_log
+from f.utils.log import BatchProgress, cfg_log
 
 
 def main(start_cursor: str, end_cursor: str = "", batch_size: int = 100):
@@ -14,6 +14,24 @@ def main(start_cursor: str, end_cursor: str = "", batch_size: int = 100):
     crdb = create_sql_engine()
     meili = meili_client()
     client, _ = api_connect()
+
+    count_params: dict[str, object] = {"start": start_cursor}
+    count_cond = "id >= :start"
+    if end_cursor:
+        count_cond += " AND id <= :end"
+        count_params["end"] = end_cursor
+
+    with crdb.begin() as conn:
+        total_count = (
+            conn.execute(
+                text(f"SELECT COUNT(*) FROM databot.off_products WHERE {count_cond}"),
+                count_params,
+            ).scalar()
+            or 0
+        )
+
+    print(f"Total products to process: {total_count}")
+    progress = BatchProgress(total_count)
 
     current = start_cursor
     first = True
@@ -47,6 +65,7 @@ def main(start_cursor: str, end_cursor: str = "", batch_size: int = 100):
                 off_variant(pid, crdb=crdb, meili=meili, client=client)
             except Exception as e:
                 print(f"Error processing {pid}: {e}")
+            progress.update(pid)
 
         total += len(product_ids)
         print(f"Processed {total} products so far (last: {product_ids[-1]})")

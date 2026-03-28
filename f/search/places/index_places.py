@@ -59,16 +59,17 @@ def index_places(
             _ = meili.index(f"places_{lang}").add_documents(lang_docs)
 
 
-def main(keys: list[str]):
+def main(keys: list[str], check: bool = True):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_lang_indexes(
-        meili,
-        "places",
-        {
-            "searchableAttributes": ["name", "address", "desc"],
-            "filterableAttributes": ["_geo"],
-        },
-        lang_fields=LANG_FIELDS,
-    )
+    if check:
+        check_create_lang_indexes(
+            meili,
+            "places",
+            {
+                "searchableAttributes": ["name", "address", "desc"],
+                "filterableAttributes": ["_geo"],
+            },
+            lang_fields=LANG_FIELDS,
+        )
     index_places(crdb, meili, keys)

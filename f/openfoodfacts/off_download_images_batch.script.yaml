@@ -1,7 +1,6 @@
 summary: ''
 description: ''
 lock: '!inline f/openfoodfacts/off_download_images_batch.script.lock'
-timeout: 86400
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
@@ -22,3 +21,4 @@ schema:
       default: ''
       originalType: string
   required: []
+timeout: 86400

@@ -46,13 +46,14 @@ def index_categories(
             _ = meili.index(f"categories_{lang}").add_documents(lang_docs)
 
 
-def main(keys: list[str]):
+def main(keys: list[str], check: bool = True):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_lang_indexes(
-        meili,
-        "categories",
-        {"searchableAttributes": ["name", "desc_short", "desc"]},
-        lang_fields=LANG_FIELDS,
-    )
+    if check:
+        check_create_lang_indexes(
+            meili,
+            "categories",
+            {"searchableAttributes": ["name", "desc_short", "desc"]},
+            lang_fields=LANG_FIELDS,
+        )
     index_categories(crdb, meili, keys)

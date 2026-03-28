@@ -43,13 +43,14 @@ def index_components(
             _ = meili.index(f"components_{lang}").add_documents(lang_docs)
 
 
-def main(keys: list[str]):
+def main(keys: list[str], check: bool = True):
     crdb = create_sql_engine()
     meili = meili_connect()
-    check_create_lang_indexes(
-        meili,
-        "components",
-        {"searchableAttributes": ["name", "desc"]},
-        lang_fields=LANG_FIELDS,
-    )
+    if check:
+        check_create_lang_indexes(
+            meili,
+            "components",
+            {"searchableAttributes": ["name", "desc"]},
+            lang_fields=LANG_FIELDS,
+        )
     index_components(crdb, meili, keys)
