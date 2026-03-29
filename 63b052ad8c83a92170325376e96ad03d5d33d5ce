@@ -1,0 +1,49 @@
+f/graphql/queries/components.graphql
+  b99b541617a221e4 27-50
+f/graphql/queries/categories.graphql
+  b99b541617a221e4 1-24
+f/changes/ai_ref.py
+  b99b541617a221e4 25-26,37,82-93,97,99
+f/changes/auto_suggest.flow/flow.yaml
+  b99b541617a221e4 179-204,224-233
+f/graphql/queries/processes.graphql
+  b99b541617a221e4 1-24
+f/changes/auto_create.flow/flow.yaml
+  b99b541617a221e4 157-159,162-187,201-217
+f/changes/auto_ref.flow/log_no_ref_found_and_exit.inline_script.py
+  b99b541617a221e4 1
+f/changes/ai_create.py
+  b99b541617a221e4 17,31-61,63-64,90-104,116
+f/utils/api.py
+  b99b541617a221e4 27
+f/changes/auto_ref.flow/flow.yaml
+  b99b541617a221e4 188-209,212-222,224,226-229,233-248,251-256,260-264,266-275,277-286,289-298,325-340
+f/changes/ai_shared.py
+  b99b541617a221e4 29-31,54-65
+f/graphql/queries/variants.graphql
+  b99b541617a221e4 70-72,85-86
+f/changes/apply.py
+  b99b541617a221e4 1-128,130-150,152-214,216-245,247-281,283-298,300-431,433,436-437,439,442-444,446,449-450,452,455-457,459,462-463,465,468-470,472,475-476,478,481-483,485,488-489,491,494-541
+f/graphql/queries/items.graphql
+  b99b541617a221e4 42-44,55-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.22",
+  "base_commit_sha": "63b052ad8c83a92170325376e96ad03d5d33d5ce",
+  "prompts": {
+    "b99b541617a221e4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "278c627d-7b0f-4ad2-abba-ab8f95b5fd74",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>",
+      "messages": [],
+      "total_additions": 991,
+      "total_deletions": 425,
+      "accepted_lines": 875,
+      "overriden_lines": 31
+    }
+  }
+}
