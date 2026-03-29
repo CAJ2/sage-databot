@@ -14,6 +14,7 @@ class AddVariant(BaseModel):
 
 class AddVariantCreateVariant(BaseModel):
     variant: Optional["AddVariantCreateVariantVariant"]
+    change: Optional["AddVariantCreateVariantChange"]
 
 
 class AddVariantCreateVariantVariant(BaseModel):
@@ -22,6 +23,10 @@ class AddVariantCreateVariantVariant(BaseModel):
     desc: Optional[str]
     created_at: Any = Field(alias="createdAt")
     updated_at: Any = Field(alias="updatedAt")
+
+
+class AddVariantCreateVariantChange(BaseModel):
+    id: str
 
 
 AddVariant.model_rebuild()

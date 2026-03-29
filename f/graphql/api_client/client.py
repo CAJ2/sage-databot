@@ -3,8 +3,11 @@
 
 from typing import Any, Optional, Union
 
+from .add_category import AddCategory
+from .add_component import AddComponent
 from .add_item import AddItem
 from .add_org import AddOrg
+from .add_process import AddProcess
 from .add_source import AddSource
 from .add_variant import AddVariant
 from .base_client import BaseClient
@@ -30,22 +33,31 @@ from .get_variant import GetVariant
 from .get_variant_for_review import GetVariantForReview
 from .get_variant_schema import GetVariantSchema
 from .input_types import (
+    CreateCategoryInput,
+    CreateComponentInput,
     CreateItemInput,
     CreateOrgInput,
+    CreateProcessInput,
     CreateSourceInput,
     CreateVariantInput,
     LinkSourceInput,
+    UpdateCategoryInput,
     UpdateChangeInput,
+    UpdateComponentInput,
     UpdateItemInput,
     UpdateOrgInput,
+    UpdateProcessInput,
     UpdateSourceInput,
     UpdateVariantInput,
 )
 from .link_source import LinkSource
 from .search import Search
+from .update_category import UpdateCategory
 from .update_change_status import UpdateChangeStatus
+from .update_component import UpdateComponent
 from .update_item import UpdateItem
 from .update_org import UpdateOrg
+from .update_process import UpdateProcess
 from .update_source import UpdateSource
 from .update_variant import UpdateVariant
 
@@ -55,6 +67,50 @@ def gql(q: str) -> str:
 
 
 class Client(BaseClient):
+    def add_category(self, input: CreateCategoryInput, **kwargs: Any) -> AddCategory:
+        query = gql("""
+            mutation AddCategory($input: CreateCategoryInput!) {
+              createCategory(input: $input) {
+                category {
+                  id
+                  name
+                }
+                change {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="AddCategory", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return AddCategory.model_validate(data)
+
+    def update_category(
+        self, input: UpdateCategoryInput, **kwargs: Any
+    ) -> UpdateCategory:
+        query = gql("""
+            mutation UpdateCategory($input: UpdateCategoryInput!) {
+              updateCategory(input: $input) {
+                category {
+                  id
+                  name
+                }
+                change {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateCategory", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateCategory.model_validate(data)
+
     def get_root_category(self, **kwargs: Any) -> GetRootCategory:
         query = gql("""
             query GetRootCategory {
@@ -271,6 +327,50 @@ class Client(BaseClient):
         data = self.get_data(response)
         return GetComponentForReview.model_validate(data)
 
+    def add_component(self, input: CreateComponentInput, **kwargs: Any) -> AddComponent:
+        query = gql("""
+            mutation AddComponent($input: CreateComponentInput!) {
+              createComponent(input: $input) {
+                component {
+                  id
+                  name
+                }
+                change {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="AddComponent", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return AddComponent.model_validate(data)
+
+    def update_component(
+        self, input: UpdateComponentInput, **kwargs: Any
+    ) -> UpdateComponent:
+        query = gql("""
+            mutation UpdateComponent($input: UpdateComponentInput!) {
+              updateComponent(input: $input) {
+                component {
+                  id
+                  name
+                }
+                change {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateComponent", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateComponent.model_validate(data)
+
     def get_item_for_review(self, id: str, **kwargs: Any) -> GetItemForReview:
         query = gql("""
             query GetItemForReview($id: ID!) {
@@ -335,6 +435,9 @@ class Client(BaseClient):
                   name
                   desc
                 }
+                change {
+                  id
+                }
               }
             }
             """)
@@ -353,6 +456,9 @@ class Client(BaseClient):
                   id
                   name
                   desc
+                }
+                change {
+                  id
                 }
               }
             }
@@ -477,6 +583,48 @@ class Client(BaseClient):
         )
         data = self.get_data(response)
         return GetPlaceForReview.model_validate(data)
+
+    def add_process(self, input: CreateProcessInput, **kwargs: Any) -> AddProcess:
+        query = gql("""
+            mutation AddProcess($input: CreateProcessInput!) {
+              createProcess(input: $input) {
+                process {
+                  id
+                  name
+                }
+                change {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="AddProcess", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return AddProcess.model_validate(data)
+
+    def update_process(self, input: UpdateProcessInput, **kwargs: Any) -> UpdateProcess:
+        query = gql("""
+            mutation UpdateProcess($input: UpdateProcessInput!) {
+              updateProcess(input: $input) {
+                process {
+                  id
+                  name
+                }
+                change {
+                  id
+                }
+              }
+            }
+            """)
+        variables: dict[str, object] = {"input": input}
+        response = self.execute(
+            query=query, operation_name="UpdateProcess", variables=variables, **kwargs
+        )
+        data = self.get_data(response)
+        return UpdateProcess.model_validate(data)
 
     def get_process_for_review(self, id: str, **kwargs: Any) -> GetProcessForReview:
         query = gql("""
@@ -906,6 +1054,9 @@ class Client(BaseClient):
                   createdAt
                   updatedAt
                 }
+                change {
+                  id
+                }
               }
             }
             """)
@@ -926,6 +1077,9 @@ class Client(BaseClient):
                   desc
                   createdAt
                   updatedAt
+                }
+                change {
+                  id
                 }
               }
             }

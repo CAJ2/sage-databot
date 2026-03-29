@@ -14,6 +14,7 @@ from f.changes.ai_shared import (
     build_suggestion_model,
 )
 from f.context.context_types import EntityContext
+from f.utils.api import api_connect
 from f.utils.general import llm_agent
 
 _SYSTEM_PROMPT = (
@@ -27,7 +28,41 @@ _SYSTEM_PROMPT = (
 )
 
 
-def main(entity_context: dict[str, Any], prompt: str) -> dict[str, Any]:
+def _fetch_related_entity(
+    client: Any, entity_type: str, entity_id: str
+) -> dict[str, Any] | None:
+    try:
+        if entity_type == "Variant":
+            r = client.get_variant_for_review(id=entity_id)
+            return r.variant.model_dump(by_alias=False) if r.variant else None
+        elif entity_type == "Item":
+            r = client.get_item_for_review(id=entity_id)
+            return r.item.model_dump(by_alias=False) if r.item else None
+        elif entity_type == "Component":
+            r = client.get_component_for_review(id=entity_id)
+            return r.component.model_dump(by_alias=False) if r.component else None
+        elif entity_type == "Process":
+            r = client.get_process_for_review(id=entity_id)
+            return r.process.model_dump(by_alias=False) if r.process else None
+        elif entity_type == "Category":
+            r = client.get_category_for_review(id=entity_id)
+            return r.category.model_dump(by_alias=False) if r.category else None
+        elif entity_type == "Place":
+            r = client.get_place_for_review(id=entity_id)
+            return r.place.model_dump(by_alias=False) if r.place else None
+        elif entity_type == "Material":
+            r = client.get_material_for_review(id=entity_id)
+            return r.material.model_dump(by_alias=False) if r.material else None
+    except Exception as e:
+        print(f"Could not fetch {entity_type} {entity_id}: {e}")
+    return None
+
+
+def main(
+    entity_context: dict[str, Any],
+    prompt: str,
+    related_entity_ids: list[dict[str, str]] | None = None,
+) -> dict[str, Any]:
     """
     AI agent for creating a new entity from a natural language prompt.
     Accepts a pre-built entity_context (from a context script) containing the create
@@ -52,6 +87,21 @@ def main(entity_context: dict[str, Any], prompt: str) -> dict[str, Any]:
             + "\n\n"
         )
 
+    related_str = ""
+    if related_entity_ids:
+        client, _ = api_connect()
+        fetched = []
+        for ref in related_entity_ids:
+            data = _fetch_related_entity(client, ref["entity_type"], ref["entity_id"])
+            if data:
+                fetched.append({"entity_type": ref["entity_type"], "data": data})
+        if fetched:
+            related_str = (
+                "\nRELATED ENTITIES (use as context for the new entity):\n"
+                + json.dumps(fetched, indent=2, default=str)
+                + "\n\n"
+            )
+
     hints_str = (
         f"\nMODEL-SPECIFIC GUIDANCE:\n{ctx.prompt_hints}\n\n"
         if ctx.prompt_hints
@@ -61,8 +111,9 @@ def main(entity_context: dict[str, Any], prompt: str) -> dict[str, Any]:
     user_prompt = (
         f"Create a new {entity_name} based on the following description:\n\n"
         f"{prompt}\n\n"
-        f"CREATE SCHEMA:\n{json.dumps(create_schema, indent=2, default=str)}\n\n"
+        # f"CREATE SCHEMA:\n{json.dumps(create_schema, indent=2, default=str)}\n\n"
         f"{context_str}"
+        f"{related_str}"
         f"{hints_str}"
         "Use the search tool to find IDs for any referenced entities (categories, orgs, items, etc.). "
         f"Return a complete 'data' payload ready for the create mutation, and one FieldSuggestion per field."

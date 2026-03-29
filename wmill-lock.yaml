@@ -3,10 +3,10 @@ locks:
   f/agents/toolsets: 175bd6ff504809a6fdbed6c700bb7fb46f16c9b8ac7278fc74d189217f10e44e
   f/categories/categories_flow: ff0b35cfcbb3c6b27bd6c0721b78ac5b584fd810f8c2a8cbc27bb930c47ad7b3
   f/categories/google_taxonomy_flow: fab566cf77759076fc3fb9c3137115fa492c33047a4ab84c4ad0ba653d13fcc4
-  f/changes/ai_create: 5ed31f020ea357286b6e6fbc23d2ede869e5f13daf3a2f6c5ee8bdab0d0a97fd
-  f/changes/ai_ref: 5187a72a36ecbc754ce01b8cb0e7fe5ff62ecb26751e667057dd714452a992b7
+  f/changes/ai_create: 3017d8a55b9d0a9d7ccdea08c923fc3f37b39e80e58b9fc13695ffc88eaeb1e7
+  f/changes/ai_ref: e489413bd045b4e4260621a1e777aa3ab596b9d63767bca8924e7ff44a272ccb
   f/changes/ai_review: 841c291404bdd13139606a6440a30fcce21af0b0baf66175fe94b894f0234380
-  f/changes/ai_shared: ecf2fe8e345d9724ca9c3cd0a9c19d271bfdb142987fc3de870653e12a40739d
+  f/changes/ai_shared: ca7b9b98a4f3f87177dca5f8432554464592d497fa605008243de4ebf259e104
   f/changes/ai_suggest: 1d0fdfb45bfd979b74163580e9d4a61d8296ec182a22621b5d70fe0a1cfaacb1
   f/changes/analyze_category_edit: fb9b4af688546cd478fc25f0ed8c27b77db756dd4847a36a187b531f8a9bf65c
   f/changes/analyze_component_edit: 89e862248ea315b2ee65df2f3a4de1ad844782a27a2196d6f3cf9dfbf4f0b7d7
@@ -15,8 +15,10 @@ locks:
   f/changes/analyze_place_edit: 2964934879f2400a11f552b1d2a90e7c04ed3679a5131dda51c831e5244cffbe
   f/changes/analyze_process_edit: 6ce7f6ef748f23b5ca0756e1bd921674ea1b0e533b7569af6dc64309dd97b712
   f/changes/analyze_variant_edit: a15654028b1f4585594c81f2a63b842b798a0e6e0399034e9a74bf6f266759f7
+  f/changes/apply: 496bb2b1175d3e3981b7931488cf24a34879e1185ebe089c6460055f5c9bffd3
   f/changes/auto_create.flow+__flow_hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
-  f/changes/auto_ref.flow+__flow_hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+  f/changes/auto_ref.flow+__flow_hash: c6198735676a63f2561318c045e807745a95dd19ef5ab4d9ccfcf7d156a8212f
+  f/changes/auto_ref.flow+log_no_ref_found_and_exit.inline_script.py: b76edce366f08196113f8c64c84e14c5bdde9dfe40b5811c8e14d71aee27d2af
   f/changes/auto_suggest.flow+__flow_hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
   f/changes/review_change.flow+__flow_hash: 829abef7b051eb5e782d49d34555f5e526eb2d8a82e5f879e73605024951cc3a
   f/changes/review_change.flow+fetch_change_edits.inline_script.py: 7ecb6ce427eb5b45189b9249e98c35d64fdbdadaf6ac50f58a8e44698d470573
@@ -104,9 +106,9 @@ locks:
   f/search/index_flow.flow+__flow_hash: 946e8cd4bac9ef797477311e22d4136c4e4a99dc132ad36058c508dbf61dd265
   f/search/index_flow.flow+parses_incoming_triggers.inline_script.py: 8b353e7c374e1b34e15b4d4a571910fd81db3026afef725fc32d67c5d55dc7a5
   f/search/index_script: b10ebfab73a4e7752d288a842555a1b006cd5e1df1bf116f54dfadd974e32432
-  f/search/index.flow+__flow_hash: 4b3e689edeb0a9146877fae6ca3808bd26e03776b3dcc5d6a1354987c31b290f
-  f/search/index.flow+index_dispatch.inline_script.py: 3aa6490a82b22453e224d80010a8ae41f44b7af783dfcd60363a8bfd8fcc698c
-  f/search/index.flow+parses_incoming_triggers.inline_script.py: d156d05b745045e3f94d18a5b5096346be437e0d9c7f5117c55084bce8c1feb9
+  f/search/index.flow+__flow_hash: 837a88bc166656c5f1d548c2c76a2aeecef2625ba0dc0b413f7569555f00dd1e
+  f/search/index.flow+index_dispatch.inline_script.py: 7f13c1813a4e93e1773b6787be253d8f62d1f9244c2e87e55478258cc236f102
+  f/search/index.flow+parses_incoming_triggers.inline_script.py: bd3d06f9bedb7b2ba831a15300a9f99dd88710e5df9c2d861ed47a3aa26c3875
   f/search/items/index_items: 0c36671aac07101f28a2d385530e7944c0da7308598091be34817e95e3feed88
   f/search/materials/index_materials: 1529ef0b7689b53959182325895e2f836e414a3030fc3358d3f5b6d928fb4bdd
   f/search/orgs/index_orgs: e9ee2b79ba842b4651bd6ea6d9e1c906d565f47157b58a3f054c1fc32fe37218
@@ -142,7 +144,7 @@ locks:
   f/tests/run_integration_tests.flow+run_the_test_script.inline_script.py: 818dca50c986c340350abb3229f72ec645442367afee64c08c1a6c36f912ab2e
   f/tests/test_utils: 938689a6e65d804fdba7abc5329c3d9e8804277b51ea67af2db0e046d0acd892
   f/utils/__init__: 9cf12c4d7e9613edbce79a5a2f6e8b96fbb0aadb8405bad2c3259ba05990c26c
-  f/utils/api: 01a60c40d9c6d60a70f89f0198426bf7e6f6775ff1b2cfc2f48d3b040d7879b3
+  f/utils/api: 13e8e3774bb688013e6bf90ab7e0fc3dcfd3575923ff7f06e56fff865138451a
   f/utils/db/__init__: 86ca230a09983540b728ede77d93c3b00e78a58c8f228704ee429eb36d37e618
   f/utils/db/crdb: 235b1a290007ace4dbaf56366ff889bf8484f3fc2e9841836d8f3684036aa154
   f/utils/db/meili: 519f3df633748bfd782ba04dfc1702f973b4c5a7ce462df77d8914fbcd279645

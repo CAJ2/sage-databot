@@ -15,6 +15,10 @@ schema:
       description: ''
       default: null
       originalType: string
+    related_entity_ids:
+      type: ''
+      description: ''
+      default: null
   required:
     - entity_context
     - prompt

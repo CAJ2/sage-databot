@@ -1,36 +1,39 @@
 summary: ''
 description: ''
-lock: '!inline f/changes/ai_ref.script.lock'
+lock: '!inline f/changes/apply.script.lock'
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
-    create_prompt:
+    apply:
+      type: boolean
+      description: ''
+      default: false
+    change_id:
       type: string
       description: ''
       default: null
       originalType: string
-    entity_context:
-      type: object
-      description: ''
-      default: null
-    prompt:
+    change_title:
       type: string
       description: ''
       default: null
       originalType: string
-    ref_entity_type:
+    data:
+      type: ''
+      description: ''
+      default: null
+    entity_id:
       type: string
       description: ''
       default: null
       originalType: string
-    ref_field:
+    entity_name:
       type: string
       description: ''
       default: null
       originalType: string
   required:
-    - entity_context
-    - ref_field
-    - ref_entity_type
+    - entity_name
+    - data

@@ -14,12 +14,17 @@ class AddItem(BaseModel):
 
 class AddItemCreateItem(BaseModel):
     item: Optional["AddItemCreateItemItem"]
+    change: Optional["AddItemCreateItemChange"]
 
 
 class AddItemCreateItemItem(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
+
+
+class AddItemCreateItemChange(BaseModel):
+    id: str
 
 
 AddItem.model_rebuild()

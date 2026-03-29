@@ -24,7 +24,7 @@ def api_connect(extra_headers: dict[str, str] | None = None):
     api_url = wmill.get_variable("f/api_config/api_sage_url")
     api_key_raw = wmill.get_variable("f/api_config/api_sage_key")
 
-    headers = {}
+    headers: dict[str, str] = {"accept-language": "en"}
     if extra_headers:
         headers.update(extra_headers)
     # Auto-detect test workspace and add test header
