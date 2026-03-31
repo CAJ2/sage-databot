@@ -256,7 +256,7 @@ grpcio==1.78.0
     #   xai-sdk
 grpcio-status==1.71.0
     # via google-api-core
-h11==0.14.0
+h11==0.16.0
     # via
     #   httpcore
     #   uvicorn
@@ -264,8 +264,10 @@ hf-xet==1.3.2 ; platform_machine == 'AMD64' or platform_machine == 'aarch64' or 
     # via huggingface-hub
 html5lib==1.1
     # via unstructured
-httpcore==1.0.8
-    # via httpx
+httpcore==1.0.9
+    # via
+    #   httpx
+    #   openrouter
 httpx==0.28.1
     # via
     #   anthropic
@@ -279,6 +281,7 @@ httpx==0.28.1
     #   mcp
     #   mistralai
     #   openai
+    #   openrouter
     #   pydantic-ai-slim
     #   pydantic-graph
     #   unstructured-client
@@ -525,6 +528,8 @@ opencv-python==4.13.0.92
     # via unstructured-inference
 openpyxl==3.1.5
     # via unstructured
+openrouter==0.8.0
+    # via sage-databot
 opentelemetry-api==1.39.1
     # via
     #   fastmcp
@@ -695,6 +700,7 @@ pydantic==2.12.5
     #   mistralai
     #   openai
     #   openapi-pydantic
+    #   openrouter
     #   pydantic-ai-slim
     #   pydantic-evals
     #   pydantic-graph
@@ -1085,7 +1091,7 @@ websockets==15.0.1
     #   fastmcp
     #   google-genai
     #   marimo
-wmill==1.601.1
+wmill==1.669.1
     # via sage-databot
 wrapt==1.17.2
     # via
