@@ -9,6 +9,7 @@ import json
 from f.utils.db.meili import (
     meili_connect,
     check_create_lang_indexes,
+    filter_docs_for_lang,
     split_docs_by_lang,
     SUPPORTED_LANGS,
 )
@@ -46,7 +47,9 @@ def index_regions(
                 "lng": prop["geom:longitude"],
             }
         for lang in SUPPORTED_LANGS:
-            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            lang_docs = split_docs_by_lang(
+                filter_docs_for_lang(docs, LANG_FIELDS, lang), LANG_FIELDS, lang
+            )
             _ = meili.index(f"regions_{lang}").add_documents(lang_docs)
 
 

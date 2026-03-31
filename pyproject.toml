@@ -33,8 +33,9 @@ dependencies = [
   "pydantic-ai>=1.67.0",
   "pydantic>=2.12.5",
   "smart-open[s3,http]>=7.1.0",
-  "wmill>=1.601.1",
+  "wmill>=1.669.1",
   "logfire>=4.27.0",
+  "openrouter>=0.8.0",
 ]
 
 [project.optional-dependencies]

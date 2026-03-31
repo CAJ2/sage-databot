@@ -8,6 +8,7 @@ import json
 from f.utils.db.meili import (
     meili_connect,
     check_create_lang_indexes,
+    filter_docs_for_lang,
     split_docs_by_lang,
     SUPPORTED_LANGS,
 )
@@ -77,7 +78,9 @@ def index_materials(
                         if doc2["id"] == descendant_id and doc2["technical"]:
                             tech_desc.append(doc2["name"])
         for lang in SUPPORTED_LANGS:
-            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            lang_docs = split_docs_by_lang(
+                filter_docs_for_lang(docs, LANG_FIELDS, lang), LANG_FIELDS, lang
+            )
             _ = meili.index(f"materials_{lang}").add_documents(lang_docs)
 
 

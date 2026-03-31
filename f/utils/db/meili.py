@@ -159,6 +159,32 @@ def _normalize_lang_keys(d: dict[str, Any]) -> dict[str, Any]:
     return {k.split(";")[0]: v for k, v in d.items()}
 
 
+def filter_docs_for_lang(
+    docs: list[dict[str, Any]], lang_fields: list[str], lang: str
+) -> list[dict[str, Any]]:
+    """Return docs that should be stored in the given language index.
+
+    All docs go into the 'en' index. For other languages, only docs that have
+    that language key in at least one translatable field are included.
+    """
+    if lang == "en":
+        return docs
+
+    def _has_lang(doc: dict[str, Any]) -> bool:
+        for field in lang_fields:
+            val = doc.get(field)
+            if isinstance(val, dict):
+                if lang in _normalize_lang_keys(val):
+                    return True
+            elif isinstance(val, list):
+                for item in val:
+                    if isinstance(item, dict) and lang in _normalize_lang_keys(item):
+                        return True
+        return False
+
+    return [doc for doc in docs if _has_lang(doc)]
+
+
 def split_docs_by_lang(
     docs: list[dict[str, Any]], lang_fields: list[str], lang: str
 ) -> list[dict[str, Any]]:

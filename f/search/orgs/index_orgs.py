@@ -9,6 +9,7 @@ from sqlalchemy import Engine
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 from f.utils.db.meili import (
     check_create_lang_indexes,
+    filter_docs_for_lang,
     meili_connect,
     split_docs_by_lang,
     SUPPORTED_LANGS,
@@ -39,7 +40,9 @@ def index_orgs(
         for doc in docs:
             doc["desc"] = json.loads(str(doc["desc"] or "{}"))
         for lang in SUPPORTED_LANGS:
-            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            lang_docs = split_docs_by_lang(
+                filter_docs_for_lang(docs, LANG_FIELDS, lang), LANG_FIELDS, lang
+            )
             _ = meili.index(f"orgs_{lang}").add_documents(lang_docs)
 
 

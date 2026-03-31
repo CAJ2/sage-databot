@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from typing import Any
@@ -9,9 +10,11 @@ from google.oauth2 import service_account
 from pydantic_ai.models import Model
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.models.openrouter import OpenRouterModel
 from pydantic_ai.providers.gateway import gateway_provider, normalize_gateway_provider
 from pydantic_ai.providers.google import GoogleProvider
 from pydantic_ai.providers.openai import OpenAIProvider
+from pydantic_ai.providers.openrouter import OpenRouterProvider
 
 
 def is_production() -> bool:
@@ -86,15 +89,21 @@ def llm_agent() -> Model:
         ollama = wmill.get_variable("f/api_config/llm_ollama_api")
     except Exception:
         ollama = None
+    if model_name.startswith("openrouter/"):
+        openrouter_model_id = model_name[len("openrouter/") :]
+        api_key = wmill.get_variable("f/api_config/llm_openrouter_key")
+        provider = OpenRouterProvider(api_key=api_key)
+        return OpenRouterModel(openrouter_model_id, provider=provider)
     if ollama:
         provider = OpenAIProvider(base_url=ollama)
         llm = OpenAIChatModel(model_name=model_name, provider=provider)
         return llm
     creds = service_account.Credentials.from_service_account_info(
-        wmill.get_variable("f/api_config/gcp_service_account_key"),
+        json.loads(wmill.get_variable("f/api_config/gcp_service_account_key")),
         scopes=["https://www.googleapis.com/auth/cloud-platform"],
     )
-    provider = GoogleProvider(credentials=creds)
+    project = wmill.get_variable("f/api_config/gcp_project")
+    provider = GoogleProvider(credentials=creds, project=project)
     llm = GoogleModel(model_name, provider=provider)
     return llm
 
