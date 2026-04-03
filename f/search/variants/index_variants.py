@@ -43,6 +43,8 @@ def index_variants(
             lang_docs = split_docs_by_lang(
                 filter_docs_for_lang(docs, LANG_FIELDS, lang), LANG_FIELDS, lang
             )
+            if not lang_docs:
+                continue
             _ = meili.index(f"variants_{lang}").add_documents(lang_docs)
 
 

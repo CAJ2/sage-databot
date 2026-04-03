@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: project:b4f26375c0d202c2ab42055f3efa0910fa047f92c07ce7ab2dcb874132436ebd
+# workspace-dependencies: project:d4ae54436ef6884a5074db13dbbd9a3957f8bdcaa0707391627583d39662a505
 # py: 3.12
 adbc-driver-manager==1.5.0
 adbc-driver-postgresql==1.9.0
@@ -63,9 +63,9 @@ greenlet==3.2.1
 griffelib==2.0.0
 groq==0.28.0
 grpcio==1.78.0
-h11==0.14.0
+h11==0.16.0
 hf-xet==1.3.2
-httpcore==1.0.8
+httpcore==1.0.9
 httpx==0.28.1
 httpx-sse==0.4.0
 huggingface-hub==1.6.0
@@ -112,6 +112,7 @@ nexus-rpc==1.2.0
 numpy==2.4.2
 openai==2.26.0
 openapi-pydantic==0.5.1
+openrouter==0.8.0
 opentelemetry-api==1.39.1
 opentelemetry-exporter-otlp-proto-common==1.39.1
 opentelemetry-exporter-otlp-proto-http==1.39.1
@@ -203,7 +204,7 @@ uvicorn==0.41.0
 watchfiles==1.1.1
 wcwidth==0.2.13
 websockets==15.0.1
-wmill==1.601.1
+wmill==1.669.1
 wrapt==1.17.2
 xai-sdk==1.8.0
 yarl==1.22.0

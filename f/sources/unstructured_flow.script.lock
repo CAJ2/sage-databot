@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: extract:90a39fcf23de293e5f28f4004c9375bc73625eb2fa34f8c010abcfcfb7baa9a1
+# workspace-dependencies: extract:059b6fdc31432ca4a17ad8df0011626a2ee7b220474b6bd3effb893fa493a70a
 # py: 3.12
 accelerate==1.12.0
 adbc-driver-manager==1.5.0
@@ -84,10 +84,10 @@ griffelib==2.0.0
 groq==0.28.0
 grpcio==1.78.0
 grpcio-status==1.71.0
-h11==0.14.0
+h11==0.16.0
 hf-xet==1.3.2
 html5lib==1.1
-httpcore==1.0.8
+httpcore==1.0.9
 httpx==0.28.1
 httpx-sse==0.4.0
 huggingface-hub==1.6.0
@@ -146,20 +146,6 @@ networkx==3.6.1
 nexus-rpc==1.2.0
 numba==0.64.0
 numpy==2.4.2
-nvidia-cublas-cu12==12.6.4.1
-nvidia-cuda-cupti-cu12==12.6.80
-nvidia-cuda-nvrtc-cu12==12.6.77
-nvidia-cuda-runtime-cu12==12.6.77
-nvidia-cudnn-cu12==9.5.1.17
-nvidia-cufft-cu12==11.3.0.4
-nvidia-cufile-cu12==1.11.1.6
-nvidia-curand-cu12==10.3.7.77
-nvidia-cusolver-cu12==11.7.1.2
-nvidia-cusparse-cu12==12.5.4.2
-nvidia-cusparselt-cu12==0.6.3
-nvidia-nccl-cu12==2.26.2
-nvidia-nvjitlink-cu12==12.6.85
-nvidia-nvtx-cu12==12.6.77
 olefile==0.47
 onnx==1.18.0
 onnxruntime==1.22.0
@@ -167,6 +153,7 @@ openai==2.26.0
 openapi-pydantic==0.5.1
 opencv-python==4.13.0.92
 openpyxl==3.1.5
+openrouter==0.8.0
 opentelemetry-api==1.39.1
 opentelemetry-exporter-otlp-proto-common==1.39.1
 opentelemetry-exporter-otlp-proto-http==1.39.1
@@ -282,7 +269,6 @@ torch==2.7.0
 torchvision==0.22.0
 tqdm==4.67.3
 transformers==5.3.0
-triton==3.3.0
 twisted==24.11.0
 typer==0.24.1
 typer-slim==0.21.0
@@ -305,7 +291,7 @@ wcwidth==0.2.13
 weasel==0.4.3
 webencodings==0.5.1
 websockets==15.0.1
-wmill==1.601.1
+wmill==1.669.1
 wrapt==1.17.2
 xai-sdk==1.8.0
 xlrd==2.0.1
