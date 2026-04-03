@@ -1,0 +1,37 @@
+f/search/places/index_places.py
+  2d1f04ca0882a7eb 62-63
+f/search/regions/index_regions.py
+  2d1f04ca0882a7eb 53-54
+f/search/categories/index_categories.py
+  2d1f04ca0882a7eb 46-47
+f/search/items/index_items.py
+  2d1f04ca0882a7eb 44-45
+f/search/components/index_components.py
+  2d1f04ca0882a7eb 46-47
+f/search/variants/index_variants.py
+  2d1f04ca0882a7eb 46-47
+f/search/orgs/index_orgs.py
+  2d1f04ca0882a7eb 46-47
+f/search/materials/index_materials.py
+  2d1f04ca0882a7eb 84-85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "fa6c35e59d50da1be2e7d9f6242277259253d25e",
+  "prompts": {
+    "2d1f04ca0882a7eb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e98b9571-31a1-4dd3-9a6d-55f52ec10f4c",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 0,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    }
+  }
+}
