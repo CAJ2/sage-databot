@@ -16,6 +16,7 @@ class UpdateVariant(BaseModel):
 
 class UpdateVariantUpdateVariant(BaseModel):
     variant: Optional["UpdateVariantUpdateVariantVariant"]
+    change: Optional["UpdateVariantUpdateVariantChange"]
 
 
 class UpdateVariantUpdateVariantVariant(BaseModel):
@@ -24,6 +25,10 @@ class UpdateVariantUpdateVariantVariant(BaseModel):
     desc: Optional[str]
     created_at: Any = Field(alias="createdAt")
     updated_at: Any = Field(alias="updatedAt")
+
+
+class UpdateVariantUpdateVariantChange(BaseModel):
+    id: str
 
 
 UpdateVariant.model_rebuild()

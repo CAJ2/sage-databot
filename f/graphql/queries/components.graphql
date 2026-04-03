@@ -24,3 +24,27 @@ query GetComponentForReview($id: ID!) {
     }
   }
 }
+
+mutation AddComponent($input: CreateComponentInput!) {
+  createComponent(input: $input) {
+    component {
+      id
+      name
+    }
+    change {
+      id
+    }
+  }
+}
+
+mutation UpdateComponent($input: UpdateComponentInput!) {
+  updateComponent(input: $input) {
+    component {
+      id
+      name
+    }
+    change {
+      id
+    }
+  }
+}

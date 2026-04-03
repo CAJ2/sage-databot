@@ -1,3 +1,27 @@
+mutation AddProcess($input: CreateProcessInput!) {
+  createProcess(input: $input) {
+    process {
+      id
+      name
+    }
+    change {
+      id
+    }
+  }
+}
+
+mutation UpdateProcess($input: UpdateProcessInput!) {
+  updateProcess(input: $input) {
+    process {
+      id
+      name
+    }
+    change {
+      id
+    }
+  }
+}
+
 query GetProcessForReview($id: ID!) {
   process(id: $id) {
     id

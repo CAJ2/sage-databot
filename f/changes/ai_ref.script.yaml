@@ -6,6 +6,11 @@ schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
+    create_prompt:
+      type: string
+      description: ''
+      default: null
+      originalType: string
     entity_context:
       type: object
       description: ''

@@ -22,7 +22,8 @@ _SYSTEM_PROMPT = (
     "For one-to-one ref fields, set the new value directly. "
     "For one-to-many ref fields, suggest which entities to add/change or remove. "
     "The 'data' field in your output should be a schema-compliant mutation payload "
-    "(e.g. {'addItems':['<id>'],'removeItems':['<id>']} for a many field, "
+    "using snake_case keys matching the Python input type field names "
+    "(e.g. {'add_items':['<id>'],'remove_items':['<id>']} for a many field, "
     "or {'region':{'id':'<id>'}} for a single ref). "
     "Provide concise reasoning for each suggested operation."
 )
@@ -33,6 +34,7 @@ def main(
     ref_field: str,
     ref_entity_type: str,
     prompt: str | None = None,
+    create_prompt: str | None = None,
 ) -> dict[str, Any]:
     """
     AI agent for managing a single reference field on an entity.
@@ -77,9 +79,22 @@ def main(
     suggestions: list[FieldSuggestion] = typed.suggestions
     data = {k: v for k, v in typed.data.model_dump().items() if v is not None}
 
+    def _no_ref_found(d: dict[str, Any]) -> bool:
+        if not d:
+            return True
+        return all(isinstance(v, list) and len(v) == 0 for v in d.values())
+
+    create_before_ref = None
+    if _no_ref_found(data) and create_prompt:
+        create_before_ref = {
+            "entity_type": ref_entity_type,
+            "prompt": create_prompt,
+        }
+
     return SuggestResult(
         entity_name=ctx.entity_name,
         entity_id=ctx.entity_id,
-        data=data,
+        data=data if not _no_ref_found(data) else None,
         suggestions=suggestions,
+        create_before_ref=create_before_ref,
     ).model_dump()

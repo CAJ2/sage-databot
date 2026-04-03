@@ -67,6 +67,9 @@ mutation AddVariant($input: CreateVariantInput!) {
       createdAt
       updatedAt
     }
+    change {
+      id
+    }
   }
 }
 
@@ -78,6 +81,9 @@ mutation UpdateVariant($input: UpdateVariantInput!) {
       desc
       createdAt
       updatedAt
+    }
+    change {
+      id
     }
   }
 }

@@ -1,0 +1,39 @@
+summary: ''
+description: ''
+lock: '!inline f/changes/apply.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    apply:
+      type: boolean
+      description: ''
+      default: false
+    change_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    change_title:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    data:
+      type: ''
+      description: ''
+      default: null
+    entity_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    entity_name:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - entity_name
+    - data

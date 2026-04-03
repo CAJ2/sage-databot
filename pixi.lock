@@ -213,6 +213,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/12/cf/03675d8bd8ecbf4445504d8071adab19f5f993676795708e36402ab38263/openapi_pydantic-0.5.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/fd/55/b3b49a1b97aabcfbbd6c7326df9cb0b6fa0c0aefa8e89d500939e04aa229/opencv_python-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/b3/d1/413bbdd98aac44bf094055cb282b3edaa61a1e1b7e54ebdbf9afebfd5178/openrouter-0.8.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/cf/df/d3f1ddf4bb4cb50ed9b1139cc7b1c54c34a1e7ce8fd1b9a37c0d1551a6bd/opentelemetry_api-1.39.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/8c/02/ffc3e143d89a27ac21fd557365b98bd0653b98de8a101151d5805b5d4c33/opentelemetry_exporter_otlp_proto_common-1.39.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/95/f1/b27d3e2e003cd9a3592c43d099d2ed8d0a947c15281bf8463a256db0b46c/opentelemetry_exporter_otlp_proto_http-1.39.1-py3-none-any.whl
@@ -323,7 +324,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/2e/76/932be4b50ef6ccedf9d3c6639b056a967a86258c6d9200643f01269211ca/tokenizers-0.22.2-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/b5/11/87d6d29fb5d237229d67973a6c9e06e048f01cf4994dee194ab0ea841814/tomlkit-0.14.0-py3-none-any.whl
-        - pypi: https://files.pythonhosted.org/packages/23/8e/3c74db5e53bff7ed9e34c8123e6a8bfef718b2450c35eefab85bb4a7e270/torch-2.10.0-cp312-cp312-manylinux_2_28_x86_64.whl
+        - pypi: https://files.pythonhosted.org/packages/b3/7a/abada41517ce0011775f0f4eacc79659bc9bc6c361e6bfe6f7052a6b9363/torch-2.10.0-3-cp312-cp312-manylinux_2_28_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/68/2f/f24b039169db474e8688f649377de082a965fbf85daf4e46c44412f1d15a/torchvision-0.25.0-cp312-cp312-manylinux_2_28_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/16/e1/3079a9ff9b8e11b846c6ac5c8b5bfb7ff225eee721825310c91b3b50304f/tqdm-4.67.3-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/4e/93/79754b0ca486e556c2b95d4f5afc66aaf4b260694f3d6e1b51da2d036691/transformers-5.2.0-py3-none-any.whl
@@ -348,7 +349,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/a4/74/a148b41572656904a39dfcfed3f84dd1066014eed94e209223ae8e9d088d/weasel-0.4.3-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/18/29/71729b4671f21e1eaa5d6573031ab810ad2936c8175f03f97f3ff164c802/websockets-16.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
-        - pypi: https://files.pythonhosted.org/packages/20/a3/1d3ea949d44395b94d830af6b0839720d4321dc16d59cd3f4009a6e52418/wmill-1.647.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/b8/d7/dd92549dafa27a14c85e5096c785d8b7c9957ce7cad94d252d7ea1171525/wmill-1.669.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/9f/81/5d931d78d0eb732b95dc3ddaeeb71c8bb572fb01356e9133916cd729ecdd/wrapt-1.17.3-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
         - pypi: https://files.pythonhosted.org/packages/3c/e9/e0fb57dc5b2580aa6390a836cf81d507f8017888ab8197600489118cc677/xai_sdk-1.7.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/1a/62/c8d562e7766786ba6587d09c5a8ba9f718ed3fa8af7f4553e8f91c36f302/xlrd-2.0.2-py2.py3-none-any.whl
@@ -537,6 +538,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/12/cf/03675d8bd8ecbf4445504d8071adab19f5f993676795708e36402ab38263/openapi_pydantic-0.5.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/fc/6f/5a28fef4c4a382be06afe3938c64cc168223016fa520c5abaf37e8862aa5/opencv_python-4.13.0.92-cp37-abi3-macosx_13_0_arm64.whl
         - pypi: https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/b3/d1/413bbdd98aac44bf094055cb282b3edaa61a1e1b7e54ebdbf9afebfd5178/openrouter-0.8.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/cf/df/d3f1ddf4bb4cb50ed9b1139cc7b1c54c34a1e7ce8fd1b9a37c0d1551a6bd/opentelemetry_api-1.39.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/8c/02/ffc3e143d89a27ac21fd557365b98bd0653b98de8a101151d5805b5d4c33/opentelemetry_exporter_otlp_proto_common-1.39.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/95/f1/b27d3e2e003cd9a3592c43d099d2ed8d0a947c15281bf8463a256db0b46c/opentelemetry_exporter_otlp_proto_http-1.39.1-py3-none-any.whl
@@ -670,7 +672,7 @@ environments:
         - pypi: https://files.pythonhosted.org/packages/a4/74/a148b41572656904a39dfcfed3f84dd1066014eed94e209223ae8e9d088d/weasel-0.4.3-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/40/1e/9771421ac2286eaab95b8575b0cb701ae3663abf8b5e1f64f1fd90d0a673/websockets-16.0-cp312-cp312-macosx_11_0_arm64.whl
-        - pypi: https://files.pythonhosted.org/packages/20/a3/1d3ea949d44395b94d830af6b0839720d4321dc16d59cd3f4009a6e52418/wmill-1.647.0-py3-none-any.whl
+        - pypi: https://files.pythonhosted.org/packages/b8/d7/dd92549dafa27a14c85e5096c785d8b7c9957ce7cad94d252d7ea1171525/wmill-1.669.1-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/33/df/bdf864b8997aab4febb96a9ae5c124f700a5abd9b5e13d2a3214ec4be705/wrapt-1.17.3-cp312-cp312-macosx_11_0_arm64.whl
         - pypi: https://files.pythonhosted.org/packages/3c/e9/e0fb57dc5b2580aa6390a836cf81d507f8017888ab8197600489118cc677/xai_sdk-1.7.0-py3-none-any.whl
         - pypi: https://files.pythonhosted.org/packages/1a/62/c8d562e7766786ba6587d09c5a8ba9f718ed3fa8af7f4553e8f91c36f302/xlrd-2.0.2-py2.py3-none-any.whl
@@ -3952,6 +3954,15 @@ packages:
     requires_dist:
       - et-xmlfile
     requires_python: '>=3.8'
+  - pypi: https://files.pythonhosted.org/packages/b3/d1/413bbdd98aac44bf094055cb282b3edaa61a1e1b7e54ebdbf9afebfd5178/openrouter-0.8.0-py3-none-any.whl
+    name: openrouter
+    version: 0.8.0
+    sha256: 77cf76f14f2090747ff2c153734a9112dfb27faccb5f90d760efbb94ea7e0838
+    requires_dist:
+      - httpcore>=1.0.9
+      - httpx>=0.28.1
+      - pydantic>=2.11.2
+    requires_python: '>=3.9.2'
   - conda: https://conda.anaconda.org/conda-forge/linux-64/openssl-3.6.1-h35e630c_1.conda
     sha256: 44c877f8af015332a5d12f5ff0fb20ca32f896526a7d0cdb30c769df1144fb5c
     md5: f61eb8cd60ff9057122a3d338b99c00f
@@ -5506,7 +5517,7 @@ packages:
   - pypi: ./
     name: sage-databot
     version: 0.1.0
-    sha256: f090cb1e9428969ad72514687b97ab79b88eee7745d2ac2b521c1deb3998ada3
+    sha256: e87792bccd3e61153292e2092197e14342491018c97d2b2cd37ef375a2845cc5
     requires_dist:
       - sqlalchemy>=2.0.45
       - sqlalchemy-cockroachdb>=2.0.3
@@ -5536,8 +5547,9 @@ packages:
       - pydantic-ai>=1.67.0
       - pydantic>=2.12.5
       - smart-open[s3,http]>=7.1.0
-      - wmill>=1.601.1
+      - wmill>=1.669.1
       - logfire>=4.27.0
+      - openrouter>=0.8.0
       - sage-databot[extract] ; extra == 'all'
       - unstructured[all-docs]>=0.21.5 ; extra == 'extract'
       - scrapy>=2.14.0 ; extra == 'extract'
@@ -6309,10 +6321,10 @@ packages:
     version: 0.14.0
     sha256: 592064ed85b40fa213469f81ac584f67a4f2992509a7c3ea2d632208623a3680
     requires_python: '>=3.9'
-  - pypi: https://files.pythonhosted.org/packages/23/8e/3c74db5e53bff7ed9e34c8123e6a8bfef718b2450c35eefab85bb4a7e270/torch-2.10.0-cp312-cp312-manylinux_2_28_x86_64.whl
+  - pypi: https://files.pythonhosted.org/packages/b3/7a/abada41517ce0011775f0f4eacc79659bc9bc6c361e6bfe6f7052a6b9363/torch-2.10.0-3-cp312-cp312-manylinux_2_28_x86_64.whl
     name: torch
     version: 2.10.0
-    sha256: 787124e7db3b379d4f1ed54dd12ae7c741c16a4d29b49c0226a89bea50923ffb
+    sha256: 98c01b8bb5e3240426dcde1446eed6f40c778091c8544767ef1168fc663a05a6
     requires_dist:
       - filelock
       - typing-extensions>=4.10.0
@@ -7232,10 +7244,10 @@ packages:
     version: '16.0'
     sha256: 86890e837d61574c92a97496d590968b23c2ef0aeb8a9bc9421d174cd378ae39
     requires_python: '>=3.10'
-  - pypi: https://files.pythonhosted.org/packages/20/a3/1d3ea949d44395b94d830af6b0839720d4321dc16d59cd3f4009a6e52418/wmill-1.647.0-py3-none-any.whl
+  - pypi: https://files.pythonhosted.org/packages/b8/d7/dd92549dafa27a14c85e5096c785d8b7c9957ce7cad94d252d7ea1171525/wmill-1.669.1-py3-none-any.whl
     name: wmill
-    version: 1.647.0
-    sha256: 0aafa38b181fa180651e82cff52b5a5ae89d9916f7fa918ffaf224b5f7a42b4f
+    version: 1.669.1
+    sha256: 15117e4e0037266f2599ad1d9f5eec984a727dd9a4f88e3aef92933d81e86f0a
     requires_dist:
       - httpx>=0.24
     requires_python: '>=3.7,<4.0'

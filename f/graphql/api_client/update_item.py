@@ -14,12 +14,17 @@ class UpdateItem(BaseModel):
 
 class UpdateItemUpdateItem(BaseModel):
     item: Optional["UpdateItemUpdateItemItem"]
+    change: Optional["UpdateItemUpdateItemChange"]
 
 
 class UpdateItemUpdateItemItem(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
+
+
+class UpdateItemUpdateItemChange(BaseModel):
+    id: str
 
 
 UpdateItem.model_rebuild()

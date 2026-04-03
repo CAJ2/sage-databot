@@ -43,6 +43,8 @@ def index_categories(
             doc["desc_short"] = json.loads(str(doc["desc_short"] or "{}"))
         for lang in SUPPORTED_LANGS:
             lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            if not lang_docs:
+                continue
             _ = meili.index(f"categories_{lang}").add_documents(lang_docs)
 
 

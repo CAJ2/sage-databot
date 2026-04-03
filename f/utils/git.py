@@ -5,7 +5,7 @@ import wmill
 
 from f.utils.general import is_production
 
-DATABOT_REPO_URL = "https://github.com/CAJ2/sage-databot.git"
+DATABOT_REPO_URL = "https://github.com/sage-eco/databot.git"
 
 
 def checkout_repo(branch: str = "dev") -> Path:

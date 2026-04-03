@@ -174,6 +174,9 @@ value:
           ref_field:
             expr: flow_input.ref_field
             type: javascript
+          create_prompt:
+            expr: flow_input.create_prompt
+            type: javascript
           entity_context:
             expr: results.a
             type: javascript
@@ -181,6 +184,118 @@ value:
             expr: flow_input.ref_entity_type
             type: javascript
       summary: AI reference field suggestion
+      continue_on_error: false
+    - id: b2
+      value:
+        type: branchone
+        default:
+          - id: b2_apply
+            value:
+              path: f/changes/apply
+              type: script
+              is_trigger: false
+              input_transforms:
+                data:
+                  expr: results.b.data
+                  type: javascript
+                apply:
+                  expr: flow_input.apply
+                  type: javascript
+                change_id:
+                  expr: flow_input.change_id
+                  type: javascript
+                entity_id:
+                  expr: flow_input.entity_id
+                  type: javascript
+                entity_name:
+                  expr: flow_input.entity_name
+                  type: javascript
+                change_title:
+                  expr: flow_input.change_title
+                  type: javascript
+            summary: Apply ref suggestion directly
+            continue_on_error: false
+        branches:
+          - expr: results.b.data == null && results.b.create_before_ref == null
+            modules:
+              - id: b2_no_ref_found
+                value:
+                  lock: '!inline log_no_ref_found_and_exit.inline_script.lock'
+                  type: rawscript
+                  content: '!inline log_no_ref_found_and_exit.inline_script.py'
+                  language: python3
+                  input_transforms:
+                    ref_field:
+                      expr: flow_input.ref_field
+                      type: javascript
+                    entity_name:
+                      expr: flow_input.entity_name
+                      type: javascript
+                    ref_entity_type:
+                      expr: flow_input.ref_entity_type
+                      type: javascript
+                summary: Log no ref found and exit
+                continue_on_error: false
+            summary: No ref found and no create_prompt
+            parallel: false
+            skip_failure: false
+          - expr: results.b.create_before_ref != null
+            modules:
+              - id: b2_autocreate
+                value:
+                  path: f/changes/auto_create
+                  type: flow
+                  input_transforms:
+                    apply:
+                      expr: flow_input.apply
+                      type: javascript
+                    prompt:
+                      expr: results.b.create_before_ref.prompt
+                      type: javascript
+                    change_id:
+                      expr: flow_input.change_id
+                      type: javascript
+                    entity_name:
+                      expr: results.b.create_before_ref.entity_type
+                      type: javascript
+                    change_title:
+                      expr: flow_input.change_title
+                      type: javascript
+                    related_entity_ids:
+                      expr: '[{entity_type: flow_input.entity_name, entity_id: flow_input.entity_id}]'
+                      type: javascript
+                summary: Create missing ref entity
+                continue_on_error: false
+              - id: b2_apply_with_new_ref
+                value:
+                  path: f/changes/apply
+                  type: script
+                  is_trigger: false
+                  input_transforms:
+                    data:
+                      expr: '({[flow_input.ref_field]: [{id: results.b2_autocreate.entity_id}]})'
+                      type: javascript
+                    apply:
+                      expr: flow_input.apply
+                      type: javascript
+                    change_id:
+                      expr: results.b2_autocreate.change_id || flow_input.change_id
+                      type: javascript
+                    entity_id:
+                      expr: flow_input.entity_id
+                      type: javascript
+                    entity_name:
+                      expr: flow_input.entity_name
+                      type: javascript
+                    change_title:
+                      expr: flow_input.change_title
+                      type: javascript
+                summary: Apply ref with newly created entity
+                continue_on_error: false
+            summary: Create ref entity first, then apply
+            parallel: false
+            skip_failure: false
+      summary: Apply or create-then-apply
       continue_on_error: false
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
@@ -207,6 +322,22 @@ schema:
     prompt:
       type: string
       description: Optional additional guidance for the AI agent
+    create_prompt:
+      type: string
+      description: >
+        Required to enable creation of a new ref entity when none is found. If
+        not provided and no existing ref entity is found, the flow exits cleanly
+        with a log message instead of erroring.
+    apply:
+      type: boolean
+      description: If true, directly apply the change without review
+      default: false
+    change_id:
+      type: string
+      description: ID of an existing Change to add this edit to
+    change_title:
+      type: string
+      description: Title for the new Change (auto-generated if omitted)
   required:
     - entity_name
     - entity_id

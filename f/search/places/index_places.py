@@ -8,6 +8,7 @@ import json
 from f.utils.db.meili import (
     meili_connect,
     check_create_lang_indexes,
+    filter_docs_for_lang,
     split_docs_by_lang,
     SUPPORTED_LANGS,
 )
@@ -55,7 +56,11 @@ def index_places(
                     doc["_geo"] = {"lat": coords[1], "lng": coords[0]}
             del doc["location"]
         for lang in SUPPORTED_LANGS:
-            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
+            lang_docs = split_docs_by_lang(
+                filter_docs_for_lang(docs, LANG_FIELDS, lang), LANG_FIELDS, lang
+            )
+            if not lang_docs:
+                continue
             _ = meili.index(f"places_{lang}").add_documents(lang_docs)
 
 

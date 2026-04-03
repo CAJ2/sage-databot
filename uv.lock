@@ -1112,6 +1112,7 @@ wheels = [
 name = "griffelib"
 version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/06/eccbd311c9e2b3ca45dbc063b93134c57a1ccc7607c5e545264ad092c4a9/griffelib-2.0.0.tar.gz", hash = "sha256:e504d637a089f5cab9b5daf18f7645970509bf4f53eda8d79ed71cce8bd97934", size = 166312, upload-time = "2026-03-23T21:06:55.954Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4d/51/c936033e16d12b627ea334aaaaf42229c37620d0f15593456ab69ab48161/griffelib-2.0.0-py3-none-any.whl", hash = "sha256:01284878c966508b6d6f1dbff9b6fa607bc062d8261c5c7253cb285b06422a7f", size = 142004, upload-time = "2026-02-09T19:09:40.561Z" },
 ]
@@ -1170,11 +1171,11 @@ wheels = [
 
 [[package]]
 name = "h11"
-version = "0.14.0"
+version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f5/38/3af3d3633a34a3316095b39c8e8fb4853a28a536e55d347bd8d8e9a14b03/h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d", size = 100418, upload-time = "2022-09-25T15:40:01.519Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/ee/02a2c011bdab74c6fb3c75474d40b3052059d95df7e73351460c8588d963/h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1", size = 101250, upload-time = "2025-04-24T03:35:25.427Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/95/04/ff642e65ad6b90db43e668d70ffb6736436c7ce41fcc549f4e9472234127/h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761", size = 58259, upload-time = "2022-09-25T15:39:59.68Z" },
+    { url = "https://files.pythonhosted.org/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86", size = 37515, upload-time = "2025-04-24T03:35:24.344Z" },
 ]
 
 [[package]]
@@ -1208,15 +1209,15 @@ wheels = [
 
 [[package]]
 name = "httpcore"
-version = "1.0.8"
+version = "1.0.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "certifi" },
     { name = "h11" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9f/45/ad3e1b4d448f22c0cff4f5692f5ed0666658578e358b8d58a19846048059/httpcore-1.0.8.tar.gz", hash = "sha256:86e94505ed24ea06514883fd44d2bc02d90e77e7979c8eb71b90f41d364a1bad", size = 85385, upload-time = "2025-04-11T14:42:46.661Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/06/94/82699a10bca87a5556c9c59b5963f2d039dbd239f25bc2a63907a05a14cb/httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8", size = 85484, upload-time = "2025-04-24T22:06:22.219Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/18/8d/f052b1e336bb2c1fc7ed1aaed898aa570c0b61a09707b108979d9fc6e308/httpcore-1.0.8-py3-none-any.whl", hash = "sha256:5254cf149bcb5f75e9d1b2b9f729ea4a4b883d1ad7379fc632b727cec23674be", size = 78732, upload-time = "2025-04-11T14:42:44.896Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/f5/f66802a942d491edb555dd61e3a9961140fd64c90bce1eafd741609d334d/httpcore-1.0.9-py3-none-any.whl", hash = "sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55", size = 78784, upload-time = "2025-04-24T22:06:20.566Z" },
 ]
 
 [[package]]
@@ -2259,6 +2260,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/3d/f9/88d94a75de065ea32619465d2f77b29a0469500e99012523b91cc4141cd1/openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050", size = 186464, upload-time = "2024-06-28T14:03:44.161Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2", size = 250910, upload-time = "2024-06-28T14:03:41.161Z" },
+]
+
+[[package]]
+name = "openrouter"
+version = "0.8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpcore" },
+    { name = "httpx" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4f/c1/44c5c17fdcaf36e8af25eda268d097e40799583ced48ca94adc5015576c3/openrouter-0.8.0.tar.gz", hash = "sha256:28efd76f89bcd13e195fd2729e9ed356a71d9ad88c78ded4ce073f6935381886", size = 207489, upload-time = "2026-03-27T19:20:13.601Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/d1/413bbdd98aac44bf094055cb282b3edaa61a1e1b7e54ebdbf9afebfd5178/openrouter-0.8.0-py3-none-any.whl", hash = "sha256:77cf76f14f2090747ff2c153734a9112dfb27faccb5f90d760efbb94ea7e0838", size = 442960, upload-time = "2026-03-27T19:20:12.135Z" },
 ]
 
 [[package]]
@@ -3530,6 +3545,7 @@ dependencies = [
     { name = "meilisearch" },
     { name = "nanoid" },
     { name = "networkx", extra = ["default"] },
+    { name = "openrouter" },
     { name = "osmium" },
     { name = "pandas" },
     { name = "polars" },
@@ -3576,6 +3592,7 @@ requires-dist = [
     { name = "meilisearch", specifier = ">=0.38.0" },
     { name = "nanoid", specifier = ">=2.0.0" },
     { name = "networkx", extras = ["default"], specifier = ">=3.6.1" },
+    { name = "openrouter", specifier = ">=0.8.0" },
     { name = "osmium", specifier = ">=4.2.0" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "polars", specifier = ">=1.36.1" },
@@ -3594,7 +3611,7 @@ requires-dist = [
     { name = "sqlalchemy-cockroachdb", specifier = ">=2.0.3" },
     { name = "stopwordsiso", specifier = ">=0.6.1" },
     { name = "unstructured", extras = ["all-docs"], marker = "extra == 'extract'", specifier = ">=0.21.5" },
-    { name = "wmill", specifier = ">=1.601.1" },
+    { name = "wmill", specifier = ">=1.669.1" },
 ]
 provides-extras = ["all", "extract"]
 
@@ -4486,14 +4503,14 @@ wheels = [
 
 [[package]]
 name = "wmill"
-version = "1.601.1"
+version = "1.669.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/44/7e/c6a7fa19999a8a5ece1af2c28167cc37c2529c056c93e2a07a8e1a9b3c48/wmill-1.601.1.tar.gz", hash = "sha256:f7892599501a73bc96fbb0a27e7461e8715915e91bf68d6ce591ce7e96066786", size = 18415, upload-time = "2025-12-27T15:44:10.406Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/00/e11f73a73fb79f2f4c7ad4e81ab7f82dd33f88b5c081d968bcbdae874ec1/wmill-1.669.1.tar.gz", hash = "sha256:7ea5790379c2c8ca5601057dc127d449043a88bef295a0dd063ca432bfef011e", size = 23102, upload-time = "2026-03-30T17:01:21.589Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f4/02/db9978e7b661ac1e139f9cbdebc8c24dc25da7cfd761df5c3b44436f9d15/wmill-1.601.1-py3-none-any.whl", hash = "sha256:6a1fc373d30c64d0a3df26d673be44b81cce91bacbf8bf912d9409e3ce862c61", size = 18710, upload-time = "2025-12-27T15:44:08.691Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/d7/dd92549dafa27a14c85e5096c785d8b7c9957ce7cad94d252d7ea1171525/wmill-1.669.1-py3-none-any.whl", hash = "sha256:15117e4e0037266f2599ad1d9f5eec984a727dd9a4f88e3aef92933d81e86f0a", size = 23344, upload-time = "2026-03-30T17:01:20.373Z" },
 ]
 
 [[package]]

@@ -154,7 +154,36 @@ value:
           prompt:
             expr: flow_input.prompt
             type: javascript
+          related_entity_ids:
+            expr: flow_input.related_entity_ids
+            type: javascript
       summary: AI create suggestion
+      continue_on_error: false
+    - id: c
+      value:
+        path: f/changes/apply
+        type: script
+        is_trigger: false
+        input_transforms:
+          entity_name:
+            expr: flow_input.entity_name
+            type: javascript
+          entity_id:
+            type: static
+            value: null
+          data:
+            expr: results.b.data
+            type: javascript
+          apply:
+            expr: flow_input.apply
+            type: javascript
+          change_id:
+            expr: flow_input.change_id
+            type: javascript
+          change_title:
+            expr: flow_input.change_title
+            type: javascript
+      summary: Apply AI suggestion
       continue_on_error: false
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
@@ -169,6 +198,23 @@ schema:
     prompt:
       type: string
       description: Natural language description of the new entity to create
+    related_entity_ids:
+      type: array
+      items:
+        type: object
+      description: >
+        Optional related entities to include as context when creating.
+        Each entry: {"entity_type": "Variant", "entity_id": "<id>"}
+    apply:
+      type: boolean
+      description: If true, directly apply the change without review
+      default: false
+    change_id:
+      type: string
+      description: ID of an existing Change to add this edit to
+    change_title:
+      type: string
+      description: Title for the new Change (auto-generated if omitted)
   required:
     - entity_name
     - prompt

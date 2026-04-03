@@ -1,3 +1,27 @@
+mutation AddCategory($input: CreateCategoryInput!) {
+  createCategory(input: $input) {
+    category {
+      id
+      name
+    }
+    change {
+      id
+    }
+  }
+}
+
+mutation UpdateCategory($input: UpdateCategoryInput!) {
+  updateCategory(input: $input) {
+    category {
+      id
+      name
+    }
+    change {
+      id
+    }
+  }
+}
+
 query GetRootCategory {
   categoryRoot {
     id

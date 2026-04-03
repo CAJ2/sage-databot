@@ -26,6 +26,9 @@ class SuggestResult(BaseModel):
     entity_id: str | None
     data: dict[str, Any] | None = None
     suggestions: list[FieldSuggestion]
+    create_before_ref: dict[str, Any] | None = None
+    """When set: {"entity_type": str, "prompt": str}.
+    Signals auto_ref.flow to run auto_create.flow first, then link the created entity."""
 
 
 def _resolve_python_type(prop: dict[str, Any], defs: dict[str, Any]) -> Any:
@@ -48,7 +51,18 @@ def _resolve_python_type(prop: dict[str, Any], defs: dict[str, Any]) -> Any:
         return float
     if t == "boolean":
         return bool
-    return Any  # arrays, objects, oneOf → untyped fallback
+    if t == "array":
+        items = prop.get("items", {})
+        item_type = _resolve_python_type(items, defs) if items else Any
+        return list[item_type]
+    if t == "object":
+        return dict[str, Any]
+    if "oneOf" in prop:
+        non_null = [s for s in prop["oneOf"] if s.get("type") != "null"]
+        if len(non_null) == 1:
+            return _resolve_python_type(non_null[0], defs)
+        return Any
+    return Any
 
 
 def build_suggestion_model(
