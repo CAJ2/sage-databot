@@ -1,0 +1,25 @@
+.agents/rules/project.md
+  0c30bb71e35d51a8 1-2,4-23,25-49
+.agents/skills/scan/SKILL.md
+  0c30bb71e35d51a8 1-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.5",
+  "base_commit_sha": "eb401dbdbf183b3a68510490c67462185da82cfc",
+  "prompts": {
+    "0c30bb71e35d51a8": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "6a87bebf-942e-4e16-a5e5-1cc263a2061e",
+        "model": "gemini-3-flash-preview"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 86,
+      "total_deletions": 0,
+      "accepted_lines": 85,
+      "overriden_lines": 1
+    }
+  }
+}
