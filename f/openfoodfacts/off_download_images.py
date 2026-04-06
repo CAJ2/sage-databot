@@ -566,13 +566,13 @@ def off_download_images(
                     if jsonld is None:
                         print(f"No KG entity found for MID {mid}, skipping")
                         continue
-                    try:
-                        client.link_source(LinkSourceInput(id=source_id, jsonld=jsonld))
-                        print(f"Linked KG entity {mid} to source {source_id}")
-                    except Exception as e:
-                        print(
-                            f"Failed to link KG entity {mid} to source {source_id}: {e}"
-                        )
+                    # try:
+                    #     client.link_source(LinkSourceInput(id=source_id, jsonld=jsonld))
+                    #     print(f"Linked KG entity {mid} to source {source_id}")
+                    # except Exception as e:
+                    #     print(
+                    #         f"Failed to link KG entity {mid} to source {source_id}: {e}"
+                    #     )
 
                 # Collect Wikipedia URLs from KG results for Wikidata lookup
                 wiki_urls = []

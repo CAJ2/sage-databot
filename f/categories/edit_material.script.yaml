@@ -1,0 +1,42 @@
+summary: ''
+description: ''
+lock: '!inline f/categories/edit_material.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    name:
+      type: ''
+      description: ''
+      default: null
+    desc:
+      type: ''
+      description: ''
+      default: null
+    material_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    shape:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    source:
+      type: ''
+      description: ''
+      default: null
+    technical:
+      type: boolean
+      description: ''
+      default: null
+    user_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - material_id
+    - user_id

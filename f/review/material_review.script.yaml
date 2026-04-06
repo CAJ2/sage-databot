@@ -1,0 +1,26 @@
+summary: ''
+description: ''
+lock: '!inline f/review/material_review.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    edit_id:
+      type: string
+      description: ''
+    create_changes:
+      type: object
+      description: ''
+      default: null
+    update_changes:
+      type: object
+      description: ''
+      default: null
+    entity_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - edit_id

@@ -21,3 +21,6 @@ class EntityContext(BaseModel):
     # In "review" mode: explains what makes changes to this entity valid/invalid.
     # In "suggest" mode: describes what good field values look like given the context.
     prompt_hints: str
+    # If set, signals a validation failure that occurred before the LLM review step.
+    # The review_edit script will short-circuit and return a rejection with this message.
+    error_details: str | None = None

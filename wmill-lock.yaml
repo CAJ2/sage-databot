@@ -1,8 +1,11 @@
 version: v2
 locks:
   f/agents/toolsets: 49f8c73ab1d822deb67793b985babbccbc33aecca03a0bc8255af000882008d2
+  f/categories/add_material: 0a6c78853ffcc321ee6f1f94d700a730a7bec4d45b8b79ba2daad5bd6de8c9a4
   f/categories/categories_flow: 7e09d3857f6090bb5aa4fc58a72e5d082cdfbdc73159778d13b3ac52ade08987
+  f/categories/edit_material: aa5aeabca0c611d8edec975e5fd546c9232afd71f127aa4cb72a09e5f0ea75a2
   f/categories/google_taxonomy_flow: 3212b818c055f2bc4de7423b6fab761c2410785691832fa3b75f90e331f8ab98
+  f/categories/update_material_edges: 30acba7e14cb24788e6e4b782b6bbd4b6a3bf02294cde8de7486ecdaf7b42836
   f/changes/ai_create: a84cdb7b66bb9ed427639320c4044eee1f725af7baa9e1591bde943a4f24ce30
   f/changes/ai_ref: 3d4294d6c44eab3c95a0ba49902d538f55fc409af883c2779d7356d3a30117af
   f/changes/ai_review: 841c291404bdd13139606a6440a30fcce21af0b0baf66175fe94b894f0234380

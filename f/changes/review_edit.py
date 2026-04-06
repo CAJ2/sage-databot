@@ -20,6 +20,17 @@ def main(
     across flow steps) and re-validates it into EntityContext.
     """
     ctx = EntityContext.model_validate(entity_context)
+
+    if ctx.error_details:
+        return EditAnalysis(
+            edit_id=edit_id,
+            entity_name=ctx.entity_name,
+            entity_id=ctx.entity_id,
+            approved=False,
+            reasoning=ctx.error_details,
+            field_analyses=[],
+        )
+
     model = llm_agent()
 
     entity_id = ctx.entity_id
