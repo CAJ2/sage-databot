@@ -13,7 +13,7 @@ from f.changes.ai_shared import (
 )
 from f.context.context_types import EntityContext
 from f.graphql.api_client.enums import SearchType
-from f.utils.general import llm_agent
+from f.utils.general import llm_agent, llm_model_settings
 
 _SYSTEM_PROMPT = (
     "You are a data management expert for a product and sustainability database. "
@@ -74,7 +74,10 @@ def main(
         toolsets=[search_fixed_type_toolset(search_type)],
     )
 
-    result = agent.run_sync(user_prompt)
+    result = agent.run_sync(
+        user_prompt,
+        model_settings=llm_model_settings(),
+    )
     typed = cast(Any, result.output)
     suggestions: list[FieldSuggestion] = typed.suggestions
     data = {k: v for k, v in typed.data.model_dump().items() if v is not None}

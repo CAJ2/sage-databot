@@ -1,0 +1,49 @@
+summary: ''
+description: ''
+lock: '!inline f/manual/add_category.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    name:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+    parent_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    user_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    child_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    desc_short:
+      type: ''
+      description: ''
+      default: null
+    desc:
+      type: ''
+      description: ''
+      default: null
+    image_url:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required:
+    - name
+    - parent_ids
+    - user_id

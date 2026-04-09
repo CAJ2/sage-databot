@@ -1,6 +1,6 @@
 summary: ''
 description: ''
-lock: '!inline f/categories/google_taxonomy_flow.script.lock'
+lock: '!inline f/manual/google_taxonomy_flow.script.lock'
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema

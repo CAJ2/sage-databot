@@ -3,9 +3,7 @@
 import json
 from typing import Any, cast
 
-from google.genai.types import ThinkingLevel
 from pydantic_ai import Agent
-from pydantic_ai.models.google import GoogleModelSettings
 
 from f.agents.toolsets import search_multi_type_toolset
 from f.changes.ai_shared import (
@@ -15,7 +13,7 @@ from f.changes.ai_shared import (
 )
 from f.context.context_types import EntityContext
 from f.utils.api import api_connect
-from f.utils.general import llm_agent
+from f.utils.general import llm_agent, llm_model_settings
 
 _SYSTEM_PROMPT = (
     "You are a data entry expert for a product and sustainability database. "
@@ -129,9 +127,7 @@ def main(
     print("--- AI AGENT ---")
     result = agent.run_sync(
         user_prompt,
-        model_settings=GoogleModelSettings(
-            google_thinking_config={"thinking_level": ThinkingLevel.LOW}
-        ),
+        model_settings=llm_model_settings(),
     )
     print("--- AI AGENT DONE ---")
     typed = cast(Any, result.output)
