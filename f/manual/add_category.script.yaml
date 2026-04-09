@@ -1,12 +1,36 @@
 summary: ''
 description: ''
-lock: '!inline f/categories/edit_material.script.lock'
+lock: '!inline f/manual/add_category.script.lock'
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
     name:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+    parent_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    user_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    child_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    desc_short:
       type: ''
       description: ''
       default: null
@@ -14,29 +38,12 @@ schema:
       type: ''
       description: ''
       default: null
-    material_id:
-      type: string
-      description: ''
-      default: null
-      originalType: string
-    shape:
-      type: string
-      description: ''
-      default: null
-      originalType: string
-    source:
-      type: ''
-      description: ''
-      default: null
-    technical:
-      type: boolean
-      description: ''
-      default: null
-    user_id:
+    image_url:
       type: string
       description: ''
       default: null
       originalType: string
   required:
-    - material_id
+    - name
+    - parent_ids
     - user_id

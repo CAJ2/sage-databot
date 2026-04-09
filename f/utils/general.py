@@ -6,9 +6,10 @@ from typing import Any
 import logfire
 import wmill
 import yaml
+from google.genai.types import ThinkingLevel
 from google.oauth2 import service_account
 from pydantic_ai.models import Model
-from pydantic_ai.models.google import GoogleModel
+from pydantic_ai.models.google import GoogleModel, GoogleModelSettings
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.models.openrouter import OpenRouterModel
 from pydantic_ai.providers.gateway import gateway_provider, normalize_gateway_provider
@@ -106,6 +107,42 @@ def llm_agent() -> Model:
     provider = GoogleProvider(credentials=creds, project=project)
     llm = GoogleModel(model_name, provider=provider)
     return llm
+
+
+def llm_model_settings() -> GoogleModelSettings | None:
+    """
+    Returns appropriate GoogleModelSettings based on the configured model name.
+    - gemini-2.x models: thinking_budget=512
+    - gemini-3+ models: thinking_level=LOW
+    - Non-Gemini models: None
+    """
+    models = wmill.get_variable("f/api_config/llm_models")
+    model_dict = yaml.full_load(models)
+    model_opts = find_path_or_default(model_dict)
+    model_name: str = model_opts["model"]
+
+    # Strip provider prefixes to get the bare model name
+    for prefix in ("gateway/google:", "openrouter/google/"):
+        if model_name.startswith(prefix):
+            model_name = model_name[len(prefix) :]
+            break
+
+    if not model_name.startswith("gemini-"):
+        return None
+
+    # Extract major version number (e.g. "gemini-2.5-flash" → 2, "gemini-3.0-pro" → 3)
+    parts = model_name.split("-")
+    try:
+        major = int(parts[1].split(".")[0])
+    except (IndexError, ValueError):
+        return None
+
+    if major >= 3:
+        return GoogleModelSettings(
+            google_thinking_config={"thinking_level": ThinkingLevel.LOW}
+        )
+    else:
+        return GoogleModelSettings(google_thinking_config={"thinking_budget": 512})
 
 
 def slugify(s: str) -> str:

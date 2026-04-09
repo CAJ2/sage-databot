@@ -1,49 +1,57 @@
 summary: ''
 description: ''
-lock: '!inline f/categories/update_material_edges.script.lock'
+lock: '!inline f/manual/add_material.script.lock'
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
-    add_child_ids:
+    name:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+    child_ids:
       type: array
       description: ''
       default: null
       items:
         type: string
       originalType: string[]
-    add_parent_ids:
+    desc:
+      type: object
+      description: ''
+      default: null
+      properties: {}
+    parent_ids:
       type: array
       description: ''
       default: null
       items:
         type: string
       originalType: string[]
-    material_id:
+    shape:
       type: string
       description: ''
       default: null
       originalType: string
-    remove_child_ids:
-      type: array
+    source:
+      type: object
       description: ''
       default: null
-      items:
-        type: string
-      originalType: string[]
-    remove_parent_ids:
-      type: array
+      properties: {}
+    technical:
+      type: boolean
       description: ''
       default: null
-      items:
-        type: string
-      originalType: string[]
     user_id:
       type: string
       description: ''
       default: null
       originalType: string
   required:
-    - material_id
+    - name
+    - source
+    - technical
+    - parent_ids
     - user_id

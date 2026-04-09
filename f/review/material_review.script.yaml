@@ -6,21 +6,23 @@ schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
-    edit_id:
-      type: string
-      description: ''
     create_changes:
       type: object
       description: ''
       default: null
-    update_changes:
-      type: object
+    edit_id:
+      type: string
       description: ''
       default: null
+      originalType: string
     entity_id:
       type: string
       description: ''
       default: null
       originalType: string
+    update_changes:
+      type: object
+      description: ''
+      default: null
   required:
     - edit_id

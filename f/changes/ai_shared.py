@@ -3,7 +3,7 @@
 import json
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field, create_model
+from pydantic import BaseModel, Field, create_model, model_validator
 from pydantic_ai import Agent
 from pydantic_ai.models import Model
 
@@ -81,8 +81,22 @@ def build_suggestion_model(
         python_type = _resolve_python_type(prop, defs)
         data_fields[field] = (Optional[python_type], None)
     DataModel = create_model("DataModel", **data_fields)
+
+    class _Base(BaseModel):
+        @model_validator(mode="before")
+        @classmethod
+        def _coerce_data_string(cls, values: Any) -> Any:
+            """Handle models that return `data` as a JSON string instead of an object."""
+            if isinstance(values, dict) and isinstance(values.get("data"), str):
+                try:
+                    values["data"] = json.loads(values["data"])
+                except (json.JSONDecodeError, ValueError):
+                    pass
+            return values
+
     return create_model(
         "SuggestionOutput",
+        __base__=_Base,
         data=(DataModel, ...),
         suggestions=(list[FieldSuggestion], ...),
     )

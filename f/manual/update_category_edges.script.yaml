@@ -1,0 +1,49 @@
+summary: ''
+description: ''
+lock: '!inline f/manual/update_category_edges.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    category_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    user_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+    add_parent_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    remove_parent_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    add_child_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+    remove_child_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+  required:
+    - category_id
+    - user_id

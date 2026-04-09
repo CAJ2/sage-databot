@@ -1,6 +1,6 @@
 summary: ''
 description: ''
-lock: '!inline f/categories/categories_flow.script.lock'
+lock: '!inline f/manual/categories_flow.script.lock'
 kind: script
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
