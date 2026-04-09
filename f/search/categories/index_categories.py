@@ -18,7 +18,6 @@ from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 
 LANG_FIELDS = ["name", "desc", "desc_short"]
 COLLECTION_FIELDS = [
-    {"name": "id", "type": "string"},
     {"name": "updated_at", "type": "int64", "sort": True},
     *translated_schema_fields(
         {

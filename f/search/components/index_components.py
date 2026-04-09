@@ -21,7 +21,6 @@ from f.utils.db.crdb import (
 
 LANG_FIELDS = ["name", "desc"]
 COLLECTION_FIELDS = [
-    {"name": "id", "type": "string"},
     {"name": "updated_at", "type": "int64", "sort": True},
     {"name": "tags", "type": "string[]", "optional": True, "facet": True},
     *translated_schema_fields({"name": "string", "desc": "string"}),

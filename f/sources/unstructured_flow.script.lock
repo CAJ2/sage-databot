@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: extract:059b6fdc31432ca4a17ad8df0011626a2ee7b220474b6bd3effb893fa493a70a
+# workspace-dependencies: extract:31e55ba5cd3fbee175650224451f9167222e3efa023d2b759c45a54f13e7cef0
 # py: 3.12
 accelerate==1.12.0
 adbc-driver-manager==1.5.0
@@ -29,7 +29,6 @@ boto3==1.42.22
 botocore==1.42.22
 cachetools==5.5.2
 caio==0.9.25
-camel-converter==4.0.1
 catalogue==2.0.10
 certifi==2025.1.31
 cffi==1.17.1
@@ -130,7 +129,6 @@ markupsafe==3.0.2
 matplotlib==3.10.1
 mcp==1.25.0
 mdurl==0.1.2
-meilisearch==0.38.0
 mistralai==1.9.11
 more-itertools==10.8.0
 mpmath==1.3.0
@@ -274,6 +272,7 @@ typer==0.24.1
 typer-slim==0.21.0
 types-protobuf==6.32.1.20251210
 types-requests==2.32.4.20250611
+typesense==2.0.0
 typing-extensions==4.15.0
 typing-inspection==0.4.2
 tzdata==2025.2

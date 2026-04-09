@@ -18,7 +18,6 @@ from f.utils.db.typesense import (
 
 LANG_FIELDS = ["desc"]
 COLLECTION_FIELDS = [
-    {"name": "id", "type": "string"},
     {"name": "updated_at", "type": "int64", "sort": True},
     {"name": "name", "type": "string"},
     *translated_schema_fields({"desc": "string"}),

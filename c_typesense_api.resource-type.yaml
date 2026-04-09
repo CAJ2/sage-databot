@@ -1,0 +1,45 @@
+description: A direct Typesense connection
+format_extension: null
+is_fileset: false
+schema:
+  $schema: 'https://json-schema.org/draft/2020-12/schema'
+  type: object
+  order:
+    - host
+    - port
+    - protocol
+    - api_key
+    - api_url
+  properties:
+    host:
+      type: string
+      description: ''
+      default: localhost
+      nullable: false
+    port:
+      type: string
+      description: ''
+      default: '8108'
+      nullable: false
+    protocol:
+      type: string
+      description: ''
+      default: http
+      enum:
+        - http
+        - https
+      nullable: false
+    api_key:
+      type: string
+      description: ''
+      default: ''
+      password: true
+    api_url:
+      type: string
+      description: Optional full URL override for hosted Typesense setups
+      default: ''
+  required:
+    - host
+    - port
+    - protocol
+    - api_key

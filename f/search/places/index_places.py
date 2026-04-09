@@ -20,16 +20,14 @@ from f.utils.db.crdb import (
     load_tags_by_entity_ids,
 )
 
-LANG_FIELDS = ["name", "address", "desc"]
+LANG_FIELDS = ["name", "desc"]
 COLLECTION_FIELDS = [
-    {"name": "id", "type": "string"},
     {"name": "updated_at", "type": "int64", "sort": True},
     {"name": "geo", "type": "geopoint", "optional": True},
     {"name": "tags", "type": "string[]", "optional": True, "facet": True},
     *translated_schema_fields(
         {
             "name": "string",
-            "address": "string",
             "desc": "string",
         }
     ),
@@ -49,7 +47,7 @@ def index_places(
         crdb,
         "public.places",
         ids=keys,
-        cols='id, updated_at, name::string, address::string, "desc"::string, st_asgeojson(location) as location',
+        cols='id, updated_at, name::string, "desc"::string, st_asgeojson(location) as location',
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.places")
@@ -57,8 +55,6 @@ def index_places(
         df = with_unix_timestamps(df, ["updated_at"])
         if "name" in df.columns:
             df = df.with_columns(pl.col("name").str.strip_chars())
-        if "address" in df.columns:
-            df = df.with_columns(pl.col("address").str.strip_chars())
         if "desc" in df.columns:
             df = df.with_columns(pl.col("desc").str.strip_chars())
         docs = df.to_dicts()
@@ -71,8 +67,6 @@ def index_places(
         for doc in docs:
             name_json = json.loads(doc["name"])
             doc["name"] = name_json
-            address_json = json.loads(doc["address"] or "{}")
-            doc["address"] = address_json
             desc_json = json.loads(doc["desc"] or "{}")
             doc["desc"] = desc_json
             if doc.get("location"):

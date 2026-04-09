@@ -18,7 +18,6 @@ from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 
 LANG_FIELDS = ["name"]
 COLLECTION_FIELDS = [
-    {"name": "id", "type": "string"},
     {"name": "updated_at", "type": "int64", "sort": True},
     {"name": "properties", "type": "string"},
     {"name": "placetype", "type": "string", "facet": True},

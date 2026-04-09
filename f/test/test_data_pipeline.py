@@ -2,7 +2,7 @@
 
 """
 Integration tests for data pipeline scripts.
-Tests: f/categories/categories_flow.py, f/tags/tags_flow.py
+Tests: f/manual/categories_flow.py, f/tags/tags_flow.py
 """
 
 from sqlalchemy import text
@@ -10,7 +10,7 @@ from sqlalchemy import text
 import f.tags.component_tags as component_tags
 import f.tags.place_tags as place_tags
 import f.tags.variant_tags as variant_tags
-from f.categories.categories_flow import main as categories_flow_main
+from f.manual.categories_flow import main as categories_flow_main
 from f.tags.tags_flow import main as tags_flow_main
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_gt, assert_true
