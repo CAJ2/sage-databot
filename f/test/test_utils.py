@@ -2,7 +2,7 @@
 
 """
 Integration tests for f/utils/* scripts.
-Tests: DB connection, S3Client, Meilisearch connection, api_connect,
+Tests: DB connection, S3Client, Typesense connection, api_connect,
        general utilities, lang, git.
 """
 
@@ -12,12 +12,11 @@ import tempfile
 
 from sqlalchemy import text
 
-from f.utils.db.meili import check_lang
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_eq, assert_true
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_polars_uri, create_sql_engine
-from f.utils.db.meili import meili_connect
+from f.utils.db.typesense import check_lang, ts_connect
 from f.utils.general import is_production, slugify
 from f.utils.git import checkout_repo
 from f.utils.s3 import S3Client
@@ -113,10 +112,10 @@ def test_s3_client_upload_download(t: Test):
             os.unlink(tmp2_path)
 
 
-def test_meilisearch_connection(_t: Test):
-    """Test Meilisearch connection."""
-    meili = meili_connect()
-    assert_true(meili.is_healthy(), "Meilisearch should be healthy")
+def test_typesense_connection(_t: Test):
+    """Test Typesense connection."""
+    ts = ts_connect()
+    assert_true(ts.operations.is_healthy(), "Typesense should be healthy")
 
 
 def test_api_connect(_t: Test):
@@ -167,7 +166,7 @@ def main() -> dict[str, object]:
     suite.run(test_crdb_test_table)
     suite.run(test_s3_client_exists)
     suite.run(test_s3_client_upload_download)
-    suite.run(test_meilisearch_connection)
+    suite.run(test_typesense_connection)
     suite.run(test_api_connect)
     suite.run(test_slugify)
     suite.run(test_is_production)

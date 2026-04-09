@@ -2,71 +2,77 @@
 
 from typing import cast
 from sqlalchemy import Engine
-import polars as pl
-import meilisearch
 import json
+import typesense as typesense_sdk
 
-from f.utils.db.meili import (
-    meili_connect,
-    check_create_lang_indexes,
-    filter_docs_for_lang,
-    split_docs_by_lang,
-    SUPPORTED_LANGS,
+from f.utils.db.typesense import (
+    check_create_aliased_collection,
+    expand_translated_docs,
+    import_documents,
+    resolve_collection_name,
+    translated_schema_fields,
+    ts_connect,
+    with_unix_timestamps,
 )
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 
 LANG_FIELDS = ["name"]
+COLLECTION_FIELDS = [
+    {"name": "id", "type": "string"},
+    {"name": "updated_at", "type": "int64", "sort": True},
+    {"name": "properties", "type": "string"},
+    {"name": "placetype", "type": "string", "facet": True},
+    {"name": "admin_level", "type": "int32", "sort": True, "optional": True},
+    {"name": "geo", "type": "geopoint", "optional": True},
+    *translated_schema_fields({"name": "string"}),
+]
 
 
 def index_regions(
     crdb: Engine,
-    meili: meilisearch.Client,
+    ts: typesense_sdk.Client,
     keys: list[str],
+    collection_suffix: str | None = None,
 ):
     """
-    Index the regions in Meilisearch.
+    Index the regions in Typesense.
     """
     df_iter = export_table_by_ids(
         crdb,
         "public.regions",
         ids=keys,
-        cols="id, name::string, properties::string, placetype, admin_level",
+        cols="id, updated_at, name::string, properties::string, placetype, admin_level",
         batch_size=1000,
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.regions")
         print(f"Columns: {df.describe()}")
-        df = df.cast({pl.Datetime: pl.String})
+        df = with_unix_timestamps(df, ["updated_at"])
         docs = df.to_dicts()
         for doc in docs:
             doc["name"] = json.loads(str(doc["name"]))
             prop = cast(dict[str, object], json.loads(str(doc["properties"])))
-            doc["properties"] = prop
-            doc["_geo"] = {
-                "lat": prop["geom:latitude"],
-                "lng": prop["geom:longitude"],
-            }
-        for lang in SUPPORTED_LANGS:
-            lang_docs = split_docs_by_lang(
-                filter_docs_for_lang(docs, LANG_FIELDS, lang), LANG_FIELDS, lang
-            )
-            if not lang_docs:
-                continue
-            _ = meili.index(f"regions_{lang}").add_documents(lang_docs)
-
-
-def main(keys: list[str], check: bool = True):
-    crdb = create_sql_engine()
-    meili = meili_connect()
-    if check:
-        check_create_lang_indexes(
-            meili,
-            "regions",
-            {
-                "searchableAttributes": ["name", "properties"],
-                "filterableAttributes": ["placetype"],
-                "sortableAttributes": ["admin_level"],
-            },
-            lang_fields=LANG_FIELDS,
+            doc["properties"] = json.dumps(prop, sort_keys=True)
+            doc["geo"] = [prop["geom:latitude"], prop["geom:longitude"]]
+        import_documents(
+            ts,
+            resolve_collection_name("regions", collection_suffix),
+            expand_translated_docs(docs, LANG_FIELDS),
         )
-    index_regions(crdb, meili, keys)
+
+
+def main(
+    keys: list[str],
+    check: bool = True,
+    collection_suffix: str | None = None,
+):
+    crdb = create_sql_engine()
+    ts = ts_connect()
+    if check:
+        check_create_aliased_collection(
+            ts,
+            "regions",
+            COLLECTION_FIELDS,
+            collection_suffix=collection_suffix,
+        )
+    index_regions(crdb, ts, keys, collection_suffix=collection_suffix)

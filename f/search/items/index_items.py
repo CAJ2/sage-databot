@@ -1,59 +1,84 @@
 # requirements: project
 
 from sqlalchemy import Engine
-import polars as pl
-import meilisearch
 import json
+import typesense as typesense_sdk
 
-from f.utils.db.meili import (
-    meili_connect,
-    check_create_lang_indexes,
-    split_docs_by_lang,
-    SUPPORTED_LANGS,
+from f.utils.db.typesense import (
+    check_create_aliased_collection,
+    expand_translated_docs,
+    import_documents,
+    resolve_collection_name,
+    translated_schema_fields,
+    ts_connect,
+    with_unix_timestamps,
 )
-from f.utils.db.crdb import create_sql_engine, export_table_by_ids
+from f.utils.db.crdb import (
+    create_sql_engine,
+    export_table_by_ids,
+    load_tags_by_entity_ids,
+)
 
 LANG_FIELDS = ["name", "desc"]
+COLLECTION_FIELDS = [
+    {"name": "id", "type": "string"},
+    {"name": "updated_at", "type": "int64", "sort": True},
+    {"name": "tags", "type": "string[]", "optional": True, "facet": True},
+    *translated_schema_fields({"name": "string", "desc": "string"}),
+]
 
 
 def index_items(
     crdb: Engine,
-    meili: meilisearch.Client,
+    ts: typesense_sdk.Client,
     keys: list[str],
+    collection_suffix: str | None = None,
 ):
     """
-    Index the items in Meilisearch.
+    Index the items in Typesense.
     """
     df_iter = export_table_by_ids(
         crdb,
         "public.items",
         ids=keys,
-        cols='id, updated_at, name::string, "desc"::string, source::string',
+        cols='id, updated_at, name::string, "desc"::string',
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.items")
         print(f"Columns: {df.describe()}")
-        df = df.cast({pl.Datetime: pl.String})
+        df = with_unix_timestamps(df, ["updated_at"])
         docs = df.to_dicts()
+        tags_by_id = load_tags_by_entity_ids(
+            crdb,
+            "public.items_tags",
+            "item_id",
+            [str(doc["id"]) for doc in docs],
+        )
         for doc in docs:
             doc["name"] = json.loads(str(doc["name"]))
             doc["desc"] = json.loads(str(doc["desc"] or "{}"))
-            doc["source"] = json.loads(str(doc["source"] or "{}"))
-        for lang in SUPPORTED_LANGS:
-            lang_docs = split_docs_by_lang(docs, LANG_FIELDS, lang)
-            if not lang_docs:
-                continue
-            _ = meili.index(f"items_{lang}").add_documents(lang_docs)
-
-
-def main(keys: list[str], check: bool = True):
-    crdb = create_sql_engine()
-    meili = meili_connect()
-    if check:
-        check_create_lang_indexes(
-            meili,
-            "items",
-            {"searchableAttributes": ["name", "desc"]},
-            lang_fields=LANG_FIELDS,
+            tags = tags_by_id.get(str(doc["id"]))
+            if tags:
+                doc["tags"] = tags
+        import_documents(
+            ts,
+            resolve_collection_name("items", collection_suffix),
+            expand_translated_docs(docs, LANG_FIELDS),
         )
-    index_items(crdb, meili, keys)
+
+
+def main(
+    keys: list[str],
+    check: bool = True,
+    collection_suffix: str | None = None,
+):
+    crdb = create_sql_engine()
+    ts = ts_connect()
+    if check:
+        check_create_aliased_collection(
+            ts,
+            "items",
+            COLLECTION_FIELDS,
+            collection_suffix=collection_suffix,
+        )
+    index_items(crdb, ts, keys, collection_suffix=collection_suffix)

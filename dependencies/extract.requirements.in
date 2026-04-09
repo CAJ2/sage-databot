@@ -80,8 +80,6 @@ cachetools==5.5.2
     # via py-key-value-aio
 caio==0.9.25
     # via aiofile
-camel-converter==4.0.1
-    # via meilisearch
 catalogue==2.0.10
     # via
     #   spacy
@@ -284,6 +282,7 @@ httpx==0.28.1
     #   openrouter
     #   pydantic-ai-slim
     #   pydantic-graph
+    #   typesense
     #   unstructured-client
     #   wmill
 httpx-sse==0.4.0
@@ -415,8 +414,6 @@ mcp==1.25.0
     #   pydantic-ai-slim
 mdurl==0.1.2
     # via markdown-it-py
-meilisearch==0.38.0
-    # via sage-databot
 mistralai==1.9.11
     # via pydantic-ai-slim
 more-itertools==10.8.0
@@ -689,7 +686,6 @@ pydantic==2.12.5
     #   ag-ui-protocol
     #   anthropic
     #   ariadne-codegen
-    #   camel-converter
     #   cohere
     #   confection
     #   fastmcp
@@ -827,7 +823,6 @@ requests==2.32.5
     #   google-auth
     #   google-genai
     #   jsonschema-path
-    #   meilisearch
     #   opentelemetry-exporter-otlp-proto-http
     #   osmium
     #   pydantic-ai-slim
@@ -999,6 +994,8 @@ types-protobuf==6.32.1.20251210
     # via temporalio
 types-requests==2.32.4.20250611 ; sys_platform != 'emscripten'
     # via cohere
+typesense==2.0.0
+    # via sage-databot
 typing-extensions==4.15.0
     # via
     #   adbc-driver-manager
@@ -1035,6 +1032,7 @@ typing-extensions==4.15.0
     #   torch
     #   twisted
     #   typer-slim
+    #   typesense
     #   typing-inspection
     #   unstructured
 typing-inspection==0.4.2

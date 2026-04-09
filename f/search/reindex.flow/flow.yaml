@@ -1,8 +1,20 @@
-summary: Full table reindex into Meilisearch
+summary: Full table reindex into Typesense
 description: Paginates through a table using cursor-based batching and calls
-  index.flow per batch. Gives per-batch visibility and retry granularity.
+  index.flow per batch. Builds versioned physical collections and flips aliases
+  after a successful rebuild.
 value:
   modules:
+    - id: prepare_reindex
+      value:
+        lock: '!inline prepare_reindex_suffix.inline_script.lock'
+        type: rawscript
+        content: '!inline prepare_reindex_suffix.inline_script.py'
+        language: python3
+        input_transforms:
+          collection_suffix:
+            expr: flow_input.collection_suffix
+            type: javascript
+      summary: Prepare reindex suffix
     - id: loop
       value:
         type: whileloopflow
@@ -40,11 +52,27 @@ value:
                   expr: results.fetch_batch.count
                   type: javascript
                 payload:
-                  expr: 'results.fetch_batch.ids.map(id => ({topic: flow_input.table, key:
-                    [id]}))'
+                  expr: 'results.fetch_batch.ids.map(id => ({topic: flow_input.table, id}))'
+                  type: javascript
+                collection_suffix:
+                  expr: results.prepare_reindex.collection_suffix
                   type: javascript
             summary: Call index.flow with batch
         skip_failures: false
+    - id: flip_aliases
+      value:
+        lock: '!inline flip_aliases.inline_script.lock'
+        type: rawscript
+        content: '!inline flip_aliases.inline_script.py'
+        language: python3
+        input_transforms:
+          table:
+            expr: flow_input.table
+            type: javascript
+          collection_suffix:
+            expr: results.prepare_reindex.collection_suffix
+            type: javascript
+      summary: Flip aliases
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
@@ -53,6 +81,7 @@ schema:
     - batch_size
     - sleep_seconds
     - start_cursor
+    - collection_suffix
   properties:
     table:
       type: string
@@ -68,6 +97,11 @@ schema:
     start_cursor:
       type: string
       description: Resume from this ID (exclusive). Leave empty to start from the beginning.
+      default: ''
+    collection_suffix:
+      type: string
+      description: Optional suffix for the new physical collections. Leave empty to
+        auto-generate one.
       default: ''
   required:
     - table

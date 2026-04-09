@@ -10,6 +10,11 @@ schema:
       type: boolean
       description: ''
       default: true
+    collection_suffix:
+      type: string
+      description: ''
+      default: null
+      originalType: string
     keys:
       type: array
       description: ''

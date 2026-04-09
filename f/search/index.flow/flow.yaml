@@ -1,4 +1,4 @@
-summary: Index changes from CRDB into Meilisearch
+summary: Index changes from CRDB into Typesense
 description: ''
 value:
   modules:
@@ -28,6 +28,9 @@ value:
           changes:
             expr: results.a
             type: javascript
+          collection_suffix:
+            expr: flow_input.collection_suffix
+            type: javascript
       summary: Index dispatch
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
@@ -35,10 +38,15 @@ schema:
   order:
     - payload
     - length
+    - collection_suffix
   properties:
     length:
       type: integer
       description: ''
+    collection_suffix:
+      type: string
+      description: Optional suffix for physical reindex collections
+      default: ''
     payload:
       type: array
       description: ''

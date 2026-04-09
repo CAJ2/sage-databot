@@ -1,63 +1,75 @@
 # requirements: project
 
-"""
-Integration tests for f/search/* scripts.
-Tests: index settings, category indexing, region indexing.
-"""
+"""Integration tests for f/search/* scripts."""
 
-import time
+from datetime import UTC, datetime
 
-import meilisearch
-import wmill
+import polars as pl
 from sqlalchemy import text
 
 from f.search.categories.index_categories import main as index_categories_main
 from f.search.regions.index_regions import main as index_regions_main
+from f.search.variants.index_variants import barcode_forms
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_true
 from f.utils.db.crdb import create_sql_engine
-from f.utils.db.meili import check_create_index
+from f.utils.db.typesense import (
+    check_create_collection,
+    ts_connect,
+    translated_schema_fields,
+    with_unix_timestamps,
+)
+from typing import cast
 
 
-def _wait_meili_idle(meili: meilisearch.Client, timeout: float = 30.0) -> None:
-    """Wait until Meilisearch has no enqueued or processing tasks."""
-    deadline = time.monotonic() + timeout
-    while time.monotonic() < deadline:
-        tasks = meili.get_tasks({"statuses": ["enqueued", "processing"]})
-        if not tasks.results:
-            return
-        time.sleep(0.5)
-    raise TimeoutError("Meilisearch did not finish processing tasks in time")
+def _field_map(schema: object) -> dict[str, dict[str, object]]:
+    schema_dict = cast(dict[str, object], schema) if isinstance(schema, dict) else {}
+    fields = cast(list[object], schema_dict.get("fields", []))
+    return {
+        field["name"]: field
+        for field in fields
+        if isinstance(field, dict) and "name" in field
+    }
 
 
-def _get_meili_client() -> meilisearch.Client:
-    """Get a Meilisearch client for verification."""
-    meili_res = wmill.get_resource("f/api_config/api_meilisearch")
-    if meili_res is None:
-        raise ValueError("No Meilisearch resource found")
-    return meilisearch.Client(
-        str(meili_res.get("api_url", "")),
-        api_key=meili_res.get("api_key", None),
+def test_collection_schema(t: Test):
+    """Test that check_create_collection creates the expected Typesense schema."""
+    ts = ts_connect()
+    collection_name = "test_settings_check"
+    t.cleanup.track_typesense_collection(collection_name)
+
+    check_create_collection(
+        ts,
+        collection_name,
+        [
+            {"name": "id", "type": "string"},
+            {"name": "updated_at", "type": "int64", "sort": True},
+            {"name": "category", "type": "string", "facet": True},
+            *translated_schema_fields({"name": "string", "desc": "string"}),
+        ],
     )
 
-
-def test_index_settings(t: Test):
-    """Test that check_create_index configures index settings correctly."""
-    meili = _get_meili_client()
-    index_name = "test_settings_check"
-    t.cleanup.track_meili_index(index_name)
-
-    check_create_index(
-        meili,
-        index_name,
-        {
-            "searchableAttributes": ["name", "desc"],
-            "filterableAttributes": ["category"],
-        },
+    schema = ts.collections[collection_name].retrieve()
+    fields = _field_map(schema)
+    assert_true("name_en" in fields, "name_en field should exist")
+    assert_true(fields["name_en"].get("locale") == "en", "name_en should use en locale")
+    assert_true(bool(fields["name_en"].get("stem")), "name_en should enable stemming")
+    assert_true(bool(fields["category"].get("facet")), "category should be facetable")
+    assert_true(
+        fields["updated_at"].get("type") == "int64", "updated_at should be int64"
     )
+    assert_true(bool(fields["updated_at"].get("sort")), "updated_at should be sortable")
 
-    settings = meili.index(index_name).get_settings()
-    assert_true("name" in settings["searchableAttributes"], "name should be searchable")
+
+def test_with_unix_timestamps(_t: Test):
+    df = with_unix_timestamps(
+        pl.DataFrame({"updated_at": [datetime(2024, 1, 2, 3, 4, 5, tzinfo=UTC)]}),
+        ["updated_at"],
+    )
+    updated_at = df.to_dicts()[0]["updated_at"]
+    assert_true(
+        updated_at == 1704164645, "updated_at should be converted to unix seconds"
+    )
 
 
 def test_index_categories(_t: Test):
@@ -75,12 +87,15 @@ def test_index_categories(_t: Test):
     category_ids = [str(row[0]) for row in rows]
     index_categories_main(keys=category_ids)
 
-    meili = _get_meili_client()
-    _wait_meili_idle(meili)
-    index = meili.index("categories_en")
+    ts = ts_connect()
     for cid in category_ids:
-        doc = index.get_document(cid)
+        doc = ts.collections["categories"].documents[cid].retrieve()
         assert_true(bool(doc), f"Category {cid} should be indexed")
+        assert_true("name_en" in doc, f"Category {cid} should have name_en")
+        assert_true(
+            isinstance(doc.get("updated_at"), int),
+            f"Category {cid} should store updated_at as unix seconds",
+        )
 
 
 def test_index_regions(_t: Test):
@@ -96,18 +111,46 @@ def test_index_regions(_t: Test):
     region_ids = [str(row[0]) for row in rows]
     index_regions_main(keys=region_ids)
 
-    meili = _get_meili_client()
-    _wait_meili_idle(meili)
-    index = meili.index("regions_en")
+    ts = ts_connect()
     for rid in region_ids:
-        doc = index.get_document(rid)
+        doc = ts.collections["regions"].documents[rid].retrieve()
         assert_true(bool(doc), f"Region {rid} should be indexed")
+        assert_true("name_en" in doc, f"Region {rid} should have name_en")
+        assert_true(
+            isinstance(doc.get("updated_at"), int),
+            f"Region {rid} should store updated_at as unix seconds",
+        )
+
+
+def test_barcode_forms(_t: Test):
+    assert_true(
+        barcode_forms("0123456789012")
+        == ["0123456789012", "123456789012", "00123456789012"],
+        "EAN-13 / UPC-A forms should be indexed together",
+    )
+    assert_true(
+        barcode_forms("0000012345678")
+        == [
+            "0000012345678",
+            "12345678",
+            "000012345678",
+            "00000012345678",
+        ],
+        "EAN-8 and zero-padded GTIN forms should be indexed together",
+    )
+    assert_true(
+        barcode_forms("1234567")
+        == ["1234567", "01234567", "000001234567", "0000001234567", "00000001234567"],
+        "Short UPC/EAN forms should be expanded with leading-zero variants",
+    )
 
 
 def main() -> dict[str, object]:
     _ = ensure_test_workspace()
     suite = TestSuite("search")
-    suite.run(test_index_settings)
+    suite.run(test_collection_schema)
+    suite.run(test_with_unix_timestamps)
     suite.run(test_index_categories)
     suite.run(test_index_regions)
+    suite.run(test_barcode_forms)
     return suite.results()

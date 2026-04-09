@@ -1,21 +1,14 @@
 # requirements: project
 
-"""
-Cleanup utilities for integration tests.
-
-Tracks entities, tables, S3 objects, and Meilisearch indexes created during
-tests and cleans them up afterwards.
-"""
+"""Cleanup utilities for integration tests."""
 
 import os
 from typing import Any
 
 from sqlalchemy import text, event, Engine
 
-import wmill
-import meilisearch
-
 from f.utils.db.crdb import create_sql_engine
+from f.utils.db.typesense import ts_connect
 from f.utils.s3 import S3Client
 
 
@@ -52,7 +45,7 @@ class CleanupTracker:
         cleanup.track_entity("variants", "some_id")
         cleanup.track_test_table("test_categories_load")
         cleanup.track_s3_path("__test/some_file.txt")
-        cleanup.track_meili_index("test_variants")
+        cleanup.track_typesense_collection("test_variants")
         # ... run tests ...
         cleanup.execute()
     """
@@ -61,7 +54,9 @@ class CleanupTracker:
         self._entities: list[tuple[str, str]] = []  # (table, id)
         self._test_tables: list[str] = []  # databot.test_* table names
         self._s3_paths: list[str] = []  # S3 object paths to delete
-        self._meili_indexes: list[str] = []  # Meilisearch index names
+        self._typesense_collections: list[
+            str
+        ] = []  # Typesense collection or alias names
 
     def track_entity(self, table: str, entity_id: str):
         """Track an entity in a public schema table for deletion."""
@@ -79,15 +74,19 @@ class CleanupTracker:
         """Track an S3 object path for deletion."""
         self._s3_paths.append(path)
 
+    def track_typesense_collection(self, collection_name: str):
+        """Track a Typesense collection or alias for deletion."""
+        self._typesense_collections.append(collection_name)
+
     def track_meili_index(self, index_name: str):
-        """Track a Meilisearch index for deletion."""
-        self._meili_indexes.append(index_name)
+        """Backward-compatible alias for old tests."""
+        self.track_typesense_collection(index_name)
 
     def execute(self):
         """Run all cleanup operations. Logs errors but does not raise."""
         self._cleanup_db()
         self._cleanup_s3()
-        self._cleanup_meilisearch()
+        self._cleanup_typesense()
 
     def _cleanup_db(self):
         """Clean up DB entities and test tables."""
@@ -202,39 +201,52 @@ class CleanupTracker:
         except Exception as e:
             print(f"[cleanup] Failed to clean __test/ S3 prefix: {e}")
 
-    def _cleanup_meilisearch(self):
-        """Delete tracked Meilisearch indexes."""
-        if not self._meili_indexes:
+    def _cleanup_typesense(self):
+        """Delete tracked Typesense collections and aliases."""
+        if not self._typesense_collections:
             return
 
         try:
-            meili_res = wmill.get_resource("f/api_config/api_meilisearch")
-            if meili_res is None:
-                print("[cleanup] No Meilisearch resource found")
-                return
-            meili = meilisearch.Client(
-                str(meili_res.get("api_url", "")),
-                api_key=meili_res.get("api_key", None),
-            )
+            ts = ts_connect()
         except Exception as e:
-            print(f"[cleanup] Failed to connect to Meilisearch: {e}")
+            print(f"[cleanup] Failed to connect to Typesense: {e}")
             return
 
-        for index_name in self._meili_indexes:
+        for collection_name in self._typesense_collections:
             try:
-                meili.index(index_name).delete()
-                print(f"[cleanup] Deleted Meilisearch index {index_name}")
+                _ = ts.aliases[collection_name].delete()
+                print(f"[cleanup] Deleted Typesense alias {collection_name}")
+            except Exception:
+                pass
+            try:
+                _ = ts.collections[collection_name].delete()
+                print(f"[cleanup] Deleted Typesense collection {collection_name}")
             except Exception as e:
-                print(f"[cleanup] Failed to delete index {index_name}: {e}")
+                print(
+                    f"[cleanup] Failed to delete Typesense collection {collection_name}: {e}"
+                )
 
-        # Also clean up any test_ prefixed indexes we didn't track
         try:
-            indexes = meili.get_indexes()
-            for idx in indexes.get("results", []):
-                if idx.uid.startswith("test_") and idx.uid not in self._meili_indexes:
+            aliases = ts.aliases.retrieve()
+            for alias in aliases.get("aliases", []):
+                name = alias.get("name")
+                if name.startswith("test_"):
                     try:
-                        meili.index(idx.uid).delete()
-                        print(f"[cleanup] Deleted discovered index {idx.uid}")
+                        _ = ts.aliases[name].delete()
+                        print(f"[cleanup] Deleted discovered alias {name}")
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
+        try:
+            collections = ts.collections.retrieve()
+            for collection in collections:
+                name = collection.get("name")
+                if name.startswith("test_"):
+                    try:
+                        _ = ts.collections[name].delete()
+                        print(f"[cleanup] Deleted discovered collection {name}")
                     except Exception:
                         pass
         except Exception:
@@ -308,5 +320,5 @@ def main():
     cleanup.track_entity("variants", "__test_self_test_123")
     cleanup.track_test_table("test_self_test")
     cleanup.track_s3_path("__test/self_test.txt")
-    cleanup.track_meili_index("test_self_test")
+    cleanup.track_typesense_collection("test_self_test")
     return {"status": "ok"}

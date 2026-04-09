@@ -1,4 +1,4 @@
-summary: Meilisearch API utils
+summary: Typesense compatibility utils
 description: ''
 lock: '!inline f/utils/db/meili.script.lock'
 kind: script
