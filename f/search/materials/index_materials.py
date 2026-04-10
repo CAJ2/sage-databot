@@ -119,6 +119,7 @@ def index_materials(
         "public.materials",
         ids=expanded_ids,
         cols='id, updated_at, name::string, "desc"::string, technical, shape',
+        schema={"name": pl.String, "desc": pl.String, "shape": pl.String},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.materials")
