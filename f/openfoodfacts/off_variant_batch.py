@@ -5,14 +5,14 @@ from sqlalchemy import text
 from f.openfoodfacts.off_variant import off_variant
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
-from f.utils.db.meili import meili_client
+from f.utils.db.typesense import ts_client
 from f.utils.log import BatchProgress, cfg_log
 
 
 def main(start_cursor: str, end_cursor: str = "", batch_size: int = 100):
     cfg_log()
     crdb = create_sql_engine()
-    meili = meili_client()
+    ts = ts_client()
     client, _ = api_connect()
 
     count_params: dict[str, object] = {"start": start_cursor}
@@ -62,7 +62,7 @@ def main(start_cursor: str, end_cursor: str = "", batch_size: int = 100):
 
         for pid in product_ids:
             try:
-                off_variant(pid, crdb=crdb, meili=meili, client=client)
+                off_variant(pid, crdb=crdb, ts=ts, client=client)
             except Exception as e:
                 print(f"Error processing {pid}: {e}")
             progress.update(pid)

@@ -171,14 +171,14 @@ value:
                           edit_id:
                             expr: flow_input.iter.value.edit_id
                             type: javascript
+                          entity_id:
+                            expr: flow_input.iter.value.entity_id
+                            type: javascript
                           create_changes:
                             expr: flow_input.iter.value.create_changes
                             type: javascript
                           update_changes:
                             expr: flow_input.iter.value.update_changes
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
                             type: javascript
                       summary: Material tree verification
                       continue_on_error: true

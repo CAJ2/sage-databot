@@ -127,6 +127,32 @@ def export_table_by_ids(
     return df_iter
 
 
+def load_tags_by_entity_ids(
+    crdb: Engine,
+    table: str,
+    entity_id_col: str,
+    ids: list[str],
+) -> dict[str, list[str]]:
+    """Load tag ids from a junction table keyed by entity id."""
+    if not ids:
+        return {}
+
+    ids_join = "','".join(ids)
+    with crdb.connect() as conn:
+        rows = conn.execute(
+            text(
+                f"SELECT {entity_id_col} AS entity_id, tag_id FROM {table} "
+                + f"WHERE {entity_id_col} IN ('{ids_join}') ORDER BY {entity_id_col}, tag_id"
+            )
+        ).fetchall()
+
+    tags_by_entity: dict[str, list[str]] = {}
+    for entity_id, tag_id in rows:
+        key = str(entity_id)
+        tags_by_entity.setdefault(key, []).append(str(tag_id))
+    return tags_by_entity
+
+
 def db_write_dataframe(
     df: pl.DataFrame | pl.LazyFrame,
     table: str,

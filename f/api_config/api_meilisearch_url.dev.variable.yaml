@@ -1,3 +1,0 @@
-description: URL for the Meilisearch API
-value: 'http://meilisearch:7700'
-is_secret: false

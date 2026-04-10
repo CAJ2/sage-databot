@@ -1,6 +1,7 @@
-summary: Full table reindex into Meilisearch
+summary: Full table reindex into Typesense
 description: Paginates through a table using cursor-based batching and calls
-  index.flow per batch. Gives per-batch visibility and retry granularity.
+  index.flow per batch. Builds versioned physical collections without flipping
+  aliases so the new suffix can be promoted manually later.
 value:
   modules:
     - id: loop
@@ -40,8 +41,10 @@ value:
                   expr: results.fetch_batch.count
                   type: javascript
                 payload:
-                  expr: 'results.fetch_batch.ids.map(id => ({topic: flow_input.table, key:
-                    [id]}))'
+                  expr: 'results.fetch_batch.ids.map(id => ({topic: flow_input.table, id}))'
+                  type: javascript
+                collection_suffix:
+                  expr: flow_input.collection_suffix
                   type: javascript
             summary: Call index.flow with batch
         skip_failures: false
@@ -50,6 +53,7 @@ schema:
   type: object
   order:
     - table
+    - collection_suffix
     - batch_size
     - sleep_seconds
     - start_cursor
@@ -57,6 +61,9 @@ schema:
     table:
       type: string
       description: Table name to reindex (e.g. items, variants, categories)
+    collection_suffix:
+      type: string
+      description: Suffix for the new physical collections
     batch_size:
       type: integer
       description: Number of rows per batch
@@ -71,3 +78,4 @@ schema:
       default: ''
   required:
     - table
+    - collection_suffix

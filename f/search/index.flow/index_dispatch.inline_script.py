@@ -32,7 +32,7 @@ TABLE_HANDLERS = {
 }
 
 
-def main(changes: list[ChangeSet]):
+def main(changes: list[ChangeSet], collection_suffix: str = ""):
     results = []
     for change in changes:
         table = change["table"]
@@ -42,7 +42,7 @@ def main(changes: list[ChangeSet]):
             print(f"No handler for table: {table}, skipping")
             continue
 
-        fn: Callable[[list[str], bool], None] = handler
+        fn: Callable[[list[str], bool, str | None], None] = handler
 
         @retry(
             stop=stop_after_attempt(3),
@@ -50,9 +50,10 @@ def main(changes: list[ChangeSet]):
             reraise=True,
         )
         def run_with_retry(
-            fn: Callable[[list[str], bool], None] = fn, keys: list[str] = keys
-        ):
-            fn(keys, False)
+            fn: Callable[[list[str], bool, str | None], None] = fn,
+            keys: list[str] = keys,
+        ) -> None:
+            fn(keys, True, collection_suffix or None)
 
         print(f"Indexing {len(keys)} keys for table: {table}")
         run_with_retry()

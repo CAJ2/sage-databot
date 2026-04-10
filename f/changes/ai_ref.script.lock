@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: project:d4ae54436ef6884a5074db13dbbd9a3957f8bdcaa0707391627583d39662a505
+# workspace-dependencies: project:33e23887ad13df41d35d974fd91b0a88a1c89ff5b2fe8e8932c6881f698a46d1
 # py: 3.12
 adbc-driver-manager==1.5.0
 adbc-driver-postgresql==1.9.0
@@ -24,7 +24,6 @@ boto3==1.42.22
 botocore==1.42.22
 cachetools==5.5.2
 caio==0.9.25
-camel-converter==4.0.1
 certifi==2025.1.31
 cffi==1.17.1
 charset-normalizer==3.4.4
@@ -99,7 +98,6 @@ markupsafe==3.0.2
 matplotlib==3.10.1
 mcp==1.25.0
 mdurl==0.1.2
-meilisearch==0.38.0
 mistralai==1.9.11
 more-itertools==10.8.0
 msgspec==0.20.0
@@ -195,6 +193,7 @@ tqdm==4.67.3
 typer==0.24.1
 types-protobuf==6.32.1.20251210
 types-requests==2.32.4.20250611
+typesense==2.0.0
 typing-extensions==4.15.0
 typing-inspection==0.4.2
 tzdata==2025.2

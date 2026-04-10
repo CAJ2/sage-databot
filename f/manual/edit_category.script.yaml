@@ -6,17 +6,16 @@ schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
   properties:
+    name:
+      type: ''
+      description: ''
+      default: null
     category_id:
       type: string
       description: ''
       default: null
       originalType: string
-    user_id:
-      type: string
-      description: ''
-      default: null
-      originalType: string
-    name:
+    desc:
       type: ''
       description: ''
       default: null
@@ -24,11 +23,12 @@ schema:
       type: ''
       description: ''
       default: null
-    desc:
-      type: ''
+    image_url:
+      type: string
       description: ''
       default: null
-    image_url:
+      originalType: string
+    user_id:
       type: string
       description: ''
       default: null

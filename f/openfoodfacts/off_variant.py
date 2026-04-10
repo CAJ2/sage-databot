@@ -16,28 +16,29 @@ from f.graphql.api_client.input_types import (
 from f.graphql.api_client.client import Client
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_sql_engine
-from f.utils.db.meili import MeiliClient, meili_client
+from f.utils.db.typesense import TypesenseClient, ts_client
 from f.utils.general import slugify
 from f.utils.log import cfg_log
 
 
 def resolve_regions(
-    meili: MeiliClient,
+    ts: TypesenseClient,
     countries_tags: list[str],
 ) -> list[VariantRegionsInput]:
-    """Convert OFF countries_tags (e.g. ['en:france']) to CRDB region IDs via Meilisearch."""
+    """Convert OFF countries_tags (e.g. ['en:france']) to CRDB region IDs via Typesense."""
     regions = []
     seen_ids: set[str] = set()
     for tag in countries_tags:
         # Strip language prefix (e.g. "en:france" -> "france")
         parts = tag.split(":", 1)
         country_name = parts[-1].replace("-", " ")
-        hits = meili.ranking_search(
-            "regions_en",
+        hits = ts.ranking_search(
+            "regions",
             country_name,
             threshold=0.6,
             limit=1,
             filter="placetype = country",
+            query_by="name_en",
         )
         hit = hits[0] if hits else None
         if hit:
@@ -51,7 +52,7 @@ def resolve_regions(
 def off_variant(
     product_id: str,
     crdb: Engine | None = None,
-    meili: MeiliClient | None = None,
+    ts: TypesenseClient | None = None,
     client: Client | None = None,
 ):
     """
@@ -64,8 +65,8 @@ def off_variant(
 
     if crdb is None:
         crdb = create_sql_engine()
-    if meili is None:
-        meili = meili_client()
+    if ts is None:
+        ts = ts_client()
     if client is None:
         client, _ = api_connect()
 
@@ -205,7 +206,7 @@ def off_variant(
     # Resolve countries_tags to region IDs
     regions: list[VariantRegionsInput] = []
     if product.countries_tags and product.countries_tags.countries_tags:
-        regions = resolve_regions(meili, product.countries_tags.countries_tags)
+        regions = resolve_regions(ts, product.countries_tags.countries_tags)
 
     if variant_id:
         # Update the variant

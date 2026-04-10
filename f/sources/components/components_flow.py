@@ -6,19 +6,19 @@ import polars as pl
 from sqlalchemy import text
 
 from f.utils.db.crdb import create_sql_engine, db_write_dataframe
-from f.utils.db.meili import meili_connect
+from f.utils.db.typesense import ts_client
 from f.utils.git import checkout_repo
 
 
 def main():
     """
     Orchestrates the components pipeline.
-    Reads components from the TSV file, resolves material IDs via Meilisearch,
+    Reads components from the TSV file, resolves material IDs via Typesense,
     and loads the data into CockroachDB.
     """
     checkout_repo()
 
-    meili = meili_connect()
+    ts = ts_client()
 
     comp_df = pl.read_csv(
         "databot/src/components/components.tsv", separator="\t", has_header=True
@@ -43,7 +43,7 @@ def main():
     comp_df = comp_df.drop(desc_cols.values())
 
     def get_primary_mat(row: str):
-        mat = meili.index("materials").search(row, {"limit": 1})
+        mat = ts.search("materials", row, {"limit": 1, "query_by": "name_en"})
         if len(mat["hits"]) == 0:
             return None
         else:
@@ -77,7 +77,7 @@ def main():
     )
 
     def get_mat(row: Any):
-        mat = meili.index("materials").search(row[0], {"limit": 1})
+        mat = ts.search("materials", row[0], {"limit": 1, "query_by": "name_en"})
         if len(mat["hits"]) == 0:
             return None
         else:
