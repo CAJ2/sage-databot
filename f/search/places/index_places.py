@@ -48,6 +48,7 @@ def index_places(
         "public.places",
         ids=keys,
         cols='id, updated_at, name::string, "desc"::string, st_asgeojson(location) as location',
+        schema={"name": pl.String, "desc": pl.String, "location": pl.String},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.places")

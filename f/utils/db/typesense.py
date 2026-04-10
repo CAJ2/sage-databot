@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import time
 from typing import Any, cast
-from urllib.parse import urlparse
 
 import polars as pl
 import typesense as typesense_sdk
@@ -30,49 +30,54 @@ def check_lang(lang: str | None) -> str | None:
     return None
 
 
-def _resource_nodes(resource: dict[str, Any]) -> list[dict[str, str]]:
-    api_url = resource.get("api_url")
-    if api_url:
-        parsed = urlparse(str(api_url))
-        if not parsed.hostname:
-            raise ValueError("Typesense api_url is missing a hostname")
-        port = parsed.port or (443 if parsed.scheme == "https" else 80)
-        protocol = parsed.scheme or "http"
-        return [
-            {
-                "host": parsed.hostname,
-                "port": str(port),
-                "protocol": protocol,
-            }
-        ]
+def _coerce_node(node: object) -> dict[str, str]:
+    if not isinstance(node, dict):
+        raise ValueError("Typesense nodes must be JSON objects")
 
-    host = resource.get("host")
+    host = node.get("host")
     if not host:
-        raise ValueError("Typesense resource is missing host")
+        raise ValueError("Typesense node object is missing host")
 
-    return [
-        {
-            "host": str(host),
-            "port": str(resource.get("port", 8108)),
-            "protocol": str(resource.get("protocol", "http")),
-        }
-    ]
+    return {
+        "host": str(host),
+        "port": str(node.get("port", 8108)),
+        "protocol": str(node.get("protocol", "http")),
+    }
+
+
+def parse_typesense_nodes(raw_nodes: str) -> list[dict[str, str]]:
+    nodes_value = raw_nodes.strip()
+    if nodes_value == "":
+        raise ValueError("Typesense nodes variable is empty")
+
+    parsed_nodes = json.loads(nodes_value)
+
+    if isinstance(parsed_nodes, list):
+        nodes = [_coerce_node(node) for node in parsed_nodes]
+    else:
+        nodes = [_coerce_node(parsed_nodes)]
+
+    if not nodes:
+        raise ValueError("Typesense nodes variable did not contain any nodes")
+
+    return nodes
+
+
+def _typesense_nodes() -> list[dict[str, str]]:
+    return parse_typesense_nodes(wmill.get_variable("f/api_config/api_typesense_nodes"))
 
 
 def ts_connect() -> typesense_sdk.Client:
-    ts_res = wmill.get_resource("f/api_config/api_typesense")
-    if ts_res is None:
-        raise ValueError("Unable to find Typesense resource")
+    api_key = wmill.get_variable("f/api_config/api_typesense_key")
+    if api_key.strip() == "":
+        raise ValueError("Unable to find Typesense API key variable")
 
     client = typesense_sdk.Client(
-        cast(
-            Any,
-            {
-                "nodes": _resource_nodes(ts_res),
-                "api_key": str(ts_res.get("api_key", "")),
-                "connection_timeout_seconds": 2,
-            },
-        )
+        {
+            "nodes": cast(Any, _typesense_nodes()),
+            "api_key": api_key,
+            "connection_timeout_seconds": 2,
+        },
     )
 
     if not client.operations.is_healthy():

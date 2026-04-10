@@ -5,6 +5,17 @@ from collections.abc import Iterator
 import polars as pl
 from sqlalchemy import Engine
 
+ALLOWED_TABLES = (
+    "categories",
+    "regions",
+    "orgs",
+    "variants",
+    "components",
+    "materials",
+    "places",
+    "items",
+)
+
 
 def export_table(
     crdb: Engine,

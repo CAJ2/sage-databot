@@ -1,8 +1,0 @@
-description: The Typesense API
-value:
-  host: '$var:f/api_config/api_typesense_host'
-  port: '$var:f/api_config/api_typesense_port'
-  protocol: '$var:f/api_config/api_typesense_protocol'
-  api_key: '$var:f/api_config/api_typesense_key'
-  api_url: '$var:f/api_config/api_typesense_url'
-resource_type: c_typesense_api

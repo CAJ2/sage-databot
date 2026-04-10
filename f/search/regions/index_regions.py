@@ -19,7 +19,6 @@ from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 LANG_FIELDS = ["name"]
 COLLECTION_FIELDS = [
     {"name": "updated_at", "type": "int64", "sort": True},
-    {"name": "properties", "type": "string"},
     {"name": "placetype", "type": "string", "facet": True},
     {"name": "admin_level", "type": "int32", "sort": True, "optional": True},
     {"name": "geo", "type": "geopoint", "optional": True},
@@ -51,8 +50,8 @@ def index_regions(
         for doc in docs:
             doc["name"] = json.loads(str(doc["name"]))
             prop = cast(dict[str, object], json.loads(str(doc["properties"])))
-            doc["properties"] = json.dumps(prop, sort_keys=True)
             doc["geo"] = [prop["geom:latitude"], prop["geom:longitude"]]
+            del doc["properties"]
         import_documents(
             ts,
             resolve_collection_name("regions", collection_suffix),

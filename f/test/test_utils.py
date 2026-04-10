@@ -6,6 +6,7 @@ Tests: DB connection, S3Client, Typesense connection, api_connect,
        general utilities, lang, git.
 """
 
+import json
 import os
 import shutil
 import tempfile
@@ -13,10 +14,10 @@ import tempfile
 from sqlalchemy import text
 
 from f.test.cleanup import ensure_test_workspace
-from f.test.framework import Test, TestSuite, assert_eq, assert_true
+from f.test.framework import Test, TestSuite, assert_eq, assert_raises, assert_true
 from f.utils.api import api_connect
 from f.utils.db.crdb import create_polars_uri, create_sql_engine
-from f.utils.db.typesense import check_lang, ts_connect
+from f.utils.db.typesense import check_lang, parse_typesense_nodes, ts_connect
 from f.utils.general import is_production, slugify
 from f.utils.git import checkout_repo
 from f.utils.s3 import S3Client
@@ -148,6 +149,18 @@ def test_check_lang(_t: Test):
     assert_true(result is None, "Invalid language should return None")
 
 
+def test_typesense_nodes_variable(_t: Test):
+    assert_eq(
+        parse_typesense_nodes('[{"host":"localhost","port":"8108","protocol":"http"}]'),
+        [{"host": "localhost", "port": "8108", "protocol": "http"}],
+        "Typesense nodes should come from the JSON nodes variable",
+    )
+
+
+def test_typesense_nodes_variable_rejects_invalid_json(_t: Test):
+    assert_raises(json.JSONDecodeError, parse_typesense_nodes, "localhost:8108")
+
+
 def test_git_checkout(_t: Test):
     """Test git repo checkout."""
 
@@ -171,5 +184,7 @@ def main() -> dict[str, object]:
     suite.run(test_slugify)
     suite.run(test_is_production)
     suite.run(test_check_lang)
+    suite.run(test_typesense_nodes_variable)
+    suite.run(test_typesense_nodes_variable_rejects_invalid_json)
     suite.run(test_git_checkout)
     return suite.results()
