@@ -5,31 +5,39 @@ from sqlalchemy import Engine, text
 import json
 import typesense as typesense_sdk
 
-from f.utils.db.typesense import (
-    DEFAULT_LANG,
-    SUPPORTED_LANGS,
-    check_create_aliased_collection,
-    expand_translated_docs,
-    import_documents,
-    resolve_collection_name,
-    translated_schema_fields,
-    ts_connect,
-    with_unix_timestamps,
-)
 from f.utils.db.crdb import (
     create_sql_engine,
     export_table_by_ids,
     load_tags_by_entity_ids,
 )
+from f.utils.db.typesense import (
+    DEFAULT_LANG,
+    SUPPORTED_LANGS,
+    add_mistral_embeddings,
+    check_create_aliased_collection,
+    expand_translated_docs,
+    import_documents,
+    mistral_embedding_field,
+    resolve_collection_name,
+    translated_field_names,
+    translated_schema_fields,
+    ts_connect,
+    with_unix_timestamps,
+)
 
 LANG_FIELDS = ["name", "desc"]
+EMBED_FIELDS = translated_field_names(LANG_FIELDS)
 MAX_CATEGORY_PREFIX_COUNT = 5
-COLLECTION_FIELDS = [
-    {"name": "updated_at", "type": "int64", "sort": True},
-    {"name": "categories", "type": "string[]", "optional": True, "facet": True},
-    {"name": "tags", "type": "string[]", "optional": True, "facet": True},
-    *translated_schema_fields({"name": "string", "desc": "string"}),
-]
+
+
+def collection_fields() -> list[dict[str, object]]:
+    return [
+        {"name": "updated_at", "type": "int64", "sort": True},
+        {"name": "categories", "type": "string[]", "optional": True, "facet": True},
+        {"name": "tags", "type": "string[]", "optional": True, "facet": True},
+        *translated_schema_fields({"name": "string", "desc": "string"}),
+        mistral_embedding_field(EMBED_FIELDS),
+    ]
 
 
 def load_categories_by_item_ids(
@@ -153,10 +161,11 @@ def index_items(
             tags = tags_by_id.get(str(doc["id"]))
             if tags:
                 doc["tags"] = tags
+        expanded_docs = expand_translated_docs(docs, LANG_FIELDS)
         import_documents(
             ts,
             resolve_collection_name("items", collection_suffix),
-            expand_translated_docs(docs, LANG_FIELDS),
+            add_mistral_embeddings(expanded_docs, EMBED_FIELDS),
         )
 
 
@@ -171,7 +180,7 @@ def main(
         check_create_aliased_collection(
             ts,
             "items",
-            COLLECTION_FIELDS,
+            collection_fields(),
             collection_suffix=collection_suffix,
         )
     index_items(crdb, ts, keys, collection_suffix=collection_suffix)

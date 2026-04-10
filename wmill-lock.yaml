@@ -119,8 +119,8 @@ locks:
   f/scripts/batch_run.flow+fetch_sub-cursors_for_this_iteration.inline_script.py: eec2248e198a9015dedf21c030552bf2b589d4201a1ce841753a16a760094ffc
   f/scripts/batch_run.flow+run_script_for_one_worker's_sub-batch.inline_script.py: e47dc9aa0d9c2f37a73e96c9ad97d58975b8b827ed4c1f096cdfdd6300b277d0
   f/scripts/gen_ids: e9201a11b4f2b201398416660149996c885b562c679d4069a75911ecfbe0ea4d
-  f/search/categories/index_categories: 65e37b479f29adf20a0a06b734e089384c308d7e71ddad8bb9a3d0c263dc37dc
-  f/search/components/index_components: 5f4b53a5d719708f8550e699542cbea7688609587ce56ae117ffca2d66cb7f82
+  f/search/categories/index_categories: 2db6c1a7780bd05607cd8f3b0e76b59022dfe756adef3bb91ec577638d84e4eb
+  f/search/components/index_components: 8d5cced9aede21dd5e540042bf90433efd29ddcfa0bf5030a869d97896ea7afa
   f/search/flip_aliases: 41df66a71af49a688b7e6e545fd2d144028fd0d20fdc16ac3c223cb31e47e1e8
   f/search/index_flow: 275f667aa01e8d9007a38850c77ede4c9abe20efa5d4119e2dbe8cdc7a424cbf
   f/search/index_flow.flow+__flow_hash: 946e8cd4bac9ef797477311e22d4136c4e4a99dc132ad36058c508dbf61dd265
@@ -129,14 +129,14 @@ locks:
   f/search/index.flow+__flow_hash: 47eb4548a137f1e3d136c67e6136ea9df0b892edef922c7099065d6d31d03cce
   f/search/index.flow+index_dispatch.inline_script.py: 9159457fc07375d32cc15d33119755dbdb621fdcf5e9cef27bd6738019e38056
   f/search/index.flow+parses_incoming_triggers.inline_script.py: 2fa6aec331693bad51bf9f85313736e28f8e5e232f6a9250e1f2c2362f3ceda1
-  f/search/items/index_items: 339ef672e167bed469ffc3895eed2ab77265e5caf78e38618a0d8f4d639e3dec
+  f/search/items/index_items: 3088fe12ebdfb8b51d8d6392afde266f67297b7d8cdd5ad772fbaed74fa9646d
   f/search/materials/index_materials: 4bf1ae932e7c6ce86e3ce9874f13b63fb0993267dfc5271ccc1fe49449c2f6b2
-  f/search/orgs/index_orgs: fae6dc03f8dd2ffc6906df14a780711e6c783e607d4c5bc01e3638e42b4249fc
-  f/search/places/index_places: 16ae311e0cf4c62fd47a17c42553e843e90b38294a36998d8f2ee75e7ae1bddf
+  f/search/orgs/index_orgs: 5b7a91b7f296f47771cb7d6da0f2535cacdcd0c010969609358a8b133d9d670a
+  f/search/places/index_places: 70a4fa21b8ef97ff25538a6d8d7197bd8f95e63326da5efd3185414c250d0a17
   f/search/regions/index_regions: 7055d3289b0a7ace2fac24f938d8237ca1c083d1da3c4f075b3fa0c74d96efe3
   f/search/reindex.flow+__flow_hash: db541a706208de9ffaa0dab09523bbc42e5048fd6f05cf94cd32c4f99a03b5b8
   f/search/reindex.flow+fetch_next_batch_of_ids.inline_script.py: 427e950ccc3154910ac5fed73c1384bab69e8009aa033ebed0818906c226e884
-  f/search/variants/index_variants: 25858bf24b4b36762aebaeb8354ba80d2d22735b7e3c6c86550e39883a456577
+  f/search/variants/index_variants: 734f14876201b526508b70a55ec65d439f9f336297d23610478c198ee0291836
   f/sources/components/components_flow: bb270e81600c525d163cdc686f46e51a30b4cd3bb29882bf6ebd8b3b69d1e29d
   f/sources/extract_flow: 7fa63e10709a765caaec450d2351a15675f5ae665fdaeb7cf1700f558e729868
   f/sources/materials/materials_flow: 60b03ef8d90842aaed9328702f5271014f7ed38265e2ce639f27ae56b0de7c04
@@ -157,7 +157,7 @@ locks:
   f/test/test_changes: 489bc718909e8ae458a578ff06f596d1ccbfeb76aebac5b738d64beee85dccc5
   f/test/test_data_pipeline: 566be830feedb12d5cdb52b487696c1a501ac4715f0a7a0b182ec0bfc86690ad
   f/test/test_openfoodfacts: 9cb3363978f9184dddfb7cc613c1cc216e6fe9b8c1001fb7a4bfbc4f27998b9a
-  f/test/test_search: 9ce06cc6637a7ac7dbcb0c5eba6363cb97e17cd8c661f6596b7684c2b254b9d0
+  f/test/test_search: a3ccd711e4425ae12d3510f22f0bca7564a256aca7accc3e74b24fb775e9862b
   f/test/test_utils: f96e22f766db0512e60e1104590b7c713a14dccc89bf3b9c962e4ee776ced450
   f/tests/run_integration_tests.flow+__flow_hash: 7f693984ab257e4e55f579a5dc1a7f8facaa1d8ea503a533d4ff90bb52cbf147
   f/tests/run_integration_tests.flow+gather_integration_test_files.inline_script.py: 79e5690772064558bc77bd2ec0e9cf3cfb18efdfa0d927bc0e4df5b0b3aab8b0
@@ -168,7 +168,7 @@ locks:
   f/utils/db/__init__: 86ca230a09983540b728ede77d93c3b00e78a58c8f228704ee429eb36d37e618
   f/utils/db/crdb: 735dbfbf3da7849c3578831e6719c9b6c937efa653f75354ae587628e737bedb
   f/utils/db/meili: 6b6e52346ce8df4824bf6c3b3e5971336ff28073c34230310c5049a7e9cdcf38
-  f/utils/db/typesense: aec9c0aabfb8f1f0b27db750b34da350a6bd6eef6ca61c41d030cc07679b1187
+  f/utils/db/typesense: 9ef657d6ead0df83ff9603333932a5db86723347d98d8b774e366a7476b6ae71
   f/utils/extract: 6ebb02aa39434db91ba421b7d82342331d553054114b04ca45431d489364ce86
   f/utils/general: 3cbe3ec1f792cccc5356f42d7c9c0a45ceac1dea56a84f9817119243ae391bc4
   f/utils/git: f3b381f2c1c6253edd95b3bba58cd1ab458f923bc0e11aec09c8b1b0f4b30b5a

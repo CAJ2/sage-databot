@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Callable, Mapping
 from typing import Any, cast
 
+import httpx
 import polars as pl
 import typesense as typesense_sdk
 import wmill
@@ -15,6 +17,13 @@ SUPPORTED_LANGS = ["en", "sv", "fr"]
 DEFAULT_LANG = "en"
 FALLBACK_LANG = "xx"
 BOOTSTRAP_SUFFIX = "v1"
+TYPESENSE_TIMEOUT_SECONDS = 30
+MISTRAL_EMBED_DIMENSIONS = 1024
+MISTRAL_EMBED_MODEL = "mistral-embed"
+MISTRAL_EMBED_URL = "https://api.mistral.ai/v1/embeddings"
+MISTRAL_API_KEY_VARIABLE = "f/api_config/api_mistral_key"
+MISTRAL_EMBED_BATCH_SIZE = 32
+MISTRAL_EMBED_INPUT_MAX_CHARS = 400
 
 
 def check_lang(lang: str | None) -> str | None:
@@ -76,7 +85,7 @@ def ts_connect() -> typesense_sdk.Client:
         {
             "nodes": cast(Any, _typesense_nodes()),
             "api_key": api_key,
-            "connection_timeout_seconds": 2,
+            "connection_timeout_seconds": TYPESENSE_TIMEOUT_SECONDS,
         },
     )
 
@@ -190,6 +199,29 @@ def translated_schema_fields(
     return fields
 
 
+def translated_field_names(
+    base_names: list[str],
+    lang: str = DEFAULT_LANG,
+) -> list[str]:
+    return [f"{base_name}_{lang}" for base_name in base_names]
+
+
+def mistral_embedding_field(
+    from_fields: list[str],
+    *,
+    field_name: str = "embedding",
+) -> dict[str, Any]:
+    if not from_fields:
+        raise ValueError("Embedding field requires at least one source field")
+
+    return {
+        "name": field_name,
+        "type": "float[]",
+        "num_dim": MISTRAL_EMBED_DIMENSIONS,
+        "optional": True,
+    }
+
+
 def with_unix_timestamps(
     df: pl.DataFrame,
     columns: list[str],
@@ -204,6 +236,121 @@ def with_unix_timestamps(
     if not expressions:
         return df
     return df.with_columns(expressions)
+
+
+def _mistral_api_key(api_key: str | None = None) -> str:
+    embedding_api_key = api_key or wmill.get_variable(MISTRAL_API_KEY_VARIABLE)
+    if embedding_api_key.strip() == "":
+        raise ValueError("Unable to find Mistral embedding API key variable")
+    return embedding_api_key
+
+
+def mistral_embedding_input(
+    doc: Mapping[str, object],
+    from_fields: list[str],
+) -> str | None:
+    parts: list[str] = []
+    for field in from_fields:
+        value = doc.get(field)
+        if isinstance(value, str):
+            stripped = value.strip()
+            if stripped != "":
+                parts.append(stripped)
+            continue
+        if isinstance(value, list):
+            for item in value:
+                if not isinstance(item, str):
+                    continue
+                stripped = item.strip()
+                if stripped != "":
+                    parts.append(stripped)
+    if not parts:
+        return None
+    return "\n\n".join(parts)[:MISTRAL_EMBED_INPUT_MAX_CHARS]
+
+
+def mistral_embed_texts(
+    inputs: list[str],
+    *,
+    api_key: str | None = None,
+) -> list[list[float]]:
+    if not inputs:
+        return []
+
+    headers = {
+        "Authorization": f"Bearer {_mistral_api_key(api_key)}",
+        "Content-Type": "application/json",
+    }
+    embeddings: list[list[float]] = []
+
+    with httpx.Client(timeout=TYPESENSE_TIMEOUT_SECONDS * 2) as client:
+        for start in range(0, len(inputs), MISTRAL_EMBED_BATCH_SIZE):
+            batch = inputs[start : start + MISTRAL_EMBED_BATCH_SIZE]
+            response = client.post(
+                MISTRAL_EMBED_URL,
+                headers=headers,
+                json={"input": batch, "model": MISTRAL_EMBED_MODEL},
+            )
+            response.raise_for_status()
+            payload = response.json()
+            data = payload.get("data")
+            if not isinstance(data, list) or len(data) != len(batch):
+                raise ValueError(
+                    "Mistral embeddings response did not match request size"
+                )
+            for item in data:
+                if not isinstance(item, dict):
+                    raise ValueError(
+                        "Mistral embeddings response item was not an object"
+                    )
+                embedding = item.get("embedding")
+                if not isinstance(embedding, list) or not embedding:
+                    raise ValueError(
+                        "Mistral embeddings response item was missing embedding"
+                    )
+                if len(embedding) != MISTRAL_EMBED_DIMENSIONS:
+                    raise ValueError(
+                        "Mistral embedding dimension mismatch: "
+                        + f"expected {MISTRAL_EMBED_DIMENSIONS}, got {len(embedding)}"
+                    )
+                embeddings.append([float(value) for value in embedding])
+    return embeddings
+
+
+def add_mistral_embeddings(
+    docs: list[dict[str, Any]],
+    from_fields: list[str],
+    *,
+    field_name: str = "embedding",
+    api_key: str | None = None,
+    embedder: Callable[[list[str]], list[list[float]]] | None = None,
+) -> list[dict[str, Any]]:
+    embedded_docs = [dict(doc) for doc in docs]
+    pending_indexes: list[int] = []
+    pending_inputs: list[str] = []
+
+    for index, doc in enumerate(embedded_docs):
+        input_text = mistral_embedding_input(doc, from_fields)
+        if input_text is None:
+            continue
+        pending_indexes.append(index)
+        pending_inputs.append(input_text)
+
+    if not pending_inputs:
+        return embedded_docs
+
+    embeddings = (
+        embedder(pending_inputs)
+        if embedder is not None
+        else mistral_embed_texts(pending_inputs, api_key=api_key)
+    )
+    if len(embeddings) != len(pending_indexes):
+        raise ValueError("Mistral embeddings result count did not match request count")
+
+    for index, embedding in zip(pending_indexes, embeddings, strict=True):
+        embedded_docs[index][field_name] = embedding
+
+    return embedded_docs
 
 
 def _translated_value(value: object, lang: str) -> object | None:

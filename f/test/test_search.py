@@ -2,9 +2,13 @@
 
 """Integration tests for f/search/* scripts."""
 
+import base64
 from datetime import UTC, datetime
+from io import BytesIO
+from typing import cast
 
 import polars as pl
+from PIL import Image
 from sqlalchemy import text
 
 from f.search.categories.index_categories import main as index_categories_main
@@ -12,7 +16,11 @@ from f.search.items.index_items import prepend_category_names
 from f.search.materials.index_materials import prepend_ancestor_names
 from f.search.regions.index_regions import main as index_regions_main
 from f.search.variants.index_variants import (
+    append_image_context,
     barcode_forms,
+    clip_image_base64,
+    normalize_source_url,
+    prepend_component_names,
     prepend_item_names,
     should_index_variant,
 )
@@ -20,12 +28,15 @@ from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_true
 from f.utils.db.crdb import create_sql_engine
 from f.utils.db.typesense import (
+    add_mistral_embeddings,
     check_create_collection,
-    ts_connect,
+    mistral_embedding_field,
+    mistral_embedding_input,
+    translated_field_names,
     translated_schema_fields,
+    ts_connect,
     with_unix_timestamps,
 )
-from typing import cast
 
 
 def _field_map(schema: object) -> dict[str, dict[str, object]]:
@@ -74,6 +85,107 @@ def test_with_unix_timestamps(_t: Test):
     updated_at = df.to_dicts()[0]["updated_at"]
     assert_true(
         updated_at == 1704164645, "updated_at should be converted to unix seconds"
+    )
+
+
+def test_mistral_embedding_field(_t: Test):
+    field = mistral_embedding_field(["name_en", "desc_en", "desc_short_en"])
+
+    assert_true(
+        field["name"] == "embedding", "Embedding field should use the default name"
+    )
+    assert_true(field["type"] == "float[]", "Embedding field should use float vectors")
+    assert_true(
+        field["num_dim"] == 1024, "Embedding field should use mistral-embed dimensions"
+    )
+    assert_true(bool(field["optional"]), "Embedding field should be optional")
+    assert_true(
+        "embed" not in field,
+        "Embedding field should be a plain vector field for manual indexing",
+    )
+
+
+def test_mistral_embedding_input(_t: Test):
+    input_text = mistral_embedding_input(
+        {
+            "name_en": "Food",
+            "desc_en": "Products that are edible",
+            "desc_short_en": "Edible products",
+        },
+        ["name_en", "desc_en", "desc_short_en"],
+    )
+    assert_true(
+        input_text == "Food\n\nProducts that are edible\n\nEdible products",
+        "Embedding input should concatenate non-empty fields in order",
+    )
+    truncated_text = mistral_embedding_input(
+        {"name_en": "x" * 500, "desc_en": "ignored"},
+        ["name_en", "desc_en"],
+    )
+    assert_true(
+        truncated_text == ("x" * 400),
+        "Embedding input should be truncated to 400 characters",
+    )
+
+
+def test_add_mistral_embeddings(_t: Test):
+    docs = [
+        {"id": "cat-1", "name_en": "Food", "desc_en": "Products that are edible"},
+        {"id": "cat-2", "name_en": "", "desc_en": ""},
+    ]
+
+    def fake_embedder(inputs: list[str]) -> list[list[float]]:
+        assert_true(
+            inputs == ["Food\n\nProducts that are edible"],
+            "Manual embedder should only receive docs with embedding content",
+        )
+        return [[0.25] * 1024]
+
+    embedded_docs = add_mistral_embeddings(
+        docs,
+        ["name_en", "desc_en"],
+        embedder=fake_embedder,
+    )
+
+    assert_true(
+        len(cast(list[object], embedded_docs[0]["embedding"])) == 1024,
+        "Embedding vector should be attached to matching docs",
+    )
+    assert_true(
+        "embedding" not in embedded_docs[1],
+        "Docs without embedding input should not receive an embedding",
+    )
+
+
+def test_translated_field_names(_t: Test):
+    assert_true(
+        translated_field_names(["name", "desc"]) == ["name_en", "desc_en"],
+        "Translated field names should default to English embedding fields only",
+    )
+
+
+def test_clip_image_base64(_t: Test):
+    image = Image.new("RGB", (400, 300), color=(12, 34, 56))
+    buf = BytesIO()
+    image.save(buf, format="PNG")
+
+    encoded = clip_image_base64(buf.getvalue())
+    decoded = Image.open(BytesIO(base64.b64decode(encoded)))
+
+    assert_true(decoded.size == (224, 224), "CLIP images should be cropped to 224x224")
+    assert_true(decoded.mode == "RGB", "CLIP images should be converted to RGB")
+
+
+def test_normalize_source_url(_t: Test):
+    assert_true(
+        normalize_source_url("cdn://sources/off/0096619937295/2.400.jpg")
+        == "https://sources.sageleaf.app/off/0096619937295/2.400.jpg",
+        "cdn://sources URLs should be mapped to the public sources host",
+    )
+    assert_true(
+        normalize_source_url("https://example.com/image.jpg")
+        == "https://example.com/image.jpg",
+        "Non-cdn URLs should be left unchanged",
     )
 
 
@@ -157,6 +269,57 @@ def test_prepend_item_names(_t: Test):
     assert_true(
         merged["xx"] == "Base variant",
         "The fallback desc should remain available for API use",
+    )
+
+
+def test_prepend_component_names(_t: Test):
+    desc = {"xx": "Base variant", "fr": "Variante de base"}
+    components = [
+        {"id": "component-1", "name": {"xx": "Bottle", "fr": "Bouteille"}},
+        {"id": "component-2", "name": {"xx": "Cap"}},
+        {"id": "component-3", "name": {"en": "Label"}},
+        {"id": "component-4", "name": {"xx": "Carton"}},
+        {"id": "component-5", "name": {"xx": "Tray"}},
+        {"id": "component-6", "name": {"xx": "Extra"}},
+    ]
+
+    merged = prepend_component_names(desc, components)
+
+    assert_true(
+        merged["en"] == "Components:\nBottle\nCap\nLabel\nCarton\nTray\nBase variant",
+        "English desc should prepend up to five component names using xx fallback",
+    )
+    assert_true(
+        merged["fr"] == "Components:\nBouteille\nVariante de base",
+        "French desc should prepend translated component names",
+    )
+    assert_true(
+        merged["xx"] == "Base variant",
+        "The fallback desc should remain available for API use",
+    )
+
+
+def test_append_image_context(_t: Test):
+    desc = {"xx": "Base variant", "fr": "Variante de base"}
+
+    merged = append_image_context(desc, "KIRKLAND\nORGANIC\nTOMATO PASTE")
+
+    assert_true(
+        merged["en"] == "Base variant\nImage context:\nKIRKLAND\nORGANIC\nTOMATO PASTE",
+        "English desc should include OCR context with xx fallback",
+    )
+    assert_true(
+        merged["xx"] == "Base variant",
+        "The fallback desc should remain available for API use",
+    )
+    assert_true(
+        merged["fr"] == "Variante de base",
+        "Non-English desc values should be left untouched",
+    )
+    truncated = append_image_context({"en": "Base"}, "x" * 200)
+    assert_true(
+        truncated["en"] == f"Base\nImage:\n{'x' * 150}",
+        "Image context should be truncated to 150 characters",
     )
 
 
@@ -269,9 +432,17 @@ def main() -> dict[str, object]:
     suite = TestSuite("search")
     suite.run(test_collection_schema)
     suite.run(test_with_unix_timestamps)
+    suite.run(test_mistral_embedding_field)
+    suite.run(test_mistral_embedding_input)
+    suite.run(test_add_mistral_embeddings)
+    suite.run(test_translated_field_names)
+    suite.run(test_clip_image_base64)
+    suite.run(test_normalize_source_url)
     suite.run(test_prepend_category_names)
     suite.run(test_prepend_ancestor_names)
     suite.run(test_prepend_item_names)
+    suite.run(test_prepend_component_names)
+    suite.run(test_append_image_context)
     suite.run(test_should_index_variant)
     suite.run(test_index_categories)
     suite.run(test_index_regions)

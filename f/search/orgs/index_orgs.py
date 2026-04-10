@@ -7,21 +7,29 @@ from sqlalchemy import Engine
 
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 from f.utils.db.typesense import (
+    add_mistral_embeddings,
     check_create_aliased_collection,
     expand_translated_docs,
     import_documents,
+    mistral_embedding_field,
     resolve_collection_name,
+    translated_field_names,
     translated_schema_fields,
     ts_connect,
     with_unix_timestamps,
 )
 
 LANG_FIELDS = ["desc"]
-COLLECTION_FIELDS = [
-    {"name": "updated_at", "type": "int64", "sort": True},
-    {"name": "name", "type": "string"},
-    *translated_schema_fields({"desc": "string"}),
-]
+EMBED_FIELDS = ["name", *translated_field_names(LANG_FIELDS)]
+
+
+def collection_fields() -> list[dict[str, object]]:
+    return [
+        {"name": "updated_at", "type": "int64", "sort": True},
+        {"name": "name", "type": "string"},
+        *translated_schema_fields({"desc": "string"}),
+        mistral_embedding_field(EMBED_FIELDS),
+    ]
 
 
 def index_orgs(
@@ -46,10 +54,11 @@ def index_orgs(
         docs = df.to_dicts()
         for doc in docs:
             doc["desc"] = json.loads(str(doc["desc"] or "{}"))
+        expanded_docs = expand_translated_docs(docs, LANG_FIELDS)
         import_documents(
             ts,
             resolve_collection_name("orgs", collection_suffix),
-            expand_translated_docs(docs, LANG_FIELDS),
+            add_mistral_embeddings(expanded_docs, EMBED_FIELDS),
         )
 
 
@@ -64,7 +73,7 @@ def main(
         check_create_aliased_collection(
             ts,
             "orgs",
-            COLLECTION_FIELDS,
+            collection_fields(),
             collection_suffix=collection_suffix,
         )
     index_orgs(crdb, ts, keys, collection_suffix=collection_suffix)
