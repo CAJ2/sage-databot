@@ -1,0 +1,6 @@
+summary: GraphQL schema, queries, and generated client code
+display_name: graphql
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

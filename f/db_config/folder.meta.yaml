@@ -1,4 +1,4 @@
-summary: null
+summary: Database connection resources
 display_name: db_config
 extra_perms:
   u/databot: true

@@ -1,4 +1,4 @@
-summary: Geographical and mapping
+summary: Geographic import and mapping flows
 display_name: geo
 extra_perms:
   u/databot: true

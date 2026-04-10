@@ -1,4 +1,4 @@
-summary: null
+summary: Entity context assembly and enrichment scripts
 display_name: context
 extra_perms:
   u/databot: true

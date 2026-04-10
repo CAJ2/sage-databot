@@ -1,4 +1,4 @@
-summary: null
+summary: Search indexing, reindexing, and alias workflows
 display_name: search
 extra_perms:
   u/databot: true

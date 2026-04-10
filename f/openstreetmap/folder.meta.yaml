@@ -1,4 +1,4 @@
-summary: null
+summary: OpenStreetMap import and tag extraction scripts
 display_name: openstreetmap
 extra_perms:
   u/databot: true

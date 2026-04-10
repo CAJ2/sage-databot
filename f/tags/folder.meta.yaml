@@ -1,4 +1,4 @@
-summary: null
+summary: Tag extraction and entity tagging scripts
 display_name: tags
 extra_perms:
   u/databot: true

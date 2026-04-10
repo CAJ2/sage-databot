@@ -1,4 +1,4 @@
-summary: null
+summary: API configuration variables and resources
 display_name: api_config
 extra_perms:
   u/databot: true

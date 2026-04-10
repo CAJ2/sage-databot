@@ -1,4 +1,4 @@
-summary: Misc utility scripts and flows
+summary: Batch and miscellaneous runner scripts
 display_name: scripts
 extra_perms:
   u/databot: true

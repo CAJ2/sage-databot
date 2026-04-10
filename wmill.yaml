@@ -1,10 +1,8 @@
 defaultTs: bun
-
 includes:
   - f/**
 excludes: []
 codebases: []
-
 skipVariables: false
 skipResources: false
 skipResourceTypes: false
@@ -20,18 +18,17 @@ includeGroups: true
 includeSettings: false
 includeKey: false
 skipWorkspaceDependencies: false
-
-gitBranches:
+workspaces:
   commonSpecificItems:
     variables:
-      - 'f/*_config/**'
+      - f/*_config/**
     resources:
-      - 'f/*_config/**'
+      - f/*_config/**
     triggers:
-      - 'f/triggers/**'
+      - f/triggers/**
   main:
-    baseUrl: 'https://databot.dev.sageleaf.app'
+    baseUrl: https://databot.dev.sageleaf.app
     workspaceId: sage-prod
   dev:
-    baseUrl: 'https://databot.dev.sageleaf.app'
+    baseUrl: https://databot.dev.sageleaf.app
     workspaceId: sage-dev

@@ -1,4 +1,4 @@
-summary: Change and Edit analysis scripts/flows
+summary: Change review, suggestion, and apply workflows
 display_name: changes
 extra_perms:
   u/databot: true
