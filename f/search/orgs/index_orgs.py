@@ -2,6 +2,7 @@
 
 import json
 
+import polars as pl
 import typesense as typesense_sdk
 from sqlalchemy import Engine
 
@@ -46,6 +47,7 @@ def index_orgs(
         "public.orgs",
         ids=keys,
         cols='id, updated_at, name, "desc"::string',
+        schema={"name": pl.String, "desc": pl.String},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.orgs")

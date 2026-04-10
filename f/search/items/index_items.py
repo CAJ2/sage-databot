@@ -1,6 +1,7 @@
 # requirements: project
 
 from collections.abc import Mapping, Sequence
+import polars as pl
 from sqlalchemy import Engine, text
 import json
 import typesense as typesense_sdk
@@ -127,6 +128,7 @@ def index_items(
         "public.items",
         ids=keys,
         cols='id, updated_at, name::string, "desc"::string',
+        schema={"name": pl.String, "desc": pl.String},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.items")

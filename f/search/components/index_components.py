@@ -1,8 +1,9 @@
 # requirements: project
 
-from sqlalchemy import Engine
 import json
+import polars as pl
 import typesense as typesense_sdk
+from sqlalchemy import Engine
 
 from f.utils.db.crdb import (
     create_sql_engine,
@@ -49,6 +50,7 @@ def index_components(
         "public.components",
         ids=keys,
         cols='id, updated_at, name::string, "desc"::string',
+        schema={"name": pl.String, "desc": pl.String},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.components")

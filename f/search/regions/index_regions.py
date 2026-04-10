@@ -1,9 +1,10 @@
 # requirements: project
 
 from typing import cast
-from sqlalchemy import Engine
 import json
+import polars as pl
 import typesense as typesense_sdk
+from sqlalchemy import Engine
 
 from f.utils.db.typesense import (
     check_create_aliased_collection,
@@ -40,6 +41,7 @@ def index_regions(
         "public.regions",
         ids=keys,
         cols="id, updated_at, name::string, properties::string, placetype, admin_level",
+        schema={"name": pl.String, "properties": pl.String, "placetype": pl.String},
         batch_size=1000,
     )
     for df in df_iter:

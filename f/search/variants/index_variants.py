@@ -6,6 +6,7 @@ from collections.abc import Mapping, Sequence
 from io import BytesIO
 from urllib.request import urlopen
 
+import polars as pl
 import typesense as typesense_sdk
 from PIL import Image, ImageOps
 from sqlalchemy import Engine, text
@@ -322,6 +323,7 @@ def index_variants(
         "public.variants",
         ids=keys,
         cols='id, updated_at, name::string, "desc"::string, code',
+        schema={"name": pl.String, "desc": pl.String, "code": pl.String},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.variants")
