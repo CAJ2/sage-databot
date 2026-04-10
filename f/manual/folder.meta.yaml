@@ -1,4 +1,4 @@
-summary: null
+summary: Manual data maintenance and taxonomy scripts
 display_name: manual
 extra_perms:
   u/databot: true

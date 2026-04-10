@@ -1,4 +1,4 @@
-summary: null
+summary: AI agent toolsets and helper scripts
 display_name: agents
 extra_perms:
   u/databot: true

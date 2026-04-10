@@ -1,4 +1,4 @@
-summary: null
+summary: API endpoint scripts and flows
 display_name: api
 extra_perms:
   u/databot: true

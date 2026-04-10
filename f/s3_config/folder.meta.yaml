@@ -1,4 +1,4 @@
-summary: null
+summary: S3 resource configuration
 display_name: s3_config
 extra_perms:
   u/databot: true

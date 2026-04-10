@@ -1,4 +1,4 @@
-summary: Integration tests
+summary: Integration and regression tests
 display_name: test
 extra_perms:
   u/databot: true

@@ -1,4 +1,4 @@
-summary: null
+summary: Shared utility scripts and helper modules
 display_name: utils
 extra_perms:
   u/databot: true

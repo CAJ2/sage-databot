@@ -1,4 +1,4 @@
-summary: Scripts for interacting with the OpenFoodFacts database
+summary: OpenFoodFacts import, variant, and image sync scripts
 display_name: openfoodfacts
 extra_perms:
   u/databot: true
