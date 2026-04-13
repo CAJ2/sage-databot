@@ -1,0 +1,40 @@
+f/openfoodfacts/off_update_image_orders.py
+  42712adbcb819edf 1-219
+f/openfoodfacts/off_update_image_orders.script.yaml
+  42712adbcb819edf 1,3-4,6,8-10,12-15
+f/openfoodfacts/off_download_images.py
+  42712adbcb819edf 17-23,427-443,513-520,568,641-643
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "1d4c4c052b19638c25e28edd997faf293df83241",
+  "prompts": {
+    "0c30bb71e35d51a8": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "6a87bebf-942e-4e16-a5e5-1cc263a2061e",
+        "model": "gemini-3-flash-preview"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 48,
+      "overriden_lines": 0
+    },
+    "42712adbcb819edf": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "3de3b8b1-fbcc-4a95-875a-bf6ab4febb5b",
+        "model": "gemini-3-flash-preview"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 293,
+      "total_deletions": 28,
+      "accepted_lines": 266,
+      "overriden_lines": 2
+    }
+  }
+}
