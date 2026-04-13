@@ -14,7 +14,13 @@ import wmill
 from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
 
-from f.db.databot.model import KGCache, OFFProduct, WikidataCache, ensure_cache_tables
+from f.db.databot.model import (
+    Image,
+    KGCache,
+    OFFProduct,
+    WikidataCache,
+    ensure_cache_tables,
+)
 from f.db.sage.model import ExternalSource, Source, SourceContent, VariantSources
 from f.graphql.api_client.enums import SourceType
 from f.graphql.api_client.input_types import (
@@ -418,6 +424,23 @@ def off_download_images(
 
     # Step 4: Extract image IDs from images field
     images_data = product.images.images
+
+    front_images: list[Image] = []
+    for image in images_data:
+        key = str(image.key)
+        if key.startswith("front_") and image.imgid is not None:
+            front_images.append(image)
+
+    front_images.sort(key=lambda x: str(x.key))
+
+    order_map = {}
+    current_order = 1
+    for img in front_images:
+        imgid = str(img.imgid)
+        if imgid not in order_map:
+            order_map[imgid] = current_order
+            current_order += 1
+
     image_ids: dict[str, list[str]] = {}
     # Only get the primary images, not cropped sections
     # Some images have an imgid referring to the larger image it is cropped from
@@ -487,6 +510,14 @@ def off_download_images(
 
             source_id = None
 
+            if image_id in order_map:
+                calculated_order = order_map[image_id]
+            else:
+                try:
+                    calculated_order = int(image_id)
+                except ValueError:
+                    calculated_order = 9999
+
             if existing_source:
                 source_id = existing_source.id
                 # Check if any fields differ and update if so
@@ -534,7 +565,7 @@ def off_download_images(
                             "parent_source": "g6OJVnSzQkE0mHtYS31O9",  # OFF source ID in CRDB
                             "key": image_id,
                             "size": size,
-                            "order": int(image_id),
+                            "order": calculated_order,
                         },
                     )
 
@@ -607,7 +638,9 @@ def off_download_images(
             if existing_source is None:
                 print("Linking source to variant...")
                 variant_input = UpdateVariantInput(id=variant_id)
-                variant_input.add_sources = [SourceInput(id=source_id)]
+                variant_input.add_sources = [
+                    SourceInput(id=source_id, meta={"order": calculated_order})
+                ]
                 op = client.update_variant(variant_input)
                 if not op.update_variant or not op.update_variant.variant:
                     print(

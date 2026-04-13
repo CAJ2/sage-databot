@@ -1,0 +1,18 @@
+summary: Update OFF Image Orders
+description: >
+  Backfills the `order` metadata for OpenFoodFacts image sources, prioritizing
+  "front_<language>" images.
+
+  Applies the same order to `public.sources` and `public.variants_sources`.
+lock: '!inline f/openfoodfacts/off_update_image_orders.script.lock'
+kind: script
+schema:
+  $schema: http://json-schema.org/draft-07/schema#
+  type: object
+  properties:
+    batch_size:
+      type: integer
+      description: Number of products to process per batch.
+      default: 1000
+  required: []
+timeout: 86400
