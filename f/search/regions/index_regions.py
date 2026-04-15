@@ -17,13 +17,13 @@ from f.utils.db.typesense import (
 )
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 
-LANG_FIELDS = ["name"]
+LANG_FIELDS = ["name", "desc"]
 COLLECTION_FIELDS = [
     {"name": "updated_at", "type": "int64", "sort": True},
     {"name": "placetype", "type": "string", "facet": True},
     {"name": "admin_level", "type": "int32", "sort": True, "optional": True},
     {"name": "geo", "type": "geopoint", "optional": True},
-    *translated_schema_fields({"name": "string"}),
+    *translated_schema_fields({"name": "string", "desc": "string"}),
 ]
 
 
@@ -40,8 +40,13 @@ def index_regions(
         crdb,
         "public.regions",
         ids=keys,
-        cols="id, updated_at, name::string, properties::string, placetype, admin_level",
-        schema={"name": pl.String, "properties": pl.String, "placetype": pl.String},
+        cols='id, updated_at, name::string, "desc"::string, properties::string, placetype, admin_level',
+        schema={
+            "name": pl.String,
+            "desc": pl.String,
+            "properties": pl.String,
+            "placetype": pl.String,
+        },
         batch_size=1000,
     )
     for df in df_iter:
@@ -51,9 +56,11 @@ def index_regions(
         docs = df.to_dicts()
         for doc in docs:
             doc["name"] = json.loads(str(doc["name"]))
+            doc["desc"] = json.loads(str(doc["desc"] or "{}"))
             prop = cast(dict[str, object], json.loads(str(doc["properties"])))
             doc["geo"] = [prop["geom:latitude"], prop["geom:longitude"]]
             del doc["properties"]
+
         import_documents(
             ts,
             resolve_collection_name("regions", collection_suffix),

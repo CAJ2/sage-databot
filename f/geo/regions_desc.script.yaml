@@ -1,0 +1,15 @@
+summary: Fixup regions name and desc
+description: Generates 'desc' translations and 'xx' fallback for name from hierarchy.
+lock: '!inline f/geo/regions_desc.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    last_id:
+      type: string
+      description: The starting region ID cursor (e.g. wof_123)
+      default: ''
+      originalType: string
+  required: []
+timeout: 86400

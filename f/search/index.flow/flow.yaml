@@ -3,35 +3,35 @@ description: ''
 value:
   modules:
     - id: a
+      summary: Parses incoming triggers
       value:
-        lock: '!inline parses_incoming_triggers.inline_script.lock'
         type: rawscript
         content: '!inline parses_incoming_triggers.inline_script.py'
-        language: python3
         input_transforms:
           length:
+            type: javascript
             expr: flow_input.length
-            type: javascript
           payload:
-            expr: flow_input.payload
             type: javascript
+            expr: flow_input.payload
+        lock: '!inline parses_incoming_triggers.inline_script.lock'
         concurrency_time_window_s: 0
-      summary: Parses incoming triggers
+        language: python3
       continue_on_error: false
     - id: b
+      summary: Index dispatch
       value:
-        lock: '!inline index_dispatch.inline_script.lock'
         type: rawscript
         content: '!inline index_dispatch.inline_script.py'
-        language: python3
         input_transforms:
           changes:
+            type: javascript
             expr: results.a
-            type: javascript
           collection_suffix:
-            expr: flow_input.collection_suffix
             type: javascript
-      summary: Index dispatch
+            expr: flow_input.collection_suffix
+        lock: '!inline index_dispatch.inline_script.lock'
+        language: python3
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
@@ -40,13 +40,13 @@ schema:
     - length
     - collection_suffix
   properties:
-    length:
-      type: integer
-      description: ''
     collection_suffix:
       type: string
       description: Optional suffix for physical reindex collections
       default: ''
+    length:
+      type: integer
+      description: ''
     payload:
       type: array
       description: ''
