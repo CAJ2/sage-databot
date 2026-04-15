@@ -1,0 +1,59 @@
+f/geo/regions_desc.script.yaml
+  3fdf6b6a4c9bb71d 1-2,4-10,12
+f/geo/regions_desc.py
+  3fdf6b6a4c9bb71d 1-2,4,6,8-19,36-43,46-51,55-57,61-78,82-95,98-102,104,109-117,119-146,149-152,155-158,160-163
+  00d3feb7dd0573df 20-35,44-45,52-54,58-60,79-81,96-97,105-108,118,147-148,153-154,159
+f/openfoodfacts/off_update_image_orders.py
+  00d3feb7dd0573df 66,72,74-90,92-96,134,144,146-147,150,152
+  3fdf6b6a4c9bb71d 43,112,114,116,130-131,133,135-143,145,148-149,151,153-156,158
+f/utils/db/typesense.py
+  3fdf6b6a4c9bb71d 14,38-39,364-396
+f/search/regions/index_regions.py
+  00d3feb7dd0573df 20,26,43-49,59,63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "f01e40d5666370dbe9c505a7766a47a9ddc4574b",
+  "prompts": {
+    "00d3feb7dd0573df": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "15e22482-99de-4b27-9b0b-98e75358f723",
+        "model": "gemini-3-flash-preview"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 219,
+      "total_deletions": 77,
+      "accepted_lines": 87,
+      "overriden_lines": 0
+    },
+    "0c30bb71e35d51a8": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "6a87bebf-942e-4e16-a5e5-1cc263a2061e",
+        "model": "gemini-3-flash-preview"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 48,
+      "overriden_lines": 0
+    },
+    "3fdf6b6a4c9bb71d": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "6ce1dbbc-5b36-4f87-8bf8-795da1650efa",
+        "model": "gemini-3.1-pro-preview"
+      },
+      "human_author": "Christian Johansen",
+      "messages": [],
+      "total_additions": 257,
+      "total_deletions": 91,
+      "accepted_lines": 192,
+      "overriden_lines": 2
+    }
+  }
+}
