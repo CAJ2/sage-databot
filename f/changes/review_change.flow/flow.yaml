@@ -10,223 +10,223 @@ description: >
 value:
   modules:
     - id: a
+      summary: Fetch change edits
       value:
-        lock: '!inline fetch_change_edits.inline_script.lock'
         type: rawscript
         content: '!inline fetch_change_edits.inline_script.py'
-        language: python3
         input_transforms:
           change_id:
-            expr: flow_input.change_id
             type: javascript
+            expr: flow_input.change_id
+        lock: '!inline fetch_change_edits.inline_script.lock'
         concurrency_time_window_s: 0
-      summary: Fetch change edits
+        language: python3
       continue_on_error: false
     - id: b
+      summary: Analyze each edit
       value:
         type: forloopflow
-        squash: false
         modules:
           - id: c
+            summary: Fetch entity context
             value:
               type: branchone
-              default:
-                - id: c_generic
-                  value:
-                    path: f/context/generic_context
-                    type: script
-                    is_trigger: false
-                    input_transforms:
-                      mode:
-                        expr: '"review"'
-                        type: javascript
-                      entity_id:
-                        expr: flow_input.iter.value.entity_id
-                        type: javascript
-                  summary: Fetch generic context
-                  continue_on_error: true
               branches:
-                - expr: flow_input.iter.value.entity_name == "Variant"
+                - summary: Variant
                   modules:
                     - id: c_variant
-                      value:
-                        path: f/context/variant_context
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          mode:
-                            expr: '"review"'
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                       summary: Fetch Variant context
+                      value:
+                        type: script
+                        input_transforms:
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          mode:
+                            type: javascript
+                            expr: '"review"'
+                        is_trigger: false
+                        path: f/context/variant_context
                       continue_on_error: true
-                  summary: Variant
+                  expr: flow_input.iter.value.entity_name == "Variant"
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Item"
+                - summary: Item
                   modules:
                     - id: c_item
-                      value:
-                        path: f/context/item_context
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          mode:
-                            expr: '"review"'
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                       summary: Fetch Item context
+                      value:
+                        type: script
+                        input_transforms:
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          mode:
+                            type: javascript
+                            expr: '"review"'
+                        is_trigger: false
+                        path: f/context/item_context
                       continue_on_error: true
-                  summary: Item
+                  expr: flow_input.iter.value.entity_name == "Item"
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Process"
+                - summary: Process
                   modules:
                     - id: c_process
-                      value:
-                        path: f/context/process_context
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          mode:
-                            expr: '"review"'
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                       summary: Fetch Process context
+                      value:
+                        type: script
+                        input_transforms:
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          mode:
+                            type: javascript
+                            expr: '"review"'
+                        is_trigger: false
+                        path: f/context/process_context
                       continue_on_error: true
-                  summary: Process
+                  expr: flow_input.iter.value.entity_name == "Process"
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Component"
+                - summary: Component
                   modules:
                     - id: c_component
-                      value:
-                        path: f/context/component_context
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          mode:
-                            expr: '"review"'
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                       summary: Fetch Component context
+                      value:
+                        type: script
+                        input_transforms:
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          mode:
+                            type: javascript
+                            expr: '"review"'
+                        is_trigger: false
+                        path: f/context/component_context
                       continue_on_error: true
-                  summary: Component
+                  expr: flow_input.iter.value.entity_name == "Component"
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Place"
+                - summary: Place
                   modules:
                     - id: c_place
-                      value:
-                        path: f/context/place_context
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          mode:
-                            expr: '"review"'
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                       summary: Fetch Place context
+                      value:
+                        type: script
+                        input_transforms:
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          mode:
+                            type: javascript
+                            expr: '"review"'
+                        is_trigger: false
+                        path: f/context/place_context
                       continue_on_error: true
-                  summary: Place
+                  expr: flow_input.iter.value.entity_name == "Place"
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Category"
+                - summary: Category
                   modules:
                     - id: c_category
-                      value:
-                        path: f/context/category_context
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          mode:
-                            expr: '"review"'
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
                       summary: Fetch Category context
+                      value:
+                        type: script
+                        input_transforms:
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          mode:
+                            type: javascript
+                            expr: '"review"'
+                        is_trigger: false
+                        path: f/context/category_context
                       continue_on_error: true
-                  summary: Category
+                  expr: flow_input.iter.value.entity_name == "Category"
                   parallel: true
                   skip_failure: false
-                - expr: flow_input.iter.value.entity_name == "Material"
+                - summary: Material
                   modules:
                     - id: c_material
-                      value:
-                        path: f/review/material_review
-                        type: script
-                        is_trigger: false
-                        input_transforms:
-                          edit_id:
-                            expr: flow_input.iter.value.edit_id
-                            type: javascript
-                          entity_id:
-                            expr: flow_input.iter.value.entity_id
-                            type: javascript
-                          create_changes:
-                            expr: flow_input.iter.value.create_changes
-                            type: javascript
-                          update_changes:
-                            expr: flow_input.iter.value.update_changes
-                            type: javascript
                       summary: Material tree verification
+                      value:
+                        type: script
+                        input_transforms:
+                          create_changes:
+                            type: javascript
+                            expr: flow_input.iter.value.create_changes
+                          edit_id:
+                            type: javascript
+                            expr: flow_input.iter.value.edit_id
+                          entity_id:
+                            type: javascript
+                            expr: flow_input.iter.value.entity_id
+                          update_changes:
+                            type: javascript
+                            expr: flow_input.iter.value.update_changes
+                        is_trigger: false
+                        path: f/review/material_review
                       continue_on_error: true
-                  summary: Material
+                  expr: flow_input.iter.value.entity_name == "Material"
                   parallel: true
                   skip_failure: false
-            summary: Fetch entity context
+              default:
+                - id: c_generic
+                  summary: Fetch generic context
+                  value:
+                    type: script
+                    input_transforms:
+                      entity_id:
+                        type: javascript
+                        expr: flow_input.iter.value.entity_id
+                      mode:
+                        type: javascript
+                        expr: '"review"'
+                    is_trigger: false
+                    path: f/context/generic_context
+                  continue_on_error: true
           - id: d
-            value:
-              path: f/changes/review_edit
-              type: script
-              is_trigger: false
-              input_transforms:
-                edit_id:
-                  expr: flow_input.iter.value.edit_id
-                  type: javascript
-                create_changes:
-                  expr: flow_input.iter.value.create_changes
-                  type: javascript
-                entity_context:
-                  expr: results.c
-                  type: javascript
-                update_changes:
-                  expr: flow_input.iter.value.update_changes
-                  type: javascript
             summary: AI review of edit
+            value:
+              type: script
+              input_transforms:
+                create_changes:
+                  type: javascript
+                  expr: flow_input.iter.value.create_changes
+                edit_id:
+                  type: javascript
+                  expr: flow_input.iter.value.edit_id
+                entity_context:
+                  type: javascript
+                  expr: results.c
+                update_changes:
+                  type: javascript
+                  expr: flow_input.iter.value.update_changes
+              is_trigger: false
+              path: f/changes/review_edit
             continue_on_error: true
         iterator:
-          expr: results.a
           type: javascript
+          expr: results.a
         parallel: true
         skip_failures: false
-      summary: Analyze each edit
+        squash: false
     - id: k
+      summary: Write review results to CRDB
       value:
-        lock: '!inline write_review_results_to_crdb.inline_script.lock'
         type: rawscript
         content: '!inline write_review_results_to_crdb.inline_script.py'
-        language: python3
         input_transforms:
           change_id:
+            type: javascript
             expr: flow_input.change_id
-            type: javascript
           edit_analyses:
-            expr: results.b
             type: javascript
+            expr: results.b
+        lock: '!inline write_review_results_to_crdb.inline_script.lock'
         concurrency_time_window_s: 0
-      summary: Write review results to CRDB
+        language: python3
       continue_on_error: false
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema

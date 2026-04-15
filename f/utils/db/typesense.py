@@ -11,6 +11,7 @@ import httpx
 import polars as pl
 import typesense as typesense_sdk
 import wmill
+from iso639 import Language
 from typesense import exceptions as typesense_exceptions
 
 SUPPORTED_LANGS = ["en", "sv", "fr"]
@@ -34,7 +35,8 @@ def check_lang(lang: str | None) -> str | None:
         return None
     if normalized == FALLBACK_LANG:
         return normalized
-    if len(normalized) == 2 and normalized.isalpha():
+    # Allow 2-letter (ISO 639-1) or 3-letter (ISO 639-2/3) codes
+    if len(normalized) in (2, 3) and normalized.isalpha():
         return normalized
     return None
 
@@ -359,6 +361,39 @@ def _translated_value(value: object, lang: str) -> object | None:
     translated = value.get(lang)
     if translated not in (None, ""):
         return translated
+
+    # If the key was 2-letter (ISO 639-1), try 3-letter (ISO 639-2/3) versions
+    if len(lang) == 2:
+        try:
+            iso_lang = Language.from_part1(lang)
+            # Try ISO 639-3 (part3), then ISO 639-2/B (part2b), then ISO 639-2/T (part2t)
+            for key in (iso_lang.part3, iso_lang.part2b, iso_lang.part2t):
+                if key and key != lang:
+                    translated = value.get(key)
+                    if translated not in (None, ""):
+                        return translated
+        except Exception:
+            pass
+    # If the key was 3-letter, try the 2-letter version
+    elif len(lang) == 3:
+        try:
+            iso_lang = Language.from_part3(lang)
+            key = iso_lang.part1
+            if key and key != lang:
+                translated = value.get(key)
+                if translated not in (None, ""):
+                    return translated
+        except Exception:
+            try:
+                iso_lang = Language.from_part2b(lang)
+                key = iso_lang.part1
+                if key and key != lang:
+                    translated = value.get(key)
+                    if translated not in (None, ""):
+                        return translated
+            except Exception:
+                pass
+
     if lang == DEFAULT_LANG:
         fallback = value.get(FALLBACK_LANG)
         if fallback not in (None, ""):

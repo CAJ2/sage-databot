@@ -13,89 +13,89 @@ description: >
 value:
   modules:
     - id: batch_loop
+      summary: Cursor-based batch loop
       value:
         type: whileloopflow
         modules:
           - id: fetch_cursors
+            summary: Fetch sub-cursors for this iteration
             value:
-              lock: '!inline fetch_sub-cursors_for_this_iteration.inline_script.lock'
               type: rawscript
               content: '!inline fetch_sub-cursors_for_this_iteration.inline_script.py'
-              language: python3
               input_transforms:
-                limit:
-                  expr: flow_input.limit
-                  type: javascript
-                sql_query:
-                  expr: flow_input.sql_query
-                  type: javascript
                 batch_size:
+                  type: javascript
                   expr: flow_input.batch_size
-                  type: javascript
-                db_resource:
-                  expr: flow_input.db_resource
-                  type: javascript
-                start_cursor:
-                  expr: flow_input.start_cursor
-                  type: javascript
                 cursor_column:
-                  expr: flow_input.cursor_column
                   type: javascript
-            summary: Fetch sub-cursors for this iteration
+                  expr: flow_input.cursor_column
+                db_resource:
+                  type: javascript
+                  expr: flow_input.db_resource
+                limit:
+                  type: javascript
+                  expr: flow_input.limit
+                sql_query:
+                  type: javascript
+                  expr: flow_input.sql_query
+                start_cursor:
+                  type: javascript
+                  expr: flow_input.start_cursor
+              lock: '!inline fetch_sub-cursors_for_this_iteration.inline_script.lock'
+              language: python3
             stop_after_if:
-              expr: result.done == true
               error_message: null
+              expr: result.done == true
               skip_if_stopped: false
           - id: run_batches
+            summary: Run all workers in parallel
             value:
               type: forloopflow
               modules:
                 - id: run_item
+                  summary: Run script for one worker's sub-batch
                   value:
-                    lock: "!inline run_script_for_one_worker's_sub-batch.inline_script.lock"
                     type: rawscript
                     content: "!inline run_script_for_one_worker's_sub-batch.inline_script.py"
-                    language: python3
                     input_transforms:
-                      limit:
-                        expr: flow_input.limit
-                        type: javascript
-                      sql_query:
-                        expr: flow_input.sql_query
-                        type: javascript
-                      item_index:
-                        expr: flow_input.iter.index
-                        type: javascript
-                      sub_cursor:
-                        expr: flow_input.iter.value
-                        type: javascript
-                      db_resource:
-                        expr: flow_input.db_resource
-                        type: javascript
-                      script_path:
-                        expr: flow_input.script_path
-                        type: javascript
-                      static_args:
-                        expr: flow_input.static_args
-                        type: javascript
                       cursor_column:
+                        type: javascript
                         expr: flow_input.cursor_column
+                      db_resource:
                         type: javascript
+                        expr: flow_input.db_resource
                       delay_between_batches_s:
-                        expr: flow_input.delay_between_batches_s
                         type: javascript
-                  summary: Run script for one worker's sub-batch
+                        expr: flow_input.delay_between_batches_s
+                      item_index:
+                        type: javascript
+                        expr: flow_input.iter.index
+                      limit:
+                        type: javascript
+                        expr: flow_input.limit
+                      script_path:
+                        type: javascript
+                        expr: flow_input.script_path
+                      sql_query:
+                        type: javascript
+                        expr: flow_input.sql_query
+                      static_args:
+                        type: javascript
+                        expr: flow_input.static_args
+                      sub_cursor:
+                        type: javascript
+                        expr: flow_input.iter.value
+                    lock: "!inline run_script_for_one_worker's_sub-batch.inline_script.lock"
+                    language: python3
               iterator:
-                expr: results.fetch_cursors.sub_cursors
                 type: javascript
+                expr: results.fetch_cursors.sub_cursors
               parallel: true
               parallelism:
-                expr: flow_input.batch_size
                 type: javascript
+                expr: flow_input.batch_size
               skip_failures: true
-            summary: Run all workers in parallel
         skip_failures: false
-      summary: Cursor-based batch loop
 schema:
   $schema: https://json-schema.org/draft/2020-12/schema
   type: object
@@ -110,46 +110,46 @@ schema:
     - start_cursor
     - cursor_column
   properties:
+    batch_size:
+      type: integer
+      description: Number of parallel workers per iteration
+      default: 5
+    cursor_column:
+      type: string
+      description: Column used for cursor-based pagination. Must be present in the
+        sql_query result set. Change this if your query aliases the primary key
+        (e.g. "id AS product_id" → set cursor_column to "product_id").
+      default: id
+    db_resource:
+      type: string
+      description: CRDB resource path
+      default: f/db_config/db_sage
+    delay_between_batches_s:
+      type: number
+      description: Seconds to wait between workers (except the first)
+      default: 0
+    limit:
+      type: integer
+      description: Rows per worker per iteration
+      default: 10
+    script_path:
+      type: string
+      description: Windmill script path to invoke per row (e.g. f/openfoodfacts/off_variant)
     sql_query:
       type: string
       description: SQL query executed against CRDB; each row becomes one script
         invocation. Column names must match the main() parameter names of the
         target script. No WHERE/ORDER BY/LIMIT needed — the flow adds
         cursor-based pagination automatically.
-    script_path:
+    start_cursor:
       type: string
-      description: Windmill script path to invoke per row (e.g. f/openfoodfacts/off_variant)
+      description: Resume from this ID. Leave empty to start from the beginning.
+        Overridden by persisted flow state cursor if one exists.
+      default: ''
     static_args:
       type: object
       description: Static arguments merged into every script invocation. Row columns
         take precedence over static_args on key conflicts.
-    db_resource:
-      type: string
-      default: f/db_config/db_sage
-      description: CRDB resource path
-    batch_size:
-      type: integer
-      default: 5
-      description: Number of parallel workers per iteration
-    limit:
-      type: integer
-      default: 10
-      description: Rows per worker per iteration
-    delay_between_batches_s:
-      type: number
-      default: 0
-      description: Seconds to wait between workers (except the first)
-    start_cursor:
-      type: string
-      default: ''
-      description: Resume from this ID. Leave empty to start from the beginning.
-        Overridden by persisted flow state cursor if one exists.
-    cursor_column:
-      type: string
-      default: id
-      description: Column used for cursor-based pagination. Must be present in the
-        sql_query result set. Change this if your query aliases the primary key
-        (e.g. "id AS product_id" → set cursor_column to "product_id").
   required:
     - sql_query
     - script_path
