@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from f.context.context_helpers import fetch_context_entity, fetch_context_schema
 from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
 
@@ -21,34 +22,29 @@ def main(
     entity_schema: Any = None
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
+    result = None
 
-    if entity_id is not None:
-        try:
-            result = client.get_component_for_review(id=entity_id)
-            if result.component:
-                entity_data = result.component.model_dump(by_alias=False)
-                if result.component.sources:
-                    source_contexts = [
-                        s.source.content["context"]
-                        for s in (result.component.sources.nodes or [])
-                        if s.source.content and s.source.content.get("context")
-                    ]
-                    if source_contexts:
-                        related_data["source_contexts"] = source_contexts
-        except Exception as e:
-            raise ValueError(f"Could not fetch Component {entity_id}: {e}")
+    entity_data, result = fetch_context_entity(
+        entity_id=entity_id,
+        entity_name="Component",
+        fetch_fn=client.get_component_for_review,
+        result_attr="component",
+    )
+    if result and result.component and result.component.sources:
+        source_contexts = [
+            s.source.content["context"]
+            for s in (result.component.sources.nodes or [])
+            if s.source.content and s.source.content.get("context")
+        ]
+        if source_contexts:
+            related_data["source_contexts"] = source_contexts
 
-    try:
-        schema_result = client.get_component_schema()
-        if schema_result.component_schema:
-            schema_obj = (
-                schema_result.component_schema.create
-                if schema_mode == "create"
-                else schema_result.component_schema.update
-            )
-            entity_schema = schema_obj.schema_ if schema_obj else None
-    except Exception as e:
-        print(f"Could not fetch Component schema: {e}")
+    entity_schema = fetch_context_schema(
+        entity_name="Component",
+        schema_mode=schema_mode,
+        fetch_fn=client.get_component_schema,
+        schema_attr="component_schema",
+    )
 
     if mode == "review":
         prompt_hints = (

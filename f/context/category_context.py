@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from f.context.context_helpers import fetch_context_entity, fetch_context_schema
 from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
 
@@ -22,25 +23,18 @@ def main(
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
 
-    if entity_id is not None:
-        try:
-            result = client.get_category_for_review(id=entity_id)
-            if result.category:
-                entity_data = result.category.model_dump(by_alias=False)
-        except Exception as e:
-            print(f"Could not fetch Category {entity_id}: {e}")
-
-    try:
-        schema_result = client.get_category_schema()
-        if schema_result.category_schema:
-            schema_obj = (
-                schema_result.category_schema.create
-                if schema_mode == "create"
-                else schema_result.category_schema.update
-            )
-            entity_schema = schema_obj.schema_ if schema_obj else None
-    except Exception as e:
-        raise Exception(f"Could not fetch Category schema: {e}")
+    entity_data, _ = fetch_context_entity(
+        entity_id=entity_id,
+        entity_name="Category",
+        fetch_fn=client.get_category_for_review,
+        result_attr="category",
+    )
+    entity_schema = fetch_context_schema(
+        entity_name="Category",
+        schema_mode=schema_mode,
+        fetch_fn=client.get_category_schema,
+        schema_attr="category_schema",
+    )
 
     if mode == "review":
         prompt_hints = (

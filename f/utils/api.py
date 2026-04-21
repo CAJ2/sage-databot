@@ -6,6 +6,8 @@ from http import cookies
 
 from f.graphql.api_client.client import Client
 
+GRAPHQL_TIMEOUT = httpx.Timeout(30.0, connect=10.0)
+
 
 def api_connect(extra_headers: dict[str, str] | None = None):
     """
@@ -37,7 +39,11 @@ def api_connect(extra_headers: dict[str, str] | None = None):
     if "apikey" in creds:
         # API key auth — fetch current user via GetCurrentUser GraphQL query
         headers["x-api-key"] = creds["apikey"]
-        httpx_client = httpx.Client(base_url=api_url + "/graphql", headers=headers)
+        httpx_client = httpx.Client(
+            base_url=api_url + "/graphql",
+            headers=headers,
+            timeout=GRAPHQL_TIMEOUT,
+        )
         client = Client(http_client=httpx_client)
         result = client.get_current_user()
         if not result.me:
@@ -59,6 +65,7 @@ def api_connect(extra_headers: dict[str, str] | None = None):
                 "Origin": api_url,
                 "Host": api_url.replace("https://", ""),
             },
+            timeout=GRAPHQL_TIMEOUT,
         )
         c = extract_cookies(r)
         if r.status_code != 200 or len(c.keys()) == 0:
@@ -70,7 +77,10 @@ def api_connect(extra_headers: dict[str, str] | None = None):
         if "user" not in body:
             raise ValueError("Failed to sign in to the API: user key not found")
         httpx_client = httpx.Client(
-            base_url=api_url + "/graphql", cookies=cx, headers=headers
+            base_url=api_url + "/graphql",
+            cookies=cx,
+            headers=headers,
+            timeout=GRAPHQL_TIMEOUT,
         )
         user = body["user"]
         client = Client(http_client=httpx_client)

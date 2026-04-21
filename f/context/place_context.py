@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from f.context.context_helpers import fetch_context_entity
 from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
 
@@ -22,13 +23,12 @@ def main(
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
 
-    if entity_id is not None:
-        try:
-            result = client.get_place_for_review(id=entity_id)
-            if result.place:
-                entity_data = result.place.model_dump(by_alias=False)
-        except Exception as e:
-            print(f"Could not fetch Place {entity_id}: {e}")
+    entity_data, _ = fetch_context_entity(
+        entity_id=entity_id,
+        entity_name="Place",
+        fetch_fn=client.get_place_for_review,
+        result_attr="place",
+    )
 
     if mode == "review":
         prompt_hints = (

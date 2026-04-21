@@ -5,33 +5,28 @@ query Search($query: String!, $types: [SearchType!], $limit: Int) {
         id
         name
         desc
-        imageURL
       }
       ... on Item {
         id
         name
         desc
-        imageURL
       }
       ... on Component {
         id
         name
         desc
-        imageURL
       }
       ... on Category {
         id
         label: name
         desc
         descShort
-        imageURL
       }
       ... on Org {
         id
         label: name
         desc
         slug
-        websiteURL
       }
       ... on Place {
         id

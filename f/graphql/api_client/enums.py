@@ -28,9 +28,10 @@ class EditModelType(str, Enum):
     Component = "Component"
     Item = "Item"
     Material = "Material"
+    Org = "Org"
     Place = "Place"
     Process = "Process"
-    Region = "Region"
+    Program = "Program"
     Variant = "Variant"
 
 
@@ -39,6 +40,7 @@ class FeedFormat(str, Enum):
     ARTICLE = "ARTICLE"
     EXTERNAL = "EXTERNAL"
     FEATURE = "FEATURE"
+    PROJECT = "PROJECT"
     UPDATE = "UPDATE"
 
 
@@ -65,12 +67,15 @@ class SourceType(str, Enum):
 
 
 class StreamScoreRating(str, Enum):
-    EXCELLENT = "EXCELLENT"
-    FAIR = "FAIR"
-    GOOD = "GOOD"
-    POOR = "POOR"
+    A = "A"
+    A_PLUS = "A_PLUS"
+    B = "B"
+    C = "C"
+    D = "D"
+    E = "E"
+    F = "F"
+    G = "G"
     UNKNOWN = "UNKNOWN"
-    VERY_GOOD = "VERY_GOOD"
 
 
 class TagType(str, Enum):
@@ -79,4 +84,5 @@ class TagType(str, Enum):
     ORG = "ORG"
     PLACE = "PLACE"
     PROCESS = "PROCESS"
+    PROGRAM = "PROGRAM"
     VARIANT = "VARIANT"

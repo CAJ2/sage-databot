@@ -7,7 +7,7 @@ query GetPlaceForReview($id: ID!) {
       street
       housenumber
       city
-      postalCode
+      postcode
       region
       country
     }

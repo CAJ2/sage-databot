@@ -38,7 +38,6 @@ class SearchSearchNodesCategory(BaseModel):
     label: str
     desc: Optional[str]
     desc_short: Optional[str] = Field(alias="descShort")
-    image_url: Optional[str] = Field(alias="imageURL")
 
 
 class SearchSearchNodesComponent(BaseModel):
@@ -46,7 +45,6 @@ class SearchSearchNodesComponent(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
-    image_url: Optional[str] = Field(alias="imageURL")
 
 
 class SearchSearchNodesItem(BaseModel):
@@ -54,7 +52,6 @@ class SearchSearchNodesItem(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
-    image_url: Optional[str] = Field(alias="imageURL")
 
 
 class SearchSearchNodesMaterial(BaseModel):
@@ -70,7 +67,6 @@ class SearchSearchNodesOrg(BaseModel):
     label: str
     desc: Optional[str]
     slug: str
-    website_url: Optional[str] = Field(alias="websiteURL")
 
 
 class SearchSearchNodesPlace(BaseModel):
@@ -92,7 +88,6 @@ class SearchSearchNodesVariant(BaseModel):
     id: str
     name: Optional[str]
     desc: Optional[str]
-    image_url: Optional[str] = Field(alias="imageURL")
 
 
 Search.model_rebuild()

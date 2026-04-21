@@ -6,8 +6,8 @@ h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
 idna==3.11
-pydantic==2.12.5
-pydantic-core==2.41.5
+pydantic==2.13.2
+pydantic-core==2.46.2
 typing-extensions==4.15.0
 typing-inspection==0.4.2
-wmill==1.668.3
+wmill==1.687.0

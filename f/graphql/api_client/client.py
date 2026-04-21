@@ -183,6 +183,7 @@ class Client(BaseClient):
                     createInput
                     updateInput
                     changes {
+                      __typename
                       ... on Item {
                         __typename
                         id
@@ -208,15 +209,12 @@ class Client(BaseClient):
                         id
                       }
                       ... on Material {
-                        __typename
-                        id
-                      }
-                      ... on Region {
                         __typename
                         id
                       }
                     }
                     original {
+                      __typename
                       ... on Item {
                         __typename
                         id
@@ -242,10 +240,6 @@ class Client(BaseClient):
                         id
                       }
                       ... on Material {
-                        __typename
-                        id
-                      }
-                      ... on Region {
                         __typename
                         id
                       }
@@ -559,7 +553,7 @@ class Client(BaseClient):
                   street
                   housenumber
                   city
-                  postalCode
+                  postcode
                   region
                   country
                 }
@@ -807,33 +801,28 @@ class Client(BaseClient):
                     id
                     name
                     desc
-                    imageURL
                   }
                   ... on Item {
                     id
                     name
                     desc
-                    imageURL
                   }
                   ... on Component {
                     id
                     name
                     desc
-                    imageURL
                   }
                   ... on Category {
                     id
                     label: name
                     desc
                     descShort
-                    imageURL
                   }
                   ... on Org {
                     id
                     label: name
                     desc
                     slug
-                    websiteURL
                   }
                   ... on Place {
                     id
