@@ -1,0 +1,27 @@
+.agents/rules/project.md
+  s_77140d8a1a32f9::t_e6bcb86887f9f9 10-44,48-70,72-89,96-99,103-104,106-108,110-111
+  s_77140d8a1a32f9::t_159cc9921883a1 71
+.agents/rules/windmill.md
+  s_77140d8a1a32f9::t_159cc9921883a1 70-81
+  s_77140d8a1a32f9::t_358d5fca5ed20c 1-69,82-109
+.agents/rules/python.md
+  s_77140d8a1a32f9::t_30fc71e0b11dee 80-84
+AGENTS.md
+  s_77140d8a1a32f9::t_2582257e7e54f7 1-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "1bec0ec462333ac947dacbd20824b32fa16680a2",
+  "prompts": {},
+  "sessions": {
+    "s_77140d8a1a32f9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_10e7de77affeUxft2rsNwVc5Da",
+        "model": "minimax-m3"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    }
+  }
+}
