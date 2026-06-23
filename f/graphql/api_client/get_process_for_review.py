@@ -57,7 +57,7 @@ class GetProcessForReviewProcessEfficiency(BaseModel):
 
 
 class GetProcessForReviewProcessSources(BaseModel):
-    nodes: Optional[list["GetProcessForReviewProcessSourcesNodes"]]
+    nodes: list["GetProcessForReviewProcessSourcesNodes"]
 
 
 class GetProcessForReviewProcessSourcesNodes(BaseModel):

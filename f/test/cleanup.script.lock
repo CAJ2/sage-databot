@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: project:33e23887ad13df41d35d974fd91b0a88a1c89ff5b2fe8e8932c6881f698a46d1
+# workspace-dependencies: project:da33cd2488281472562c79c1406209e9aa8a66aa93b843958d23e8275d5d3253
 # py: 3.12
 adbc-driver-manager==1.5.0
 adbc-driver-postgresql==1.9.0
@@ -82,6 +82,7 @@ jeepney==0.9.0
 jinja2==3.1.6
 jiter==0.10.0
 jmespath==1.0.1
+joblib==1.5.3
 jsonref==1.1.0
 jsonschema==4.25.1
 jsonschema-path==0.3.4
@@ -107,6 +108,7 @@ nanoid==2.0.0
 narwhals==2.14.0
 networkx==3.6.1
 nexus-rpc==1.2.0
+nltk==3.9.4
 numpy==2.4.2
 openai==2.26.0
 openapi-pydantic==0.5.1

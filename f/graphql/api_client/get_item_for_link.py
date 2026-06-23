@@ -18,7 +18,7 @@ class GetItemForLinkItem(BaseModel):
 
 
 class GetItemForLinkItemCategories(BaseModel):
-    nodes: Optional[list["GetItemForLinkItemCategoriesNodes"]]
+    nodes: list["GetItemForLinkItemCategoriesNodes"]
 
 
 class GetItemForLinkItemCategoriesNodes(BaseModel):

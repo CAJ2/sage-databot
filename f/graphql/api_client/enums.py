@@ -44,6 +44,34 @@ class FeedFormat(str, Enum):
     UPDATE = "UPDATE"
 
 
+class FeedbackAction(str, Enum):
+    DOWNVOTE = "DOWNVOTE"
+    UPVOTE = "UPVOTE"
+
+
+class FeedbackEntityName(str, Enum):
+    COMPONENT = "COMPONENT"
+    ITEM = "ITEM"
+    PLACE = "PLACE"
+    PROCESS = "PROCESS"
+    PROGRAM = "PROGRAM"
+    SOURCE = "SOURCE"
+    VARIANT = "VARIANT"
+
+
+class RefModelType(str, Enum):
+    Category = "Category"
+    Component = "Component"
+    Item = "Item"
+    Material = "Material"
+    Org = "Org"
+    Place = "Place"
+    Process = "Process"
+    Program = "Program"
+    Tag = "Tag"
+    Variant = "Variant"
+
+
 class SearchType(str, Enum):
     CATEGORY = "CATEGORY"
     COMPONENT = "COMPONENT"

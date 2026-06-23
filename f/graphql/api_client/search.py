@@ -13,21 +13,19 @@ class Search(BaseModel):
 
 
 class SearchSearch(BaseModel):
-    nodes: Optional[
-        list[
-            Annotated[
-                Union[
-                    "SearchSearchNodesCategory",
-                    "SearchSearchNodesComponent",
-                    "SearchSearchNodesItem",
-                    "SearchSearchNodesMaterial",
-                    "SearchSearchNodesOrg",
-                    "SearchSearchNodesPlace",
-                    "SearchSearchNodesRegion",
-                    "SearchSearchNodesVariant",
-                ],
-                Field(discriminator="typename__"),
-            ]
+    nodes: list[
+        Annotated[
+            Union[
+                "SearchSearchNodesCategory",
+                "SearchSearchNodesComponent",
+                "SearchSearchNodesItem",
+                "SearchSearchNodesMaterial",
+                "SearchSearchNodesOrg",
+                "SearchSearchNodesPlace",
+                "SearchSearchNodesRegion",
+                "SearchSearchNodesVariant",
+            ],
+            Field(discriminator="typename__"),
         ]
     ]
 

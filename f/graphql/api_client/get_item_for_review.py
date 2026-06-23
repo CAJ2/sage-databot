@@ -19,7 +19,7 @@ class GetItemForReviewItem(BaseModel):
 
 
 class GetItemForReviewItemCategories(BaseModel):
-    nodes: Optional[list["GetItemForReviewItemCategoriesNodes"]]
+    nodes: list["GetItemForReviewItemCategoriesNodes"]
 
 
 class GetItemForReviewItemCategoriesNodes(BaseModel):
@@ -28,7 +28,7 @@ class GetItemForReviewItemCategoriesNodes(BaseModel):
 
 
 class GetItemForReviewItemVariants(BaseModel):
-    nodes: Optional[list["GetItemForReviewItemVariantsNodes"]]
+    nodes: list["GetItemForReviewItemVariantsNodes"]
 
 
 class GetItemForReviewItemVariantsNodes(BaseModel):

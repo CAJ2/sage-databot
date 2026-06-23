@@ -28,7 +28,7 @@ class GetChangeForReviewChangeUser(BaseModel):
 
 
 class GetChangeForReviewChangeEdits(BaseModel):
-    nodes: Optional[list["GetChangeForReviewChangeEditsNodes"]]
+    nodes: list["GetChangeForReviewChangeEditsNodes"]
 
 
 class GetChangeForReviewChangeEditsNodes(BaseModel):

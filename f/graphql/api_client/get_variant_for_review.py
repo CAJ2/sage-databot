@@ -21,7 +21,7 @@ class GetVariantForReviewVariant(BaseModel):
 
 
 class GetVariantForReviewVariantItems(BaseModel):
-    nodes: Optional[list["GetVariantForReviewVariantItemsNodes"]]
+    nodes: list["GetVariantForReviewVariantItemsNodes"]
 
 
 class GetVariantForReviewVariantItemsNodes(BaseModel):
@@ -31,7 +31,7 @@ class GetVariantForReviewVariantItemsNodes(BaseModel):
 
 
 class GetVariantForReviewVariantComponents(BaseModel):
-    nodes: Optional[list["GetVariantForReviewVariantComponentsNodes"]]
+    nodes: list["GetVariantForReviewVariantComponentsNodes"]
 
 
 class GetVariantForReviewVariantComponentsNodes(BaseModel):
@@ -46,7 +46,7 @@ class GetVariantForReviewVariantComponentsNodesComponent(BaseModel):
 
 
 class GetVariantForReviewVariantOrgs(BaseModel):
-    nodes: Optional[list["GetVariantForReviewVariantOrgsNodes"]]
+    nodes: list["GetVariantForReviewVariantOrgsNodes"]
 
 
 class GetVariantForReviewVariantOrgsNodes(BaseModel):
@@ -60,7 +60,7 @@ class GetVariantForReviewVariantOrgsNodesOrg(BaseModel):
 
 
 class GetVariantForReviewVariantSources(BaseModel):
-    nodes: Optional[list["GetVariantForReviewVariantSourcesNodes"]]
+    nodes: list["GetVariantForReviewVariantSourcesNodes"]
 
 
 class GetVariantForReviewVariantSourcesNodes(BaseModel):

@@ -1,0 +1,6 @@
+summary: Create/update DB model associations
+display_name: assoc
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

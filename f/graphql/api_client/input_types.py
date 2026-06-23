@@ -5,8 +5,36 @@ from typing import Any, Optional
 
 from pydantic import Field
 
-from .base_model import BaseModel
-from .enums import ChangeStatus, SourceType, TagType
+from .base_model import BaseModel, Upload
+from .enums import (
+    ChangeStatus,
+    FeedbackAction,
+    FeedbackEntityName,
+    RefModelType,
+    SourceType,
+    TagType,
+)
+
+
+class AddRefInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    input: Optional[Any] = None
+    inputs: Optional[list[Any]] = None
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    ref: Optional[str] = None
+    ref_field: Optional[str] = Field(alias="refField", default=None)
+    ref_model: RefModelType = Field(alias="refModel")
+    refs: Optional[list[str]] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
 
 
 class ComponentMaterialInput(BaseModel):
@@ -322,6 +350,25 @@ class ProgramTagsInput(BaseModel):
     meta: Optional[Any] = None
 
 
+class RemoveRefInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    ref: Optional[str] = None
+    ref_field: Optional[str] = Field(alias="refField", default=None)
+    ref_model: RefModelType = Field(alias="refModel")
+    refs: Optional[list[str]] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
+
+
 class SourceInput(BaseModel):
     id: str
     meta: Optional[Any] = None
@@ -618,6 +665,12 @@ class UpdateVariantInput(BaseModel):
     tags: Optional[list["VariantTagsInput"]] = None
 
 
+class UploadSourceInput(BaseModel):
+    file: Upload
+    metadata: Optional[Any] = None
+    source: str
+
+
 class VariantComponentsInput(BaseModel):
     id: str
     quantity: Optional[float] = None
@@ -643,6 +696,14 @@ class VariantTagsInput(BaseModel):
     meta: Optional[Any] = None
 
 
+class VoteInput(BaseModel):
+    action: FeedbackAction
+    data: Optional[Any] = None
+    entity_id: str = Field(alias="entityID")
+    entity_name: FeedbackEntityName = Field(alias="entityName")
+
+
+AddRefInput.model_rebuild()
 CreateCategoryInput.model_rebuild()
 CreateComponentInput.model_rebuild()
 CreateItemInput.model_rebuild()
@@ -652,6 +713,7 @@ CreateProcessInput.model_rebuild()
 CreateProgramInput.model_rebuild()
 CreateVariantInput.model_rebuild()
 DeleteInput.model_rebuild()
+RemoveRefInput.model_rebuild()
 UpdateCategoryInput.model_rebuild()
 UpdateComponentInput.model_rebuild()
 UpdateItemInput.model_rebuild()

@@ -13,7 +13,7 @@ class GetVariant(BaseModel):
 
 
 class GetVariantVariants(BaseModel):
-    edges: Optional[list["GetVariantVariantsEdges"]]
+    edges: list["GetVariantVariantsEdges"]
     page_info: "GetVariantVariantsPageInfo" = Field(alias="pageInfo")
 
 
