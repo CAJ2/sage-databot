@@ -1,0 +1,55 @@
+dependencies/project.requirements.in
+  s_77140d8a1a32f9::t_6f6bb976b0e03b 85,253-254,319-320,523-525,612
+f/graphql/api_client/get_change_for_review.py
+  s_77140d8a1a32f9::t_f8159278d0099a 31
+f/assoc/item_variants.py
+  s_77140d8a1a32f9::t_1d1f369c32c835 3-104
+f/graphql/api_client/get_item_for_link.py
+  s_77140d8a1a32f9::t_f8159278d0099a 21
+f/graphql/api_client/get_category_for_review.py
+  s_77140d8a1a32f9::t_f8159278d0099a 23,32,41
+f/assoc/name_match.py
+  s_77140d8a1a32f9::t_85c0a2712070ee 1-46
+f/graphql/api_client/__init__.py
+  s_77140d8a1a32f9::t_f8159278d0099a 43-44,46,196,226,241,247,324,355-356,492-493,552,558
+pyproject.toml
+  s_77140d8a1a32f9::t_6df63e56df9494 39
+f/graphql/api_client/search.py
+  s_77140d8a1a32f9::t_f8159278d0099a 16-28
+f/graphql/api_client/get_variant_for_review.py
+  s_77140d8a1a32f9::t_f8159278d0099a 24,34,49,63
+dependencies/extract.requirements.in
+  s_77140d8a1a32f9::t_6f6bb976b0e03b 105,361-362,456-457,821,981
+f/graphql/api_client/get_process_for_review.py
+  s_77140d8a1a32f9::t_f8159278d0099a 60
+f/graphql/api_client/input_types.py
+  s_77140d8a1a32f9::t_f8159278d0099a 8-37,353-371,668-673,699-706,716
+f/graphql/api_client/get_variant.py
+  s_77140d8a1a32f9::t_f8159278d0099a 16
+f/graphql/api_client/get_item_for_review.py
+  s_77140d8a1a32f9::t_f8159278d0099a 22,31
+f/assoc/item_variants.script.yaml
+  s_77140d8a1a32f9::t_3708b2822f4276 1-13,18-26,33-38
+f/graphql/api_client/get_component_for_review.py
+  s_77140d8a1a32f9::t_f8159278d0099a 42
+f/graphql/api_client/enums.py
+  s_77140d8a1a32f9::t_f8159278d0099a 47-74
+f/graphql/schema.gql
+  s_77140d8a1a32f9::t_f8159278d0099a 7-38,44-46,54,57,71,74,79,86-89,106-112,131,142,145,159-161,175-177,191-193,206,213,228-233,236-246,263-269,292,296-301,306-311,322-324,334-336,723,743-745,783-789,791,828-849,870-872,882,887,894-914,916,920,940-946,952-973,981-983,1007-1009,1032,1035,1038,1043,1048,1051,1054-1057,1075-1077,1087,1090,1100,1124,1137-1138,1157,1163-1165,1171,1190-1196,1202-1204,1231-1233,1235,1274-1276,1292,1312,1319-1325,1351-1357,1389-1391,1406,1414,1417,1423,1440-1446,1466-1468,1474,1479,1482,1485,1488,1491,1495,1498,1501,1504,1506-1508,1510,1512,1516,1530,1539-1569,1587,1596-1598,1603-1605,1607-1624,1627-1653,1658-1664,1681,1724-1726,1742,1744,1746-1751,1753-1762,1830-1836,2315-2327,2333,2342,2350-2356,2375-2377,2391,2396,2403,2406,2412-2415,2420-2425,2427-2437,2440,2460-2466,2490-2496,2521-2527,2532-2543,2550-2556,2567-2569,2579-2581,2584-2596
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.10",
+  "base_commit_sha": "eb3dc6cbdf4c543f2b3c388e828a144619c88a85",
+  "prompts": {},
+  "sessions": {
+    "s_77140d8a1a32f9": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_10e7de77affeUxft2rsNwVc5Da",
+        "model": "minimax-m3"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    }
+  }
+}
