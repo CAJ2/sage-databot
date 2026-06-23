@@ -77,6 +77,11 @@ class stripe(TypedDict):
     api_key: str
 ```
 
+Before adding a new dependency, grep `pyproject.toml` to see what is
+already available. For example, `stopwordsiso` is already a project dep
+for stopword lists. For stemming or lemmatization, prefer an existing
+dep if one fits; reach for `nltk` only when nothing else does.
+
 ## Windmill Client
 
 Import the windmill client for platform interactions:
