@@ -68,7 +68,7 @@ locks:
   f/graphql/api_client/add_variant: 2fb2270c088737398c2fe0b6591f7b2c739869a4e4b5541fb9ad52a6f87fa650
   f/graphql/api_client/base_client: ffa52d4e26d1c4ffc4872a251d82813f4d8d06dfe4f61ad26a5860c66ae1e9b5
   f/graphql/api_client/base_model: 494ea33563d91f471d47d23459e9bce64d2720d6a648222dffa2216580e36d90
-  f/graphql/api_client/client: 096f3df0d145a0a978da2475f9620903ba7e7f7273a770636fc305fc6ce2a139
+  f/graphql/api_client/client: 4603e721d8ed7f450a851431fd4650e30aa1aadeca82bc264d87dea04f760c32
   f/graphql/api_client/enums: ff1dedd4dc5ee55fa01ac29a71f8257a8bdfac7c2be83526d1c13be9a2322e97
   f/graphql/api_client/exceptions: a9a01d7aabc287d9b60283ca4caf388807cc6b8036e620f1d9c4033d542ccced
   f/graphql/api_client/get_category_for_review: 6fc9ad634b7c2f8d1f4b690c02cb3fe5a5846d8dec7bc67e4bd97c012d467ef6
