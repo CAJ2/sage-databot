@@ -2,6 +2,7 @@
 
 from typing import Any
 
+from f.context.context_helpers import fetch_context_entity, fetch_context_schema
 from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
 
@@ -23,13 +24,12 @@ def main(
     related_data: dict[str, Any] = {}
     result = None
 
-    if entity_id is not None:
-        try:
-            result = client.get_process_for_review(id=entity_id)
-            if result.process:
-                entity_data = result.process.model_dump(by_alias=False)
-        except Exception as e:
-            print(f"Could not fetch Process {entity_id}: {e}")
+    entity_data, result = fetch_context_entity(
+        entity_id=entity_id,
+        entity_name="Process",
+        fetch_fn=client.get_process_for_review,
+        result_attr="process",
+    )
 
     # Fetch linked material for additional context
     material_id = entity_data.get("material", {}) or {}
@@ -54,17 +54,12 @@ def main(
         if source_contexts:
             related_data["source_contexts"] = source_contexts
 
-    try:
-        schema_result = client.get_process_schema()
-        if schema_result.process_schema:
-            schema_obj = (
-                schema_result.process_schema.create
-                if schema_mode == "create"
-                else schema_result.process_schema.update
-            )
-            entity_schema = schema_obj.schema_ if schema_obj else None
-    except Exception as e:
-        print(f"Could not fetch Process schema: {e}")
+    entity_schema = fetch_context_schema(
+        entity_name="Process",
+        schema_mode=schema_mode,
+        fetch_fn=client.get_process_schema,
+        schema_attr="process_schema",
+    )
 
     if mode == "review":
         prompt_hints = (

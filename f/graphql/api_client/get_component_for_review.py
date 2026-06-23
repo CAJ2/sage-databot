@@ -39,7 +39,7 @@ class GetComponentForReviewComponentMaterialsMaterial(BaseModel):
 
 
 class GetComponentForReviewComponentSources(BaseModel):
-    nodes: Optional[list["GetComponentForReviewComponentSourcesNodes"]]
+    nodes: list["GetComponentForReviewComponentSourcesNodes"]
 
 
 class GetComponentForReviewComponentSourcesNodes(BaseModel):

@@ -5,8 +5,36 @@ from typing import Any, Optional
 
 from pydantic import Field
 
-from .base_model import BaseModel
-from .enums import ChangeStatus, SourceType, TagType
+from .base_model import BaseModel, Upload
+from .enums import (
+    ChangeStatus,
+    FeedbackAction,
+    FeedbackEntityName,
+    RefModelType,
+    SourceType,
+    TagType,
+)
+
+
+class AddRefInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    input: Optional[Any] = None
+    inputs: Optional[list[Any]] = None
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    ref: Optional[str] = None
+    ref_field: Optional[str] = Field(alias="refField", default=None)
+    ref_model: RefModelType = Field(alias="refModel")
+    refs: Optional[list[str]] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
 
 
 class ComponentMaterialInput(BaseModel):
@@ -125,6 +153,32 @@ class CreateOrgInput(BaseModel):
     website_url: Optional[str] = Field(alias="websiteURL", default=None)
 
 
+class CreatePlaceInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    address: Optional[str] = None
+    address_tr: Optional[list["TranslatedInput"]] = Field(
+        alias="addressTr", default=None
+    )
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    desc: Optional[str] = None
+    desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    location: Optional["PlaceLocationInput"] = None
+    name: Optional[str] = None
+    name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    org: Optional["PlaceOrgInput"] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
+    tags: Optional[list["PlaceTagsInput"]] = None
+
+
 class CreateProcessInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
     "Sources to associate with this change"
@@ -151,6 +205,32 @@ class CreateProcessInput(BaseModel):
     "IDs of sources to remove from this change"
     rules: Optional[Any] = None
     variant: Optional["ProcessVariantInput"] = None
+
+
+class CreateProgramInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    desc: Optional[str] = None
+    desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
+    instructions: Optional[Any] = None
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    name: Optional[str] = None
+    name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    orgs: Optional[list["ProgramOrgsInput"]] = None
+    processes: Optional[list["ProgramProcessesInput"]] = None
+    region: Optional[str] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
+    social: Optional[Any] = None
+    status: str
+    tags: Optional[list["ProgramTagsInput"]] = None
 
 
 class CreateSourceInput(BaseModel):
@@ -222,6 +302,20 @@ class LinkSourceInput(BaseModel):
     "JSON-LD document with @id and @type"
 
 
+class PlaceLocationInput(BaseModel):
+    latitude: float
+    longitude: float
+
+
+class PlaceOrgInput(BaseModel):
+    id: str
+
+
+class PlaceTagsInput(BaseModel):
+    id: str
+    meta: Optional[Any] = None
+
+
 class ProcessMaterialInput(BaseModel):
     id: str
 
@@ -240,6 +334,39 @@ class ProcessRegionInput(BaseModel):
 
 class ProcessVariantInput(BaseModel):
     id: str
+
+
+class ProgramOrgsInput(BaseModel):
+    id: str
+    role: Optional[str] = None
+
+
+class ProgramProcessesInput(BaseModel):
+    id: str
+
+
+class ProgramTagsInput(BaseModel):
+    id: str
+    meta: Optional[Any] = None
+
+
+class RemoveRefInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    ref: Optional[str] = None
+    ref_field: Optional[str] = Field(alias="refField", default=None)
+    ref_model: RefModelType = Field(alias="refModel")
+    refs: Optional[list[str]] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
 
 
 class SourceInput(BaseModel):
@@ -381,6 +508,35 @@ class UpdateOrgInput(BaseModel):
     website_url: Optional[str] = Field(alias="websiteURL", default=None)
 
 
+class UpdatePlaceInput(BaseModel):
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    add_tags: Optional[list["PlaceTagsInput"]] = Field(alias="addTags", default=None)
+    address: Optional[str] = None
+    address_tr: Optional[list["TranslatedInput"]] = Field(
+        alias="addressTr", default=None
+    )
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    desc: Optional[str] = None
+    desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
+    id: str
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    location: Optional["PlaceLocationInput"] = None
+    name: Optional[str] = None
+    name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    org: Optional["PlaceOrgInput"] = None
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
+    remove_tags: Optional[list[str]] = Field(alias="removeTags", default=None)
+    tags: Optional[list["PlaceTagsInput"]] = None
+
+
 class UpdateProcessInput(BaseModel):
     add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
     "Sources to associate with this change"
@@ -408,6 +564,41 @@ class UpdateProcessInput(BaseModel):
     "IDs of sources to remove from this change"
     rules: Optional[Any] = None
     variant: Optional["ProcessVariantInput"] = None
+
+
+class UpdateProgramInput(BaseModel):
+    add_orgs: Optional[list["ProgramOrgsInput"]] = Field(alias="addOrgs", default=None)
+    add_processes: Optional[list["ProgramProcessesInput"]] = Field(
+        alias="addProcesses", default=None
+    )
+    add_sources: Optional[list["SourceInput"]] = Field(alias="addSources", default=None)
+    "Sources to associate with this change"
+    add_tags: Optional[list["ProgramTagsInput"]] = Field(alias="addTags", default=None)
+    apply: Optional[bool] = None
+    "If true, immediately apply (merge) the change after creation"
+    change: Optional["CreateChangeInput"] = None
+    "Details for a new change to create for this edit"
+    change_id: Optional[str] = Field(alias="changeID", default=None)
+    "ID of an existing change to add this edit to"
+    desc: Optional[str] = None
+    desc_tr: Optional[list["TranslatedInput"]] = Field(alias="descTr", default=None)
+    id: str
+    instructions: Optional[Any] = None
+    lang: Optional[str] = None
+    'Language code for text input fields (BCP 47, e.g. "en")'
+    name: Optional[str] = None
+    name_tr: Optional[list["TranslatedInput"]] = Field(alias="nameTr", default=None)
+    orgs: Optional[list["ProgramOrgsInput"]] = None
+    processes: Optional[list["ProgramProcessesInput"]] = None
+    region: Optional[str] = None
+    remove_orgs: Optional[list[str]] = Field(alias="removeOrgs", default=None)
+    remove_processes: Optional[list[str]] = Field(alias="removeProcesses", default=None)
+    remove_sources: Optional[list[str]] = Field(alias="removeSources", default=None)
+    "IDs of sources to remove from this change"
+    remove_tags: Optional[list[str]] = Field(alias="removeTags", default=None)
+    social: Optional[Any] = None
+    status: Optional[str] = None
+    tags: Optional[list["ProgramTagsInput"]] = None
 
 
 class UpdateSourceInput(BaseModel):
@@ -474,6 +665,12 @@ class UpdateVariantInput(BaseModel):
     tags: Optional[list["VariantTagsInput"]] = None
 
 
+class UploadSourceInput(BaseModel):
+    file: Upload
+    metadata: Optional[Any] = None
+    source: str
+
+
 class VariantComponentsInput(BaseModel):
     id: str
     quantity: Optional[float] = None
@@ -499,16 +696,29 @@ class VariantTagsInput(BaseModel):
     meta: Optional[Any] = None
 
 
+class VoteInput(BaseModel):
+    action: FeedbackAction
+    data: Optional[Any] = None
+    entity_id: str = Field(alias="entityID")
+    entity_name: FeedbackEntityName = Field(alias="entityName")
+
+
+AddRefInput.model_rebuild()
 CreateCategoryInput.model_rebuild()
 CreateComponentInput.model_rebuild()
 CreateItemInput.model_rebuild()
 CreateOrgInput.model_rebuild()
+CreatePlaceInput.model_rebuild()
 CreateProcessInput.model_rebuild()
+CreateProgramInput.model_rebuild()
 CreateVariantInput.model_rebuild()
 DeleteInput.model_rebuild()
+RemoveRefInput.model_rebuild()
 UpdateCategoryInput.model_rebuild()
 UpdateComponentInput.model_rebuild()
 UpdateItemInput.model_rebuild()
 UpdateOrgInput.model_rebuild()
+UpdatePlaceInput.model_rebuild()
 UpdateProcessInput.model_rebuild()
+UpdateProgramInput.model_rebuild()
 UpdateVariantInput.model_rebuild()

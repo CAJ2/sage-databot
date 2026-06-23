@@ -1,0 +1,95 @@
+summary: AI-search Variants to associate to an Item
+description: >
+  Given an Item ID, fetches Item context, asks an AI agent to search for
+  matching existing Variants, and creates/apply Change edits that associate the
+  selected Variants back to the Item via Variant.add_items.
+value:
+  modules:
+    - id: a
+      summary: Fetch Item context
+      value:
+        type: script
+        input_transforms:
+          entity_id:
+            type: javascript
+            expr: flow_input.entity_id
+          mode:
+            type: javascript
+            expr: '"suggest"'
+          target_fields:
+            type: javascript
+            expr: '[]'
+        is_trigger: false
+        path: f/context/item_context
+      continue_on_error: false
+    - id: b
+      summary: AI association search
+      value:
+        type: script
+        input_transforms:
+          association_field:
+            type: javascript
+            expr: '"variants"'
+          entity_context:
+            type: javascript
+            expr: results.a
+          prompt:
+            type: javascript
+            expr: flow_input.prompt
+          target_entity_type:
+            type: javascript
+            expr: '"Variant"'
+        is_trigger: false
+        path: f/changes/ai_associate
+      continue_on_error: false
+    - id: c
+      summary: Apply associations
+      value:
+        type: script
+        input_transforms:
+          apply:
+            type: javascript
+            expr: flow_input.apply
+          change_id:
+            type: javascript
+            expr: flow_input.change_id
+          change_title:
+            type: javascript
+            expr: flow_input.change_title
+          source_entity_id:
+            type: javascript
+            expr: flow_input.entity_id
+          source_entity_name:
+            type: javascript
+            expr: '"Item"'
+          target_ids:
+            type: javascript
+            expr: results.b.target_ids
+        is_trigger: false
+        path: f/changes/apply_associations
+      continue_on_error: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - entity_id
+    - prompt
+  properties:
+    apply:
+      type: boolean
+      description: If true, directly apply the change without review
+      default: false
+    change_id:
+      type: string
+      description: ID of an existing Change to add these association edits to
+    change_title:
+      type: string
+      description: Title for the new Change (auto-generated if omitted)
+    entity_id:
+      type: string
+      description: The ID of the Item to find Variants for
+    prompt:
+      type: string
+      description: Optional additional guidance for the AI association search
+  required:
+    - entity_id

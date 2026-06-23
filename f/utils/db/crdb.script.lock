@@ -10,4 +10,4 @@ polars==1.39.3
 polars-runtime-32==1.39.3
 sqlalchemy==2.0.49
 typing-extensions==4.15.0
-wmill==1.680.0
+wmill==1.687.0

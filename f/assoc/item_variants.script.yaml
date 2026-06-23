@@ -1,0 +1,38 @@
+summary: Bulk-associate Variants to an Item by name match
+description: >
+  Searches Variants whose name matches the Item's name (lowercased, stemmed,
+  stopwords removed), and creates a draft Change edit adding the Item to each
+  Variant's items. Re-runs with the same change_id accumulate edits into one
+  draft; pass apply=true to merge. Idempotent: variants already linked to the
+  item are skipped.
+lock: '!inline f/assoc/item_variants.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    apply:
+      type: boolean
+      description: If true, directly apply the change without review
+      default: false
+    change_id:
+      type: string
+      description: ID of an existing Change to add these association edits to
+      default: null
+      originalType: string
+    change_title:
+      type: string
+      description: Title for the new Change (auto-generated if omitted)
+      default: null
+      originalType: string
+    item_id:
+      type: string
+      description: ID of the Item to find Variants for
+      default: null
+      originalType: string
+    limit:
+      type: integer
+      description: Max number of search results to consider
+      default: 100
+  required:
+    - item_id

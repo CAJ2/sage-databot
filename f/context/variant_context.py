@@ -3,6 +3,7 @@
 
 from typing import Any
 
+from f.context.context_helpers import fetch_context_entity, fetch_context_schema
 from f.context.context_types import ContextMode, EntityContext, SchemaMode
 from f.utils.api import api_connect
 
@@ -22,34 +23,29 @@ def main(
     entity_schema: Any = None
     entity_data: dict[str, Any] = {}
     related_data: dict[str, Any] = {}
+    result = None
 
-    if entity_id is not None:
-        try:
-            result = client.get_variant_for_review(id=entity_id)
-            if result.variant:
-                entity_data = result.variant.model_dump(by_alias=False)
-                if result.variant.sources:
-                    source_contexts = [
-                        s.source.content["context"]
-                        for s in (result.variant.sources.nodes or [])
-                        if s.source.content and s.source.content.get("context")
-                    ]
-                    if source_contexts:
-                        related_data["source_contexts"] = source_contexts
-        except Exception as e:
-            print(f"Could not fetch Variant {entity_id}: {e}")
+    entity_data, result = fetch_context_entity(
+        entity_id=entity_id,
+        entity_name="Variant",
+        fetch_fn=client.get_variant_for_review,
+        result_attr="variant",
+    )
+    if result and result.variant and result.variant.sources:
+        source_contexts = [
+            s.source.content["context"]
+            for s in (result.variant.sources.nodes or [])
+            if s.source.content and s.source.content.get("context")
+        ]
+        if source_contexts:
+            related_data["source_contexts"] = source_contexts
 
-    try:
-        schema_result = client.get_variant_schema()
-        if schema_result.variant_schema:
-            schema_obj = (
-                schema_result.variant_schema.create
-                if schema_mode == "create"
-                else schema_result.variant_schema.update
-            )
-            entity_schema = schema_obj.schema_ if schema_obj else None
-    except Exception as e:
-        print(f"Could not fetch Variant schema: {e}")
+    entity_schema = fetch_context_schema(
+        entity_name="Variant",
+        schema_mode=schema_mode,
+        fetch_fn=client.get_variant_schema,
+        schema_attr="variant_schema",
+    )
 
     if mode == "review":
         prompt_hints = (

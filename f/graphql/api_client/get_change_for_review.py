@@ -28,7 +28,7 @@ class GetChangeForReviewChangeUser(BaseModel):
 
 
 class GetChangeForReviewChangeEdits(BaseModel):
-    nodes: Optional[list["GetChangeForReviewChangeEditsNodes"]]
+    nodes: list["GetChangeForReviewChangeEditsNodes"]
 
 
 class GetChangeForReviewChangeEditsNodes(BaseModel):
@@ -43,9 +43,10 @@ class GetChangeForReviewChangeEditsNodes(BaseModel):
                 "GetChangeForReviewChangeEditsNodesChangesComponent",
                 "GetChangeForReviewChangeEditsNodesChangesItem",
                 "GetChangeForReviewChangeEditsNodesChangesMaterial",
+                "GetChangeForReviewChangeEditsNodesChangesOrg",
                 "GetChangeForReviewChangeEditsNodesChangesPlace",
                 "GetChangeForReviewChangeEditsNodesChangesProcess",
-                "GetChangeForReviewChangeEditsNodesChangesRegion",
+                "GetChangeForReviewChangeEditsNodesChangesProgram",
                 "GetChangeForReviewChangeEditsNodesChangesVariant",
             ],
             Field(discriminator="typename__"),
@@ -58,9 +59,10 @@ class GetChangeForReviewChangeEditsNodes(BaseModel):
                 "GetChangeForReviewChangeEditsNodesOriginalComponent",
                 "GetChangeForReviewChangeEditsNodesOriginalItem",
                 "GetChangeForReviewChangeEditsNodesOriginalMaterial",
+                "GetChangeForReviewChangeEditsNodesOriginalOrg",
                 "GetChangeForReviewChangeEditsNodesOriginalPlace",
                 "GetChangeForReviewChangeEditsNodesOriginalProcess",
-                "GetChangeForReviewChangeEditsNodesOriginalRegion",
+                "GetChangeForReviewChangeEditsNodesOriginalProgram",
                 "GetChangeForReviewChangeEditsNodesOriginalVariant",
             ],
             Field(discriminator="typename__"),
@@ -88,22 +90,28 @@ class GetChangeForReviewChangeEditsNodesChangesMaterial(BaseModel):
     id: str
 
 
+class GetChangeForReviewChangeEditsNodesChangesOrg(BaseModel):
+    typename__: Literal["Org"] = Field(alias="__typename")
+
+
 class GetChangeForReviewChangeEditsNodesChangesPlace(BaseModel):
+    typename__: Literal["Place"] = Field(alias="__typename")
     typename__: Literal["Place"] = Field(alias="__typename")
     id: str
 
 
 class GetChangeForReviewChangeEditsNodesChangesProcess(BaseModel):
     typename__: Literal["Process"] = Field(alias="__typename")
+    typename__: Literal["Process"] = Field(alias="__typename")
     id: str
 
 
-class GetChangeForReviewChangeEditsNodesChangesRegion(BaseModel):
-    typename__: Literal["Region"] = Field(alias="__typename")
-    id: str
+class GetChangeForReviewChangeEditsNodesChangesProgram(BaseModel):
+    typename__: Literal["Program"] = Field(alias="__typename")
 
 
 class GetChangeForReviewChangeEditsNodesChangesVariant(BaseModel):
+    typename__: Literal["Variant"] = Field(alias="__typename")
     typename__: Literal["Variant"] = Field(alias="__typename")
     id: str
 
@@ -128,22 +136,28 @@ class GetChangeForReviewChangeEditsNodesOriginalMaterial(BaseModel):
     id: str
 
 
+class GetChangeForReviewChangeEditsNodesOriginalOrg(BaseModel):
+    typename__: Literal["Org"] = Field(alias="__typename")
+
+
 class GetChangeForReviewChangeEditsNodesOriginalPlace(BaseModel):
+    typename__: Literal["Place"] = Field(alias="__typename")
     typename__: Literal["Place"] = Field(alias="__typename")
     id: str
 
 
 class GetChangeForReviewChangeEditsNodesOriginalProcess(BaseModel):
     typename__: Literal["Process"] = Field(alias="__typename")
+    typename__: Literal["Process"] = Field(alias="__typename")
     id: str
 
 
-class GetChangeForReviewChangeEditsNodesOriginalRegion(BaseModel):
-    typename__: Literal["Region"] = Field(alias="__typename")
-    id: str
+class GetChangeForReviewChangeEditsNodesOriginalProgram(BaseModel):
+    typename__: Literal["Program"] = Field(alias="__typename")
 
 
 class GetChangeForReviewChangeEditsNodesOriginalVariant(BaseModel):
+    typename__: Literal["Variant"] = Field(alias="__typename")
     typename__: Literal["Variant"] = Field(alias="__typename")
     id: str
 

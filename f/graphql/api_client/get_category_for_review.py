@@ -20,7 +20,7 @@ class GetCategoryForReviewCategory(BaseModel):
 
 
 class GetCategoryForReviewCategoryParents(BaseModel):
-    nodes: Optional[list["GetCategoryForReviewCategoryParentsNodes"]]
+    nodes: list["GetCategoryForReviewCategoryParentsNodes"]
 
 
 class GetCategoryForReviewCategoryParentsNodes(BaseModel):
@@ -29,7 +29,7 @@ class GetCategoryForReviewCategoryParentsNodes(BaseModel):
 
 
 class GetCategoryForReviewCategoryChildren(BaseModel):
-    nodes: Optional[list["GetCategoryForReviewCategoryChildrenNodes"]]
+    nodes: list["GetCategoryForReviewCategoryChildrenNodes"]
 
 
 class GetCategoryForReviewCategoryChildrenNodes(BaseModel):
@@ -38,7 +38,7 @@ class GetCategoryForReviewCategoryChildrenNodes(BaseModel):
 
 
 class GetCategoryForReviewCategoryItems(BaseModel):
-    nodes: Optional[list["GetCategoryForReviewCategoryItemsNodes"]]
+    nodes: list["GetCategoryForReviewCategoryItemsNodes"]
 
 
 class GetCategoryForReviewCategoryItemsNodes(BaseModel):

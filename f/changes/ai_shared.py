@@ -3,7 +3,7 @@
 import json
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field, create_model, model_validator
+from pydantic import BaseModel, Field, create_model, field_validator, model_validator
 from pydantic_ai import Agent
 from pydantic_ai.models import Model
 
@@ -29,6 +29,33 @@ class SuggestResult(BaseModel):
     create_before_ref: dict[str, Any] | None = None
     """When set: {"entity_type": str, "prompt": str}.
     Signals auto_ref.flow to run auto_create.flow first, then link the created entity."""
+
+
+class AssociationIDsResult(BaseModel):
+    """Minimal association result for add-only flows."""
+
+    target_ids: list[str] = Field(default_factory=list)
+
+    @field_validator("target_ids", mode="before")
+    @classmethod
+    def _coerce_target_ids(cls, value: Any) -> list[str]:
+        if value is None:
+            return []
+        if isinstance(value, list):
+            return [str(v).strip() for v in value if str(v).strip()]
+        raise TypeError("target_ids must be a list")
+
+    @model_validator(mode="after")
+    def _dedupe_target_ids(self) -> "AssociationIDsResult":
+        deduped: list[str] = []
+        seen: set[str] = set()
+        for target_id in self.target_ids:
+            if target_id in seen:
+                continue
+            seen.add(target_id)
+            deduped.append(target_id)
+        self.target_ids = deduped
+        return self
 
 
 def _resolve_python_type(prop: dict[str, Any], defs: dict[str, Any]) -> Any:

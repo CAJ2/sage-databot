@@ -102,6 +102,7 @@ click==8.3.1
     #   ariadne-codegen
     #   black
     #   marimo
+    #   nltk
     #   python-oxmsg
     #   typer
     #   typer-slim
@@ -357,6 +358,8 @@ jmespath==1.0.1
     #   botocore
     #   itemloaders
     #   parsel
+joblib==1.5.3
+    # via nltk
 jsonref==1.1.0
     # via fastmcp
 jsonschema==4.25.1
@@ -450,6 +453,8 @@ networkx==3.6.1
     #   unstructured
 nexus-rpc==1.2.0
     # via temporalio
+nltk==3.9.4
+    # via sage-databot
 numba==0.64.0
     # via unstructured
 numpy==2.4.2
@@ -813,6 +818,7 @@ referencing==0.36.2
     #   jsonschema-specifications
 regex==2024.11.6
     # via
+    #   nltk
     #   tiktoken
     #   transformers
     #   unstructured
@@ -972,6 +978,7 @@ torchvision==0.22.0
 tqdm==4.67.3
     # via
     #   huggingface-hub
+    #   nltk
     #   openai
     #   spacy
     #   transformers

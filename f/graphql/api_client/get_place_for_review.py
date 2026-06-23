@@ -3,8 +3,6 @@
 
 from typing import Optional
 
-from pydantic import Field
-
 from .base_model import BaseModel
 
 
@@ -25,7 +23,7 @@ class GetPlaceForReviewPlaceAddress(BaseModel):
     street: Optional[str]
     housenumber: Optional[str]
     city: Optional[str]
-    postal_code: Optional[str] = Field(alias="postalCode")
+    postcode: Optional[str]
     region: Optional[str]
     country: Optional[str]
 

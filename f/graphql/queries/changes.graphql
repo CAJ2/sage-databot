@@ -43,10 +43,6 @@ query GetChangeForReview($id: ID!) {
             __typename
             id
           }
-          ... on Region {
-            __typename
-            id
-          }
         }
         original {
           ... on Item {
@@ -74,10 +70,6 @@ query GetChangeForReview($id: ID!) {
             id
           }
           ... on Material {
-            __typename
-            id
-          }
-          ... on Region {
             __typename
             id
           }

@@ -5,14 +5,21 @@ Integration tests for f/changes/* and f/context/* scripts.
 Tests: all context scripts.
 """
 
+from types import SimpleNamespace
 from typing import Any
+from unittest.mock import patch
 
 from sqlalchemy import text
 
+from f.changes.ai_associate import existing_association_ids, fallback_target_ids
+from f.changes.apply_associations import build_apply_requests
+from f.context.context_types import EntityContext
+from f.context.context_helpers import fetch_context_entity, fetch_context_schema
 from f.context.category_context import main as category_context_main
 from f.context.component_context import main as component_context_main
 from f.context.item_context import main as item_context_main
 from f.context.variant_context import main as variant_context_main
+from f.graphql.api_client.enums import SearchType
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import (
     Test,
@@ -20,6 +27,7 @@ from f.test.framework import (
     assert_contains,
     assert_eq,
     assert_isinstance,
+    assert_raises,
     assert_true,
 )
 from f.utils.api import api_connect
@@ -139,6 +147,166 @@ def test_generic_context(_t: Test):
     assert_eq(result["entity_name"], "Component")
 
 
+def test_existing_association_ids(_t: Test):
+    result = existing_association_ids(
+        {
+            "variants": [
+                {"id": "var_1", "name": "Variant 1"},
+                {"id": "var_1", "name": "Duplicate"},
+                "var_2",
+                {"name": "Missing ID"},
+            ]
+        },
+        "variants",
+    )
+
+    assert_eq(result, ["var_1", "var_2"])
+
+
+def test_build_apply_requests_for_item(_t: Test):
+    result = build_apply_requests(
+        "Item", "item_1", ["variant_1", "variant_1", "variant_2"]
+    )
+
+    assert_eq(
+        result,
+        [
+            {
+                "entity_name": "Variant",
+                "entity_id": "variant_1",
+                "data": {"add_items": ["item_1"]},
+            },
+            {
+                "entity_name": "Variant",
+                "entity_id": "variant_2",
+                "data": {"add_items": ["item_1"]},
+            },
+        ],
+    )
+
+
+def test_build_apply_requests_for_variant(_t: Test):
+    result = build_apply_requests(
+        "Variant", "variant_1", ["component_1", "component_1", "component_2"]
+    )
+
+    assert_eq(
+        result,
+        [
+            {
+                "entity_name": "Variant",
+                "entity_id": "variant_1",
+                "data": {
+                    "add_components": [
+                        {"id": "component_1"},
+                        {"id": "component_2"},
+                    ]
+                },
+            }
+        ],
+    )
+
+
+def test_fetch_context_entity_requires_found_entity(_t: Test):
+    class MissingClient:
+        def get_item_for_review(self, *, _id: str):
+            return SimpleNamespace(item=None)
+
+    assert_raises(
+        ValueError,
+        fetch_context_entity,
+        entity_id="missing-item",
+        entity_name="Item",
+        fetch_fn=MissingClient().get_item_for_review,
+        result_attr="item",
+    )
+
+
+def test_fetch_context_schema_requires_schema(_t: Test):
+    class MissingSchemaClient:
+        def get_variant_schema(self):
+            return SimpleNamespace(variant_schema=None)
+
+    assert_raises(
+        ValueError,
+        fetch_context_schema,
+        entity_name="Variant",
+        schema_mode="update",
+        fetch_fn=MissingSchemaClient().get_variant_schema,
+        schema_attr="variant_schema",
+    )
+
+
+def test_item_context_raises_on_fetch_error(_t: Test):
+    class BrokenClient:
+        def get_item_for_review(self, *, _id: str):
+            raise RuntimeError("boom")
+
+        def get_item_schema(self):
+            return SimpleNamespace(
+                item_schema=SimpleNamespace(
+                    create=SimpleNamespace(schema_={}),
+                    update=SimpleNamespace(schema_={}),
+                )
+            )
+
+    with patch("f.context.item_context.api_connect", return_value=(BrokenClient(), {})):
+        assert_raises(ValueError, item_context_main, entity_id="item_1")
+
+
+def test_fallback_target_ids_uses_exact_name_matches(_t: Test):
+    class FakeNode:
+        def __init__(self, data: dict[str, Any]):
+            self._data: dict[str, Any] = {}
+            self._data = data
+
+        def model_dump(self, exclude: set[str] | None = None) -> dict[str, Any]:
+            if not exclude:
+                return dict(self._data)
+            return {k: v for k, v in self._data.items() if k not in exclude}
+
+    class FakeClient:
+        def __init__(self, result: Any):
+            self._result: Any = None
+            self._result = result
+
+        def search(
+            self, _query: str, _types: list[SearchType], _limit: int
+        ) -> SimpleNamespace:
+            return self._result
+
+    ctx = EntityContext(
+        entity_name="Item",
+        entity_id="item_1",
+        entity_data={"name": "Tomato Paste", "variants": [{"id": "existing_variant"}]},
+        related_data={},
+        prompt_hints="",
+    )
+
+    fake_result = SimpleNamespace(
+        search=SimpleNamespace(
+            nodes=[
+                FakeNode({"id": "variant_a", "name": "Tomato Paste", "desc": None}),
+                FakeNode(
+                    {
+                        "id": "existing_variant",
+                        "name": "Tomato Paste",
+                        "desc": None,
+                    }
+                ),
+                FakeNode({"id": "variant_b", "name": "tomato paste", "desc": None}),
+                FakeNode({"id": "variant_c", "name": "Tomatoes paste", "desc": None}),
+            ]
+        )
+    )
+
+    fake_client = FakeClient(fake_result)
+    with patch("f.changes.ai_associate.api_connect", return_value=(fake_client, {})):
+        result = fallback_target_ids(ctx, SearchType.VARIANT, "variants")
+
+    assert_eq(result, ["variant_a", "variant_b"])
+
+
 def main() -> dict[str, object]:
     ensure_test_workspace()
     suite = TestSuite("changes_and_context")
@@ -147,4 +315,11 @@ def main() -> dict[str, object]:
     suite.run(test_category_context)
     suite.run(test_item_context)
     suite.run(test_generic_context)
+    suite.run(test_existing_association_ids)
+    suite.run(test_build_apply_requests_for_item)
+    suite.run(test_build_apply_requests_for_variant)
+    suite.run(test_fetch_context_entity_requires_found_entity)
+    suite.run(test_fetch_context_schema_requires_schema)
+    suite.run(test_item_context_raises_on_fetch_error)
+    suite.run(test_fallback_target_ids_uses_exact_name_matches)
     return suite.results()
