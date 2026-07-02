@@ -1,0 +1,21 @@
+f/search/programs/index_programs.script.lock
+  s_3f6161e80871b7::t_c15d8634f7a83d 1-212
+f/search/programs/rank_programs.script.lock
+  s_3f6161e80871b7::t_68a47d653373a8 1-212
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "cf5a0734475c3ea5115df0bbbd60047e007231a2",
+  "prompts": {},
+  "sessions": {
+    "s_3f6161e80871b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "619297d8-bbf9-4e5c-98d2-a4079f23e196",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    }
+  }
+}
