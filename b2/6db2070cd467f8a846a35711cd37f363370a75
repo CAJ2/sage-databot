@@ -1,0 +1,285 @@
+f/analytics/import_posthog_events.script.yaml
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 1-14
+f/review/material_review.py
+  s_e9c8a657742984::t_a271add79ead87 24
+f/search/categories/index_categories.py
+  s_d798f73e18262b::t_5ca3c5e45fd65d 8
+  s_d798f73e18262b::t_db5b471c9e94b8 87
+  s_98c4c5b3307e40::t_9537c1554db9fc 55-62
+  s_98c4c5b3307e40::t_7f41dc169f5ebf 30
+f/analytics/import_posthog_events.py
+  s_e9c8a657742984::t_97518bf557eb64 12
+  s_c1acdf615b24b2::t_e3d7394c7b14b0 1-11,13,22-31,44-50,88-94
+  s_e9c8a657742984::t_3854067537e98d 33
+  s_c1acdf615b24b2::t_1c5d79e3c1adff 14-21,32,34-43,51-86
+  s_c1acdf615b24b2::t_905977552909d1 87
+f/search/tags/index_tags.script.yaml
+  s_d798f73e18262b::t_fcefed6af3ed72 1-26
+f/search/items/rank_items.script.yaml
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 3
+  s_98c4c5b3307e40::t_388ecb894b1607 1-2,4-17
+f/search/variants/rank_variants.script.yaml
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 3
+  s_98c4c5b3307e40::t_876caa3b024fd1 1-2,4-17
+f/search/orgs/rank_orgs.script.yaml
+  s_98c4c5b3307e40::t_72ceff6ad994e9 1-2,4-17
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 3
+f/search/processes/rank_processes.py
+  s_d798f73e18262b::t_79e035cea803e8 50-51
+  s_9ccf480590febe::t_4c320a92856c64 1-49,52-71
+f/search/processes/rank_processes.script.yaml
+  s_9ccf480590febe::t_28f6b3a32df3c3 1-17
+f/search/variants/rank_variants.py
+  s_d798f73e18262b::t_9cb90c9ecb4188 81-82
+  s_e9c8a657742984::t_c79a9991e75c9e 22
+  s_c1acdf615b24b2::t_0f6af4e9bac814 65
+  s_e9c8a657742984::t_cfd95671fc8d98 8
+  s_e9c8a657742984::t_7d6f898ef0a273 87
+  s_98c4c5b3307e40::t_ca12f89a295c0b 1-7,9-21,23-28,40-64,66-79,83-86,88-106
+  s_e9c8a657742984::t_e014712e6619ad 80
+  s_e9c8a657742984::t_e8c6a29eec038e 29-39
+f/search/categories/rank_categories.py
+  s_e9c8a657742984::t_adf6a9e4265f62 78
+  s_c1acdf615b24b2::t_793c97edb872eb 56
+  s_e9c8a657742984::t_7126755d888b3b 8
+  s_d798f73e18262b::t_896b10c2e2ed39 72-73
+  s_98c4c5b3307e40::t_f8e9d7c5059631 1-7,9-19,21-26,33-55,57-70,74-77,79-97
+  s_e9c8a657742984::t_f3b24a776f8f36 27-32
+  s_e9c8a657742984::t_b0bbba5f136926 71
+  s_e9c8a657742984::t_15dcc1e4b4f8c0 20
+.codegraph/.gitignore
+  s_3f6161e80871b7::t_9f8fbc9713301a 8
+f/search/categories/rank_categories.script.yaml
+  s_98c4c5b3307e40::t_76fa4702734b92 1-2,4-17
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 3
+f/search/components/rank_components.script.yaml
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 3
+  s_98c4c5b3307e40::t_86b28bcd226b3c 1-2,4-17
+f/search/items/index_items.py
+  s_d798f73e18262b::t_f2c40ce50e66a7 9
+  s_d798f73e18262b::t_48f55406e28772 182
+  s_98c4c5b3307e40::t_140c65f6abec2b 38
+  s_98c4c5b3307e40::t_7f2d56bad754ca 132-134
+f/graphql/schema.gql
+  s_e9c8a657742984::t_8630a49ea9eb53 1507,1651-1668,1671
+f/search/tags/rank_tags.py
+  s_8c71bf6be63c55::t_a7025fa58b5ca9 1-66,69-92
+  s_d798f73e18262b::t_0e46b248bccab7 67-68
+f/search/places/rank_places.py
+  s_98c4c5b3307e40::t_95c4f26109846d 1-7,9-20,22-27,35-58,60-73,77-80,82-100
+  s_d798f73e18262b::t_1cbc333dec958a 75-76
+  s_e9c8a657742984::t_a3e7f3fac09667 21
+  s_c1acdf615b24b2::t_56c003501fee8e 59
+  s_e9c8a657742984::t_235c9feb60f7d8 8
+  s_e9c8a657742984::t_ce46f54a289970 28-34
+  s_e9c8a657742984::t_b350a767c23cf1 81
+  s_e9c8a657742984::t_497ac7ffc1ae32 74
+f/sources/unstructured_flow.py
+  s_e9c8a657742984::t_bd4886f37781d2 8-9
+  s_e9c8a657742984::t_365eaa0d7c9979 10-11
+f/search/rank_script.script.yaml
+  s_d798f73e18262b::t_b06c584090e011 1-9
+f/graphql/api_client/__init__.py
+  s_e9c8a657742984::t_8630a49ea9eb53 227,496
+f/analytics/posthog_events.flow/flow.yaml
+  s_c1acdf615b24b2::t_7d5115bdfb3473 1-12,15-19,22-30
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 13-14,20-21
+f/analytics/cleanup_posthog_events.script.yaml
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 1-9
+f/graphql/queries/changes.graphql
+  s_e9c8a657742984::t_c778ba397498aa 84-89
+  s_e9c8a657742984::t_a89c9ba5dfd6ce 46-53
+  s_3f6161e80871b7::t_b08d081ef50564 90-91
+f/search/variants/index_variants.py
+  s_98c4c5b3307e40::t_9187fa044f6383 47
+  s_d798f73e18262b::t_88bbae9bacd527 409
+  s_d798f73e18262b::t_fc966a80fc6274 14
+  s_98c4c5b3307e40::t_d7cd380fb46a77 327-334
+f/search/rerank.flow/fetch_next_batch_of_ids.inline_script.py
+  s_d798f73e18262b::t_d3b8a856276817 1-25
+f/search/tags/index_tags.py
+  s_d798f73e18262b::t_619481fd68ee40 11
+  s_d798f73e18262b::t_1f7cf52a64f91a 10
+  s_d798f73e18262b::t_b53f4acb08ff31 1-9,12
+f/search/rerank.flow/flow.yaml
+  s_d798f73e18262b::t_d7050df64c49a1 1-2,5-74
+  s_d798f73e18262b::t_c9b412497292a4 3-4
+f/search/tags/rank_tags.script.yaml
+  s_8c71bf6be63c55::t_d29847238c1170 1-17
+f/search/processes/index_processes.script.yaml
+  s_d798f73e18262b::t_0137f4f03fee59 1-26
+f/search/components/rank_components.py
+  s_98c4c5b3307e40::t_2d133426cd2c80 1-7,9-20,22-27,35-58,60-73,77-80,82-100
+  s_e9c8a657742984::t_bfc9e8881b75b7 8
+  s_e9c8a657742984::t_7a6c0cbb113d48 74
+  s_e9c8a657742984::t_d4d03322d959e4 28-34
+  s_e9c8a657742984::t_8c8c0f3cbac7b6 81
+  s_c1acdf615b24b2::t_62d7cac25df7d7 59
+  s_e9c8a657742984::t_c91609a007700b 21
+  s_d798f73e18262b::t_e31b6aa0528c8a 75-76
+f/graphql/api_client/get_change_for_review.py
+  s_e9c8a657742984::t_8630a49ea9eb53 95,110,140,155
+f/search/places/rank_places.script.yaml
+  s_98c4c5b3307e40::t_eabf6d2c81cbc6 1-2,4-17
+  s_c1acdf615b24b2::t_3ffdb57bb5d28b 3
+f/graphql/api_client/input_types.py
+  s_e9c8a657742984::t_8630a49ea9eb53 372-376
+f/search/components/index_components.py
+  s_d798f73e18262b::t_8523589f6f81b1 88
+  s_98c4c5b3307e40::t_d1ed2046a0925d 34
+  s_d798f73e18262b::t_852da3d7fe9ddb 8
+  s_98c4c5b3307e40::t_16a799251cf22f 54-56
+f/analytics/folder.meta.yaml
+  s_c1acdf615b24b2::t_203fc7a156d64b 1-6
+f/search/orgs/index_orgs.py
+  s_98c4c5b3307e40::t_bc7c7f785e6a30 31
+  s_98c4c5b3307e40::t_999b0c4aefcb85 51-53
+  s_d798f73e18262b::t_69179672753ed4 9
+  s_d798f73e18262b::t_e5fde50451f2e7 75
+f/search/processes/index_processes.py
+  s_d798f73e18262b::t_e8b767bce31b74 1-9,12
+  s_d798f73e18262b::t_91d25d762fb795 11
+  s_d798f73e18262b::t_35a245049336fe 10
+f/search/items/rank_items.py
+  s_e9c8a657742984::t_c0b2a697354c96 77
+  s_c1acdf615b24b2::t_80c4c8c79badc3 62
+  s_e9c8a657742984::t_6fb1156dba6daf 8
+  s_e9c8a657742984::t_317e55b21a15ff 84
+  s_e9c8a657742984::t_f040c60a5a6476 22
+  s_e9c8a657742984::t_9cfa8c656ea6ba 29-36
+  s_d798f73e18262b::t_42ff69ff0613eb 78-79
+  s_98c4c5b3307e40::t_71f21c9f8ff6cd 1-7,9-21,23-28,37-61,63-76,80-83,85-103
+f/search/places/index_places.py
+  s_98c4c5b3307e40::t_21c18d4c0d8b60 34
+  s_d798f73e18262b::t_4e09288067fecb 111
+  s_98c4c5b3307e40::t_05a446d6611137 60-67
+  s_d798f73e18262b::t_29e1774119a713 8
+f/graphql/api_client/client.py
+  s_e9c8a657742984::t_8630a49ea9eb53 214-221,252-259
+f/analytics/cleanup_posthog_events.py
+  s_c1acdf615b24b2::t_b1d0337f4a810e 13,15-16,18,20,25-26,35-40,43,46-49
+  s_e9c8a657742984::t_cef9d3d2c2a511 12
+  s_c1acdf615b24b2::t_661139f758f4a4 1-11,14,19,21-24,27-34,41-42,44-45,50-55
+  s_c1acdf615b24b2::t_7fb50336fdd581 17
+f/search/orgs/rank_orgs.py
+  s_e9c8a657742984::t_9c9ba7d0a0a1cb 74
+  s_e9c8a657742984::t_7088d93ef8edb6 81
+  s_e9c8a657742984::t_c0cad9477c4d23 8
+  s_e9c8a657742984::t_e057030fc4eca7 21
+  s_c1acdf615b24b2::t_16aab1feeaeb8a 59
+  s_d798f73e18262b::t_0b1f1b1f1c1277 75-76
+  s_e9c8a657742984::t_4de7d92029254c 28-34
+  s_98c4c5b3307e40::t_51ea96a50abc82 1-7,9-20,22-27,35-58,60-73,77-80,82-100
+pyrightconfig.json
+  s_e9c8a657742984::t_84c4d913f2516d 2-3
+f/analytics/cleanup_posthog_events.script.lock
+  s_d798f73e18262b::t_0d63f3832bddf7 1-212
+f/analytics/import_posthog_events.script.lock
+  s_d798f73e18262b::t_73ae9caaa217f0 1-212
+f/graphql/api_client/__init__.script.lock
+  s_3f6161e80871b7::t_190cc15d181fcc 3,12
+f/graphql/api_client/client.script.lock
+  s_3f6161e80871b7::t_6de1fc0ecd19d3 3
+f/search/categories/rank_categories.script.lock
+  s_3f6161e80871b7::t_26256311919385 1-212
+f/search/components/rank_components.script.lock
+  s_3f6161e80871b7::t_63ca7409ae72eb 1-212
+f/search/items/rank_items.script.lock
+  s_3f6161e80871b7::t_f0b4a8a93da575 1-212
+f/search/orgs/rank_orgs.script.lock
+  s_3f6161e80871b7::t_cba3ebb2c56942 1-212
+f/search/places/rank_places.script.lock
+  s_3f6161e80871b7::t_686832079f2933 1-212
+f/search/processes/index_processes.script.lock
+  s_3f6161e80871b7::t_2df8ebfa7d2964 1-212
+f/search/processes/rank_processes.script.lock
+  s_3f6161e80871b7::t_2e4bcf1329a217 1-212
+f/search/rank_script.script.lock
+  s_3f6161e80871b7::t_7d8a431629600d 1-212
+f/search/rerank.flow/fetch_next_batch_of_ids.inline_script.lock
+  s_d798f73e18262b::t_1ec573dd6e68a3 1-212
+f/search/rerank.flow/rank_dispatch.inline_script.lock
+  s_d798f73e18262b::t_6dec402f64cdd0 1-212
+f/search/tags/index_tags.script.lock
+  s_3f6161e80871b7::t_256088993904c5 1-212
+f/search/tags/rank_tags.script.lock
+  s_3f6161e80871b7::t_f7237e26c030d2 1-212
+f/search/variants/rank_variants.script.lock
+  s_3f6161e80871b7::t_e5aa77e0c0502b 1-212
+f/utils/api.script.lock
+  s_3f6161e80871b7::t_8931217fc7c557 3,13
+CLAUDE.md
+  s_b17ec2edf5fa88::t_69e4a7bdec0021 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "b26db2070cd467f8a846a35711cd37f363370a75",
+  "prompts": {},
+  "sessions": {
+    "s_3f6161e80871b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "619297d8-bbf9-4e5c-98d2-a4079f23e196",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_8c71bf6be63c55": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7de08770-a8a8-4aaf-9f36-fbf7c37a1089",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_98c4c5b3307e40": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12673ccc-4347-4a1b-aae9-baa4aaf27a72",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_9ccf480590febe": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "80231301-28cd-469b-884f-b001f6bc3f03",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_b17ec2edf5fa88": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1b14f0e2-0bef-450c-bd43-1b3572d73435",
+        "model": "unknown"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_c1acdf615b24b2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "68ea5d0a-3c8c-407f-8fb7-f12aaf3bf84e",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_d798f73e18262b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "13470754-272f-4428-b041-be4d0b6a1d66",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_e9c8a657742984": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7c0adfd8-ba55-4644-9d84-2bbe5c450008",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    }
+  }
+}
