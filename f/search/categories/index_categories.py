@@ -5,6 +5,7 @@ import polars as pl
 import json
 import typesense as typesense_sdk
 
+from f.search.categories.rank_categories import main as rank_main
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 from f.utils.db.typesense import (
     add_mistral_embeddings,
@@ -26,6 +27,7 @@ EMBED_FIELDS = translated_field_names(LANG_FIELDS)
 def collection_fields() -> list[dict[str, object]]:
     return [
         {"name": "updated_at", "type": "int64", "sort": True},
+        {"name": "rank_order", "type": "float", "sort": True, "optional": True},
         *translated_schema_fields(
             {
                 "name": "string",
@@ -50,8 +52,14 @@ def index_categories(
         crdb,
         "public.categories",
         ids=keys,
-        cols='id, updated_at, name::string, desc_short::string, "desc"::string',
-        schema={"name": pl.String, "desc_short": pl.String, "desc": pl.String},
+        cols='id, updated_at, name::string, desc_short::string, "desc"::string'
+        + ", (rank->>'order')::FLOAT8 AS rank_order",
+        schema={
+            "name": pl.String,
+            "desc_short": pl.String,
+            "desc": pl.String,
+            "rank_order": pl.Float64,
+        },
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.categories")
@@ -76,6 +84,7 @@ def main(
     check: bool = True,
     collection_suffix: str | None = None,
 ):
+    rank_main(keys)
     crdb = create_sql_engine()
     ts = ts_connect()
     if check:

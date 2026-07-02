@@ -1,0 +1,14 @@
+summary: ''
+description: ''
+lock: '!inline f/analytics/import_posthog_events.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    prefix:
+      type: string
+      description: ''
+      default: posthog-events/
+      originalType: string
+  required: []

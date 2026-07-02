@@ -6,6 +6,7 @@ import polars as pl
 import typesense as typesense_sdk
 from sqlalchemy import Engine
 
+from f.search.orgs.rank_orgs import main as rank_main
 from f.utils.db.crdb import create_sql_engine, export_table_by_ids
 from f.utils.db.typesense import (
     add_mistral_embeddings,
@@ -27,6 +28,7 @@ EMBED_FIELDS = ["name", *translated_field_names(LANG_FIELDS)]
 def collection_fields() -> list[dict[str, object]]:
     return [
         {"name": "updated_at", "type": "int64", "sort": True},
+        {"name": "rank_order", "type": "float", "sort": True, "optional": True},
         {"name": "name", "type": "string"},
         *translated_schema_fields({"desc": "string"}),
         mistral_embedding_field(EMBED_FIELDS),
@@ -46,8 +48,9 @@ def index_orgs(
         crdb,
         "public.orgs",
         ids=keys,
-        cols='id, updated_at, name, "desc"::string',
-        schema={"name": pl.String, "desc": pl.String},
+        cols='id, updated_at, name, "desc"::string'
+        + ", (rank->>'order')::FLOAT8 AS rank_order",
+        schema={"name": pl.String, "desc": pl.String, "rank_order": pl.Float64},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.orgs")
@@ -69,6 +72,7 @@ def main(
     check: bool = True,
     collection_suffix: str | None = None,
 ):
+    rank_main(keys)
     crdb = create_sql_engine()
     ts = ts_connect()
     if check:

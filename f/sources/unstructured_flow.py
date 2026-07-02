@@ -5,14 +5,10 @@ import os
 import tempfile
 
 import fasttext
-from unstructured.documents.elements import (  # pyright: ignore[reportMissingImports]
-    Element,
-)
-from unstructured.partition.auto import (  # pyright: ignore[reportMissingImports]
-    partition,
-)
-from unstructured.staging.base import (  # pyright: ignore[reportMissingImports]
-    _fix_metadata_field_precision,
+from unstructured.documents.elements import Element
+from unstructured.partition.auto import partition
+from unstructured.staging.base import (
+    _fix_metadata_field_precision,  # pyright: ignore[reportPrivateUsage]
     elements_to_dicts,
 )
 

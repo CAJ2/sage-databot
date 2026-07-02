@@ -1,0 +1,74 @@
+summary: Full table rerank in CockroachDB
+description: Paginates through a table using cursor-based batching and calls the
+  rank handler per batch. Updates rank scores in CRDB without touching
+  Typesense.
+value:
+  modules:
+    - id: loop
+      value:
+        type: whileloopflow
+        modules:
+          - id: fetch_batch
+            summary: Fetch next batch of IDs
+            value:
+              type: rawscript
+              content: '!inline fetch_next_batch_of_ids.inline_script.py'
+              input_transforms:
+                batch_size:
+                  type: javascript
+                  expr: flow_input.batch_size
+                start_cursor:
+                  type: javascript
+                  expr: flow_input.start_cursor
+                table:
+                  type: javascript
+                  expr: flow_input.table
+              lock: '!inline fetch_next_batch_of_ids.inline_script.lock'
+              language: python3
+            stop_after_if:
+              expr: results.fetch_batch.count == 0
+              skip_if_stopped: true
+          - id: call_rank
+            summary: Rank batch
+            value:
+              type: rawscript
+              content: '!inline rank_dispatch.inline_script.py'
+              input_transforms:
+                ids:
+                  type: javascript
+                  expr: results.fetch_batch.ids
+                table:
+                  type: javascript
+                  expr: flow_input.table
+              lock: '!inline rank_dispatch.inline_script.lock'
+              language: python3
+            sleep:
+              type: javascript
+              expr: flow_input.sleep_seconds
+        skip_failures: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - table
+    - batch_size
+    - sleep_seconds
+    - start_cursor
+  properties:
+    batch_size:
+      type: integer
+      description: Number of rows per batch
+      default: 100
+    sleep_seconds:
+      type: integer
+      description: Seconds to sleep between batches
+      default: 0
+    start_cursor:
+      type: string
+      description: Resume from this ID (exclusive). Leave empty to start from the beginning.
+      default: ''
+    table:
+      type: string
+      description: Table name to rerank (e.g. items, variants, categories)
+  required:
+    - table

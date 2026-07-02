@@ -21,6 +21,7 @@ def main(
     NetworkX DiGraph to verify DAG and weak-connectivity properties.
     Returns a serialized EntityContext dict; populates error_details on failure.
     """
+    del edit_id
     prompt_hints = (
         "When reviewing changes to a Material, consider:\n"
         "- Whether the material name/description is accurate and specific.\n"

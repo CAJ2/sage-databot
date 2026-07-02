@@ -369,6 +369,11 @@ class RemoveRefInput(BaseModel):
     "IDs of sources to remove from this change"
 
 
+class SearchFacetFilterInput(BaseModel):
+    field: str
+    values: list[str]
+
+
 class SourceInput(BaseModel):
     id: str
     meta: Optional[Any] = None

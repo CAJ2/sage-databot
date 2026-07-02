@@ -183,7 +183,6 @@ class Client(BaseClient):
                     createInput
                     updateInput
                     changes {
-                      __typename
                       ... on Item {
                         __typename
                         id
@@ -209,12 +208,19 @@ class Client(BaseClient):
                         id
                       }
                       ... on Material {
+                        __typename
+                        id
+                      }
+                      ... on Org {
+                        __typename
+                        id
+                      }
+                      ... on Program {
                         __typename
                         id
                       }
                     }
                     original {
-                      __typename
                       ... on Item {
                         __typename
                         id
@@ -240,6 +246,14 @@ class Client(BaseClient):
                         id
                       }
                       ... on Material {
+                        __typename
+                        id
+                      }
+                      ... on Org {
+                        __typename
+                        id
+                      }
+                      ... on Program {
                         __typename
                         id
                       }

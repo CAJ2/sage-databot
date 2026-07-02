@@ -1,4 +1,6 @@
 {
+  "venvPath": ".pixi/envs",
+  "venv": "default",
   "exclude": [
     "f/graphql/api_client/**",
     "f/graphql/schema.gql",
