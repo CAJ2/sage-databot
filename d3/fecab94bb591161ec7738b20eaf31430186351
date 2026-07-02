@@ -1,0 +1,48 @@
+f/search/programs/rank_programs.py
+  s_3f6161e80871b7::t_f49e8fa3634c97 1-100
+f/search/programs/index_programs.py
+  s_3f6161e80871b7::t_1fc99183c9e8b0 1-113
+f/search/rank_script.py
+  s_d798f73e18262b::t_f5ab112188a8f4 1-8,10-13
+  s_3f6161e80871b7::t_ec3a1b81c00cc5 9
+f/search/rerank.flow/rank_dispatch.inline_script.py
+  s_d798f73e18262b::t_ba3a81bd381636 1-11,13-20,22-27,29-39
+  s_3f6161e80871b7::t_50d4f3a234d4d2 21
+  s_d798f73e18262b::t_52a91e6717ae9a 28
+  s_3f6161e80871b7::t_a1adf29dcf0983 12
+f/search/index.flow/index_dispatch.inline_script.py
+  s_d798f73e18262b::t_0b61124a6b51b8 16,18
+  s_d798f73e18262b::t_a2ed226b5c9fa2 51
+  s_3f6161e80871b7::t_64bc717073340a 17
+  s_d798f73e18262b::t_0fecc6168a098d 36-37
+  s_3f6161e80871b7::t_976e09408c3659 34
+  s_d798f73e18262b::t_556c1b12a26efa 59
+f/search/programs/rank_programs.script.yaml
+  s_3f6161e80871b7::t_9c10ff78cb4034 1-17
+f/search/programs/index_programs.script.yaml
+  s_3f6161e80871b7::t_e6b9d6091f13ca 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "d3fecab94bb591161ec7738b20eaf31430186351",
+  "prompts": {},
+  "sessions": {
+    "s_3f6161e80871b7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "619297d8-bbf9-4e5c-98d2-a4079f23e196",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    },
+    "s_d798f73e18262b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "13470754-272f-4428-b041-be4d0b6a1d66",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Christian Johansen <johansen.christian.a@gmail.com>"
+    }
+  }
+}
