@@ -13,6 +13,9 @@ from f.search.components.index_components import main as index_components
 from f.search.materials.index_materials import main as index_materials
 from f.search.places.index_places import main as index_places
 from f.search.items.index_items import main as index_items
+from f.search.processes.index_processes import main as index_processes
+from f.search.programs.index_programs import main as index_programs
+from f.search.tags.index_tags import main as index_tags
 
 
 class ChangeSet(TypedDict):
@@ -28,7 +31,10 @@ TABLE_HANDLERS = {
     "components": index_components,
     "materials": index_materials,
     "places": index_places,
+    "programs": index_programs,
     "items": index_items,
+    "processes": index_processes,
+    "tags": index_tags,
 }
 
 
@@ -42,7 +48,7 @@ def main(changes: list[ChangeSet], collection_suffix: str = ""):
             print(f"No handler for table: {table}, skipping")
             continue
 
-        fn: Callable[[list[str], bool, str | None], None] = handler
+        fn: Callable[[list[str], bool, str | None], object] = handler
 
         @retry(
             stop=stop_after_attempt(3),
@@ -50,7 +56,7 @@ def main(changes: list[ChangeSet], collection_suffix: str = ""):
             reraise=True,
         )
         def run_with_retry(
-            fn: Callable[[list[str], bool, str | None], None] = fn,
+            fn: Callable[[list[str], bool, str | None], object] = fn,
             keys: list[str] = keys,
         ) -> None:
             fn(keys, True, collection_suffix or None)
