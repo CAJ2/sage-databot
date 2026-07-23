@@ -1,0 +1,92 @@
+# requirements: project
+
+import json
+import math
+
+from sqlalchemy import Engine, text
+
+from f.utils.db.crdb import create_sql_engine
+
+WEIGHTS = {
+    "has_name_en": 0.40,
+    "has_desc_en": 0.35,
+    "has_image": 0.25,
+}
+
+
+def query_qual(crdb: Engine, ids: list[str]) -> dict[str, dict[str, bool]]:
+    if not ids:
+        return {}
+    ids_join = "','".join(ids)
+    with crdb.connect() as conn:
+        rows = conn.execute(
+            text(
+                f"""SELECT id,
+                (name->>'en' IS NOT NULL AND LENGTH(name->>'en') > 0) AS has_name_en,
+                ("desc"->>'en' IS NOT NULL AND LENGTH("desc"->>'en') > 0) AS has_desc_en,
+                (image IS NOT NULL) AS has_image
+                FROM public.tags WHERE id IN ('{ids_join}')"""
+            )
+        ).fetchall()
+    return {
+        str(row[0]): {
+            "has_name_en": bool(row[1]),
+            "has_desc_en": bool(row[2]),
+            "has_image": bool(row[3]),
+        }
+        for row in rows
+    }
+
+
+def query_pop(crdb: Engine, ids: list[str]) -> dict[str, int]:
+    if not ids:
+        return {}
+    ids_join = "','".join(ids)
+    with crdb.connect() as conn:
+        rows = conn.execute(
+            text(
+                f"""
+            SELECT id,
+              (SELECT count(*) FROM public.items_tags      WHERE tag_id = tags.id) +
+              (SELECT count(*) FROM public.variants_tags   WHERE tag_id = tags.id) +
+              (SELECT count(*) FROM public.components_tags WHERE tag_id = tags.id) +
+              (SELECT count(*) FROM public.places_tags     WHERE tag_id = tags.id)
+              AS assoc_count
+            FROM public.tags WHERE id IN ('{ids_join}')
+        """
+            )
+        ).fetchall()
+    return {str(row[0]): int(row[1]) for row in rows}
+
+
+def normalize_pop(count: int, scale: int = 1_000) -> float:
+    return min(1.0, math.log1p(count) / math.log1p(scale))
+
+
+def main(keys: list[str]) -> dict[str, int]:
+    if not keys:
+        return {"updated": 0}
+    crdb = create_sql_engine()
+    qual_by_id = query_qual(crdb, keys)
+    assoc_by_id = query_pop(crdb, keys)
+
+    ranks: dict[str, dict[str, float]] = {}
+    for id_ in keys:
+        signals = qual_by_id.get(id_, {})
+        qual = sum(WEIGHTS[k] * (1.0 if v else 0.0) for k, v in signals.items())
+        count = assoc_by_id.get(id_, 0)
+        pop = normalize_pop(count)
+        order = 0.4 * pop + 0.6 * qual
+        ranks[id_] = {
+            "qual": round(qual, 4),
+            "pop": round(pop, 4),
+            "order": round(order, 4),
+        }
+
+    with crdb.begin() as conn:
+        conn.execute(
+            text("UPDATE public.tags SET rank = :rank WHERE id = :id"),
+            [{"rank": json.dumps(r), "id": id_} for id_, r in ranks.items()],
+        )
+
+    return {"updated": len(ranks)}

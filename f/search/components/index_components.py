@@ -5,6 +5,7 @@ import polars as pl
 import typesense as typesense_sdk
 from sqlalchemy import Engine
 
+from f.search.components.rank_components import main as rank_main
 from f.utils.db.crdb import (
     create_sql_engine,
     export_table_by_ids,
@@ -30,6 +31,7 @@ EMBED_FIELDS = translated_field_names(LANG_FIELDS)
 def collection_fields() -> list[dict[str, object]]:
     return [
         {"name": "updated_at", "type": "int64", "sort": True},
+        {"name": "rank_order", "type": "float", "sort": True, "optional": True},
         {"name": "tags", "type": "string[]", "optional": True, "facet": True},
         *translated_schema_fields({"name": "string", "desc": "string"}),
         mistral_embedding_field(EMBED_FIELDS),
@@ -49,8 +51,9 @@ def index_components(
         crdb,
         "public.components",
         ids=keys,
-        cols='id, updated_at, name::string, "desc"::string',
-        schema={"name": pl.String, "desc": pl.String},
+        cols='id, updated_at, name::string, "desc"::string'
+        + ", (rank->>'order')::FLOAT8 AS rank_order",
+        schema={"name": pl.String, "desc": pl.String, "rank_order": pl.Float64},
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.components")
@@ -82,6 +85,7 @@ def main(
     check: bool = True,
     collection_suffix: str | None = None,
 ):
+    rank_main(keys)
     crdb = create_sql_engine()
     ts = ts_connect()
     if check:

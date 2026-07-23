@@ -92,26 +92,25 @@ class GetChangeForReviewChangeEditsNodesChangesMaterial(BaseModel):
 
 class GetChangeForReviewChangeEditsNodesChangesOrg(BaseModel):
     typename__: Literal["Org"] = Field(alias="__typename")
+    id: str
 
 
 class GetChangeForReviewChangeEditsNodesChangesPlace(BaseModel):
-    typename__: Literal["Place"] = Field(alias="__typename")
     typename__: Literal["Place"] = Field(alias="__typename")
     id: str
 
 
 class GetChangeForReviewChangeEditsNodesChangesProcess(BaseModel):
     typename__: Literal["Process"] = Field(alias="__typename")
-    typename__: Literal["Process"] = Field(alias="__typename")
     id: str
 
 
 class GetChangeForReviewChangeEditsNodesChangesProgram(BaseModel):
     typename__: Literal["Program"] = Field(alias="__typename")
+    id: str
 
 
 class GetChangeForReviewChangeEditsNodesChangesVariant(BaseModel):
-    typename__: Literal["Variant"] = Field(alias="__typename")
     typename__: Literal["Variant"] = Field(alias="__typename")
     id: str
 
@@ -138,26 +137,25 @@ class GetChangeForReviewChangeEditsNodesOriginalMaterial(BaseModel):
 
 class GetChangeForReviewChangeEditsNodesOriginalOrg(BaseModel):
     typename__: Literal["Org"] = Field(alias="__typename")
+    id: str
 
 
 class GetChangeForReviewChangeEditsNodesOriginalPlace(BaseModel):
-    typename__: Literal["Place"] = Field(alias="__typename")
     typename__: Literal["Place"] = Field(alias="__typename")
     id: str
 
 
 class GetChangeForReviewChangeEditsNodesOriginalProcess(BaseModel):
     typename__: Literal["Process"] = Field(alias="__typename")
-    typename__: Literal["Process"] = Field(alias="__typename")
     id: str
 
 
 class GetChangeForReviewChangeEditsNodesOriginalProgram(BaseModel):
     typename__: Literal["Program"] = Field(alias="__typename")
+    id: str
 
 
 class GetChangeForReviewChangeEditsNodesOriginalVariant(BaseModel):
-    typename__: Literal["Variant"] = Field(alias="__typename")
     typename__: Literal["Variant"] = Field(alias="__typename")
     id: str
 

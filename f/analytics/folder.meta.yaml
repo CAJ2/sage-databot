@@ -1,0 +1,6 @@
+summary: Analytics event ingestion and aggregation scripts
+display_name: analytics
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

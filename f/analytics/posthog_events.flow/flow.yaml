@@ -1,0 +1,30 @@
+summary: Import PostHog events from S3 and clean up old files
+description: ''
+value:
+  modules:
+    - id: import
+      summary: Import new PostHog events from S3 into DuckLake
+      value:
+        type: script
+        input_transforms:
+          prefix:
+            type: javascript
+            expr: flow_input.prefix
+        is_trigger: false
+        path: f/analytics/import_posthog_events
+    - id: cleanup
+      summary: Delete S3 files for events imported 1+ day ago
+      value:
+        type: script
+        input_transforms: {}
+        is_trigger: false
+        path: f/analytics/cleanup_posthog_events
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    prefix:
+      type: string
+      description: S3 prefix to scan for PostHog exports
+      default: posthog-events/
+  required: []

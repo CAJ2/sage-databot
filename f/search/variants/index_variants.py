@@ -11,6 +11,7 @@ import typesense as typesense_sdk
 from PIL import Image, ImageOps
 from sqlalchemy import Engine, text
 
+from f.search.variants.rank_variants import main as rank_main
 from f.utils.db.crdb import (
     create_sql_engine,
     export_table_by_ids,
@@ -43,6 +44,7 @@ SOURCES_PUBLIC_BASE_URL = "https://sources.sageleaf.app/"
 def collection_fields() -> list[dict[str, object]]:
     return [
         {"name": "updated_at", "type": "int64", "sort": True},
+        {"name": "rank_order", "type": "float", "sort": True, "optional": True},
         {"name": "code", "type": "string[]", "optional": True},
         {"name": "image", "type": "image", "optional": True, "store": False},
         {
@@ -322,8 +324,14 @@ def index_variants(
         crdb,
         "public.variants",
         ids=keys,
-        cols='id, updated_at, name::string, "desc"::string, code',
-        schema={"name": pl.String, "desc": pl.String, "code": pl.String},
+        cols='id, updated_at, name::string, "desc"::string, code'
+        + ", (rank->>'order')::FLOAT8 AS rank_order",
+        schema={
+            "name": pl.String,
+            "desc": pl.String,
+            "code": pl.String,
+            "rank_order": pl.Float64,
+        },
     )
     for df in df_iter:
         print(f"Exported {df.height} rows from public.variants")
@@ -398,6 +406,7 @@ def main(
     check: bool = True,
     collection_suffix: str | None = None,
 ):
+    rank_main(keys)
     crdb = create_sql_engine()
     ts = ts_connect()
     if check:

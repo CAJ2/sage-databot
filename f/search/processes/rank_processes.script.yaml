@@ -1,0 +1,17 @@
+summary: Compute rank for processes
+description: Updates rank.qual, rank.pop, rank.order in public.processes
+lock: '!inline f/search/processes/rank_processes.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    keys:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+  required:
+    - keys
