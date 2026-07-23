@@ -60,7 +60,7 @@ def find_path_or_default(cfg: dict[str, Any]) -> dict[str, Any]:
         )
 
 
-def llm_agent() -> Model:
+def llm_agent(preset: str | None = None) -> Model:
     # Configure logfire
     logfire_token = wmill.get_variable("f/api_config/llm_logfire_token")
     if logfire_token:
@@ -69,7 +69,12 @@ def llm_agent() -> Model:
 
     models = wmill.get_variable("f/api_config/llm_models")
     model_dict = yaml.full_load(models)
-    model_opts = find_path_or_default(model_dict)
+    if preset is not None:
+        if preset not in model_dict:
+            raise ValueError(f"LLM preset '{preset}' not found in llm_models config.")
+        model_opts = model_dict[preset]
+    else:
+        model_opts = find_path_or_default(model_dict)
     model_name = model_opts["model"]
     if model_name.startswith("gateway/"):
         # Pydantic AI Gateway
