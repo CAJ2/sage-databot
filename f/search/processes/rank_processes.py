@@ -4,7 +4,7 @@ import json
 
 from sqlalchemy import Engine, text
 
-from f.utils.db.crdb import create_sql_engine
+from f.utils.db.crdb import create_sql_engine, filter_unchanged_ranks
 from f.utils.general import llm_agent
 from f.context.llm_rank import compute_llm_hash, score_entity
 
@@ -110,10 +110,17 @@ def main(keys: list[str]) -> dict[str, int]:
             "order": round(order, 4),
         }
 
-    with crdb.begin() as conn:
-        conn.execute(
-            text("UPDATE public.processes SET rank = :rank WHERE id = :id"),
-            [{"rank": json.dumps(r), "id": id_} for id_, r in ranks.items()],
-        )
+    # Filter to only include ranks that have changed
+    changed_ranks = filter_unchanged_ranks(crdb, "processes", ranks)
 
-    return {"updated": len(ranks)}
+    if changed_ranks:
+        with crdb.begin() as conn:
+            conn.execute(
+                text("UPDATE public.processes SET rank = :rank WHERE id = :id"),
+                [
+                    {"rank": json.dumps(r), "id": id_}
+                    for id_, r in changed_ranks.items()
+                ],
+            )
+
+    return {"updated": len(changed_ranks)}

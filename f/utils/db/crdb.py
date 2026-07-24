@@ -153,6 +153,47 @@ def load_tags_by_entity_ids(
     return tags_by_entity
 
 
+def filter_unchanged_ranks(
+    crdb: Engine,
+    table: str,
+    new_ranks: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """
+    Filter out ranks that haven't changed to avoid triggering unnecessary changefeed events.
+
+    Args:
+        crdb: SQLAlchemy Engine for database connection
+        table: Table name to query existing ranks from
+        new_ranks: Dictionary mapping id -> rank dict with new computed values
+
+    Returns:
+        Dictionary containing only the ranks that have changed
+    """
+    if not new_ranks:
+        return {}
+
+    ids = list(new_ranks.keys())
+    ids_join = "','".join(ids)
+
+    existing_ranks: dict[str, str | None] = {}
+    with crdb.connect() as conn:
+        rows = conn.execute(
+            text(f"SELECT id, rank FROM public.{table} WHERE id IN ('{ids_join}')")
+        ).fetchall()
+        existing_ranks = {str(row[0]): row[1] for row in rows}
+
+    changed_ranks = {}
+    for id_, new_rank in new_ranks.items():
+        existing_rank_json = existing_ranks.get(id_)
+        new_rank_json = json.dumps(new_rank)
+
+        # Only include if rank doesn't exist or has changed
+        if existing_rank_json is None or existing_rank_json != new_rank_json:
+            changed_ranks[id_] = new_rank
+
+    return changed_ranks
+
+
 def db_write_dataframe(
     df: pl.DataFrame | pl.LazyFrame,
     table: str,
