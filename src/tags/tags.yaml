@@ -1,0 +1,85 @@
+# Tag spec consumed by f/tags/tags_flow.py.
+#
+# Each section holds tag definitions for one entity type. All tags are
+# upserted into the public.tags table on flow run, keyed by (type, tag_id).
+#
+# Fields:
+#   id             Nano ID — stable, must not change once published.
+#   tag_id         Stable identifier for the tag.
+#   name           Translated name, keyed by BCP-47 language code.
+#   type           COMPONENT | VARIANT | PLACE.
+#   desc           Translated description, keyed by BCP-47 language code (or null).
+#   meta_template  Optional: {schema, uischema} paths (relative to this file)
+#                  pointing at JSON files under src/tags/schemas/ and
+#                  src/tags/ui_schemas/. The flow reads and validates them
+#                  at runtime.
+#   bg_color       Background color for the tag chip.
+#   image          Remote path to the image file.
+
+components:
+  - id: 3Lehg0WInPD8XJznXbbeZ
+    tag_id: packaging
+    name:
+      en: Packaging
+      sv: Förpackning
+    type: COMPONENT
+    desc:
+      en: Material used solely for packaging the product.
+      sv: Material som används enbart för att förpacka produkten.
+    meta_template:
+      schema: schemas/component_packaging.json
+      uischema: ui_schemas/component_packaging.json
+    bg_color: '#D4B2D8'
+    image: icon://mdi:package
+
+variants:
+  - id: 9ytcoER6E3yFSQz6o2JZC
+    tag_id: origins
+    name:
+      en: Places of Origin
+      sv: Ursprungsplatser
+    type: VARIANT
+    desc: null
+    meta_template:
+      schema: schemas/variant_origins.json
+      uischema: ui_schemas/variant_origins.json
+    bg_color: '#92B4A7'
+    image: icon://ic:baseline-place
+
+  - id: bnsXi41vh9qb5SudBKGWR
+    tag_id: manufacturing
+    name:
+      en: Manufacturing
+      sv: Tillverkning
+    type: VARIANT
+    desc: null
+    meta_template:
+      schema: schemas/variant_manufacturing.json
+      uischema: ui_schemas/variant_manufacturing.json
+    bg_color: '#2F2F2F'
+    image: icon://mdi:building
+
+  - id: pf77bSePb7M0IgzLJfkTh
+    tag_id: organic
+    name:
+      en: Certified Organic
+      sv: Certifierat Ekologiskt
+    type: VARIANT
+    desc: null
+    meta_template: null
+    bg_color: '#69B578'
+    image: icon://mdi:organic
+
+places:
+  - id: 6LsWZmITO4_YHFnZcRvph
+    tag_id: opening_hours
+    name:
+      en: Opening Hours
+      sv: Öppettider
+    type: PLACE
+    desc: null
+    meta_template:
+      schema: schemas/place_opening_hours.json
+      uischema: ui_schemas/place_opening_hours.json
+    bg_color: '#7236FD'
+    image: icon://mdi:clock
