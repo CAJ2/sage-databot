@@ -175,23 +175,20 @@ def filter_unchanged_ranks(
     ids = list(new_ranks.keys())
     ids_join = "','".join(ids)
 
-    existing_ranks: dict[str, str | None] = {}
+    existing_ranks: dict[str, Any] = {}
     with crdb.connect() as conn:
         rows = conn.execute(
             text(f"SELECT id, rank FROM public.{table} WHERE id IN ('{ids_join}')")
         ).fetchall()
-        existing_ranks = {str(row[0]): row[1] for row in rows}
+        for row in rows:
+            rank_value = row[1]
+            if isinstance(rank_value, str):
+                rank_value = json.loads(rank_value)
+            existing_ranks[str(row[0])] = rank_value
 
-    changed_ranks = {}
-    for id_, new_rank in new_ranks.items():
-        existing_rank_json = existing_ranks.get(id_)
-        new_rank_json = json.dumps(new_rank)
-
-        # Only include if rank doesn't exist or has changed
-        if existing_rank_json is None or existing_rank_json != new_rank_json:
-            changed_ranks[id_] = new_rank
-
-    return changed_ranks
+    return {
+        id_: rank for id_, rank in new_ranks.items() if existing_ranks.get(id_) != rank
+    }
 
 
 def db_write_dataframe(
