@@ -173,7 +173,7 @@ locks:
   f/sources/materials/materials_flow: d710aa556aaaf4c4a90bd8aaf8fb29b272d249362fb6fd3bdbc1dd1c06b0b607
   f/sources/unstructured_flow: f12ec3ad6860c211315b57ec3354c8b07df7d570f75f4e0f06a82a3568b1b76f
   f/sources/upload_source: d69a779c58d087b38919a2b43890db02cfa99c50d5dfeea6c0d54eee0a058c06
-  f/tags/tags_flow: 3dbcf59f2f47842aa3e6a514a93bdd35f4d2f0756f0f9a6bfdae8872391b6870
+  f/tags/tags_flow: 9729e4c16d0a42752fd1f0468eaec55b6ccd6edf5feeea0c467d5c7bceb9f432
   f/test/cleanup: 655b428a93b686b68924b5ef5c31b270c6ce46eb521ac49492c2ef4fc5837cd6
   f/test/framework: 275bee1b11cca99eea045a5516e3cb91ba6798088289528cbb0aafbdc7a878ed
   f/test/github_status: a00012d2c7b2f3e01414993052fb07da30c73aef4d6d73513b5d4e072cca5b01
@@ -183,7 +183,7 @@ locks:
   f/test/run_tests.flow+run_test_script.inline_script.py: a4ecdad7ed13806cef2f6f72d7bfff435c7b91bb9d07f8480786ac9a35c40b3f
   f/test/run_tests.flow+safety_check_-_verify_test_workspace.inline_script.py: 346589dda9413635f97c0a3c8445398eeb1aa992d0a90dd2b5dae63e8c679399
   f/test/test_changes: ccb54b3cd94ebae45a53ae7ddd0fbf43e3e90f2cacf5c3dc58145940c2fc5963
-  f/test/test_data_pipeline: 2843d2c28e18e76e21cdcdbd9fb003559aec048024570637992bd77a841e5421
+  f/test/test_data_pipeline: 473da5bcf5066741e90bf9b3a45aa65b26482ead0adf6308030a9a59a2376546
   f/test/test_openfoodfacts: d3d939d68383a44d749c231ac36b84480b1e329736adb1f12ea5c4690e667a8a
   f/test/test_search: 1f6afa74fa2ad4b2d101b3603cb0c3f347bb22de852cde6ccc555778eaf1c9b2
   f/test/test_utils: 7bcc37a693a1fc777653e5bf7d48c2afb97379c46ef7771c2e9cd7479a3a6e14

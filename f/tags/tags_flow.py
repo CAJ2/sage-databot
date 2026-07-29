@@ -24,7 +24,7 @@ def load_tags(repo_path: Path) -> list[dict[str, Any]]:
         spec = yaml.safe_load(f)
 
     tags: list[dict[str, Any]] = []
-    for section in ("components", "variants", "places"):
+    for section in ("components", "variants", "places", "programs"):
         for tag in spec.get(section) or []:
             tags.append(tag)
     return tags
