@@ -1,15 +1,33 @@
 # requirements: project
 
 from pathlib import Path
+from typing import Any
 from sqlalchemy import text
 import json
+import yaml
 from jsonschema import Draft202012Validator
 
-import f.tags.variant_tags as variant_tags
-import f.tags.component_tags as component_tags
-import f.tags.place_tags as place_tags
 from f.utils.git import checkout_repo
 from f.utils.db.crdb import create_sql_engine
+
+
+TAGS_SPEC_PATH = Path("src/tags/tags.yaml")
+
+
+def load_tags(repo_path: Path) -> list[dict[str, Any]]:
+    """
+    Load all tag definitions from src/tags/tags.yaml in the checked-out
+    databot repo. Flattens the per-type sections into a single list.
+    """
+    spec_path = repo_path / TAGS_SPEC_PATH
+    with open(spec_path, "r") as f:
+        spec = yaml.safe_load(f)
+
+    tags: list[dict[str, Any]] = []
+    for section in ("components", "variants", "places", "programs"):
+        for tag in spec.get(section) or []:
+            tags.append(tag)
+    return tags
 
 
 def update_db_tags(repo_path: Path):
@@ -18,9 +36,7 @@ def update_db_tags(repo_path: Path):
     """
     crdb = create_sql_engine()
 
-    all_tags = []
-    for tags in [variant_tags.tags, component_tags.tags, place_tags.tags]:
-        all_tags.extend(tags)
+    all_tags = load_tags(repo_path)
 
     # Iterate over each tag and upsert it into the database
     for tag in all_tags:

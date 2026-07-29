@@ -26,7 +26,6 @@ value:
               lock: '!inline fetch_next_batch_of_ids.inline_script.lock'
               language: python3
             stop_after_if:
-              error_message: null
               expr: results.fetch_batch.count == 0
               skip_if_stopped: true
           - id: call_index

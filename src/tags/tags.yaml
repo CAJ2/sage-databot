@@ -1,0 +1,341 @@
+# Tag spec consumed by f/tags/tags_flow.py.
+#
+# Each section holds tag definitions for one entity type. All tags are
+# upserted into the public.tags table on flow run, keyed by (type, tag_id).
+#
+# Fields:
+#   id             Nano ID — stable, must not change once published.
+#   tag_id         Stable identifier for the tag.
+#   name           Translated name, keyed by BCP-47 language code.
+#   type           COMPONENT | VARIANT | PLACE | PROGRAM.
+#   desc           Translated description, keyed by BCP-47 language code (or null).
+#   meta_template  Optional: {schema, uischema} paths (relative to this file)
+#                  pointing at JSON files under src/tags/schemas/ and
+#                  src/tags/ui_schemas/. The flow reads and validates them
+#                  at runtime.
+#   bg_color       Background color for the tag chip.
+#   image          Remote path to the image file.
+
+components:
+  - id: 3Lehg0WInPD8XJznXbbeZ
+    tag_id: packaging
+    name:
+      en: Packaging
+      sv: Förpackning
+    type: COMPONENT
+    desc:
+      en: Component whose primary purpose is containing, protecting, transporting, or presenting another component.
+      sv: Komponent vars huvudsakliga syfte är att innehålla, skydda, transportera eller presentera en annan komponent.
+    meta_template:
+      schema: schemas/component_packaging.json
+      uischema: ui_schemas/component_packaging.json
+    bg_color: '#D4B2D8'
+    image: icon://mdi/package
+
+  - id: h3gAkHmmBlj0R4LqtLGES
+    tag_id: resealable
+    name:
+      en: Resealable
+    type: COMPONENT
+    desc:
+      en: If the component can be resealed to be somewhat airtight.
+    meta_template: null
+    bg_color: '#4A90E2'
+    image: icon://f7/checkmark-seal
+
+  - id: Fs-ZdfecDgIeZfR5fl3Uf
+    tag_id: non-resealable
+    name:
+      en: Non-Resealable
+    type: COMPONENT
+    desc:
+      en: If the component cannot be sealed again after opening.
+    meta_template: null
+    bg_color: '#E94B4B'
+    image: icon://f7/xmark-seal
+
+  - id: _6a1Lb0Cixxz1k9lId3ui
+    tag_id: tear-to-open
+    name:
+      en: Tear To Open
+    type: COMPONENT
+    desc:
+      en: Opening this component requires tearing, breaking a seal, peeling, etc.
+    meta_template: null
+    bg_color: '#F5A623'
+    image: icon://icon-park-outline/rectangle-tear
+
+  - id: OLGiCuWTx2w8G1cbT4Z3b
+    tag_id: food-contact
+    name:
+      en: Food Contact
+    type: COMPONENT
+    desc:
+      en: May come into contact with food.
+    meta_template: null
+    bg_color: '#8B4513'
+    image: icon://mdi/food
+
+  - id: rzAAe8j0Zq4PUMWWD4eOa
+    tag_id: perishable
+    name:
+      en: Perishable
+    type: COMPONENT
+    desc:
+      en: Requires refrigeration, freezing, or other controlled storage for part of its normal shelf life.
+    meta_template: null
+    bg_color: '#87CEEB'
+    image: icon://mdi/refrigerator
+
+  - id: qWJ2Fyg3ZHgox1yaSZtCx
+    tag_id: accessory
+    name:
+      en: Accessory
+    type: COMPONENT
+    desc:
+      en: Separate component that is designed specifically for use with a different primary component.
+    meta_template: null
+    bg_color: '#9B59B6'
+    image: icon://icon-park-outline/other
+
+  - id: 0BENxTvn2kOeH54xqfTDz
+    tag_id: single-use
+    name:
+      en: Single Use
+    type: COMPONENT
+    desc:
+      en: Intended to be used only once.
+    meta_template: null
+    bg_color: '#E67E22'
+    image: icon://mdi/plus-circle
+
+  - id: WWr54R8YNt6W47canNPYg
+    tag_id: multi-use
+    name:
+      en: Multi Use
+    type: COMPONENT
+    desc:
+      en: Intended to be used more than once.
+    meta_template: null
+    bg_color: '#16A085'
+    image: icon://mdi/plus-circle-multiple
+
+  - id: oOOENSSkUzL--qUUUOLUf
+    tag_id: microwave-safe
+    name:
+      en: Microwave Safe
+    type: COMPONENT
+    desc:
+      en: Safe for use in a microwave.
+    meta_template: null
+    bg_color: '#FF6B6B'
+    image: icon://mdi/microwave
+
+  - id: uCJRfCjntynCzxNttHWxI
+    tag_id: freezer-safe
+    name:
+      en: Freezer Safe
+    type: COMPONENT
+    desc:
+      en: Suitable for freezer storage.
+    meta_template: null
+    bg_color: '#5DADE2'
+    image: icon://mdi/snowflake
+
+  - id: DTbMDHBncNaVgLt0crK-f
+    tag_id: oven-safe
+    name:
+      en: Oven Safe
+    type: COMPONENT
+    desc:
+      en: Suitable for conventional oven use.
+    meta_template: null
+    bg_color: '#E74C3C'
+    image: icon://mdi/oven
+
+  - id: F4EjHqnm-Kp9BnrJbxfyY
+    tag_id: dishwasher-safe
+    name:
+      en: Dishwasher Safe
+    type: COMPONENT
+    desc:
+      en: Safe for dishwasher cleaning.
+    meta_template: null
+    bg_color: '#3498DB'
+    image: icon://mdi/dishwasher
+
+  - id: W2tnE28wRR-V4sC-YKdA0
+    tag_id: shelf-stable
+    name:
+      en: Shelf Stable
+    type: COMPONENT
+    desc:
+      en: Can be safely stored at room temperature for its intended shelf life.
+    meta_template: null
+    bg_color: '#F39C12'
+    image: icon://lsicon/shelf-outline
+
+variants:
+  - id: 9ytcoER6E3yFSQz6o2JZC
+    tag_id: origins
+    name:
+      en: Places of Origin
+      sv: Ursprungsplatser
+    type: VARIANT
+    desc:
+      en: Information about where a product's raw or derived materials originated
+    meta_template:
+      schema: schemas/variant_origins.json
+      uischema: ui_schemas/variant_origins.json
+    bg_color: '#92B4A7'
+    image: icon://ic/baseline-place
+
+  - id: bnsXi41vh9qb5SudBKGWR
+    tag_id: manufacturing
+    name:
+      en: Manufacturing
+      sv: Tillverkning
+    type: VARIANT
+    desc:
+      en: Information about where the product is manufactured
+    meta_template:
+      schema: schemas/variant_manufacturing.json
+      uischema: ui_schemas/variant_manufacturing.json
+    bg_color: '#2F2F2F'
+    image: icon://mdi/building
+
+  - id: pf77bSePb7M0IgzLJfkTh
+    tag_id: organic
+    name:
+      en: Certified Organic
+      sv: Certifierat Ekologiskt
+    type: VARIANT
+    desc:
+      en: Products that are certified as organic
+    meta_template: null
+    bg_color: '#69B578'
+    image: icon://mdi/organic
+
+  - id: YkJBQXwr5J7n2f_mcMse8
+    tag_id: usda-organic
+    name:
+      en: USDA Organic
+    type: VARIANT
+    desc: null
+    meta_template: null
+    bg_color: '#1ABC9C'
+    image: icon://mdi/organic
+
+  - id: 4EVOqsyhStLbvlXdgczrK
+    tag_id: eu-organic
+    name:
+      en: EU Organic
+    type: VARIANT
+    desc: null
+    meta_template: null
+    bg_color: '#27AE60'
+    image: icon://mdi/organic
+
+  - id: fZxT5YCkwxm-Th3jcuGAr
+    tag_id: rainforest-alliance
+    name:
+      en: Rainforest Alliance Certified
+    type: VARIANT
+    desc:
+      en: Learn more at https://www.rainforest-alliance.org/
+    meta_template: null
+    bg_color: '#2ECC71'
+    image: icon://material-symbols/check-rounded
+
+  - id: yOxFNvFie0-KOSxpKy-Zx
+    tag_id: regenerative-organic
+    name:
+      en: Regenerative Organic Certified
+    type: VARIANT
+    desc:
+      en: Learn more at https://regenorganic.org/
+    meta_template: null
+    bg_color: '#16A085'
+    image: icon://material-symbols/check-rounded
+
+places:
+  - id: 6LsWZmITO4_YHFnZcRvph
+    tag_id: opening_hours
+    name:
+      en: Opening Hours
+      sv: Öppettider
+    type: PLACE
+    desc:
+      en: Stores the opening hours and related information for places of interest
+    meta_template:
+      schema: schemas/place_opening_hours.json
+      uischema: ui_schemas/place_opening_hours.json
+    bg_color: '#7236FD'
+    image: icon://mdi/clock
+
+programs:
+  - id: K0W_eUoBP6hPlRYPZ-aey
+    tag_id: municipal
+    name:
+      en: Municipal
+    type: PROGRAM
+    desc:
+      en: Marks a program operated by a municipality
+    meta_template: null
+    bg_color: '#34495E'
+    image: icon://mdi/city
+
+  - id: 1x-upvcsng7FCxlgZmYOJ
+    tag_id: garbage
+    name:
+      en: Garbage
+    type: PROGRAM
+    desc:
+      en: Offers garbage services
+    meta_template: null
+    bg_color: '#6C7A89'
+    image: icon://mdi/garbage
+
+  - id: aF91CuQ0mZzq8NNlHkklX
+    tag_id: recycling
+    name:
+      en: Recycling
+    type: PROGRAM
+    desc:
+      en: Offers recycling services
+    meta_template: null
+    bg_color: '#27AE60'
+    image: icon://material-symbols/recycling
+
+  - id: q8ynkDOHLMAR2S7VlpK_W
+    tag_id: compost
+    name:
+      en: Compost
+    type: PROGRAM
+    desc:
+      en: Offers composting services
+    meta_template: null
+    bg_color: '#8B7355'
+    image: icon://material-symbols/compost
+
+  - id: FuPudbIxDX_DqGAS_DAL1
+    tag_id: mail-in
+    name:
+      en: Mail-In
+    type: PROGRAM
+    desc:
+      en: Provides a mail-in service
+    meta_template: null
+    bg_color: '#F1C40F'
+    image: icon://iconoir/mail-in
+
+  - id: cyNfmFUhNcjfXCJbkc7aP
+    tag_id: hazardous-waste
+    name:
+      en: Hazardous Waste
+    type: PROGRAM
+    desc:
+      en: Accepts hazardous waste
+    meta_template: null
+    bg_color: '#C0392B'
+    image: icon://healthicons/hazardous

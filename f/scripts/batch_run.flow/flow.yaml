@@ -44,7 +44,6 @@ value:
               lock: '!inline fetch_sub-cursors_for_this_iteration.inline_script.lock'
               language: python3
             stop_after_if:
-              error_message: null
               expr: result.done == true
               skip_if_stopped: false
           - id: run_batches

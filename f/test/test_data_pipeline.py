@@ -7,22 +7,20 @@ Tests: f/manual/categories_flow.py, f/tags/tags_flow.py
 
 from sqlalchemy import text
 
-import f.tags.component_tags as component_tags
-import f.tags.place_tags as place_tags
-import f.tags.variant_tags as variant_tags
 from f.manual.categories_flow import main as categories_flow_main
+from f.tags.tags_flow import load_tags
 from f.tags.tags_flow import main as tags_flow_main
 from f.test.cleanup import ensure_test_workspace
 from f.test.framework import Test, TestSuite, assert_gt, assert_true
 from f.utils.db.crdb import create_sql_engine
+from f.utils.git import checkout_repo
 
 
 def test_tags_definitions_valid(_t: Test):
     """Test that tag definitions are valid and have required fields."""
 
-    all_tags = []
-    for tags in [variant_tags.tags, component_tags.tags, place_tags.tags]:
-        all_tags.extend(tags)
+    repo_path = checkout_repo()
+    all_tags = load_tags(repo_path)
 
     assert_gt(len(all_tags), 0, "Should have at least one tag definition")
 
