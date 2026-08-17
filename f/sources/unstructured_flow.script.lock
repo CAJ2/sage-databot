@@ -1,5 +1,5 @@
 # workspace-dependencies-mode: manual
-# workspace-dependencies: extract:3dd9c59eea17fda97465cec919a17cef2c2de2915e2172e57fc1972ed82919d9
+# workspace-dependencies: extract:5ecee93b829f23e0ed751fdd69a6a307817817d5591d3b2688d6256d908c4a8a
 # py: 3.12
 accelerate==1.12.0
 adbc-driver-manager==1.5.0

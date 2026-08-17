@@ -1,0 +1,6 @@
+summary: Durable prompt version sync scripts
+display_name: prompts
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot

@@ -1,0 +1,74 @@
+summary: Process unprocessed sources through analysis pipelines
+description: Paginates through public.sources with processed_at IS NULL
+  (cursor-based), and for each batch of IMAGE sources not already locked in an
+  in-flight batch job, runs the image analysis flow synchronously and marks
+  processed_at once it completes.
+value:
+  modules:
+    - id: loop
+      value:
+        type: whileloopflow
+        modules:
+          - id: fetch_batch
+            summary: Fetch next batch of unprocessed IMAGE source ids
+            value:
+              type: rawscript
+              content: '!inline fetch_batch.inline_script.py'
+              input_transforms:
+                batch_size:
+                  type: javascript
+                  expr: flow_input.batch_size
+                start_cursor:
+                  type: javascript
+                  expr: flow_input.start_cursor
+              lock: '!inline fetch_batch.inline_script.lock'
+              language: python3
+            stop_after_if:
+              expr: results.fetch_batch.count == 0
+              skip_if_stopped: true
+          - id: analyze
+            summary: Submit and poll image analysis for the batch
+            value:
+              type: flow
+              input_transforms:
+                poll_interval_seconds:
+                  type: javascript
+                  expr: flow_input.poll_interval_seconds
+                source_ids:
+                  type: javascript
+                  expr: results.fetch_batch.source_ids
+              path: f/sources/analysis/image_analysis
+          - id: mark_processed
+            summary: Mark batch as processed
+            value:
+              type: rawscript
+              content: '!inline mark_processed.inline_script.py'
+              input_transforms:
+                source_ids:
+                  type: javascript
+                  expr: results.fetch_batch.source_ids
+              lock: '!inline mark_processed.inline_script.lock'
+              language: python3
+        skip_failures: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - batch_size
+    - poll_interval_seconds
+    - start_cursor
+  properties:
+    batch_size:
+      type: integer
+      description: Number of sources per batch
+      default: 50
+    poll_interval_seconds:
+      type: integer
+      description: Seconds to sleep between analysis job status checks
+      default: 300
+    start_cursor:
+      type: string
+      description: Resume from this source id (exclusive). Leave empty to start from
+        the beginning.
+      default: ''
+  required: []

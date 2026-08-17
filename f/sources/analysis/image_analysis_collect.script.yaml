@@ -1,0 +1,17 @@
+summary: Collect completed Mistral batch jobs and write results to sources
+description: |
+  Polls pending databot.batch_jobs for status, and on success downloads
+  the output file and appends each source's structured analysis onto
+  Source.content.prompts via the GraphQL API.
+lock: '!inline f/sources/analysis/image_analysis_collect.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    job_id:
+      type: string
+      description: ''
+      default: null
+      originalType: string
+  required: []

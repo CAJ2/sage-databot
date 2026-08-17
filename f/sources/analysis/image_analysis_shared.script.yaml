@@ -1,0 +1,12 @@
+summary: Shared prompt/schema helpers for image analysis
+description: |
+  ImageAnalysis output schema, PROMPT_NAME/PROMPT_MODEL constants, and
+  latest_prompt()/build_batch_request() helpers shared by the submit and
+  sync scripts.
+lock: '!inline f/sources/analysis/image_analysis_shared.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties: {}
+  required: []

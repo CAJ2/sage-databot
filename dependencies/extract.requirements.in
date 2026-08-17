@@ -418,7 +418,9 @@ mcp==1.25.0
 mdurl==0.1.2
     # via markdown-it-py
 mistralai==1.9.11
-    # via pydantic-ai-slim
+    # via
+    #   pydantic-ai-slim
+    #   sage-databot
 more-itertools==10.8.0
     # via
     #   jaraco-classes

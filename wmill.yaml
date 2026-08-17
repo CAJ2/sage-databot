@@ -1,3 +1,4 @@
+# $schema: https://raw.githubusercontent.com/windmill-labs/windmill/refs/heads/main/cli/wmill.schema.json
 defaultTs: bun
 includes:
   - f/**
@@ -18,6 +19,8 @@ includeGroups: true
 includeSettings: false
 includeKey: false
 skipWorkspaceDependencies: false
+locksRequired: true
+lint: true
 workspaces:
   commonSpecificItems:
     variables:
@@ -32,3 +35,9 @@ workspaces:
   dev:
     baseUrl: https://databot.dev.sageleaf.app
     workspaceId: sage-dev
+  localdev:
+    baseUrl: https://localhost:8400
+    workspaceId: localdev
+    overrides:
+      skipVariables: true
+      skipResources: true

@@ -1,0 +1,65 @@
+summary: Submit an image analysis batch job and poll until it completes
+description: Submits a Mistral batch job for the given source ids, then sleeps
+  and re-checks the job status periodically until it reaches a terminal state,
+  collecting results as soon as the job succeeds.
+value:
+  modules:
+    - id: submit
+      summary: Submit batch job
+      value:
+        type: script
+        input_transforms:
+          source_ids:
+            type: javascript
+            expr: flow_input.source_ids
+        path: f/sources/analysis/image_analysis_submit
+      stop_after_if:
+        expr: results.submit.job_id == null
+        skip_if_stopped: true
+      retry:
+        constant:
+          attempts: 3
+          seconds: 15
+    - id: poll_loop
+      summary: Poll job status until terminal
+      value:
+        type: whileloopflow
+        modules:
+          - id: check_status
+            summary: Check job status and collect on success
+            value:
+              type: script
+              input_transforms:
+                job_id:
+                  type: javascript
+                  expr: results.submit.job_id
+              path: f/sources/analysis/image_analysis_collect
+            sleep:
+              type: javascript
+              expr: flow_input.poll_interval_seconds
+            stop_after_if:
+              expr: results.check_status.done == true
+              skip_if_stopped: true
+            retry:
+              constant:
+                attempts: 5
+                seconds: 30
+        skip_failures: false
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  order:
+    - source_ids
+    - poll_interval_seconds
+  properties:
+    poll_interval_seconds:
+      type: integer
+      description: Seconds to sleep between job status checks
+      default: 300
+    source_ids:
+      type: array
+      description: Source ids to submit for image analysis
+      items:
+        type: string
+  required:
+    - source_ids

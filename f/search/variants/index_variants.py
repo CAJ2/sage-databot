@@ -31,14 +31,13 @@ from f.utils.db.typesense import (
     ts_connect,
     with_unix_timestamps,
 )
+from f.utils.urls import normalize_source_url
 
 LANG_FIELDS = ["name", "desc"]
 EMBED_FIELDS = translated_field_names(LANG_FIELDS)
 STANDARD_BARCODE_LENGTHS = [7, 8, 12, 13, 14]
 MAX_ITEM_DESC_COUNT = 5
 IMAGE_CONTEXT_MAX_CHARS = 150
-SOURCES_CDN_PREFIX = "cdn://sources/"
-SOURCES_PUBLIC_BASE_URL = "https://sources.sageleaf.app/"
 
 
 def collection_fields() -> list[dict[str, object]]:
@@ -186,12 +185,6 @@ def load_primary_image_data_by_variant_ids(
             if isinstance(image_context, str) and image_context.strip() != "":
                 image_data_by_variant[key]["context"] = image_context.strip()
     return image_data_by_variant
-
-
-def normalize_source_url(source_url: str) -> str:
-    if source_url.startswith(SOURCES_CDN_PREFIX):
-        return source_url.replace(SOURCES_CDN_PREFIX, SOURCES_PUBLIC_BASE_URL, 1)
-    return source_url
 
 
 def prepend_related_names(

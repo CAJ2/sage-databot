@@ -37,6 +37,7 @@ dependencies = [
   "openrouter>=0.8.0",
   "typesense>=2.0.0",
   "nltk>=3.9.2",
+  "mistralai>=1.9.11",
 ]
 
 [project.optional-dependencies]

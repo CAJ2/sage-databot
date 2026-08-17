@@ -1,0 +1,11 @@
+summary: Integration tests for image analysis prompt sync and batch submit
+description: |
+  Tests prompt sync insert/no-op-on-unchanged behavior and the submit
+  query's "already analyzed for this prompt_id" exclusion logic.
+lock: '!inline f/test/test_analysis.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties: {}
+  required: []

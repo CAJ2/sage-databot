@@ -8,10 +8,19 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from f.db.base import Base, JSONData, JSONModel, Translated
 
 
+class SourcePromptResult(JSONModel):
+    id: str
+    prompt_id: str
+    model: str
+    output: dict[str, Any]
+    created_at: str
+
+
 class SourceContent(JSONModel):
     text: str | None = None
     context: str | None = None
     icon: str | None = None
+    prompts: list[SourcePromptResult] | None = None
 
 
 class Variant(Base):

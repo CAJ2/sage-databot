@@ -19,7 +19,6 @@ from f.search.variants.index_variants import (
     append_image_context,
     barcode_forms,
     clip_image_base64,
-    normalize_source_url,
     prepend_component_names,
     prepend_item_names,
     should_index_variant,
@@ -37,6 +36,7 @@ from f.utils.db.typesense import (
     ts_connect,
     with_unix_timestamps,
 )
+from f.utils.urls import normalize_source_url
 
 
 def _field_map(schema: object) -> dict[str, dict[str, object]]:

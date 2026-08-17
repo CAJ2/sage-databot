@@ -64,8 +64,6 @@ def cmd_sync(workspace: str) -> None:
             "--workspace",
             workspace,
             "--yes",
-            "--branch",
-            "dev",
             "--excludes",
             "f/*_config/**",
             *token_args,
