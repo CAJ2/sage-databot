@@ -10,6 +10,8 @@ from sqlalchemy import text
 
 from f.utils.db.crdb import create_sql_engine
 
+TREE_INSERT_CHUNK_SIZE = 1000
+
 
 def main(
     name: dict[str, Any],
@@ -70,25 +72,15 @@ def main(
             "Adding this material would result in a disconnected material tree."
         )
 
+    # Recompute the full closure over the whole graph. Adding a node/edges
+    # can create an undirected shortcut that alters shortest-path depths
+    # between unrelated nodes elsewhere in the DAG, so depth cannot be
+    # bounded to the new node's own ancestor/descendant cross-product.
     ugraph = graph.to_undirected()
-    ancestors = list(nx.ancestors(graph, new_id))
-    descendants = list(nx.descendants(graph, new_id))
-
-    # Entries where new node is the descendant
-    ancestor_entries = [
-        (a, new_id, nx.shortest_path_length(ugraph, a, new_id)) for a in ancestors
-    ]
-    # Entries where new node is the ancestor
-    descendant_entries = [
-        (new_id, d, nx.shortest_path_length(ugraph, new_id, d)) for d in descendants
-    ]
-    # Cross-product: (ancestor_of_parent, descendant_of_child) through the new node.
-    # Uses the updated graph so any new shorter paths are accounted for.
-    cross_entries = [
-        (a, d, nx.shortest_path_length(ugraph, a, d))
-        for a in ancestors
-        for d in descendants
-    ]
+    tree_entries: list[tuple[str, str, int]] = []
+    for node in graph.nodes:
+        for d in nx.descendants(graph, node):
+            tree_entries.append((node, d, nx.shortest_path_length(ugraph, node, d)))
 
     changes_json = json.dumps(
         {
@@ -135,43 +127,26 @@ def main(
                 {"parent_id": new_id, "child_id": child_id},
             )
 
-        # Insert new tree entries (ancestor/descendant of new node). Since new_id is new,
-        # there are no conflicts on these rows.
-        for ancestor_id, descendant_id, depth in ancestor_entries + descendant_entries:
-            conn.execute(
-                text(
-                    """
-                    INSERT INTO public.material_tree (ancestor_id, descendant_id, depth)
-                    VALUES (:ancestor_id, :descendant_id, :depth)
-                    ON CONFLICT (ancestor_id, descendant_id) DO UPDATE
-                        SET depth = EXCLUDED.depth
-                        WHERE public.material_tree.depth > EXCLUDED.depth
-                    """
-                ),
-                {
-                    "ancestor_id": ancestor_id,
-                    "descendant_id": descendant_id,
-                    "depth": depth,
-                },
+        # Full rebuild: clear and reinsert the whole closure so depths stay
+        # correct even where the change had ripple effects far from new_id.
+        # Inserted in chunks of multi-row VALUES to keep this to a handful of
+        # round trips instead of one per row.
+        conn.execute(text("DELETE FROM public.material_tree"))
+        for i in range(0, len(tree_entries), TREE_INSERT_CHUNK_SIZE):
+            chunk = tree_entries[i : i + TREE_INSERT_CHUNK_SIZE]
+            placeholders = ", ".join(
+                f"(:a{j}, :d{j}, :dep{j})" for j in range(len(chunk))
             )
-
-        # Upsert cross-product entries — only shorten existing depths, never lengthen.
-        for ancestor_id, descendant_id, depth in cross_entries:
+            params: dict[str, str | int] = {}
+            for j, (ancestor_id, descendant_id, depth) in enumerate(chunk):
+                params[f"a{j}"] = ancestor_id
+                params[f"d{j}"] = descendant_id
+                params[f"dep{j}"] = depth
             conn.execute(
                 text(
-                    """
-                    INSERT INTO public.material_tree (ancestor_id, descendant_id, depth)
-                    VALUES (:ancestor_id, :descendant_id, :depth)
-                    ON CONFLICT (ancestor_id, descendant_id) DO UPDATE
-                        SET depth = EXCLUDED.depth
-                        WHERE public.material_tree.depth > EXCLUDED.depth
-                    """
+                    f"INSERT INTO public.material_tree (ancestor_id, descendant_id, depth) VALUES {placeholders}"
                 ),
-                {
-                    "ancestor_id": ancestor_id,
-                    "descendant_id": descendant_id,
-                    "depth": depth,
-                },
+                params,
             )
 
         conn.execute(

@@ -1,0 +1,15 @@
+summary: Verify materials tree
+description: Diffs public.material_tree against the closure recomputed from
+  public.material_edges, reporting missing/extra/wrong-depth rows. Pass fix=true
+  to rewrite material_tree to match.
+lock: '!inline f/review/verify_materials_tree.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    fix:
+      type: boolean
+      description: ''
+      default: false
+  required: []
