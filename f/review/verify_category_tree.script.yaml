@@ -1,0 +1,15 @@
+summary: Verify categories tree
+description: Diffs public.category_tree against the closure recomputed from
+  public.category_edges, reporting missing/extra/wrong-depth rows. Pass fix=true
+  to rewrite category_tree to match.
+lock: '!inline f/review/verify_category_tree.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    fix:
+      type: boolean
+      description: ''
+      default: false
+  required: []

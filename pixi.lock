@@ -5535,7 +5535,7 @@ packages:
   - pypi: ./
     name: sage-databot
     version: 0.1.0
-    sha256: 1e54088717efe52adae7901bf81695f6a00f4f44b377937ab60c3d8c4c4ee514
+    sha256: 76702a8a43b06956126ce5b11a2743eb756adf2088715e0d173a6d0e35b6b518
     requires_dist:
       - sqlalchemy>=2.0.45
       - sqlalchemy-cockroachdb>=2.0.3
@@ -5569,6 +5569,7 @@ packages:
       - openrouter>=0.8.0
       - typesense>=2.0.0
       - nltk>=3.9.2
+      - mistralai>=1.9.11
       - sage-databot[extract] ; extra == 'all'
       - unstructured[all-docs]>=0.21.5 ; extra == 'extract'
       - scrapy>=2.14.0 ; extra == 'extract'

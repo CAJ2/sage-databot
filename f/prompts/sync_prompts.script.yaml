@@ -1,0 +1,12 @@
+summary: Sync prompt template files into databot.prompts
+description: |
+  Glob src/analysis/prompts/*.jinja and insert any new, content-addressed
+  prompt versions into databot.prompts. Existing rows are never updated
+  or deleted, so old prompt versions stay retrievable by id.
+lock: '!inline f/prompts/sync_prompts.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties: {}
+  required: []

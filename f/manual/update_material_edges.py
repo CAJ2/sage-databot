@@ -9,6 +9,8 @@ from sqlalchemy import text
 
 from f.utils.db.crdb import create_sql_engine
 
+TREE_INSERT_CHUNK_SIZE = 1000
+
 
 def main(
     material_id: str,
@@ -90,10 +92,6 @@ def main(
     for row in edge_rows:
         graph.add_edge(row[0], row[1])
 
-    # Capture affected nodes before applying changes (for cross-product cleanup)
-    old_ancestors: set[str] = nx.ancestors(graph, material_id)
-    old_descendants: set[str] = nx.descendants(graph, material_id)
-
     # Apply edge changes in-memory
     for parent_id in remove_parent_ids:
         graph.remove_edge(parent_id, material_id)
@@ -111,30 +109,15 @@ def main(
     if not nx.is_weakly_connected(graph):
         raise ValueError("This change would result in a disconnected material tree.")
 
+    # Recompute the full closure over the whole graph. A change anywhere can
+    # create an undirected shortcut that alters shortest-path depths between
+    # unrelated nodes elsewhere in the DAG, so depth cannot be bounded to the
+    # edited node's own ancestor/descendant cross-product.
     ugraph = graph.to_undirected()
-    new_ancestors: set[str] = nx.ancestors(graph, material_id)
-    new_descendants: set[str] = nx.descendants(graph, material_id)
-
-    # Recompute all tree entries for material_id (as ancestor or descendant)
-    new_ancestor_entries = [
-        (a, material_id, nx.shortest_path_length(ugraph, a, material_id))
-        for a in new_ancestors
-    ]
-    new_descendant_entries = [
-        (material_id, d, nx.shortest_path_length(ugraph, material_id, d))
-        for d in new_descendants
-    ]
-
-    # Recompute affected cross-product entries: all (A, D) pairs from the union
-    # of old and new ancestor/descendant sets. Stale entries are deleted first,
-    # then valid paths are reinserted.
-    affected_ancestors = old_ancestors | new_ancestors
-    affected_descendants = old_descendants | new_descendants
-    cross_entries: list[tuple[str, str, float]] = []
-    for a in affected_ancestors:
-        for d in affected_descendants:
-            if nx.has_path(graph, a, d):
-                cross_entries.append((a, d, nx.shortest_path_length(ugraph, a, d)))
+    tree_entries: list[tuple[str, str, int]] = []
+    for node in graph.nodes:
+        for d in nx.descendants(graph, node):
+            tree_entries.append((node, d, nx.shortest_path_length(ugraph, node, d)))
 
     original_json = json.dumps(
         {
@@ -182,43 +165,26 @@ def main(
                 {"parent_id": material_id, "child_id": child_id},
             )
 
-        # Remove all existing tree entries involving material_id
-        conn.execute(
-            text(
-                "DELETE FROM public.material_tree WHERE ancestor_id = :mid OR descendant_id = :mid"
-            ),
-            {"mid": material_id},
-        )
-
-        # Remove stale cross-product entries (A, D) that may have changed
-        for a in affected_ancestors:
-            for d in affected_descendants:
-                conn.execute(
-                    text(
-                        "DELETE FROM public.material_tree WHERE ancestor_id = :a AND descendant_id = :d"
-                    ),
-                    {"a": a, "d": d},
-                )
-
-        # Reinsert tree entries for material_id and valid cross-product entries
-        for ancestor_id, descendant_id, depth in (
-            new_ancestor_entries + new_descendant_entries + cross_entries
-        ):
+        # Full rebuild: clear and reinsert the whole closure so depths stay
+        # correct even where the change had ripple effects far from material_id.
+        # Inserted in chunks of multi-row VALUES to keep this to a handful of
+        # round trips instead of one per row.
+        conn.execute(text("DELETE FROM public.material_tree"))
+        for i in range(0, len(tree_entries), TREE_INSERT_CHUNK_SIZE):
+            chunk = tree_entries[i : i + TREE_INSERT_CHUNK_SIZE]
+            placeholders = ", ".join(
+                f"(:a{j}, :d{j}, :dep{j})" for j in range(len(chunk))
+            )
+            params: dict[str, str | int] = {}
+            for j, (ancestor_id, descendant_id, depth) in enumerate(chunk):
+                params[f"a{j}"] = ancestor_id
+                params[f"d{j}"] = descendant_id
+                params[f"dep{j}"] = depth
             conn.execute(
                 text(
-                    """
-                    INSERT INTO public.material_tree (ancestor_id, descendant_id, depth)
-                    VALUES (:ancestor_id, :descendant_id, :depth)
-                    ON CONFLICT (ancestor_id, descendant_id) DO UPDATE
-                        SET depth = EXCLUDED.depth
-                        WHERE public.material_tree.depth > EXCLUDED.depth
-                    """
+                    f"INSERT INTO public.material_tree (ancestor_id, descendant_id, depth) VALUES {placeholders}"
                 ),
-                {
-                    "ancestor_id": ancestor_id,
-                    "descendant_id": descendant_id,
-                    "depth": depth,
-                },
+                params,
             )
 
         conn.execute(

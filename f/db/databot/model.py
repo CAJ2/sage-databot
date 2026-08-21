@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, cast
 
-from sqlalchemy import JSON, DateTime, Engine, Table
+from sqlalchemy import JSON, DateTime, Engine, ForeignKey, Table
 from sqlalchemy.orm import Mapped, mapped_column
 
 from f.db.base import Base, JSONData, JSONModel
@@ -104,4 +104,44 @@ class WikidataCache(Base):
 def ensure_cache_tables(engine: Engine) -> None:
     """Create KGCache and WikidataCache tables if they don't already exist."""
     for table in (KGCache.__table__, WikidataCache.__table__):
+        cast(Table, table).create(engine, checkfirst=True)
+
+
+class Prompt(Base):
+    __tablename__: str = "prompts"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
+    model: Mapped[str] = mapped_column()
+    content: Mapped[str] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+def ensure_prompt_tables(engine: Engine) -> None:
+    """Create the Prompt table if it doesn't already exist."""
+    cast(Table, Prompt.__table__).create(engine, checkfirst=True)
+
+
+class BatchJob(Base):
+    __tablename__: str = "batch_jobs"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    prompt_id: Mapped[str] = mapped_column()
+    status: Mapped[str] = mapped_column()
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+
+
+class BatchJobItem(Base):
+    __tablename__: str = "batch_job_items"
+
+    job_id: Mapped[str] = mapped_column(ForeignKey("batch_jobs.id"), primary_key=True)
+    source_id: Mapped[str] = mapped_column(primary_key=True)
+
+
+def ensure_batch_job_tables(engine: Engine) -> None:
+    """Create BatchJob and BatchJobItem tables if they don't already exist."""
+    for table in (BatchJob.__table__, BatchJobItem.__table__):
         cast(Table, table).create(engine, checkfirst=True)

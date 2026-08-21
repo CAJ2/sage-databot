@@ -1,0 +1,18 @@
+You are analyzing a product image.
+
+Respond with a JSON object matching the given schema, describing:
+- item: a simple generic description of the primary object shown
+- brand: the primary brand name visible on the product, if any
+- marketing_labels: attributes related to brand marketing (e.g. "New", "Limited Edition", "Best Seller")
+- certification_labels: any third-party certifications or labels visible (e.g. "USDA Organic", "Fair Trade", "Vegan")
+- functional: functional claims about contents (e.g. "Sugar Free", "Contains Nuts", "100% Cotton")
+- packaging: the type(s) of packaging visible (e.g. "Cardboard Box", "Plastic Bottle", "Plastic Pouch", "Aluminum Can")
+- materials: all material(s) of product or packaging, be specific (e.g. "Glass", "Aluminum", "Paper", "Composite Paper/Plastic")
+
+Only report what is visually evident in the image. Leave a field empty if there is not enough information to determine it.
+{% if context %}
+
+Additional OCR-extracted text found on the image, use it to disambiguate
+labels and text you can see but not read clearly:
+{{ context }}
+{% endif %}

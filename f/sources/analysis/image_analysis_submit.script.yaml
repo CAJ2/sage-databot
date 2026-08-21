@@ -1,0 +1,20 @@
+summary: Submit a Mistral batch job for image attribute analysis
+description: |
+  Selects IMAGE sources not yet analyzed with the latest image_analysis
+  prompt version, submits them as a Mistral batch job, and records the
+  job and its source ids in databot.batch_jobs / databot.batch_job_items.
+lock: '!inline f/sources/analysis/image_analysis_submit.script.lock'
+kind: script
+schema:
+  $schema: https://json-schema.org/draft/2020-12/schema
+  type: object
+  properties:
+    source_ids:
+      type: array
+      description: ''
+      default: null
+      items:
+        type: string
+      originalType: string[]
+  required:
+    - source_ids

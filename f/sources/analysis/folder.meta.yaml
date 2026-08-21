@@ -1,0 +1,6 @@
+summary: Structured attribute extraction from product images via Mistral batch API
+display_name: analysis
+extra_perms:
+  u/databot: true
+owners:
+  - u/databot
